@@ -1,0 +1,29 @@
+{
+  "name": "@jrdaws/framework",
+  "version": "0.1.0",
+  "description": "Dawson Does Framework - templates + Cursor rules + prompts",
+  "type": "module",
+  "bin": {
+    "framework": "bin/framework.js"
+  },
+  "files": [
+    "bin/",
+    "prompts/",
+    "templates/",
+    ".cursor/",
+    "scripts/",
+    "tasks/",
+    "orchestrator.config.json",
+    ".env.example",
+    "README.md"
+  ],
+  "dependencies": {
+    "degit": "^2.8.4",
+    "fs-extra": "^11.2.0",
+    "prompts": "^2.4.2"
+  },
+  "scripts": {
+    "figma:parse": "node scripts/figma/parse-figma.mjs",
+    "cost:summary": "node scripts/orchestrator/cost-summary.mjs"
+  }
+}
