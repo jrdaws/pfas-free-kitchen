@@ -26,6 +26,11 @@
   "scripts": {
     "figma:parse": "node scripts/figma/parse-figma.mjs",
     "cost:summary": "node scripts/orchestrator/cost-summary.mjs",
-    "map:generate": "node scripts/meta/generate-framework-map.mjs"
+    "map:generate": "node scripts/meta/generate-framework-map.mjs",
+    "docs:map": "node scripts/orchestrator/generate-framework-map.mjs",
+    "prepare": "husky"
+  },
+  "devDependencies": {
+    "husky": "^9.1.7"
   }
 }
