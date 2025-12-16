@@ -1,8 +1,9 @@
-name: Framework Map Check
+name: Framework Map
 
 on:
   pull_request:
   push:
+    branches: [ main ]
 
 jobs:
   map:
@@ -12,6 +13,6 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install
-      - run: npm run framework:map
+      - run: npm ci
+      - run: npm run map:gen
       - run: git diff --exit-code FRAMEWORK_MAP.md

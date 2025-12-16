@@ -3,3 +3,6 @@
 
 npm run framework:map
 git add FRAMEWORK_MAP.md
+
+npm run map:gen
+git add FRAMEWORK_MAP.md

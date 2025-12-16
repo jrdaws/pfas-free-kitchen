@@ -29,7 +29,8 @@
     "map:generate": "node scripts/meta/generate-framework-map.mjs",
     "docs:map": "node scripts/orchestrator/generate-framework-map.mjs",
     "prepare": "husky",
-    "framework:map": "node scripts/meta/generate-framework-map.mjs"
+    "framework:map": "node scripts/meta/generate-framework-map.mjs",
+    "map:gen": "node scripts/orchestrator/framework-map.mjs"
   },
   "devDependencies": {
     "husky": "^9.1.7"
