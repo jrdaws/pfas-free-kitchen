@@ -8,13 +8,13 @@
   },
   "files": [
     "bin/",
-    "prompts/",
-    "templates/",
-    ".cursor/",
     "scripts/",
-    "tasks/",
-    "orchestrator.config.json",
-    ".env.example",
+    "prompts/",
+    "docs/",
+    "templates/",
+    ".dd/health.sh",
+    ".cursor/",
+    "FRAMEWORK_MAP.md",
     "README.md"
   ],
   "dependencies": {
@@ -27,15 +27,12 @@
   "scripts": {
     "figma:parse": "node scripts/figma/parse-figma.mjs",
     "cost:summary": "node scripts/orchestrator/cost-summary.mjs",
-    "map:generate": "node scripts/meta/generate-framework-map.mjs",
-    "docs:map": "node scripts/orchestrator/generate-framework-map.mjs",
-    "prepare": "husky",
     "framework:map": "node scripts/orchestrator/framework-map.mjs",
-    "map:gen": "node scripts/orchestrator/framework-map.mjs",
     "health": "node scripts/orchestrator/health.mjs",
     "entitlements:test": "node scripts/orchestrator/entitlements-test.mjs",
     "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
-    "test": "node --test"
+    "test": "node --test",
+    "prepare": "husky"
   },
   "devDependencies": {
     "husky": "^9.1.7"
