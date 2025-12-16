@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import path from "node:path";
+import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import fs from "node:fs";
 import { realpathSync } from "node:fs";
@@ -15,6 +16,12 @@ const TEMPLATES = {
   "automation": "jrdaws/dawson-does-framework/templates/automation",
 };
 
+
+function runOrExit(cmd, args, opts = {}) {
+  const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
+  if (r.error) throw r.error;
+  if (typeof r.status === "number" && r.status !== 0) process.exit(r.status);
+}
 function usage() {
   console.log(`Usage:
   framework start [projectDir]
@@ -77,10 +84,10 @@ async function cmdScaffold(templateId, projectDir) {
 
 async function ensureFrameworkMapFresh() {
   try {
-    const { execa } = await import("execa");
-    await execa("npm", ["run", "framework:map"], { stdio: "ignore" });
-  } catch (e) {
-    // Non-fatal: map is advisory, never blocking
+    // Best-effort; never blocks CLI
+    spawnSync("npm", ["run", "framework:map"], { stdio: "ignore" });
+  } catch {
+    // ignore
   }
 }
 
@@ -179,13 +186,11 @@ async function cmdFigmaParse() {
     console.log("Figma integration is optional. Skipping because no FIGMA_TOKEN / FIGMA_FILE_KEY found.");
     return;
   }
-  const { execa } = await import("execa");
-  await execa("node", ["scripts/figma/parse-figma.mjs"], { stdio: "inherit" });
+  runOrExit("node", ["scripts/figma/parse-figma.mjs"]);
 }
 
 async function cmdCostSummary() {
-  const { execa } = await import("execa");
-  await execa("node", ["scripts/orchestrator/cost-summary.mjs"], { stdio: "inherit" });
+  runOrExit("node", ["scripts/orchestrator/cost-summary.mjs"]);
 }
 
 async function cmdDoctor(projectDirArg) {
@@ -198,8 +203,7 @@ async function cmdDoctor(projectDirArg) {
     process.exit(1);
   }
 
-  const { execa } = await import("execa");
-  await execa("bash", [healthPath], { stdio: "inherit" });
+  runOrExit("bash", [healthPath]);
 }
 
 /**
