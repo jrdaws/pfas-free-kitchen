@@ -1,21 +1,24 @@
 {
   "caps": [
     {
+      "id": "start.prompt",
+      "tier": "free",
+      "phrase": "Print framework start prompt",
+      "command": "framework start",
+      "requiresEnv": []
+    },
+    {
       "id": "figma.parse",
+      "tier": "pro",
       "phrase": "Parse Figma (sections + frames)",
       "command": "framework figma:parse",
       "requiresEnv": ["FIGMA_TOKEN", "FIGMA_FILE_KEY"]
     },
     {
       "id": "cost.logging",
+      "tier": "pro",
       "phrase": "Show cost summary",
       "command": "framework cost:summary",
-      "requiresEnv": []
-    },
-    {
-      "id": "start.prompt",
-      "phrase": "Print framework start prompt",
-      "command": "framework start",
       "requiresEnv": []
     }
   ]

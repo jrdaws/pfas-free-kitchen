@@ -1,160 +1,229 @@
-# Dawson Does Framework Map
+# FRAMEWORK_MAP
 
-Generated: 2025-12-16T02:14:23.155Z
+Auto-generated. Do not edit manually.
+Last updated: 2025-12-16T02:38:38.051Z
 
-Git: main @ ab3d212
+This file is the authoritative roadmap for humans and AI agents.
 
-## Purpose
-This file is the "road map" for humans and AI agents to understand the repo structure, entrypoints, capabilities, and how to troubleshoot.
+## Project Structure
 
-## Entrypoints
-- CLI entry: `bin/framework.js`
-- Default template scaffold: `templates/`
-- Prompts: `prompts/`
-- Scripts/tools: `scripts/`
+- DESIGN.md
+- FRAMEWORK_MAP.md
+- README.md
+- bin
+  - framework.js
+- docs
+  - FRAMEWORK_MAP.md
+- logs
+- next-seo-template
+  - PROJECT.md
+  - README.md
+  - components.json
+  - eslint.config.mjs
+  - next-env.d.ts
+  - next.config.ts
+  - package-lock.json
+  - package.json
+  - postcss.config.mjs
+  - prompts
+    - agents
+      - executor.v0.1.md
+      - research.v0.1.md
+      - reviewer.v0.1.md
+    - superprompt
+      - v0.1.md
+  - public
+    - file.svg
+    - globe.svg
+    - next.svg
+    - vercel.svg
+    - window.svg
+  - src
+    - app
+      - favicon.ico
+      - globals.css
+      - layout.tsx
+      - page.tsx
+    - components
+      - ui
+        - badge.tsx
+        - button.tsx
+        - card.tsx
+        - input.tsx
+        - separator.tsx
+        - tabs.tsx
+    - lib
+      - utils.ts
+  - tsconfig.json
+- orchestrator.config.json
+- package-lock.json
+- package.json
+- prompts
+  - agents
+    - executor.v0.1.md
+    - research.v0.1.md
+    - reviewer.v0.1.md
+  - orchestrator
+    - handoff.research.md
+  - superprompt
+    - v0.1.md
+  - tasks
+    - figma-to-shadcn.md
+    - framework-start.md
+    - tasks.v0.1.yaml
+- scripts
+  - figma
+    - parse-figma.mjs
+  - meta
+    - generate-framework-map.mjs
+  - orchestrate.mjs
+  - orchestrator
+    - capabilities.json
+    - capability-engine.mjs
+    - cost-summary.mjs
+    - cost.mjs
+    - generate-framework-map.mjs
+    - project-config.mjs
+  - providers
+    - anthropic.mjs
+    - openai.mjs
+  - scaffold-tools.mjs
+- tasks
+  - README.md
+- templates
+  - automation
+  - internal-tool
+  - saas
+  - seo-directory
+    - PROJECT.md
+    - README.md
+    - components.json
+    - eslint.config.mjs
+    - next-env.d.ts
+    - next.config.ts
+    - package.json
+    - postcss.config.mjs
+    - prompts
+      - agents
+        - executor.v0.1.md
+        - research.v0.1.md
+        - reviewer.v0.1.md
+      - superprompt
+        - v0.1.md
+    - public
+      - file.svg
+      - globe.svg
+      - next.svg
+      - vercel.svg
+      - window.svg
+    - src
+      - app
+        - favicon.ico
+        - globals.css
+        - layout.tsx
+        - page.tsx
+      - components
+        - ui
+      - lib
+        - utils.ts
+    - tests
+      - visual
+        - home.spec.ts
+    - tsconfig.json
+- test-project
+  - PROJECT.md
+  - README.md
+  - package-lock.json
+  - package.json
+  - prompts
+    - agents
+      - executor.v0.1.md
+      - research.v0.1.md
+      - reviewer.v0.1.md
+    - superprompt
+      - v0.1.md
 
-## Key Files
+## CLI Commands (detected)
 
-- `README.md` - ## Recommended Prompt Order
-- `DESIGN.md` - ## Figma → shadcn Planning
-- `.cursor/rules.md` - ## Dawson Does Framework - Chat Triggers
-- `orchestrator.config.json` - {
-- `.env.example` - # Figma
-- `bin/framework.js` - #!/usr/bin/env node
-- `scripts/orchestrator/capabilities.json` - {
-- `scripts/orchestrator/capability-engine.mjs` - import fs from "node:fs";
-- `scripts/orchestrator/project-config.mjs` - import fs from "node:fs";
-- `scripts/orchestrator/cost.mjs` - import fs from "node:fs";
-- `scripts/orchestrator/cost-summary.mjs` - import { summarizeUsage } from "./cost.mjs";
-- `scripts/figma/parse-figma.mjs` - #!/usr/bin/env node
-- `prompts/superprompt/v0.1.md` - You are Claude Code operating inside Cursor AND you are my AI EXECUTIVE SYSTEM.
+- `framework start`
+- `framework capabilities`
+- `framework phrases`
+- `framework toggle`
+- `framework figma:parse`
+- `framework cost:summary`
+- `framework start`
+- `framework capabilities`
+- `framework phrases`
+- `framework toggle`
+- `framework figma:parse`
+- `framework cost:summary`
+## Capabilities (tiered)
 
-## CLI Commands (from capabilities registry)
+### free
 
-| Phrase | Command | Requires Env |
-|---|---|---|
-| Parse Figma (sections + frames) | `framework figma:parse` | FIGMA_TOKEN, FIGMA_FILE_KEY |
-| Show cost summary | `framework cost:summary` |  |
-| Print framework start prompt | `framework start` |  |
+- **start.prompt** - Print framework start prompt
+  - Tier: `free`
+  - Command: `framework start`
 
-## Project Feature Toggles
-Per-project toggles live at: `.dd/config.json` (within a project folder).
+### pro
 
-Typical flow:
-- `framework capabilities <projectDir>`
-- `framework phrases <projectDir>`
-- `framework toggle <capId> on|off <projectDir>`
+- **figma.parse** - Parse Figma (sections + frames)
+  - Tier: `pro`
+  - Command: `framework figma:parse` (env: FIGMA_TOKEN, FIGMA_FILE_KEY)
+- **cost.logging** - Show cost summary
+  - Tier: `pro`
+  - Command: `framework cost:summary`
 
-## Directory Index (tracked files)
+## Prompts & Agents
 
-### .cursor (1)
-- `.cursor/rules.md`
+- agents
+  - executor.v0.1.md
+  - research.v0.1.md
+  - reviewer.v0.1.md
+- orchestrator
+  - handoff.research.md
+- superprompt
+  - v0.1.md
+- tasks
+  - figma-to-shadcn.md
+  - framework-start.md
+  - tasks.v0.1.yaml
 
-### .dd (1)
-- `.dd/config.json`
+## Call Graph (simple import scan)
 
-### .env.example (1)
-- `.env.example`
+- **bin/framework.js**
+  - calls/imports:
+    - scripts/orchestrator/project-config.mjs
+    - scripts/orchestrator/capability-engine.mjs
+- **scripts/orchestrator/capability-engine.mjs**
+  - calls/imports:
+    - scripts/orchestrator/project-config.mjs
+- **scripts/orchestrator/project-config.mjs**
+  - calls/imports:
+    - (none)
+- **scripts/figma/parse-figma.mjs**
+  - calls/imports:
+    - (none)
+- **scripts/orchestrator/cost.mjs**
+  - calls/imports:
+    - (none)
+- **scripts/orchestrator/cost-summary.mjs**
+  - calls/imports:
+    - scripts/orchestrator/cost.mjs
+## Recent Changes (git log)
 
-### .githooks (1)
-- `.githooks/pre-commit`
-
-### .github (1)
-- `.github/workflows/visual-regression.yml`
-
-### .gitignore (1)
-- `.gitignore`
-
-### bin (1)
-- `bin/framework.js`
-
-### DESIGN.md (1)
-- `DESIGN.md`
-
-### FRAMEWORK_MAP.md (1)
-- `FRAMEWORK_MAP.md`
-
-### orchestrator.config.json (1)
-- `orchestrator.config.json`
-
-### package-lock.json (1)
-- `package-lock.json`
-
-### package.json (1)
-- `package.json`
-
-### prompts (8)
-- `prompts/agents/executor.v0.1.md`
-- `prompts/agents/research.v0.1.md`
-- `prompts/agents/reviewer.v0.1.md`
-- `prompts/orchestrator/handoff.research.md`
-- `prompts/superprompt/v0.1.md`
-- `prompts/tasks/figma-to-shadcn.md`
-- `prompts/tasks/framework-start.md`
-- `prompts/tasks/tasks.v0.1.yaml`
-
-### README.md (1)
-- `README.md`
-
-### scripts (11)
-- `scripts/figma/parse-figma.mjs`
-- `scripts/meta/generate-framework-map.mjs`
-- `scripts/orchestrate.mjs`
-- `scripts/orchestrator/capabilities.json`
-- `scripts/orchestrator/capability-engine.mjs`
-- `scripts/orchestrator/cost-summary.mjs`
-- `scripts/orchestrator/cost.mjs`
-- `scripts/orchestrator/project-config.mjs`
-- `scripts/providers/anthropic.mjs`
-- `scripts/providers/openai.mjs`
-- `scripts/scaffold-tools.mjs`
-
-### tasks (1)
-- `tasks/README.md`
-
-### templates (38)
-- `templates/seo-directory/.cursor/rules.md`
-- `templates/seo-directory/.env.local.example`
-- `templates/seo-directory/.eslintrc.json`
-- `templates/seo-directory/.github/workflows/ci.yml`
-- `templates/seo-directory/.gitignore`
-- `templates/seo-directory/.husky/pre-commit`
-- `templates/seo-directory/.prettierignore`
-- `templates/seo-directory/.prettierrc.json`
-- `templates/seo-directory/PROJECT.md`
-- `templates/seo-directory/README.md`
-- `templates/seo-directory/components.json`
-- `templates/seo-directory/eslint.config.mjs`
-- `templates/seo-directory/next-env.d.ts`
-- `templates/seo-directory/next.config.ts`
-- `templates/seo-directory/package.json`
-- `templates/seo-directory/postcss.config.mjs`
-- `templates/seo-directory/prompts/agents/executor.v0.1.md`
-- `templates/seo-directory/prompts/agents/research.v0.1.md`
-- `templates/seo-directory/prompts/agents/reviewer.v0.1.md`
-- `templates/seo-directory/prompts/superprompt/v0.1.md`
-- `templates/seo-directory/public/file.svg`
-- `templates/seo-directory/public/globe.svg`
-- `templates/seo-directory/public/next.svg`
-- `templates/seo-directory/public/vercel.svg`
-- `templates/seo-directory/public/window.svg`
-- `templates/seo-directory/src/app/favicon.ico`
-- `templates/seo-directory/src/app/globals.css`
-- `templates/seo-directory/src/app/layout.tsx`
-- `templates/seo-directory/src/app/page.tsx`
-- `templates/seo-directory/src/components/ui/badge.tsx`
-- `templates/seo-directory/src/components/ui/button.tsx`
-- `templates/seo-directory/src/components/ui/card.tsx`
-- `templates/seo-directory/src/components/ui/input.tsx`
-- `templates/seo-directory/src/components/ui/separator.tsx`
-- `templates/seo-directory/src/components/ui/tabs.tsx`
-- `templates/seo-directory/src/lib/utils.ts`
-- `templates/seo-directory/tests/visual/home.spec.ts`
-- `templates/seo-directory/tsconfig.json`
-
-## Troubleshooting Quick Notes
-
-- If CLI breaks, run: `node bin/framework.js help` and fix syntax errors first.
-- If optional integrations are missing credentials, the correct behavior is to skip with a clear message.
-- If Figma parsing fails, confirm `FIGMA_TOKEN` + `FIGMA_FILE_KEY` are set (or run without them).
-
+- 2025-12-15 a5f741c Add auto-updating framework map for agents (docs/FRAMEWORK_MAP.md)
+- 2025-12-15 096c196 Add auto-updating FRAMEWORK_MAP.md (repo roadmap for agents)
+- 2025-12-15 ab3d212 Fix syntax error in CLI (remove extra brace)
+- 2025-12-15 ee2f188 Fix CLI dispatcher so phrases/capabilities/toggle work
+- 2025-12-15 3c49fba Add dynamic phrases/capabilities/toggles + optional figma + superprompt section
+- 2025-12-15 b520656 Add framework function phrases + capability negotiation
+- 2025-12-15 6596592 Make Figma parsing optional when env vars missing
+- 2025-12-15 57341d7 Fix CLI dispatcher (framework start)
+- 2025-12-15 6558946 Ignore local scratch projects (next-seo-template, test-project)
+- 2025-12-15 3fe9b34 Add framework start CLI, Figma parsing, PR visual workflow, and agent cost logging
+- 2025-12-15 0a40cc4 Add standardized design rules (shadcn + figma + dribbble)
+- 2025-12-15 658b7b9 Add design system and UI workflow (shadcn + figma + dribbble)
+- 2025-12-14 f612f6f Add multi-model orchestrator (start/follow-rules/compacting)
+- 2025-12-14 0941329 Add template-local gitignore
+- 2025-12-14 21a3109 Add gitignore for node_modules/.next/env
