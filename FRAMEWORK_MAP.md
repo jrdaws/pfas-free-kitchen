@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T05:10:15.043Z
+Generated: 2025-12-16T05:14:03.568Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 062a36c 2025-12-15 Add repo-audit + provider registry + usage budgets + entitlements tests
+- 2f464d4 2025-12-15 Fix entitlements can() imports + restrict test discovery
+062a36c 2025-12-15 Add repo-audit + provider registry + usage budgets + entitlements tests
 f33ebba 2025-12-15 Add repo health script
 e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
 7558ac8 2025-12-15 Ignore backup files
@@ -28,7 +29,6 @@ b520656 2025-12-15 Add framework function phrases + capability negotiation
 3fe9b34 2025-12-15 Add framework start CLI, Figma parsing, PR visual workflow, and agent cost logging
 0a40cc4 2025-12-15 Add standardized design rules (shadcn + figma + dribbble)
 658b7b9 2025-12-15 Add design system and UI workflow (shadcn + figma + dribbble)
-f612f6f 2025-12-14 Add multi-model orchestrator (start/follow-rules/compacting)
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
