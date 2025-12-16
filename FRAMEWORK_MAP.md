@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T04:53:35.960Z
+Generated: 2025-12-16T05:01:29.348Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 7558ac8 2025-12-15 Ignore backup files
+- e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
+7558ac8 2025-12-15 Ignore backup files
 140e1b8 2025-12-15 Fix framework-map recentChanges + remove duplicate dispatcher block
 6ffa4d1 2025-12-15 Add optional Google/Meta/Apple integration scaffolding + capabilities
 3745882 2025-12-15 Update framework map + hooks
@@ -28,7 +29,6 @@ b520656 2025-12-15 Add framework function phrases + capability negotiation
 f612f6f 2025-12-14 Add multi-model orchestrator (start/follow-rules/compacting)
 0941329 2025-12-14 Add template-local gitignore
 21a3109 2025-12-14 Add gitignore for node_modules/.next/env
-e285d62 2025-12-14 Update seo-directory template with shadcn + supabase + env example
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
