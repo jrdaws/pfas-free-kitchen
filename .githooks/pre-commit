@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -e
+if [ -f package.json ]; then
+  node scripts/meta/generate-framework-map.mjs >/dev/null 2>&1 || true
+  git add FRAMEWORK_MAP.md >/dev/null 2>&1 || true
+fi
