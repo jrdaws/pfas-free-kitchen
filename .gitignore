@@ -8,3 +8,6 @@ node_modules
 # local dev scratch
 next-seo-template/
 test-project/
+
+# backups
+*.bak.*
