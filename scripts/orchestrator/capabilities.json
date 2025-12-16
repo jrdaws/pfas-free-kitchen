@@ -8,7 +8,10 @@
       "optional": false,
       "color": "green",
       "requiresEnv": [],
-      "paths": ["prompts/tasks/framework-start.md", "bin/framework.js"]
+      "paths": [
+        "prompts/tasks/framework-start.md",
+        "bin/framework.js"
+      ]
     },
     {
       "id": "figma.parse",
@@ -17,8 +20,15 @@
       "tier": "pro",
       "optional": true,
       "color": "blue",
-      "requiresEnv": ["FIGMA_TOKEN", "FIGMA_FILE_KEY"],
-      "paths": ["scripts/figma/parse-figma.mjs", ".env.example", "bin/framework.js"]
+      "requiresEnv": [
+        "FIGMA_TOKEN",
+        "FIGMA_FILE_KEY"
+      ],
+      "paths": [
+        "scripts/figma/parse-figma.mjs",
+        ".env.example",
+        "bin/framework.js"
+      ]
     },
     {
       "id": "cost.logging",
@@ -28,7 +38,67 @@
       "optional": true,
       "color": "purple",
       "requiresEnv": [],
-      "paths": ["scripts/orchestrator/cost.mjs", "scripts/orchestrator/cost-summary.mjs", "bin/framework.js"]
+      "paths": [
+        "scripts/orchestrator/cost.mjs",
+        "scripts/orchestrator/cost-summary.mjs",
+        "bin/framework.js"
+      ]
+    },
+    {
+      "id": "integrations.google.gmail",
+      "phrase": "Enable Google OAuth + Gmail API scaffolding",
+      "command": "docs: open docs/integrations/google-gmail.md",
+      "tier": "team",
+      "optional": true,
+      "color": "blue",
+      "requiresEnv": [
+        "GOOGLE_CLIENT_ID",
+        "GOOGLE_CLIENT_SECRET",
+        "GOOGLE_REDIRECT_URI"
+      ],
+      "paths": [
+        "src/platform/integrations/google/index.ts",
+        "docs/integrations/google-gmail.md",
+        ".env.example"
+      ]
+    },
+    {
+      "id": "integrations.meta.graph",
+      "phrase": "Enable Meta OAuth + Graph API scaffolding",
+      "command": "docs: open docs/integrations/meta.md",
+      "tier": "team",
+      "optional": true,
+      "color": "blue",
+      "requiresEnv": [
+        "META_APP_ID",
+        "META_APP_SECRET",
+        "META_REDIRECT_URI"
+      ],
+      "paths": [
+        "src/platform/integrations/meta/index.ts",
+        "docs/integrations/meta.md",
+        ".env.example"
+      ]
+    },
+    {
+      "id": "auth.apple",
+      "phrase": "Enable Apple Sign In scaffolding",
+      "command": "docs: open docs/integrations/apple.md",
+      "tier": "team",
+      "optional": true,
+      "color": "blue",
+      "requiresEnv": [
+        "APPLE_TEAM_ID",
+        "APPLE_CLIENT_ID",
+        "APPLE_KEY_ID",
+        "APPLE_PRIVATE_KEY_P8",
+        "APPLE_REDIRECT_URI"
+      ],
+      "paths": [
+        "src/platform/integrations/apple/index.ts",
+        "docs/integrations/apple.md",
+        ".env.example"
+      ]
     }
   ]
 }

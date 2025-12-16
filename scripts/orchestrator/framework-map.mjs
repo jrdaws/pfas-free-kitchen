@@ -163,9 +163,9 @@ function rel(p) {
 
 function recentChanges(n = 20) {
   try {
-    const { execSync } = require("child_process");
-    const out = execSync(`git log -n ${n} --pretty=format:%h\\ %ad\\ %s --date=short`, { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString();
-    return out.trim().split("\n");
+    const { execSync } = await import("node:child_process");
+    const out = execSync(`git log -n  --pretty=format:%h\\ %ad\\ %s --date=short`, { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString();
+    return out.trim().split("\\n");
   } catch {
     return [];
   }

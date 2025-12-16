@@ -73,6 +73,15 @@ async function cmdScaffold(templateId, projectDir) {
   console.log("  Open SUPER_PROMPT.md, fill variables, paste into Cursor chat");
 }
 
+async function ensureFrameworkMapFresh() {
+  try {
+    const { execa } = await import("execa");
+    await execa("npm", ["run", "framework:map"], { stdio: "ignore" });
+  } catch (e) {
+    // Non-fatal: map is advisory, never blocking
+  }
+}
+
 async function main() {
   const [, , a, b] = process.argv;
 
@@ -120,6 +129,7 @@ Examples:
 }
 
 async function cmdCapabilities(projectDirArg) {
+  await ensureFrameworkMapFresh();
   const projectDir = resolveProjectDir(projectDirArg);
   const caps = await resolveEnabledCaps(projectDir);
   const cfg = await loadProjectConfig(projectDir);
