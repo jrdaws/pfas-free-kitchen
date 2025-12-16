@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import crypto from "crypto";
+import { execSync } from "node:child_process";
 
 const REPO_ROOT = process.cwd();
 const ENTRY = path.join(REPO_ROOT, "bin", "framework.js");
@@ -163,8 +164,7 @@ function rel(p) {
 
 function recentChanges(n = 20) {
   try {
-    const { execSync } = await import("node:child_process");
-    const out = execSync(`git log -n  --pretty=format:%h\\ %ad\\ %s --date=short`, { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString();
+    const out = execSync(`git log -n ${n} --pretty=format:%h\\ %ad\\ %s --date=short`, { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString();
     return out.trim().split("\\n");
   } catch {
     return [];
