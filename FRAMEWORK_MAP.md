@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T07:22:03.494Z
+Generated: 2025-12-16T08:02:07.508Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 4aafcdb 2025-12-15 Ignore npm pack tgz artifacts
+- e1f5348 2025-12-15 Add agent feedback loop docs + improve export args test
+4aafcdb 2025-12-15 Ignore npm pack tgz artifacts
 835d6dc 2025-12-15 Fix CLI: remove execa dependency; use spawnSync for doctor/map/scripts
 d0f1e14 2025-12-15 Add global map auto-refresh + framework doctor command
 d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
@@ -28,7 +29,6 @@ ab3d212 2025-12-15 Fix syntax error in CLI (remove extra brace)
 ee2f188 2025-12-15 Fix CLI dispatcher so phrases/capabilities/toggle work
 3c49fba 2025-12-15 Add dynamic phrases/capabilities/toggles + optional figma + superprompt section
 b520656 2025-12-15 Add framework function phrases + capability negotiation
-6596592 2025-12-15 Make Figma parsing optional when env vars missing
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

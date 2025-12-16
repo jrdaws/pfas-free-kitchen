@@ -34,15 +34,18 @@ export function parseExportFlags(args) {
     force: false,
   };
 
+  // Helper: check if next arg exists and is a value (not another flag)
+  const hasValue = (idx) => args[idx + 1] && !args[idx + 1].startsWith("--");
+
   for (let i = 0; i < args.length; i++) {
     const arg = args[i];
-    if (arg === "--name" && args[i + 1]) {
+    if (arg === "--name" && hasValue(i)) {
       flags.name = args[++i];
-    } else if (arg === "--remote" && args[i + 1]) {
+    } else if (arg === "--remote" && hasValue(i)) {
       flags.remote = args[++i];
     } else if (arg === "--push") {
       flags.push = true;
-    } else if (arg === "--branch" && args[i + 1]) {
+    } else if (arg === "--branch" && hasValue(i)) {
       flags.branch = args[++i];
     } else if (arg === "--dry-run") {
       flags.dryRun = true;
@@ -70,6 +73,11 @@ function runIn(dir, cmd, args, opts = {}) {
   });
   if (result.error) {
     throw result.error;
+  }
+  if (result.status !== 0) {
+    const err = new Error(`Command failed: ${cmd} ${args.join(" ")} (exit ${result.status})`);
+    err.exitCode = result.status;
+    throw err;
   }
   return result;
 }
@@ -152,10 +160,10 @@ async function cmdExport(templateId, projectDir, restArgs) {
     console.log("   - README.md");
     console.log("   - .gitignore");
     console.log("   - .dd/config.json");
+    console.log("   - .dd/health.sh (if source exists)");
     console.log("   - START_PROMPT.md (if source exists)");
     console.log(`\n3. Initialize git repository:`);
-    console.log(`   git init`);
-    console.log(`   git checkout -b ${flags.branch}`);
+    console.log(`   git init -b ${flags.branch}`);
     console.log(`   git add -A`);
     console.log(`   git commit -m "Initial commit (exported via dawson-does-framework)"`);
     if (flags.remote) {
@@ -289,16 +297,31 @@ coverage/
     console.log(`     - START_PROMPT.md already exists, skipped`);
   }
 
-  // 3. Initialize git
+  // .dd/health.sh (copy framework health script if present)
+  const srcHealth = path.join(PKG_ROOT, ".dd", "health.sh");
+  const dstHealth = path.join(absProjectDir, ".dd", "health.sh");
+  try {
+    if (fs.existsSync(srcHealth)) {
+      await fse.ensureDir(path.dirname(dstHealth));
+      await fse.copy(srcHealth, dstHealth, { overwrite: true });
+      await fse.chmod(dstHealth, 0o755);
+      console.log(`     ✓ .dd/health.sh created`);
+    } else {
+      console.log(`     - .dd/health.sh not found in framework package, skipped`);
+    }
+  } catch (e) {
+    console.log(`     - failed to copy .dd/health.sh (non-fatal): ${e?.message || e}`);
+  }
+
+  // 3. Initialize git (use -b to set initial branch, requires git 2.28+)
   console.log(`[3/5] Initializing git repository...`);
-  runIn(absProjectDir, "git", ["init", "-q"]);
-  runIn(absProjectDir, "git", ["checkout", "-b", flags.branch], { stdio: "pipe" });
+  runIn(absProjectDir, "git", ["init", "-q", "-b", flags.branch]);
   console.log(`     ✓ Git initialized on branch "${flags.branch}"`);
 
   // 4. Commit
   console.log(`[4/5] Creating initial commit...`);
   runIn(absProjectDir, "git", ["add", "-A"]);
-  runIn(absProjectDir, "git", ["commit", "-m", "Initial commit (exported via dawson-does-framework)"], { stdio: "pipe" });
+  runIn(absProjectDir, "git", ["commit", "-q", "-m", "Initial commit (exported via dawson-does-framework)"]);
   console.log(`     ✓ Initial commit created`);
 
   // 5. Remote + push (optional)
@@ -316,11 +339,11 @@ coverage/
 
     if (flags.push) {
       console.log(`     Pushing to origin/${flags.branch}...`);
-      const pushResult = runIn(absProjectDir, "git", ["push", "-u", "origin", flags.branch], { stdio: "inherit" });
-      if (pushResult.status !== 0) {
-        console.error("     ✗ Push failed. You can push manually later.");
-      } else {
+      try {
+        runIn(absProjectDir, "git", ["push", "-u", "origin", flags.branch], { stdio: "inherit" });
         console.log(`     ✓ Pushed to origin/${flags.branch}`);
+      } catch {
+        console.error("     ✗ Push failed. You can push manually later.");
       }
     }
   } else {
