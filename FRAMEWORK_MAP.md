@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T05:35:34.898Z
+Generated: 2025-12-16T05:43:47.445Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 083a9a7 2025-12-15 Refactor entitlements into pure canCore + thin wrapper
+- d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
+083a9a7 2025-12-15 Refactor entitlements into pure canCore + thin wrapper
 2f464d4 2025-12-15 Fix entitlements can() imports + restrict test discovery
 062a36c 2025-12-15 Add repo-audit + provider registry + usage budgets + entitlements tests
 f33ebba 2025-12-15 Add repo health script
@@ -28,7 +29,6 @@ b520656 2025-12-15 Add framework function phrases + capability negotiation
 57341d7 2025-12-15 Fix CLI dispatcher (framework start)
 6558946 2025-12-15 Ignore local scratch projects (next-seo-template, test-project)
 3fe9b34 2025-12-15 Add framework start CLI, Figma parsing, PR visual workflow, and agent cost logging
-0a40cc4 2025-12-15 Add standardized design rules (shadcn + figma + dribbble)
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

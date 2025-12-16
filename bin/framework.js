@@ -113,6 +113,7 @@ async function cmdHelp() {
   framework toggle <capId> on|off [projectDir]
   framework figma:parse
   framework cost:summary
+  framework doctor [projectDir]
   framework <templateId> <projectDir>
 
 Examples:
@@ -122,6 +123,7 @@ Examples:
   framework capabilities .
   framework phrases .
   framework toggle figma.parse on .
+  framework doctor .
   framework seo-directory my-project
 `);
 }
@@ -186,6 +188,20 @@ async function cmdCostSummary() {
   await execa("node", ["scripts/orchestrator/cost-summary.mjs"], { stdio: "inherit" });
 }
 
+async function cmdDoctor(projectDirArg) {
+  const projectDir = resolveProjectDir(projectDirArg);
+  const healthPath = path.join(projectDir, ".dd", "health.sh");
+
+  if (!fs.existsSync(healthPath)) {
+    console.error("Missing:", healthPath);
+    console.error("Expected a health script at .dd/health.sh in the target project/repo.");
+    process.exit(1);
+  }
+
+  const { execa } = await import("execa");
+  await execa("bash", [healthPath], { stdio: "inherit" });
+}
+
 /**
  * Unified dispatcher (single source of truth)
  */
@@ -195,6 +211,9 @@ try { argvPath = realpathSync(argvPath); } catch {}
 const isEntrypoint = selfPath === argvPath;
 if (isEntrypoint) {
   const [, , a, b, c, d] = process.argv;
+
+  // Keep FRAMEWORK_MAP.md fresh on every CLI invocation (never blocks)
+  await ensureFrameworkMapFresh();
 
   // help first
   if (!a || a === "help" || a === "--help" || a === "-h") {
@@ -209,6 +228,7 @@ if (isEntrypoint) {
   if (a === "toggle") { await cmdToggle(b, c, d); process.exit(0); }
   if (a === "figma:parse") { await cmdFigmaParse(); process.exit(0); }
   if (a === "cost:summary") { await cmdCostSummary(); process.exit(0); }
+  if (a === "doctor") { await cmdDoctor(b); process.exit(0); }
 
   // otherwise treat as template
   await main(); // <-- your existing template clone flow
