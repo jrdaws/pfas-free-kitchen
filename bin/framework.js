@@ -1,11 +1,14 @@
 #!/usr/bin/env node
 import path from "node:path";
 import { spawnSync } from "node:child_process";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, URL } from "node:url";
 import fs from "node:fs";
 import { realpathSync } from "node:fs";
 import fse from "fs-extra";
 import degit from "degit";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const PKG_ROOT = path.resolve(__dirname, "..");
 
 const __cwd = process.cwd();
 
@@ -16,6 +19,325 @@ const TEMPLATES = {
   "automation": "jrdaws/dawson-does-framework/templates/automation",
 };
 
+/**
+ * Parse export command flags from argv array
+ * @param {string[]} args - Rest of argv after templateId and projectDir
+ * @returns {object} Parsed flags
+ */
+export function parseExportFlags(args) {
+  const flags = {
+    name: null,
+    remote: null,
+    push: false,
+    branch: "main",
+    dryRun: false,
+    force: false,
+  };
+
+  for (let i = 0; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--name" && args[i + 1]) {
+      flags.name = args[++i];
+    } else if (arg === "--remote" && args[i + 1]) {
+      flags.remote = args[++i];
+    } else if (arg === "--push") {
+      flags.push = true;
+    } else if (arg === "--branch" && args[i + 1]) {
+      flags.branch = args[++i];
+    } else if (arg === "--dry-run") {
+      flags.dryRun = true;
+    } else if (arg === "--force") {
+      flags.force = true;
+    }
+  }
+
+  return flags;
+}
+
+/**
+ * Run a command in a specific directory
+ * @param {string} dir - Working directory
+ * @param {string} cmd - Command to run
+ * @param {string[]} args - Command arguments
+ * @param {object} opts - Additional options
+ * @returns {object} spawnSync result
+ */
+function runIn(dir, cmd, args, opts = {}) {
+  const result = spawnSync(cmd, args, {
+    cwd: dir,
+    stdio: "inherit",
+    ...opts,
+  });
+  if (result.error) {
+    throw result.error;
+  }
+  return result;
+}
+
+/**
+ * Check if git is available
+ * @returns {boolean}
+ */
+function isGitAvailable() {
+  try {
+    const result = spawnSync("git", ["--version"], { stdio: "pipe" });
+    return result.status === 0;
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Export command: clone template into a new project directory and initialize git
+ */
+async function cmdExport(templateId, projectDir, restArgs) {
+  const flags = parseExportFlags(restArgs || []);
+  const dryRun = flags.dryRun;
+
+  // Validate required args
+  if (!templateId || !projectDir) {
+    console.error("Usage: framework export <templateId> <projectDir> [options]\n");
+    console.error("Options:");
+    console.error("  --name <repoName>    Name for the project (defaults to folder name)");
+    console.error("  --remote <gitUrl>    Git remote URL to add as origin");
+    console.error("  --push               Push to remote after init (requires --remote)");
+    console.error("  --branch <branch>    Branch name (default: main)");
+    console.error("  --dry-run            Show what would happen without making changes");
+    console.error("  --force              Overwrite existing directory");
+    console.error("\nValid templates:", Object.keys(TEMPLATES).join(", "));
+    process.exit(1);
+  }
+
+  // Validate template
+  if (!TEMPLATES[templateId]) {
+    console.error(`Unknown templateId: ${templateId}`);
+    console.error(`Valid templates: ${Object.keys(TEMPLATES).join(", ")}`);
+    process.exit(1);
+  }
+
+  // Validate --push requires --remote
+  if (flags.push && !flags.remote) {
+    console.error("Error: --push requires --remote to be specified.");
+    console.error("Example: framework export saas ./my-app --remote https://github.com/me/my-app.git --push");
+    process.exit(1);
+  }
+
+  // Resolve projectDir to absolute path
+  const absProjectDir = path.resolve(projectDir);
+  const projectName = flags.name || path.basename(absProjectDir);
+
+  // Check if projectDir exists and is not empty
+  if (fs.existsSync(absProjectDir)) {
+    const contents = fs.readdirSync(absProjectDir);
+    if (contents.length > 0 && !flags.force) {
+      console.error(`Error: Directory "${absProjectDir}" exists and is not empty.`);
+      console.error("Use --force to overwrite.");
+      process.exit(1);
+    }
+  }
+
+  // Check git is available (needed for git init/commit/push)
+  if (!isGitAvailable()) {
+    console.error("Error: git is required for export flow.");
+    console.error("Please install git and ensure it's in your PATH.");
+    process.exit(1);
+  }
+
+  // Dry run mode: print operations and exit
+  if (dryRun) {
+    console.log("DRY RUN - The following operations would be performed:\n");
+    console.log(`1. Clone template "${templateId}" into "${absProjectDir}"`);
+    console.log(`   degit ${TEMPLATES[templateId]}`);
+    console.log(`\n2. Create starter files in "${absProjectDir}":`);
+    console.log("   - README.md");
+    console.log("   - .gitignore");
+    console.log("   - .dd/config.json");
+    console.log("   - START_PROMPT.md (if source exists)");
+    console.log(`\n3. Initialize git repository:`);
+    console.log(`   git init`);
+    console.log(`   git checkout -b ${flags.branch}`);
+    console.log(`   git add -A`);
+    console.log(`   git commit -m "Initial commit (exported via dawson-does-framework)"`);
+    if (flags.remote) {
+      console.log(`\n4. Add remote origin:`);
+      console.log(`   git remote add origin ${flags.remote}`);
+    }
+    if (flags.push) {
+      console.log(`\n5. Push to remote:`);
+      console.log(`   git push -u origin ${flags.branch}`);
+    }
+    console.log("\nDRY RUN complete. No changes made.");
+    return;
+  }
+
+  // ---- ACTUAL OPERATIONS (not dry run) ----
+
+  console.log(`\nExporting template "${templateId}" to "${absProjectDir}"...\n`);
+
+  // 1. Clone template using degit
+  console.log(`[1/5] Cloning template...`);
+  const repoPath = TEMPLATES[templateId];
+  const emitter = degit(repoPath, { cache: false, force: flags.force, verbose: false });
+  await emitter.clone(absProjectDir);
+  console.log(`     ✓ Template cloned`);
+
+  // 2. Create starter files
+  console.log(`[2/5] Creating starter files...`);
+
+  // README.md
+  const readmePath = path.join(absProjectDir, "README.md");
+  if (!fs.existsSync(readmePath)) {
+    const readmeContent = `# ${projectName}
+
+> Exported from [dawson-does-framework](https://github.com/jrdaws/dawson-does-framework) using template: \`${templateId}\`
+
+## Getting Started
+
+\`\`\`bash
+npm install
+npm run dev
+\`\`\`
+
+## Next Steps
+
+1. Open this folder in Cursor
+2. Review and customize the code
+3. Update this README with your project details
+
+---
+
+*Generated by dawson-does-framework export*
+`;
+    await fse.writeFile(readmePath, readmeContent, "utf8");
+    console.log(`     ✓ README.md created`);
+  } else {
+    console.log(`     - README.md already exists, skipped`);
+  }
+
+  // .gitignore
+  const gitignorePath = path.join(absProjectDir, ".gitignore");
+  if (!fs.existsSync(gitignorePath)) {
+    const gitignoreContent = `# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+dist/
+build/
+.next/
+out/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Testing
+coverage/
+
+# Misc
+.cache/
+`;
+    await fse.writeFile(gitignorePath, gitignoreContent, "utf8");
+    console.log(`     ✓ .gitignore created`);
+  } else {
+    console.log(`     - .gitignore already exists, skipped`);
+  }
+
+  // .dd/config.json
+  const ddDir = path.join(absProjectDir, ".dd");
+  const ddConfigPath = path.join(ddDir, "config.json");
+  await fse.ensureDir(ddDir);
+  if (!fs.existsSync(ddConfigPath)) {
+    const ddConfig = {
+      plan: "free",
+      featureOverrides: {},
+    };
+    await fse.writeJson(ddConfigPath, ddConfig, { spaces: 2 });
+    console.log(`     ✓ .dd/config.json created`);
+  } else {
+    console.log(`     - .dd/config.json already exists, skipped`);
+  }
+
+  // START_PROMPT.md (copy from package resources if available)
+  const startPromptDst = path.join(absProjectDir, "START_PROMPT.md");
+  if (!fs.existsSync(startPromptDst)) {
+    // Try to locate from installed package
+    const startPromptSrc = path.join(PKG_ROOT, "prompts", "tasks", "framework-start.md");
+    if (fs.existsSync(startPromptSrc)) {
+      await fse.copy(startPromptSrc, startPromptDst);
+      console.log(`     ✓ START_PROMPT.md created`);
+    } else {
+      console.log(`     - START_PROMPT.md source not found, skipped (this is OK)`);
+    }
+  } else {
+    console.log(`     - START_PROMPT.md already exists, skipped`);
+  }
+
+  // 3. Initialize git
+  console.log(`[3/5] Initializing git repository...`);
+  runIn(absProjectDir, "git", ["init", "-q"]);
+  runIn(absProjectDir, "git", ["checkout", "-b", flags.branch], { stdio: "pipe" });
+  console.log(`     ✓ Git initialized on branch "${flags.branch}"`);
+
+  // 4. Commit
+  console.log(`[4/5] Creating initial commit...`);
+  runIn(absProjectDir, "git", ["add", "-A"]);
+  runIn(absProjectDir, "git", ["commit", "-m", "Initial commit (exported via dawson-does-framework)"], { stdio: "pipe" });
+  console.log(`     ✓ Initial commit created`);
+
+  // 5. Remote + push (optional)
+  if (flags.remote) {
+    console.log(`[5/5] Setting up remote...`);
+    // Check if origin already exists
+    const remoteCheck = spawnSync("git", ["remote", "get-url", "origin"], { cwd: absProjectDir, stdio: "pipe" });
+    if (remoteCheck.status === 0) {
+      runIn(absProjectDir, "git", ["remote", "set-url", "origin", flags.remote], { stdio: "pipe" });
+      console.log(`     ✓ Remote origin updated to ${flags.remote}`);
+    } else {
+      runIn(absProjectDir, "git", ["remote", "add", "origin", flags.remote], { stdio: "pipe" });
+      console.log(`     ✓ Remote origin added: ${flags.remote}`);
+    }
+
+    if (flags.push) {
+      console.log(`     Pushing to origin/${flags.branch}...`);
+      const pushResult = runIn(absProjectDir, "git", ["push", "-u", "origin", flags.branch], { stdio: "inherit" });
+      if (pushResult.status !== 0) {
+        console.error("     ✗ Push failed. You can push manually later.");
+      } else {
+        console.log(`     ✓ Pushed to origin/${flags.branch}`);
+      }
+    }
+  } else {
+    console.log(`[5/5] Remote setup skipped (no --remote provided)`);
+  }
+
+  console.log(`\n✅ Export complete!\n`);
+  console.log(`Next steps:`);
+  console.log(`  cd ${absProjectDir}`);
+  console.log(`  npm install`);
+  console.log(`  npm run dev`);
+  if (!flags.remote) {
+    console.log(`\nTo add a remote later:`);
+    console.log(`  git remote add origin <your-repo-url>`);
+    console.log(`  git push -u origin ${flags.branch}`);
+  }
+}
 
 function runOrExit(cmd, args, opts = {}) {
   const r = spawnSync(cmd, args, { stdio: "inherit", ...opts });
@@ -121,7 +443,19 @@ async function cmdHelp() {
   framework figma:parse
   framework cost:summary
   framework doctor [projectDir]
+  framework export <templateId> <projectDir> [options]
   framework <templateId> <projectDir>
+
+Export Options:
+  --name <repoName>    Name for the project (defaults to folder name)
+  --remote <gitUrl>    Git remote URL to add as origin
+  --push               Push to remote after init (requires --remote)
+  --branch <branch>    Branch name (default: main)
+  --dry-run            Show what would happen without making changes
+  --force              Overwrite existing directory
+
+Valid Templates:
+  seo-directory, saas, internal-tool, automation
 
 Examples:
   framework help
@@ -132,6 +466,9 @@ Examples:
   framework toggle figma.parse on .
   framework doctor .
   framework seo-directory my-project
+  framework export seo-directory ~/Documents/Cursor/my-app
+  framework export saas ~/Documents/Cursor/my-saas --remote https://github.com/me/my-saas.git --push
+  framework export internal-tool ./tool --name tool --branch main
 `);
 }
 
@@ -233,6 +570,11 @@ if (isEntrypoint) {
   if (a === "figma:parse") { await cmdFigmaParse(); process.exit(0); }
   if (a === "cost:summary") { await cmdCostSummary(); process.exit(0); }
   if (a === "doctor") { await cmdDoctor(b); process.exit(0); }
+  if (a === "export") {
+    const restArgs = process.argv.slice(5); // Everything after "export <templateId> <projectDir>"
+    await cmdExport(b, c, restArgs);
+    process.exit(0);
+  }
 
   // otherwise treat as template
   await main(); // <-- your existing template clone flow
