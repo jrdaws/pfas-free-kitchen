@@ -34,7 +34,8 @@
     "map:gen": "node scripts/orchestrator/framework-map.mjs",
     "health": "node scripts/orchestrator/health.mjs",
     "entitlements:test": "node scripts/orchestrator/entitlements-test.mjs",
-    "audit:tail": "node scripts/orchestrator/audit-tail.mjs"
+    "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
+    "test": "node --test"
   },
   "devDependencies": {
     "husky": "^9.1.7"
