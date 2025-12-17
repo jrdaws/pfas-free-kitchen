@@ -313,6 +313,22 @@ coverage/
     console.log(`     - failed to copy .dd/health.sh (non-fatal): ${e?.message || e}`);
   }
 
+  // .dd/after-install.sh (copy framework health script if present)
+  const srcafter-install = path.join(PKG_ROOT, ".dd", "after-install.sh");
+  const dstafter-install = path.join(absProjectDir, ".dd", "after-install.sh");
+  try {
+    if (fs.existsSync(after-install.sh)) {
+      await fse.ensureDir(path.dirname(after-install.sh));
+      await fse.copy(srcafter-install, dstafter-install, { overwrite: true });
+      await fse.chmod(dstafter-install, 0o755);
+      console.log(`     ✓ .dd/after-install.sh created`);
+    } else {
+      console.log(`     - .dd/after-install.sh not found in framework package, skipped`);
+    }
+  } catch (e) {
+    console.log(`     - failed to copy .dd/after-install.sh (non-fatal): ${e?.message || e}`);
+  }
+
   // 3. Initialize git (use -b to set initial branch, requires git 2.28+)
   console.log(`[3/5] Initializing git repository...`);
   runIn(absProjectDir, "git", ["init", "-q", "-b", flags.branch]);

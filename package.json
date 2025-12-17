@@ -15,6 +15,7 @@
     "tasks/",
     ".cursor/",
     ".dd/health.sh",
+    ".dd/after-install.sh",
     "orchestrator.config.json",
     ".env.example",
     "FRAMEWORK_MAP.md",
