@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-17T01:38:18.305Z
+Generated: 2025-12-17T02:02:35.283Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 3be859c 2025-12-16 Add after-install hook to template
+- c347e86 2025-12-16 Add after-install hook to seo-directory template
+3be859c 2025-12-16 Add after-install hook to template
 1a405f5 2025-12-16 Add post-export hook runner
 46afde8 2025-12-16 Make .dd/health.sh work for framework repo and exported apps
 7206c8e 2025-12-16 Add capability validation, local secrets vault, realtime scaffolding
@@ -28,7 +29,6 @@ e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
 404f57f 2025-12-15 Update husky hook header for v10 compatibility
 5ac3efb 2025-12-15 Add provider-agnostic platform core + capability annotations + auto-regenerated FRAMEWORK_MAP
 f865806 2025-12-15 Add auto-generated FRAMEWORK_MAP (BFS + tree + reverse graph + tiers) and enforce updates
-486ba3f 2025-12-15 Make call graph recursive BFS from bin/framework.js
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
