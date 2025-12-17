@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T09:39:34.125Z
+Generated: 2025-12-17T01:14:04.571Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 46afde8 2025-12-16 Make .dd/health.sh work for framework repo and exported apps
+- 1a405f5 2025-12-16 Add post-export hook runner
+46afde8 2025-12-16 Make .dd/health.sh work for framework repo and exported apps
 7206c8e 2025-12-16 Add capability validation, local secrets vault, realtime scaffolding
 7ce9aa1 2025-12-16 Fix package.json files list to include health, docs, and framework assets
 4580560 2025-12-16 Fix npm package files list; include .dd/health.sh
@@ -28,7 +29,6 @@ e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
 f865806 2025-12-15 Add auto-generated FRAMEWORK_MAP (BFS + tree + reverse graph + tiers) and enforce updates
 486ba3f 2025-12-15 Make call graph recursive BFS from bin/framework.js
 e7e8d37 2025-12-15 Enhance FRAMEWORK_MAP: call graph + tiered capabilities + recent changes
-a5f741c 2025-12-15 Add auto-updating framework map for agents (docs/FRAMEWORK_MAP.md)
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
