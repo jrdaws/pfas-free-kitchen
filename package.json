@@ -35,15 +35,18 @@
     "docs:map": "node scripts/orchestrator/generate-framework-map.mjs",
     "framework:map": "node scripts/orchestrator/framework-map.mjs",
     "map:gen": "node scripts/orchestrator/framework-map.mjs",
-    "health": "node scripts/orchestrator/health.mjs",
+    "health": "node --import tsx scripts/orchestrator/health.mjs",
     "entitlements:test": "node scripts/orchestrator/entitlements-test.mjs",
     "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
     "test": "node --test",
     "prepare": "husky",
     "caps:validate": "node scripts/orchestrator/validate-capabilities.mjs",
-    "matrix:smoke": "node tests/matrix/smoke.mjs"
+    "matrix:smoke": "node tests/matrix/smoke.mjs",
+    "caps:explain": "node scripts/orchestrator/caps-explain.mjs",
+    "caps:diff": "node scripts/orchestrator/caps-diff.mjs"
   },
   "devDependencies": {
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "tsx": "^4.21.0"
   }
 }

@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-17T02:46:18.308Z
+Generated: 2025-12-18T21:09:28.849Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 2ea919b 2025-12-16 Export: include .dd/after-install.sh
+- 6f92075 2025-12-16 Fix export: copy after-install.sh to correct output folder
+2ea919b 2025-12-16 Export: include .dd/after-install.sh
 ce5f6e8 2025-12-16 Export should include .dd/after-install.sh
 f39b358 2025-12-16 Export should also include .dd/after-install.sh
 284f892 2025-12-16 Export should include .dd/after-install.sh
@@ -28,7 +29,6 @@ f33ebba 2025-12-15 Add repo health script
 e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
 7558ac8 2025-12-15 Ignore backup files
 140e1b8 2025-12-15 Fix framework-map recentChanges + remove duplicate dispatcher block
-6ffa4d1 2025-12-15 Add optional Google/Meta/Apple integration scaffolding + capabilities
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

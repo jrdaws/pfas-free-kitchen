@@ -10,7 +10,20 @@
       "provides": ["oauth.github"],
       "filesOwned": ["src/app/api/dd/integrations/github/**", "src/dd/secrets/**"],
       "templates": [],
-      "env": [],
+      "env": [
+        {
+          "key": "GITHUB_CLIENT_ID",
+          "required": true,
+          "runtime": "server",
+          "secret": false
+        },
+        {
+          "key": "GITHUB_CLIENT_SECRET",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
       "postInstall": [],
       "tests": ["node scripts/orchestrator/validate-capabilities.mjs"]
     }
