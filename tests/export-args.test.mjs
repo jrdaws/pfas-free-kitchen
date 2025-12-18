@@ -5,6 +5,7 @@ import { parseExportFlags } from "../bin/framework.js";
 test("parseExportFlags: empty args returns defaults", () => {
   const result = parseExportFlags([]);
   assert.deepEqual(result, {
+  afterInstall: "prompt",
     name: null,
     remote: null,
     push: false,
@@ -54,6 +55,7 @@ test("parseExportFlags: all flags combined", () => {
     "--force",
   ]);
   assert.deepEqual(result, {
+  afterInstall: "prompt",
     name: "my-app",
     remote: "https://github.com/me/my-app.git",
     push: true,
