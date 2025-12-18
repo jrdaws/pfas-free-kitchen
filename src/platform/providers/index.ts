@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
-import { ProviderHealth } from "./types";
+import { pathToFileURL } from "node:url";
+import type { ProviderHealth } from "./types";
 
 export type ProviderKind = "auth" | "billing" | "analytics" | "llm" | "webhooks";
 
@@ -22,7 +23,7 @@ export async function loadProviders(): Promise<Record<string, ProviderModule>> {
   const files = listProviderImplFiles();
   const out: Record<string, ProviderModule> = {};
   for (const f of files) {
-    const mod: any = await import(pathToFileUrl(f));
+    const mod: any = await import(pathToFileURL(f).toString());
     const p: ProviderModule = mod.default || mod.provider;
     if (p?.name) out[p.name] = p;
   }
@@ -48,8 +49,3 @@ export async function healthAll(): Promise<{ ok: boolean; results: Record<string
   return { ok, results };
 }
 
-function pathToFileUrl(p: string) {
-  const u = new URL("file://");
-  u.pathname = p;
-  return u.toString();
-}
