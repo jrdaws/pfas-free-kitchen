@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-18T21:22:12.467Z
-Hash: 01e6fa6159
+Generated: 2025-12-18T21:43:53.225Z
+Hash: 542288378f
 
 ## Recent changes
-- 4f605d9 2025-12-18 chore(map): refresh FRAMEWORK_MAP
+- 7e3464b 2025-12-18 chore(dd): make patch helper dry-run by default
+4f605d9 2025-12-18 chore(map): refresh FRAMEWORK_MAP
 d895e50 2025-12-18 chore(dd): add after-install patch prompt helper
 e1ac240 2025-12-18 fix(health): run with tsx and stabilize provider imports
 26a42f3 2025-12-18 fix(cli): ensure shebang at byte 0
@@ -28,7 +29,6 @@ e1f5348 2025-12-15 Add agent feedback loop docs + improve export args test
 d0f1e14 2025-12-15 Add global map auto-refresh + framework doctor command
 d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
 083a9a7 2025-12-15 Refactor entitlements into pure canCore + thin wrapper
-2f464d4 2025-12-15 Fix entitlements can() imports + restrict test discovery
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -38,6 +38,7 @@ d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
 Used for: runtime reasoning, blast-radius analysis, debugging
 
 - `bin/framework.js`
+  - `src/dd/post-export-hooks.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
 
@@ -45,6 +46,8 @@ Used for: runtime reasoning, blast-radius analysis, debugging
 Used for: onboarding, refactors, capability ownership
 
 - `bin/framework.js`
+- `├─ src/dd/post-export-hooks.mjs`
+- `│  src/dd/post-export-hooks.mjs`
 - `├─ scripts/orchestrator/project-config.mjs`
 - `│  scripts/orchestrator/project-config.mjs`
 - `└─ scripts/orchestrator/capability-engine.mjs`
@@ -54,6 +57,7 @@ Used for: onboarding, refactors, capability ownership
 
 ## Reverse graph (What depends on this file)
 
+- `src/dd/post-export-hooks.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
 

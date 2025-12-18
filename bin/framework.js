@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { runPostExportHooks } from "../src/dd/post-export-hooks.mjs";
 // Ask whether to run .dd/after-install.sh (and remember the user's choice)
 async function askYesNo(question, defaultNo = true) {
   return await new Promise((resolve) => {
@@ -84,6 +85,7 @@ const TEMPLATES = {
  */
 export function parseExportFlags(args) {
   const flags = {
+    afterInstall: "prompt",
     name: null,
     remote: null,
     push: false,
@@ -109,6 +111,9 @@ export function parseExportFlags(args) {
       flags.dryRun = true;
     } else if (arg === "--force") {
       flags.force = true;
+    } else if (arg === "--after-install" && hasValue(i)) {
+      const v = String(args[++i]).trim();
+      if (v === "prompt" || v === "auto" || v === "off") flags.afterInstall = v;
     }
   }
 
@@ -435,6 +440,7 @@ coverage/
   }
 
   console.log(`\n✅ Export complete!\n`);
+  await runPostExportHooks({ outDir: absProjectDir, afterInstall: flags.afterInstall });
   console.log(`Next steps:`);
   console.log(`  cd ${absProjectDir}`);
   console.log(`  npm install`);

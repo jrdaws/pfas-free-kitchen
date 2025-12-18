@@ -100,3 +100,13 @@ test("parseExportFlags: --branch followed by flag keeps default", () => {
   assert.equal(result.push, true);
 });
 
+
+test("parseExportFlags: --after-install prompt|auto|off", async () => {
+  const m = await import("../bin/framework.js");
+  const d1 = m.parseExportFlags(["--after-install", "prompt"]);
+  const d2 = m.parseExportFlags(["--after-install", "auto"]);
+  const d3 = m.parseExportFlags(["--after-install", "off"]);
+  assert.equal(d1.afterInstall, "prompt");
+  assert.equal(d2.afterInstall, "auto");
+  assert.equal(d3.afterInstall, "off");
+});
