@@ -1,10 +1,11 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-18T21:09:39.797Z
+Generated: 2025-12-18T21:13:22.535Z
 Hash: 01e6fa6159
 
 ## Recent changes
-- 26a42f3 2025-12-18 fix(cli): ensure shebang at byte 0
+- e1ac240 2025-12-18 fix(health): run with tsx and stabilize provider imports
+26a42f3 2025-12-18 fix(cli): ensure shebang at byte 0
 c39020b 2025-12-18 feat(trust): align capability engine + add caps explain/diff
 6f92075 2025-12-16 Fix export: copy after-install.sh to correct output folder
 2ea919b 2025-12-16 Export: include .dd/after-install.sh
@@ -28,7 +29,6 @@ d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
 2f464d4 2025-12-15 Fix entitlements can() imports + restrict test discovery
 062a36c 2025-12-15 Add repo-audit + provider registry + usage budgets + entitlements tests
 f33ebba 2025-12-15 Add repo health script
-e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
