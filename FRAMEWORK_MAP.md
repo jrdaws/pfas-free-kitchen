@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 7c67fd4d5c
 
 ## Recent changes
+- f0220dd 2025-12-18 fix(health): ensure correct argument handling in has_script function
 - f9b9d5a 2025-12-18 fix(health): correct argument index for script name in has_script function
 - ed09ee6 2025-12-18 refactor(framework): remove after-install prompt and enhance capability logging
 - d749c18 2025-12-18 refactor: enhance captureRepoAdditions to return commits and status
@@ -28,7 +29,6 @@ Hash: 7c67fd4d5c
 - 06f5534 2025-12-18 fix(export): actually parse --template-source and --framework-version
 - 482f673 2025-12-18 chore(map): make FRAMEWORK_MAP deterministic (no timestamp churn)
 - 05ee343 2025-12-18 chore(test): stop auto-running framework:map during tests; add map check script
-- 27ad00f 2025-12-18 refactor(tests): use defaults + expectFlags helpers
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

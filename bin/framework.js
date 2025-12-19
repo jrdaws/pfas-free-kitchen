@@ -165,14 +165,17 @@ Arguments:
   projectDir     Output directory (default: ./_demo-<templateId>)
 
 Options:
+  --force                           Overwrite existing directory
+  --dry-run                         Preview without making changes
   --after-install prompt|auto|off   Post-install behavior (default: prompt)
+  --template-source local|remote|auto  Template source (default: auto)
 
 Valid templates: ${Object.keys(TEMPLATES).join(", ")}
 
 Examples:
-  framework demo                    # Export saas to ./_demo-saas
-  framework demo seo-directory      # Export seo-directory to ./_demo-seo-directory
-  framework demo saas ./my-test     # Export saas to ./my-test
+  framework demo                         # Export saas to ./_demo-saas
+  framework demo seo-directory           # Export seo-directory to ./_demo-seo-directory
+  framework demo saas ./my-test --force  # Overwrite existing ./my-test
 `);
     return;
   }
@@ -186,8 +189,8 @@ Examples:
   }
 
   const projectDir = restArgs[1] || `./_demo-${templateId}`;
-  const flags = parseExportFlags(restArgs.slice(2));
-  await cmdExport(templateId, projectDir, ["--after-install", flags.afterInstall]);
+  // Pass through all flags to cmdExport (it will parse them itself)
+  await cmdExport(templateId, projectDir, restArgs.slice(2));
 }
 
 
