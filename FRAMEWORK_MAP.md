@@ -4,7 +4,8 @@ Generated: (deterministic)
 Hash: 542288378f
 
 ## Recent changes
-- 482f673 2025-12-18 chore(map): make FRAMEWORK_MAP deterministic (no timestamp churn)
+- 06f5534 2025-12-18 fix(export): actually parse --template-source and --framework-version
+482f673 2025-12-18 chore(map): make FRAMEWORK_MAP deterministic (no timestamp churn)
 05ee343 2025-12-18 chore(test): stop auto-running framework:map during tests; add map check script
 27ad00f 2025-12-18 refactor(tests): use defaults + expectFlags helpers
 43c1fec 2025-12-18 test(export): include afterInstall in expected defaults
@@ -28,7 +29,6 @@ c347e86 2025-12-16 Add after-install hook to seo-directory template
 7206c8e 2025-12-16 Add capability validation, local secrets vault, realtime scaffolding
 7ce9aa1 2025-12-16 Fix package.json files list to include health, docs, and framework assets
 4580560 2025-12-16 Fix npm package files list; include .dd/health.sh
-938f70a 2025-12-16 Export: include .dd/health.sh in exported repos
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

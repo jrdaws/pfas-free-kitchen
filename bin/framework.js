@@ -77,6 +77,45 @@ const TEMPLATES = {
   "automation": "jrdaws/dawson-does-framework/templates/automation",
 };
 
+
+function resolveTemplateRef({ templateId, templateSource, frameworkVersion }) {
+  const source = templateSource || "auto";
+  const localDir = path.join(PKG_ROOT, "templates", templateId);
+
+  const localExists = (() => {
+    try { return fs.existsSync(localDir) && fs.statSync(localDir).isDirectory(); } catch { return false; }
+  })();
+
+  let mode = source;
+  if (mode === "auto") mode = localExists ? "local" : "remote";
+
+  if (mode === "local") {
+    if (!localExists) {
+      throw new Error(`Local template not found: ${localDir}`);
+    }
+    return { mode: "local", localDir, remoteRef: null };
+  }
+
+  // remote
+  const base = TEMPLATES[templateId];
+  if (!base) {
+    throw new Error(`Unknown templateId: ${templateId}`);
+  }
+  const remoteRef = frameworkVersion ? `${base}#${frameworkVersion}` : base;
+  return { mode: "remote", localDir: null, remoteRef };
+}
+
+function copyDirRecursive(src, dst) {
+  fs.mkdirSync(dst, { recursive: true });
+  const entries = fs.readdirSync(src, { withFileTypes: true });
+  for (const e of entries) {
+    const from = path.join(src, e.name);
+    const to = path.join(dst, e.name);
+    if (e.isDirectory()) copyDirRecursive(from, to);
+    else fs.copyFileSync(from, to);
+  }
+}
+
 const args = process.argv.slice(2);
 
 // Subcommand: demo
