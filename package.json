@@ -24,6 +24,7 @@
   ],
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.47.10",
     "degit": "^2.8.4",
     "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
