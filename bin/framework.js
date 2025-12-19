@@ -8,6 +8,7 @@ import { realpathSync } from "node:fs";
 import fse from "fs-extra";
 import degit from "degit";
 import { writeManifest } from "../src/dd/manifest.mjs";
+import { validateConfig } from "../src/dd/config-schema.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -455,6 +456,15 @@ coverage/
     console.log(`     ✓ .dd/config.json created`);
   } else {
     console.log(`     - .dd/config.json already exists, skipped`);
+  }
+
+  // Validate config (warn but don't block)
+  const existingConfig = await fse.readJson(ddConfigPath);
+  const validation = validateConfig(existingConfig);
+  if (!validation.valid) {
+    console.log(`     ⚠️  Config validation warnings:`);
+    validation.errors.forEach(err => console.log(`        - ${err}`));
+    console.log(`     (Config will still work, but consider fixing these issues)`);
   }
 
   // START_PROMPT.md (copy from package resources if available)
