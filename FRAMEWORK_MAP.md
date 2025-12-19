@@ -4,7 +4,8 @@ Generated: (deterministic)
 Hash: 542288378f
 
 ## Recent changes
-- a8a50aa 2025-12-18 chore(template): bump Next.js to patched version
+- beed865 2025-12-18 chore(template): include TypeScript devDependencies to avoid first-run mutation
+a8a50aa 2025-12-18 chore(template): bump Next.js to patched version
 4d73d98 2025-12-18 fix(export): define resolved in cmdExport; dry-run reflects local/remote resolution
 1dbd3a8 2025-12-18 fix(export): honor local template source and copy templates from disk
 1b8e681 2025-12-18 feat(template): make saas template runnable (Next.js dev/build/start)
@@ -28,7 +29,6 @@ ce5f6e8 2025-12-16 Export should include .dd/after-install.sh
 f39b358 2025-12-16 Export should also include .dd/after-install.sh
 284f892 2025-12-16 Export should include .dd/after-install.sh
 c347e86 2025-12-16 Add after-install hook to seo-directory template
-3be859c 2025-12-16 Add after-install hook to template
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
