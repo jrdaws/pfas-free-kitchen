@@ -12,6 +12,7 @@ import { validateConfig } from "../src/dd/config-schema.mjs";
 import { detectDrift } from "../src/dd/drift.mjs";
 import { checkPlanCompliance } from "../src/dd/plan-compliance.mjs";
 import { cmdLLM } from "../src/commands/llm.mjs";
+import { cmdAuth } from "../src/commands/auth.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -885,6 +886,7 @@ if (isEntrypoint) {
   if (a === "doctor") { await cmdDoctor(b); process.exit(0); }
   if (a === "drift") { await cmdDrift(b); process.exit(0); }
   if (a === "llm") { await cmdLLM([b, c, d]); process.exit(0); }
+  if (a === "auth") { await cmdAuth([b, c, d]); process.exit(0); }
   if (a === "export") {
     const restArgs = process.argv.slice(5); // Everything after "export <templateId> <projectDir>"
     await cmdExport(b, c, restArgs);
