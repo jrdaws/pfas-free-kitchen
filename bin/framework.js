@@ -49,7 +49,7 @@ async function maybeRunAfterInstall(OUT) {
     cfg.afterInstall = cfg.afterInstall || {};
     cfg.afterInstall.dontAskAgain = dontAskAgain;
     fs.mkdirSync(ddDir, { recursive: true });
-    fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2) + "\\n");
+    fs.writeFileSync(configPath, JSON.stringify(cfg, null, 2) + "\n");
   } catch (_) {}
 
   if (!runNow) return;
@@ -65,6 +65,7 @@ import fs from "node:fs";
 import { realpathSync } from "node:fs";
 import fse from "fs-extra";
 import degit from "degit";
+import { writeManifest } from "../src/dd/manifest.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -73,8 +74,8 @@ const __cwd = process.cwd();
 const TEMPLATES = {
   "seo-directory": "jrdaws/dawson-does-framework/templates/seo-directory",
   "saas": "jrdaws/dawson-does-framework/templates/saas",
-  "internal-tool": "jrdaws/dawson-does-framework/templates/internal-tool",
-  "automation": "jrdaws/dawson-does-framework/templates/automation",
+  // "internal-tool": "jrdaws/dawson-does-framework/templates/internal-tool",  // TODO: add template content
+  // "automation": "jrdaws/dawson-does-framework/templates/automation",        // TODO: add template content
 };
 
 
@@ -120,7 +121,7 @@ function resolveTemplateRef({ templateId, templateSource, frameworkVersion }) {
     if (!localExists) {
       throw new Error(`Local template not found: ${localDir}`);
     }
-    return { mode: "local", localDir, remoteRef: null };
+    return { mode: "local", localPath: localDir, remoteRef: null };
   }
 
   // remote
@@ -210,6 +211,38 @@ export function parseExportFlags(args) {
  */
 async function cmdDemo(restArgs) {
   const templateId = restArgs[0] || "saas";
+  
+  // Handle help and invalid args
+  if (templateId === "--help" || templateId === "-h" || templateId === "help") {
+    console.log(`Usage: framework demo [templateId] [projectDir] [options]
+
+Quick export for testing. Creates a demo project with sensible defaults.
+
+Arguments:
+  templateId     Template to use (default: saas)
+  projectDir     Output directory (default: ./_demo-<templateId>)
+
+Options:
+  --after-install prompt|auto|off   Post-install behavior (default: prompt)
+
+Valid templates: ${Object.keys(TEMPLATES).join(", ")}
+
+Examples:
+  framework demo                    # Export saas to ./_demo-saas
+  framework demo seo-directory      # Export seo-directory to ./_demo-seo-directory
+  framework demo saas ./my-test     # Export saas to ./my-test
+`);
+    return;
+  }
+
+  // Validate template exists
+  if (!TEMPLATES[templateId]) {
+    console.error(`Unknown template: ${templateId}`);
+    console.error(`Valid templates: ${Object.keys(TEMPLATES).join(", ")}`);
+    console.error(`\nRun 'framework demo --help' for usage.`);
+    process.exit(1);
+  }
+
   const projectDir = restArgs[1] || `./_demo-${templateId}`;
   const flags = parseExportFlags(restArgs.slice(2));
   await cmdExport(templateId, projectDir, ["--after-install", flags.afterInstall]);
@@ -376,7 +409,16 @@ const dryRun = flags.dryRun;
     }
 
   console.log(`     ✓ Template cloned`);
-
+  // Write template manifest immediately after template clone/copy,
+  // before we add starter files (README/.dd extras etc.)
+  try {
+    const manifestPath = writeManifest(absProjectDir, { templateId, flags, resolved });
+    console.log(`     ✓ Manifest written: ${manifestPath}`);
+  } catch (e) {
+    console.error("Error: failed to write template manifest");
+    console.error(e);
+    process.exit(1);
+  }
   // 2. Create starter files
   console.log(`[2/5] Creating starter files...`);
 
@@ -693,20 +735,19 @@ Export Options:
   --force              Overwrite existing directory
 
 Valid Templates:
-  seo-directory, saas, internal-tool, automation
+  ${Object.keys(TEMPLATES).join(", ")}
 
 Examples:
   framework help
   framework start
-  framework start /Users/joseph.dawson/Documents/dd-cli-test
+  framework demo                    # Quick export for testing
+  framework demo saas ./my-test     # Export saas to ./my-test
   framework capabilities .
   framework phrases .
   framework toggle figma.parse on .
   framework doctor .
-  framework seo-directory my-project
   framework export seo-directory ~/Documents/Cursor/my-app
   framework export saas ~/Documents/Cursor/my-saas --remote https://github.com/me/my-saas.git --push
-  framework export internal-tool ./tool --name tool --branch main
 `);
 }
 

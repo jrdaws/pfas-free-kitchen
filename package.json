@@ -8,6 +8,7 @@
   },
   "files": [
     "bin/",
+    "src/",
     "scripts/",
     "prompts/",
     "docs/",
@@ -38,7 +39,7 @@
     "health": "node --import tsx scripts/orchestrator/health.mjs",
     "entitlements:test": "node scripts/orchestrator/entitlements-test.mjs",
     "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
-    "test": "node --test",
+    "test": "node --test 'tests/*.test.mjs' 'tests/**/*.test.mjs'",
     "prepare": "husky",
     "caps:validate": "node scripts/orchestrator/validate-capabilities.mjs",
     "matrix:smoke": "node tests/matrix/smoke.mjs",
