@@ -10,6 +10,10 @@ const EnvSchema = z.object({
 
   FIGMA_TOKEN: z.string().optional(),
   FIGMA_FILE_KEY: z.string().optional(),
+
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_PUBLISHABLE_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
 });
 
 export type AppEnv = z.infer<typeof EnvSchema>;
