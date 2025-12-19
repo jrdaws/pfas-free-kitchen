@@ -4,7 +4,8 @@ Generated: (deterministic)
 Hash: 542288378f
 
 ## Recent changes
-- 1dbd3a8 2025-12-18 fix(export): honor local template source and copy templates from disk
+- 4d73d98 2025-12-18 fix(export): define resolved in cmdExport; dry-run reflects local/remote resolution
+1dbd3a8 2025-12-18 fix(export): honor local template source and copy templates from disk
 1b8e681 2025-12-18 feat(template): make saas template runnable (Next.js dev/build/start)
 95c5870 2025-12-18 feat(export): resolve template source (local/remote/auto) + version pinning
 06f5534 2025-12-18 fix(export): actually parse --template-source and --framework-version
@@ -28,7 +29,6 @@ f39b358 2025-12-16 Export should also include .dd/after-install.sh
 c347e86 2025-12-16 Add after-install hook to seo-directory template
 3be859c 2025-12-16 Add after-install hook to template
 1a405f5 2025-12-16 Add post-export hook runner
-46afde8 2025-12-16 Make .dd/health.sh work for framework repo and exported apps
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
