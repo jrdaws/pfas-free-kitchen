@@ -667,7 +667,7 @@ async function main() {
 
 
 import { resolveProjectDir, loadProjectConfig, saveProjectConfig } from "../scripts/orchestrator/project-config.mjs";
-import { resolveEnabledCaps, requiredEnvKeysForCap } from "../scripts/orchestrator/capability-engine.mjs";
+import { resolveEnabledCaps, requiredEnvKeysForCap, detectConflicts } from "../scripts/orchestrator/capability-engine.mjs";
 
 async function cmdHelp() {
   console.log(`Usage:
@@ -713,6 +713,7 @@ async function cmdCapabilities(projectDirArg) {
   const projectDir = resolveProjectDir(projectDirArg);
   const caps = await resolveEnabledCaps(projectDir);
   const cfg = await loadProjectConfig(projectDir);
+  const conflicts = detectConflicts(caps);
 
   console.log(JSON.stringify({
     projectDir,
@@ -721,14 +722,28 @@ async function cmdCapabilities(projectDirArg) {
     disabled: caps.filter(c => !c.enabled).map(c => {
       const reqKeys = requiredEnvKeysForCap(c);
       return { id: c.id, reason: (reqKeys.length ? "missing env or overridden off" : "overridden off") };
-    })
+    }),
+    conflicts: conflicts.map(conf => ({
+      capA: conf.capA.id,
+      capB: conf.capB.id,
+      reason: conf.reason
+    }))
   }, null, 2));
+
+  if (conflicts.length > 0) {
+    console.log(`\n⚠️  WARNING: ${conflicts.length} capability conflict(s) detected!`);
+    conflicts.forEach(conf => {
+      console.log(`   - ${conf.reason}`);
+    });
+    console.log(`\nTo resolve: disable one of the conflicting capabilities in .dd/config.json`);
+  }
 }
 
 async function cmdPhrases(projectDirArg) {
   await ensureFrameworkMapFresh();
   const projectDir = resolveProjectDir(projectDirArg);
   const caps = await resolveEnabledCaps(projectDir);
+  const conflicts = detectConflicts(caps);
 
   console.log("FRAMEWORK CAPABILITIES (dynamic):\n");
   for (const c of caps) {
@@ -739,6 +754,14 @@ async function cmdPhrases(projectDirArg) {
     if (!c.enabled && reqKeys.length) {
       console.log(`     (Enable by setting env: ${reqKeys.join(", ")}, or toggling on in .dd/config.json)`);
     }
+  }
+
+  if (conflicts.length > 0) {
+    console.log(`\n⚠️  WARNING: ${conflicts.length} capability conflict(s) detected!`);
+    conflicts.forEach(conf => {
+      console.log(`   - ${conf.reason}`);
+    });
+    console.log(`\nTo resolve: disable one of the conflicting capabilities using 'framework toggle <capId> off .'`);
   }
 }
 

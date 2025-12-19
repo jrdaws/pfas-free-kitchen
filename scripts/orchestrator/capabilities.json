@@ -26,6 +26,78 @@
       ],
       "postInstall": [],
       "tests": ["node scripts/orchestrator/validate-capabilities.mjs"]
+    },
+    {
+      "id": "billing.stripe",
+      "label": "Stripe Billing",
+      "group": "Billing",
+      "requires": [],
+      "conflicts": ["billing.paddle", "billing.lemon-squeezy"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.stripe.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "STRIPE_SECRET_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        },
+        {
+          "key": "STRIPE_PUBLISHABLE_KEY",
+          "required": true,
+          "runtime": "client",
+          "secret": false
+        }
+      ],
+      "postInstall": [],
+      "tests": []
+    },
+    {
+      "id": "billing.paddle",
+      "label": "Paddle Billing",
+      "group": "Billing",
+      "requires": [],
+      "conflicts": ["billing.stripe", "billing.lemon-squeezy"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.paddle.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "PADDLE_VENDOR_ID",
+          "required": true,
+          "runtime": "server",
+          "secret": false
+        },
+        {
+          "key": "PADDLE_AUTH_CODE",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
+    },
+    {
+      "id": "billing.lemon-squeezy",
+      "label": "Lemon Squeezy Billing",
+      "group": "Billing",
+      "requires": [],
+      "conflicts": ["billing.stripe", "billing.paddle"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.lemon-squeezy.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "LEMON_SQUEEZY_API_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
     }
   ]
 }

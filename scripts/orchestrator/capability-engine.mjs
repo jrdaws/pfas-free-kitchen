@@ -71,3 +71,41 @@ export async function resolveEnabledCaps(projectDir) {
     return { ...c, enabled };
   });
 }
+
+/**
+ * Detect conflicting capabilities that are both enabled.
+ * Returns array of conflicts: [{ capA: Capability, capB: Capability, reason: string }]
+ */
+export function detectConflicts(enabledCaps) {
+  const conflicts = [];
+  const enabledIds = new Set(
+    enabledCaps.filter(c => c.enabled).map(c => c.id)
+  );
+
+  for (const cap of enabledCaps) {
+    if (!cap.enabled) continue;
+
+    const conflictList = Array.isArray(cap.conflicts) ? cap.conflicts : [];
+    for (const conflictId of conflictList) {
+      if (enabledIds.has(conflictId)) {
+        // Avoid duplicate conflicts (A→B and B→A)
+        const existing = conflicts.find(
+          conf =>
+            (conf.capA.id === cap.id && conf.capB.id === conflictId) ||
+            (conf.capA.id === conflictId && conf.capB.id === cap.id)
+        );
+
+        if (!existing) {
+          const conflictCap = enabledCaps.find(c => c.id === conflictId);
+          conflicts.push({
+            capA: cap,
+            capB: conflictCap,
+            reason: `${cap.label} conflicts with ${conflictCap.label}`
+          });
+        }
+      }
+    }
+  }
+
+  return conflicts;
+}
