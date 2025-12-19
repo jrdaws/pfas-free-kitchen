@@ -130,7 +130,7 @@ function resolveTemplateRef({ templateId, templateSource, frameworkVersion }) {
     throw new Error(`Unknown templateId: ${templateId}`);
   }
   const remoteRef = frameworkVersion ? `${base}#${frameworkVersion}` : base;
-  return { mode: "remote", localDir: null, remoteRef };
+  return { mode: "remote", localPath: null, remoteRef };
 }
 
 function copyDirRecursive(src, dst) {

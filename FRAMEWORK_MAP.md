@@ -4,6 +4,11 @@ Generated: (deterministic)
 Hash: 7c67fd4d5c
 
 ## Recent changes
+- 97e7a25 2025-12-18 chore(ci): add seo-directory smoke test job
+- 56bb214 2025-12-18 feat(templates): add ready signal to saas and seo-directory page components
+- 06c6762 2025-12-18 chore: add handoff tooling and move network tests
+- 1301cf8 2025-12-18 fix(map): normalize Recent changes bullets and handle multiline entries
+- 51fe7d7 2025-12-18 chore(templates): add after-install.sh to saas template
 - 23d4b34 2025-12-18 chore(ci): add GitHub Actions workflow for tests and smoke
 - db43ff5 2025-12-18 fix(cli): improve demo command UX and update templates list
 - def1e12 2025-12-18 feat(hooks): add TTY detection for non-interactive environments
@@ -24,11 +29,6 @@ Hash: 7c67fd4d5c
 - afb31e0 2025-12-18 test(export): update expectations for afterInstall + add post-export hooks module
 - 433686d 2025-12-18 feat(export): add --after-install and run post-export hooks
 - 7e3464b 2025-12-18 chore(dd): make patch helper dry-run by default
-- 4f605d9 2025-12-18 chore(map): refresh FRAMEWORK_MAP
-- d895e50 2025-12-18 chore(dd): add after-install patch prompt helper
-- e1ac240 2025-12-18 fix(health): run with tsx and stabilize provider imports
-- 26a42f3 2025-12-18 fix(cli): ensure shebang at byte 0
-- c39020b 2025-12-18 feat(trust): align capability engine + add caps explain/diff
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
