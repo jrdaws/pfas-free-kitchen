@@ -102,6 +102,27 @@
       ],
       "postInstall": [],
       "tests": []
+    },
+    {
+      "id": "llm.anthropic",
+      "label": "Anthropic Claude LLM",
+      "group": "LLM",
+      "tier": "free",
+      "requires": [],
+      "conflicts": [],
+      "provides": ["llm"],
+      "filesOwned": ["src/platform/providers/impl/llm.anthropic.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "ANTHROPIC_API_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
     }
   ]
 }
