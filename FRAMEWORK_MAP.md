@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 7c67fd4d5c
 
 ## Recent changes
+- ed09ee6 2025-12-18 refactor(framework): remove after-install prompt and enhance capability logging
 - d749c18 2025-12-18 refactor: enhance captureRepoAdditions to return commits and status
 - cd87d1f 2025-12-18 chore: update framework map and fix localDir typo
 - 97e7a25 2025-12-18 chore(ci): add seo-directory smoke test job
@@ -28,7 +29,6 @@ Hash: 7c67fd4d5c
 - 05ee343 2025-12-18 chore(test): stop auto-running framework:map during tests; add map check script
 - 27ad00f 2025-12-18 refactor(tests): use defaults + expectFlags helpers
 - 43c1fec 2025-12-18 test(export): include afterInstall in expected defaults
-- afb31e0 2025-12-18 test(export): update expectations for afterInstall + add post-export hooks module
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

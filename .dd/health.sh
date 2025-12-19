@@ -21,7 +21,7 @@ has_script() {
   local name="$1"
   node - <<'NODE' "$name"
 import fs from "node:fs";
-const name = process.argv[1];
+const name = process.argv[2];
 if (!fs.existsSync("package.json")) process.exit(1);
 const pkg = JSON.parse(fs.readFileSync("package.json","utf8"));
 process.exit(pkg?.scripts?.[name] ? 0 : 1);
