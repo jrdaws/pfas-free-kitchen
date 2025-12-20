@@ -1,0 +1,38 @@
+# Test directories
+tests/
+_test-*
+_demo-*
+test-dryrun/
+**/*.test.mjs
+**/*.test.js
+**/*.test.ts
+**/tests/
+
+# Backup files
+**/*.bak
+**/*.bak.*
+*~
+
+# Development files
+.husky/
+.git/
+.github/
+*.log
+npm-debug.log*
+.DS_Store
+
+# Editor files
+.vscode/
+.idea/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# CI/CD
+.github/workflows/
+
+# Coverage
+coverage/
+.nyc_output/
