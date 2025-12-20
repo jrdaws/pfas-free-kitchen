@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a5b61bc06d
 
 ## Recent changes
+- 3198864 2025-12-19 refactor(framework): enhance compliance message to display highest required tier
 - 8a327d0 2025-12-19 fix(framework): improve compliance message for capability violations
 - 39c2fcf 2025-12-19 feat(cli): add framework auth test command
 - 517f1d9 2025-12-19 test(auth): add comprehensive Supabase auth provider tests
@@ -28,7 +29,6 @@ Hash: a5b61bc06d
 - ed09ee6 2025-12-18 refactor(framework): remove after-install prompt and enhance capability logging
 - d749c18 2025-12-18 refactor: enhance captureRepoAdditions to return commits and status
 - cd87d1f 2025-12-18 chore: update framework map and fix localDir typo
-- 97e7a25 2025-12-18 chore(ci): add seo-directory smoke test job
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
