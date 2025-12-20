@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Copy, Check, Terminal, Download, Wand2, AlertCircle, ExternalLink, Loader2 } from "lucide-react";
 import { buildCommand, buildCommandSingleLine, getRequiredEnvVars } from "@/lib/command-builder";
 import { TEMPLATES } from "@/lib/templates";
+import { generateProjectZip } from "@/lib/zip-generator";
 
 interface ExportViewProps {
   template: string;
@@ -46,35 +47,18 @@ export function ExportView({
   const handleDownloadZip = async () => {
     setIsDownloading(true);
     try {
-      const response = await fetch("/api/export", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          template,
-          projectName,
-          outputDir,
-          integrations,
-          vision,
-          mission,
-          successCriteria,
-          envKeys,
-        }),
+      await generateProjectZip({
+        template,
+        projectName,
+        integrations,
+        vision,
+        mission,
+        successCriteria,
+        envKeys,
       });
-
-      if (!response.ok) throw new Error("Export failed");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `${projectName || "project"}.zip`;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
     } catch (error) {
       console.error("Download failed:", error);
-      alert("Failed to download project. Please try the CLI command instead.");
+      alert("Failed to generate ZIP. Please try the CLI command instead.");
     } finally {
       setIsDownloading(false);
     }
@@ -300,14 +284,16 @@ export function ExportView({
                   Your ZIP file will include:
                 </p>
                 <ul className="space-y-1 text-xs text-terminal-dim list-disc list-inside">
-                  <li>Complete Next.js project with {selectedTemplate?.name} template</li>
-                  <li>All {integrationCount} selected integrations pre-configured</li>
+                  <li>Next.js project starter structure</li>
+                  <li>package.json with {integrationCount > 0 ? `${integrationCount} integration` : "core"} dependencies</li>
                   <li>.dd/ directory with vision, mission, goals (if provided)</li>
-                  <li>.cursor/ directory for Cursor AI integration</li>
                   <li>.env.local.example with all required variables</li>
                   <li>README with setup instructions</li>
-                  <li>package.json with locked dependency versions</li>
+                  <li>Tailwind CSS + TypeScript pre-configured</li>
                 </ul>
+                <p className="text-xs text-terminal-warning mt-3">
+                  💡 For full templates with pre-built components, use the CLI command (Option A)
+                </p>
               </div>
 
               <Button
