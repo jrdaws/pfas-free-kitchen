@@ -168,6 +168,20 @@
       ],
       "postInstall": [],
       "tests": []
+    },
+    {
+      "id": "webhooks.standard",
+      "label": "Standard Webhooks",
+      "group": "Webhooks",
+      "tier": "free",
+      "requires": [],
+      "conflicts": [],
+      "provides": ["webhooks"],
+      "filesOwned": ["src/platform/providers/impl/webhooks.standard.ts"],
+      "templates": [],
+      "env": [],
+      "postInstall": [],
+      "tests": ["npm test tests/providers/webhooks-standard.test.mjs"]
     }
   ]
 }
