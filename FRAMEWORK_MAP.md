@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 6d67cca890
 
 ## Recent changes
+- d026157 2025-12-19 feat(cli): add failure recovery guidance
 - 3639d8c 2025-12-19 feat(cli): add structured step logging with timing
 - 2158038 2025-12-19 feat(cli): comprehensive --dry-run output
 - 7039463 2025-12-19 Merge pull request: feat: Add LLM (Anthropic) and Auth (Supabase) providers
@@ -28,7 +29,6 @@ Hash: 6d67cca890
 - fa6eeca 2025-12-19 feat(drift): add drift detection command
 - 7837f13 2025-12-18 feat(config): add plan file schema validation
 - 842c59e 2025-12-18 feat(framework): enhance command options and argument handling
-- f0220dd 2025-12-18 fix(health): ensure correct argument handling in has_script function
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
