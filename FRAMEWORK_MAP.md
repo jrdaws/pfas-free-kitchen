@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: c3e2bf2609
+Hash: 05a6897405
 
 ## Recent changes
+- 619faad 2025-12-19 chore: bump version to v0.2.0
 - e005888 2025-12-19 feat(plugins): add plugin system with hook architecture
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
@@ -28,7 +29,6 @@ Hash: c3e2bf2609
 - 91df16c 2025-12-19 test(llm): add comprehensive Anthropic provider tests
 - 48305af 2025-12-19 feat(llm): implement Anthropic LLM provider with health checks
 - 7156b54 2025-12-19 chore(deps): add @anthropic-ai/sdk for LLM provider
-- 52a3ab7 2025-12-19 test(billing): add comprehensive Stripe provider tests
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -46,6 +46,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/commands/llm.mjs`
   - `src/commands/auth.mjs`
   - `src/commands/plugin.mjs`
+  - `src/commands/templates.mjs`
   - `src/dd/plugins.mjs`
   - `src/dd/logger.mjs`
   - `src/dd/version.mjs`
@@ -54,6 +55,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
     - `src/dd/recovery-guidance.mjs`
     - `src/platform/providers/impl/llm.anthropic.ts`
     - `src/platform/providers/impl/auth.supabase.ts`
+    - `src/dd/registry.mjs`
       - `src/platform/providers/llm.ts`
       - `src/platform/providers/types.ts`
       - `src/platform/providers/auth.ts`
@@ -102,6 +104,12 @@ Used for: onboarding, refactors, capability ownership
 - `│  src/commands/plugin.mjs`
 - `│  └─ src/dd/plugins.mjs`
 - `│     src/dd/plugins.mjs`
+- `├─ src/commands/templates.mjs`
+- `│  src/commands/templates.mjs`
+- `│  ├─ src/dd/registry.mjs`
+- `│  │  src/dd/registry.mjs`
+- `│  └─ src/dd/version.mjs`
+- `│     src/dd/version.mjs`
 - `├─ src/dd/plugins.mjs`
 - `│  src/dd/plugins.mjs`
 - `├─ src/dd/logger.mjs`
@@ -125,14 +133,16 @@ Used for: onboarding, refactors, capability ownership
 - `src/commands/llm.mjs` <- `bin/framework.js`
 - `src/commands/auth.mjs` <- `bin/framework.js`
 - `src/commands/plugin.mjs` <- `bin/framework.js`
+- `src/commands/templates.mjs` <- `bin/framework.js`
 - `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
 - `src/dd/logger.mjs` <- `bin/framework.js`
-- `src/dd/version.mjs` <- `bin/framework.js`
+- `src/dd/version.mjs` <- `bin/framework.js`, `src/commands/templates.mjs`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
 - `src/dd/recovery-guidance.mjs` <- `src/commands/llm.mjs`, `src/commands/auth.mjs`
 - `src/platform/providers/impl/llm.anthropic.ts` <- `src/commands/llm.mjs`
 - `src/platform/providers/impl/auth.supabase.ts` <- `src/commands/auth.mjs`
+- `src/dd/registry.mjs` <- `src/commands/templates.mjs`
 - `src/platform/providers/llm.ts` <- `src/platform/providers/impl/llm.anthropic.ts`
 - `src/platform/providers/types.ts` <- `src/platform/providers/impl/llm.anthropic.ts`, `src/platform/providers/impl/auth.supabase.ts`, `src/platform/providers/llm.ts`, `src/platform/providers/auth.ts`
 - `src/platform/providers/auth.ts` <- `src/platform/providers/impl/auth.supabase.ts`
