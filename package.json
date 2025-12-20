@@ -44,7 +44,7 @@
     "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
     "test": "node --test 'tests/*.test.mjs' 'tests/**/*.test.mjs'",
     "prepare": "husky",
-    "prepublishOnly": "npm test && npm run caps:validate",
+    "prepublishOnly": "npm test && npm run caps:validate && npm run framework:map:check",
     "caps:validate": "node scripts/orchestrator/validate-capabilities.mjs",
     "matrix:smoke": "node tests/matrix/smoke.mjs",
     "caps:explain": "node scripts/orchestrator/caps-explain.mjs",

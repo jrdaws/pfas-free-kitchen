@@ -4,6 +4,8 @@ Generated: (deterministic)
 Hash: 3cce48cf1e
 
 ## Recent changes
+- 1dc85d2 2025-12-19 fix: restore framework:map:check to prepublishOnly and update map
+- 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - f700193 2025-12-19 chore: update FRAMEWORK_MAP.md for v0.1.0 release
 - 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
 - 8bbab03 2025-12-19 chore: prepare for npm publish
@@ -27,8 +29,6 @@ Hash: 3cce48cf1e
 - 91df16c 2025-12-19 test(llm): add comprehensive Anthropic provider tests
 - 48305af 2025-12-19 feat(llm): implement Anthropic LLM provider with health checks
 - 7156b54 2025-12-19 chore(deps): add @anthropic-ai/sdk for LLM provider
-- 52a3ab7 2025-12-19 test(billing): add comprehensive Stripe provider tests
-- 3f06deb 2025-12-19 feat(billing): implement Stripe billing provider
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
