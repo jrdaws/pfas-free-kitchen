@@ -13,6 +13,8 @@ import { detectDrift } from "../src/dd/drift.mjs";
 import { checkPlanCompliance } from "../src/dd/plan-compliance.mjs";
 import { cmdLLM } from "../src/commands/llm.mjs";
 import { cmdAuth } from "../src/commands/auth.mjs";
+import { cmdPlugin } from "../src/commands/plugin.mjs";
+import { executeHooks } from "../src/dd/plugins.mjs";
 import * as logger from "../src/dd/logger.mjs";
 import { getCurrentVersion, checkForUpdates, getUpgradeCommand, getPackageName } from "../src/dd/version.mjs";
 
@@ -390,7 +392,43 @@ async function cmdExport(templateId, projectDir, restArgs) {
 
   // ---- ACTUAL OPERATIONS (not dry run) ----
 
+  // Execute pre:export hooks
+  const preExportContext = {
+    templateId,
+    projectDir: absProjectDir,
+    projectName,
+    flags,
+  };
+
+  const preExportResult = await executeHooks("pre:export", preExportContext, ".");
+  if (!preExportResult.allSucceeded) {
+    console.error("\n❌ Pre-export hooks failed:");
+    for (const result of preExportResult.results) {
+      if (!result.success) {
+        console.error(`   ${result.plugin}: ${result.message}`);
+      }
+    }
+    process.exit(1);
+  }
+
   logger.log(`\nExporting template "${templateId}" to "${absProjectDir}"...\n`);
+
+  // Execute pre:export:clone hooks
+  const preCloneContext = {
+    ...preExportContext,
+    resolvedTemplate: resolved,
+  };
+
+  const preCloneResult = await executeHooks("pre:export:clone", preCloneContext, ".");
+  if (!preCloneResult.allSucceeded) {
+    console.error("\n❌ Pre-clone hooks failed:");
+    for (const result of preCloneResult.results) {
+      if (!result.success) {
+        console.error(`   ${result.plugin}: ${result.message}`);
+      }
+    }
+    process.exit(1);
+  }
 
   // 1. Clone template using degit
   logger.startStep("clone", logger.formatStep(1, 5, "Cloning template..."));
@@ -427,6 +465,14 @@ async function cmdExport(templateId, projectDir, restArgs) {
     process.exit(1);
   }
   logger.endStep("clone", "     Template ready");
+
+  // Execute post:export:clone hooks
+  const postCloneContext = {
+    ...preCloneContext,
+    manifestPath: path.join(absProjectDir, ".dd", "manifest.json"),
+  };
+
+  await executeHooks("post:export:clone", postCloneContext, ".");
 
   // 2. Create starter files
   logger.startStep("files", logger.formatStep(2, 5, "Creating starter files..."));
@@ -628,6 +674,16 @@ coverage/
     logger.log(`[5/5] Remote setup skipped (no --remote provided)`);
   }
 
+  // Execute post:export hooks
+  const postExportContext = {
+    ...preExportContext,
+    manifestPath: path.join(absProjectDir, ".dd", "manifest.json"),
+    gitInitialized: true,
+    remoteConfigured: !!flags.remote,
+  };
+
+  await executeHooks("post:export", postExportContext, ".");
+
   logger.log(`\n✅ Export complete!\n`);
   await runPostExportHooks({ outDir: absProjectDir, afterInstall: flags.afterInstall });
   logger.log(`Next steps:`);
@@ -748,6 +804,7 @@ async function cmdHelp() {
   framework cost:summary
   framework doctor [projectDir]
   framework drift [projectDir]
+  framework plugin <add|remove|list|hooks|info>
   framework export <templateId> <projectDir> [options]
   framework <templateId> <projectDir>
 
@@ -1022,6 +1079,7 @@ if (isEntrypoint) {
   if (a === "upgrade") { await cmdUpgrade(b === "--dry-run"); process.exit(0); }
   if (a === "llm") { await cmdLLM([b, c, d]); process.exit(0); }
   if (a === "auth") { await cmdAuth([b, c, d]); process.exit(0); }
+  if (a === "plugin") { await cmdPlugin([b, c, d]); process.exit(0); }
   if (a === "demo") {
     const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
     await cmdDemo(restArgs);

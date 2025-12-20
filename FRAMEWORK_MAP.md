@@ -1,7 +1,7 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 3cce48cf1e
+Hash: c3e2bf2609
 
 ## Recent changes
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
@@ -45,6 +45,8 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/dd/plan-compliance.mjs`
   - `src/commands/llm.mjs`
   - `src/commands/auth.mjs`
+  - `src/commands/plugin.mjs`
+  - `src/dd/plugins.mjs`
   - `src/dd/logger.mjs`
   - `src/dd/version.mjs`
   - `scripts/orchestrator/project-config.mjs`
@@ -96,6 +98,12 @@ Used for: onboarding, refactors, capability ownership
 - `│     │     src/platform/providers/types.ts`
 - `│     └─ src/platform/providers/types.ts`
 - `│        src/platform/providers/types.ts`
+- `├─ src/commands/plugin.mjs`
+- `│  src/commands/plugin.mjs`
+- `│  └─ src/dd/plugins.mjs`
+- `│     src/dd/plugins.mjs`
+- `├─ src/dd/plugins.mjs`
+- `│  src/dd/plugins.mjs`
 - `├─ src/dd/logger.mjs`
 - `│  src/dd/logger.mjs`
 - `├─ src/dd/version.mjs`
@@ -116,6 +124,8 @@ Used for: onboarding, refactors, capability ownership
 - `src/dd/plan-compliance.mjs` <- `bin/framework.js`
 - `src/commands/llm.mjs` <- `bin/framework.js`
 - `src/commands/auth.mjs` <- `bin/framework.js`
+- `src/commands/plugin.mjs` <- `bin/framework.js`
+- `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
 - `src/dd/logger.mjs` <- `bin/framework.js`
 - `src/dd/version.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`

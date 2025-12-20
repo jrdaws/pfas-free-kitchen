@@ -1,0 +1,12 @@
+{
+  "plugins": [
+    {
+      "name": "test-plugin",
+      "version": "1.0.0",
+      "path": "./test-plugin.mjs",
+      "hooks": [
+        "pre:export"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+{
+  "plugins": [
+    {
+      "name": "plugin-2",
+      "version": "1.0.0",
+      "path": "./plugin-2.mjs",
+      "hooks": []
+    }
+  ]
+}
