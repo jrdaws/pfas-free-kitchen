@@ -4,7 +4,7 @@ Generated: (deterministic)
 Hash: 3cce48cf1e
 
 ## Recent changes
-- 8320961 2025-12-19 chore: sync FRAMEWORK_MAP.md with latest commit
+- a15cbf4 2025-12-19 chore: sync FRAMEWORK_MAP.md with latest commit
 - ebf1792 2025-12-19 fix: restore framework:map:check to prepublishOnly and update map
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - f700193 2025-12-19 chore: update FRAMEWORK_MAP.md for v0.1.0 release
