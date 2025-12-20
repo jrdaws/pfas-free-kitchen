@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: c3e2bf2609
 
 ## Recent changes
+- e005888 2025-12-19 feat(plugins): add plugin system with hook architecture
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
 - 8bbab03 2025-12-19 chore: prepare for npm publish
@@ -28,7 +29,6 @@ Hash: c3e2bf2609
 - 48305af 2025-12-19 feat(llm): implement Anthropic LLM provider with health checks
 - 7156b54 2025-12-19 chore(deps): add @anthropic-ai/sdk for LLM provider
 - 52a3ab7 2025-12-19 test(billing): add comprehensive Stripe provider tests
-- 3f06deb 2025-12-19 feat(billing): implement Stripe billing provider
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
