@@ -8,6 +8,7 @@ import { InspirationUpload } from "@/app/components/configurator/InspirationUplo
 import { ProjectDetails } from "@/app/components/configurator/ProjectDetails";
 import { IntegrationSelector } from "@/app/components/configurator/IntegrationSelector";
 import { EnvironmentKeys } from "@/app/components/configurator/EnvironmentKeys";
+import { AIPreview } from "@/app/components/configurator/AIPreview";
 import { ContextFields } from "@/app/components/configurator/ContextFields";
 import { ExportView } from "@/app/components/configurator/ExportView";
 import { Button } from "@/components/ui/button";
@@ -74,7 +75,7 @@ export default function ConfigurePage() {
         return missingRequired.length === 0;
       case 5: // Environment (optional step)
         return true;
-      case 6: // Preview (skipped for now)
+      case 6: // AI Preview (optional step)
         return true;
       case 7: // Context (optional step)
         return true;
@@ -90,14 +91,8 @@ export default function ConfigurePage() {
 
     completeStep(currentStep);
 
-    // Skip step 6 only (AI Preview - needs backend)
-    const skippedSteps = [6];
-    let nextStep = (currentStep + 1) as Step;
-
-    while (skippedSteps.includes(nextStep) && nextStep < 8) {
-      completeStep(nextStep);
-      nextStep = (nextStep + 1) as Step;
-    }
+    // All steps are now active
+    const nextStep = (currentStep + 1) as Step;
 
     if (nextStep <= 8) {
       setStep(nextStep);
@@ -105,13 +100,8 @@ export default function ConfigurePage() {
   };
 
   const handlePrevious = () => {
-    // Skip step 6 when going backward (AI Preview - needs backend)
-    const skippedSteps = [6];
-    let prevStep = (currentStep - 1) as Step;
-
-    while (skippedSteps.includes(prevStep) && prevStep > 0) {
-      prevStep = (prevStep - 1) as Step;
-    }
+    // All steps are now active
+    const prevStep = (currentStep - 1) as Step;
 
     if (prevStep >= 1) {
       setStep(prevStep);
@@ -191,6 +181,15 @@ export default function ConfigurePage() {
               integrations={integrations}
               envKeys={envKeys}
               onEnvKeyChange={setEnvKey}
+            />
+          )}
+
+          {currentStep === 6 && (
+            <AIPreview
+              template={template}
+              integrations={integrations}
+              inspirations={inspirations}
+              description={description}
             />
           )}
 

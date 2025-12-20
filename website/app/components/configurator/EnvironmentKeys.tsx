@@ -285,46 +285,164 @@ export function EnvironmentKeys({
           );
         })}
 
-        {/* Copy All Button */}
+        {/* Installation Instructions & Commands */}
         {requiredEnvVars.length > 0 && (
-          <div className="terminal-window border-terminal-accent/30">
-            <div className="terminal-header">
-              <div className="terminal-dot bg-terminal-error"></div>
-              <div className="terminal-dot bg-terminal-warning"></div>
-              <div className="terminal-dot bg-terminal-text"></div>
-              <span className="text-xs text-terminal-accent ml-2">
-                .env.local File Content
-              </span>
-            </div>
-            <div className="terminal-content space-y-4">
-              <p className="text-xs text-terminal-dim">
-                Copy all environment variables to create your .env.local file:
-              </p>
-              <pre className="text-xs bg-terminal-bg/50 p-4 rounded border border-terminal-text/20 overflow-x-auto font-mono text-terminal-text">
-                {requiredEnvVars.map((varName) => (
-                  <div key={varName}>
-                    {varName}={envKeys[varName] || "your_value_here"}
+          <>
+            {/* Step-by-step instructions for beginners */}
+            <div className="terminal-window border-terminal-warning/30">
+              <div className="terminal-header">
+                <div className="terminal-dot bg-terminal-error"></div>
+                <div className="terminal-dot bg-terminal-warning"></div>
+                <div className="terminal-dot bg-terminal-text"></div>
+                <span className="text-xs text-terminal-warning ml-2">
+                  📖 How to Install Environment Variables
+                </span>
+              </div>
+              <div className="terminal-content space-y-4">
+                <div className="space-y-3 text-xs text-terminal-dim">
+                  <p className="text-terminal-text font-bold">After exporting your project, you need to create a <code className="text-terminal-accent">.env.local</code> file:</p>
+                  
+                  <div className="space-y-2 ml-4">
+                    <p><span className="text-terminal-accent font-bold">Step 1:</span> Open a terminal and navigate to your exported project folder</p>
+                    <p><span className="text-terminal-accent font-bold">Step 2:</span> Create the <code className="text-terminal-accent">.env.local</code> file in the <span className="underline">root of your project</span> (same folder as <code>package.json</code>)</p>
+                    <p><span className="text-terminal-accent font-bold">Step 3:</span> Paste the environment variables inside the file</p>
+                    <p><span className="text-terminal-accent font-bold">Step 4:</span> Replace placeholder values with your actual API keys</p>
+                    <p><span className="text-terminal-accent font-bold">Step 5:</span> Run <code className="text-terminal-accent">npm run dev</code> to start your app</p>
                   </div>
-                ))}
-              </pre>
-              <Button
-                onClick={handleCopyEnvFile}
-                className="w-full bg-terminal-accent hover:bg-terminal-accent/80 text-terminal-bg"
-              >
-                {copiedKey === "__all__" ? (
-                  <>
-                    <Check className="mr-2 h-4 w-4" />
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <Copy className="mr-2 h-4 w-4" />
-                    Copy All to Clipboard
-                  </>
-                )}
-              </Button>
+
+                  <div className="bg-terminal-error/10 border border-terminal-error/30 rounded p-3 mt-4">
+                    <p className="text-terminal-error flex items-start gap-2">
+                      <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
+                      <span><strong>Important:</strong> The <code>.env.local</code> file should NEVER be committed to git. It's already in the <code>.gitignore</code> file.</span>
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
+
+            {/* Terminal command to create .env.local automatically */}
+            <div className="terminal-window border-terminal-accent/50">
+              <div className="terminal-header">
+                <div className="terminal-dot bg-terminal-error"></div>
+                <div className="terminal-dot bg-terminal-warning"></div>
+                <div className="terminal-dot bg-terminal-text"></div>
+                <span className="text-xs text-terminal-accent ml-2">
+                  ⚡ Quick Install Command (Copy & Run in Terminal)
+                </span>
+              </div>
+              <div className="terminal-content space-y-4">
+                <p className="text-xs text-terminal-dim">
+                  Run this command in your project folder to automatically create your <code className="text-terminal-accent">.env.local</code> file:
+                </p>
+                <div className="relative">
+                  <pre className="text-xs bg-black p-4 rounded border border-terminal-accent/30 overflow-x-auto font-mono text-terminal-text">
+                    <span className="text-terminal-dim"># Navigate to your project (replace with your project path)</span>{"\n"}
+                    <span className="text-terminal-accent">cd</span> ./your-project-name{"\n\n"}
+                    <span className="text-terminal-dim"># Create .env.local with your API keys</span>{"\n"}
+                    <span className="text-terminal-accent">cat</span> {">"} .env.local {"<<"} 'EOF'{"\n"}
+                    {requiredEnvVars.map((varName) => (
+                      <span key={varName}>{varName}={envKeys[varName] || "YOUR_VALUE_HERE"}{"\n"}</span>
+                    ))}
+                    EOF
+                  </pre>
+                  <Button
+                    onClick={() => {
+                      const command = `cat > .env.local << 'EOF'\n${requiredEnvVars.map((varName) => `${varName}=${envKeys[varName] || "YOUR_VALUE_HERE"}`).join("\n")}\nEOF`;
+                      navigator.clipboard.writeText(command);
+                      setCopiedKey("__command__");
+                      setTimeout(() => setCopiedKey(null), 2000);
+                    }}
+                    size="sm"
+                    className="absolute top-2 right-2 bg-terminal-accent/20 hover:bg-terminal-accent/40 text-terminal-accent text-xs"
+                  >
+                    {copiedKey === "__command__" ? (
+                      <><Check className="mr-1 h-3 w-3" /> Copied!</>
+                    ) : (
+                      <><Copy className="mr-1 h-3 w-3" /> Copy Command</>
+                    )}
+                  </Button>
+                </div>
+                <p className="text-xs text-terminal-dim">
+                  <strong>Windows users:</strong> Use PowerShell and run:{" "}
+                  <code className="text-terminal-accent">notepad .env.local</code> then paste the content below.
+                </p>
+              </div>
+            </div>
+
+            {/* Copy env content for manual paste */}
+            <div className="terminal-window border-terminal-text/20">
+              <div className="terminal-header">
+                <div className="terminal-dot bg-terminal-error"></div>
+                <div className="terminal-dot bg-terminal-warning"></div>
+                <div className="terminal-dot bg-terminal-text"></div>
+                <span className="text-xs text-terminal-dim ml-2">
+                  📋 .env.local File Content (Copy & Paste Manually)
+                </span>
+              </div>
+              <div className="terminal-content space-y-4">
+                <p className="text-xs text-terminal-dim">
+                  If you prefer, copy this content and paste it into a new file called <code className="text-terminal-accent">.env.local</code> in your project root:
+                </p>
+                <pre className="text-xs bg-terminal-bg/50 p-4 rounded border border-terminal-text/20 overflow-x-auto font-mono text-terminal-text">
+                  {requiredEnvVars.map((varName) => (
+                    <div key={varName}>
+                      {varName}={envKeys[varName] || "your_value_here"}
+                    </div>
+                  ))}
+                </pre>
+                <Button
+                  onClick={handleCopyEnvFile}
+                  className="w-full bg-terminal-accent hover:bg-terminal-accent/80 text-terminal-bg"
+                >
+                  {copiedKey === "__all__" ? (
+                    <>
+                      <Check className="mr-2 h-4 w-4" />
+                      Copied to Clipboard!
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-2 h-4 w-4" />
+                      Copy .env.local Content
+                    </>
+                  )}
+                </Button>
+              </div>
+            </div>
+
+            {/* Resources */}
+            <div className="terminal-window border-terminal-text/10">
+              <div className="terminal-header">
+                <div className="terminal-dot bg-terminal-error"></div>
+                <div className="terminal-dot bg-terminal-warning"></div>
+                <div className="terminal-dot bg-terminal-text"></div>
+                <span className="text-xs text-terminal-dim ml-2">
+                  📚 Additional Resources
+                </span>
+              </div>
+              <div className="terminal-content">
+                <ul className="text-xs text-terminal-dim space-y-2">
+                  <li className="flex items-center gap-2">
+                    <ExternalLink className="h-3 w-3 text-terminal-accent" />
+                    <a href="https://nextjs.org/docs/app/building-your-application/configuring/environment-variables" target="_blank" rel="noopener noreferrer" className="text-terminal-accent hover:underline">
+                      Next.js Environment Variables Guide
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ExternalLink className="h-3 w-3 text-terminal-accent" />
+                    <a href="https://github.com/jrdaws/dawson-does-framework#environment-setup" target="_blank" rel="noopener noreferrer" className="text-terminal-accent hover:underline">
+                      Framework Documentation
+                    </a>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <ExternalLink className="h-3 w-3 text-terminal-accent" />
+                    <a href="https://vercel.com/docs/environment-variables" target="_blank" rel="noopener noreferrer" className="text-terminal-accent hover:underline">
+                      Vercel Deployment Environment Variables
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </>
         )}
       </div>
     </div>

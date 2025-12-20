@@ -45,6 +45,8 @@ export interface ConfiguratorState {
   auditLog: { action: string; reasoning: string; timestamp: number }[];
   isGenerating: boolean;
   iterationHistory: string[];
+  userApiKey: string;
+  remainingDemoGenerations: number | null;
 
   // Step 7: Context
   vision: string;
@@ -72,6 +74,8 @@ export interface ConfiguratorState {
   }) => void;
   setGenerating: (isGenerating: boolean) => void;
   addIteration: (prompt: string) => void;
+  setUserApiKey: (key: string) => void;
+  setRemainingDemoGenerations: (count: number | null) => void;
   setVision: (vision: string) => void;
   setMission: (mission: string) => void;
   setSuccessCriteria: (criteria: string) => void;
@@ -96,6 +100,8 @@ const initialState = {
   auditLog: [],
   isGenerating: false,
   iterationHistory: [],
+  userApiKey: '',
+  remainingDemoGenerations: null,
   vision: '',
   mission: '',
   successCriteria: '',
@@ -165,6 +171,10 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         iterationHistory: [...state.iterationHistory, prompt],
       })),
 
+      setUserApiKey: (key) => set({ userApiKey: key }),
+
+      setRemainingDemoGenerations: (count) => set({ remainingDemoGenerations: count }),
+
       setVision: (vision) => set({ vision }),
 
       setMission: (mission) => set({ mission }),
@@ -176,7 +186,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
     {
       name: 'configurator-storage',
       partialize: (state) => ({
-        // Persist everything except env keys and preview state
+        // Persist everything except env keys and sensitive preview state
         currentStep: state.currentStep,
         completedSteps: Array.from(state.completedSteps),
         mode: state.mode,
@@ -186,6 +196,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         projectName: state.projectName,
         outputDir: state.outputDir,
         integrations: state.integrations,
+        userApiKey: state.userApiKey, // Persist user's API key choice
         vision: state.vision,
         mission: state.mission,
         successCriteria: state.successCriteria,
