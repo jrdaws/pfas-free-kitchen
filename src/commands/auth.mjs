@@ -3,6 +3,8 @@
  * Usage: framework auth test
  */
 
+import { printRecoveryGuidance } from "../dd/recovery-guidance.mjs";
+
 export async function cmdAuth(args) {
   const subcommand = args[0];
 
@@ -76,12 +78,7 @@ async function cmdAuthTest() {
       console.error(`   Error code: ${error.code}`);
     }
 
-    if (error.message.includes("SUPABASE_URL") || error.message.includes("SUPABASE_ANON_KEY")) {
-      console.error("\n💡 Set required Supabase environment variables:");
-      console.error("   export SUPABASE_URL=https://your-project.supabase.co");
-      console.error("   export SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...");
-      console.error("   export SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... (optional)");
-    }
+    printRecoveryGuidance(error);
 
     process.exit(1);
   }

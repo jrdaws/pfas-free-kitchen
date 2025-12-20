@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 07d4a5f63e
+Hash: 6d67cca890
 
 ## Recent changes
+- 3639d8c 2025-12-19 feat(cli): add structured step logging with timing
 - 2158038 2025-12-19 feat(cli): comprehensive --dry-run output
 - 7039463 2025-12-19 Merge pull request: feat: Add LLM (Anthropic) and Auth (Supabase) providers
 - 809fda1 2025-12-19 refactor(framework): streamline compliance message logic for clarity
@@ -28,7 +29,6 @@ Hash: 07d4a5f63e
 - 7837f13 2025-12-18 feat(config): add plan file schema validation
 - 842c59e 2025-12-18 feat(framework): enhance command options and argument handling
 - f0220dd 2025-12-18 fix(health): ensure correct argument handling in has_script function
-- f9b9d5a 2025-12-18 fix(health): correct argument index for script name in has_script function
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -48,6 +48,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/dd/logger.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
+    - `src/dd/recovery-guidance.mjs`
     - `src/platform/providers/impl/llm.anthropic.ts`
     - `src/platform/providers/impl/auth.supabase.ts`
       - `src/platform/providers/llm.ts`
@@ -72,6 +73,8 @@ Used for: onboarding, refactors, capability ownership
 - `│  src/dd/plan-compliance.mjs`
 - `├─ src/commands/llm.mjs`
 - `│  src/commands/llm.mjs`
+- `│  ├─ src/dd/recovery-guidance.mjs`
+- `│  │  src/dd/recovery-guidance.mjs`
 - `│  └─ src/platform/providers/impl/llm.anthropic.ts`
 - `│     src/platform/providers/impl/llm.anthropic.ts`
 - `│     ├─ src/platform/providers/llm.ts`
@@ -82,6 +85,8 @@ Used for: onboarding, refactors, capability ownership
 - `│        src/platform/providers/types.ts`
 - `├─ src/commands/auth.mjs`
 - `│  src/commands/auth.mjs`
+- `│  ├─ src/dd/recovery-guidance.mjs`
+- `│  │  src/dd/recovery-guidance.mjs`
 - `│  └─ src/platform/providers/impl/auth.supabase.ts`
 - `│     src/platform/providers/impl/auth.supabase.ts`
 - `│     ├─ src/platform/providers/auth.ts`
@@ -111,6 +116,7 @@ Used for: onboarding, refactors, capability ownership
 - `src/dd/logger.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
+- `src/dd/recovery-guidance.mjs` <- `src/commands/llm.mjs`, `src/commands/auth.mjs`
 - `src/platform/providers/impl/llm.anthropic.ts` <- `src/commands/llm.mjs`
 - `src/platform/providers/impl/auth.supabase.ts` <- `src/commands/auth.mjs`
 - `src/platform/providers/llm.ts` <- `src/platform/providers/impl/llm.anthropic.ts`

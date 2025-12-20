@@ -3,6 +3,8 @@
  * Usage: framework llm test
  */
 
+import { printRecoveryGuidance } from "../dd/recovery-guidance.mjs";
+
 export async function cmdLLM(args) {
   const subcommand = args[0];
 
@@ -77,10 +79,7 @@ async function cmdLLMTest() {
       console.error(`   Error code: ${error.code}`);
     }
 
-    if (error.message.includes("ANTHROPIC_API_KEY")) {
-      console.error("\n💡 Set ANTHROPIC_API_KEY environment variable:");
-      console.error("   export ANTHROPIC_API_KEY=sk-ant-...");
-    }
+    printRecoveryGuidance(error);
 
     process.exit(1);
   }
