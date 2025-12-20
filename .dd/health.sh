@@ -3,39 +3,89 @@ set -euo pipefail
 
 echo "== repo =="
 pwd
-echo
 
+echo
 echo "== git =="
-git status -sb
-echo
+if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  git status --porcelain=v1 -b || true
+else
+  echo "(not a git repo)"
+fi
 
+echo
 echo "== node/npm =="
 node -v
 npm -v
-echo
 
+has_script() {
+  local name="$1"
+  node - <<'NODE' "$name"
+import fs from "node:fs";
+const name = process.argv[2];
+if (!fs.existsSync("package.json")) process.exit(1);
+const pkg = JSON.parse(fs.readFileSync("package.json","utf8"));
+process.exit(pkg?.scripts?.[name] ? 0 : 1);
+NODE
+}
+
+echo
 echo "== install =="
-npm ci >/dev/null 2>&1 || npm i >/dev/null 2>&1
-echo "deps ok"
-echo
+if [ -f package.json ]; then
+  if [ -d node_modules ]; then
+    echo "deps ok"
+  else
+    echo "deps missing (run: npm install)"
+  fi
+else
+  echo "no package.json"
+fi
 
-echo "== syntax checks =="
-node -c bin/framework.js
-node -c scripts/orchestrator/framework-map.mjs
-echo "syntax ok"
 echo
+echo "== checks =="
 
-echo "== map regen =="
-npm run -s framework:map
-test -f FRAMEWORK_MAP.md && echo "map ok: FRAMEWORK_MAP.md" || (echo "map missing" && exit 1)
+# Case A: framework repo (has CLI source)
+if [ -f "bin/framework.js" ]; then
+  echo "-- framework checks --"
+  node -c bin/framework.js
+
+  if has_script test; then
+    npm test
+  fi
+
+  if has_script "caps:validate"; then
+    npm run caps:validate
+  fi
+
+  # Optional: verify packed tarball includes health.sh when run from framework repo
+  if has_script test; then
+    npm pack --silent >/dev/null
+    PKG="$(ls -t ./*.tgz | head -1)"
+    tar -tf "$PKG" | grep -E 'package/\.dd/health\.sh' >/dev/null
+    echo "tarball includes .dd/health.sh"
+  fi
+
+# Case B: exported app/template (no CLI source)
+else
+  echo "-- app checks --"
+
+  if has_script lint; then
+    npm run lint
+  fi
+
+  if has_script typecheck; then
+    npm run typecheck
+  fi
+
+  if has_script build; then
+    npm run build
+  fi
+
+  if has_script test; then
+    npm test
+  else
+    echo "(no test script)"
+  fi
+fi
+
 echo
-
-echo "== capabilities sanity =="
-test -f scripts/orchestrator/capabilities.json && node -e "const j=require('./scripts/orchestrator/capabilities.json'); console.log('caps:', (j.caps||[]).length)"
-echo
-
-echo "== package scripts =="
-node -e "const p=require('./package.json'); console.log(Object.keys(p.scripts||{}).sort().join('\n'))" | sed -n '1,40p'
-echo
-
-echo "== done =="
+echo "✅ health passed"

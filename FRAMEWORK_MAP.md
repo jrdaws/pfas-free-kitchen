@@ -1,56 +1,94 @@
 # FRAMEWORK_MAP
 
-Generated: 2025-12-16T07:22:03.494Z
-Hash: 01e6fa6159
+Generated: (deterministic)
+Hash: a5b61bc06d
 
 ## Recent changes
-- 4aafcdb 2025-12-15 Ignore npm pack tgz artifacts
-835d6dc 2025-12-15 Fix CLI: remove execa dependency; use spawnSync for doctor/map/scripts
-d0f1e14 2025-12-15 Add global map auto-refresh + framework doctor command
-d924d8e 2025-12-15 Fix CLI: don’t call main() eagerly; use unified dispatcher
-083a9a7 2025-12-15 Refactor entitlements into pure canCore + thin wrapper
-2f464d4 2025-12-15 Fix entitlements can() imports + restrict test discovery
-062a36c 2025-12-15 Add repo-audit + provider registry + usage budgets + entitlements tests
-f33ebba 2025-12-15 Add repo health script
-e66266a 2025-12-15 Auto-refresh FRAMEWORK_MAP on capabilities/phrases
-7558ac8 2025-12-15 Ignore backup files
-140e1b8 2025-12-15 Fix framework-map recentChanges + remove duplicate dispatcher block
-6ffa4d1 2025-12-15 Add optional Google/Meta/Apple integration scaffolding + capabilities
-3745882 2025-12-15 Update framework map + hooks
-404f57f 2025-12-15 Update husky hook header for v10 compatibility
-5ac3efb 2025-12-15 Add provider-agnostic platform core + capability annotations + auto-regenerated FRAMEWORK_MAP
-f865806 2025-12-15 Add auto-generated FRAMEWORK_MAP (BFS + tree + reverse graph + tiers) and enforce updates
-486ba3f 2025-12-15 Make call graph recursive BFS from bin/framework.js
-e7e8d37 2025-12-15 Enhance FRAMEWORK_MAP: call graph + tiered capabilities + recent changes
-a5f741c 2025-12-15 Add auto-updating framework map for agents (docs/FRAMEWORK_MAP.md)
-096c196 2025-12-15 Add auto-updating FRAMEWORK_MAP.md (repo roadmap for agents)
-ab3d212 2025-12-15 Fix syntax error in CLI (remove extra brace)
-ee2f188 2025-12-15 Fix CLI dispatcher so phrases/capabilities/toggle work
-3c49fba 2025-12-15 Add dynamic phrases/capabilities/toggles + optional figma + superprompt section
-b520656 2025-12-15 Add framework function phrases + capability negotiation
-6596592 2025-12-15 Make Figma parsing optional when env vars missing
+- 3198864 2025-12-19 refactor(framework): enhance compliance message to display highest required tier
+- 8a327d0 2025-12-19 fix(framework): improve compliance message for capability violations
+- 39c2fcf 2025-12-19 feat(cli): add framework auth test command
+- 517f1d9 2025-12-19 test(auth): add comprehensive Supabase auth provider tests
+- 9c98e21 2025-12-19 feat(auth): implement Supabase auth provider with health checks
+- c7ac391 2025-12-19 chore(deps): add @supabase/supabase-js for auth provider
+- d76de9d 2025-12-19 feat(cli): add framework llm test command
+- 91df16c 2025-12-19 test(llm): add comprehensive Anthropic provider tests
+- 48305af 2025-12-19 feat(llm): implement Anthropic LLM provider with health checks
+- 7156b54 2025-12-19 chore(deps): add @anthropic-ai/sdk for LLM provider
+- 52a3ab7 2025-12-19 test(billing): add comprehensive Stripe provider tests
+- 3f06deb 2025-12-19 feat(billing): implement Stripe billing provider
+- a5b2cdb 2025-12-19 feat(config): add Stripe environment variables to schema
+- c8e5c9b 2025-12-19 chore(deps): add stripe npm package for billing provider
+- 3c9b9ef 2025-12-19 test(matrix): add matrix smoke test script for all templates
+- ab239db 2025-12-19 feat(compliance): add plan compliance checking
+- 62d1744 2025-12-19 feat(capabilities): add conflict detection and composition rules
+- fa6eeca 2025-12-19 feat(drift): add drift detection command
+- 7837f13 2025-12-18 feat(config): add plan file schema validation
+- 842c59e 2025-12-18 feat(framework): enhance command options and argument handling
+- f0220dd 2025-12-18 fix(health): ensure correct argument handling in has_script function
+- f9b9d5a 2025-12-18 fix(health): correct argument index for script name in has_script function
+- ed09ee6 2025-12-18 refactor(framework): remove after-install prompt and enhance capability logging
+- d749c18 2025-12-18 refactor: enhance captureRepoAdditions to return commits and status
+- cd87d1f 2025-12-18 chore: update framework map and fix localDir typo
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
 |---|---|---:|---|---|---|---|
-| `start.prompt` | `free` | no | `green` | Print framework start prompt | `framework start` | `prompts/tasks/framework-start.md`, `bin/framework.js` |
-| `figma.parse` | `pro` | yes | `blue` | Parse Figma (sections + frames) | `framework figma:parse` | `scripts/figma/parse-figma.mjs`, `.env.example`, `bin/framework.js` |
-| `cost.logging` | `free` | yes | `purple` | Show cost summary | `framework cost:summary` | `scripts/orchestrator/cost.mjs`, `scripts/orchestrator/cost-summary.mjs`, `bin/framework.js` |
-| `integrations.google.gmail` | `team` | yes | `blue` | Enable Google OAuth + Gmail API scaffolding | `docs: open docs/integrations/google-gmail.md` | `src/platform/integrations/google/index.ts`, `docs/integrations/google-gmail.md`, `.env.example` |
-| `integrations.meta.graph` | `team` | yes | `blue` | Enable Meta OAuth + Graph API scaffolding | `docs: open docs/integrations/meta.md` | `src/platform/integrations/meta/index.ts`, `docs/integrations/meta.md`, `.env.example` |
-| `auth.apple` | `team` | yes | `blue` | Enable Apple Sign In scaffolding | `docs: open docs/integrations/apple.md` | `src/platform/integrations/apple/index.ts`, `docs/integrations/apple.md`, `.env.example` |
 
 ## Call Graph (Execution BFS)
 Used for: runtime reasoning, blast-radius analysis, debugging
 
-- `bin/framework.js`  -  start.prompt [free/required/green], figma.parse [pro/optional/blue], cost.logging [free/optional/purple]
+- `bin/framework.js`
+  - `src/dd/post-export-hooks.mjs`
+  - `src/dd/manifest.mjs`
+  - `src/dd/config-schema.mjs`
+  - `src/dd/drift.mjs`
+  - `src/dd/plan-compliance.mjs`
+  - `src/commands/llm.mjs`
+  - `src/commands/auth.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
+    - `src/platform/providers/impl/llm.anthropic.ts`
+    - `src/platform/providers/impl/auth.supabase.ts`
+      - `src/platform/providers/llm.ts`
+      - `src/platform/providers/types.ts`
+      - `src/platform/providers/auth.ts`
 
 ## Dependency Tree (Structural)
 Used for: onboarding, refactors, capability ownership
 
-- `bin/framework.js`  -  start.prompt [free/required/green], figma.parse [pro/optional/blue], cost.logging [free/optional/purple]
+- `bin/framework.js`
+- `├─ src/dd/post-export-hooks.mjs`
+- `│  src/dd/post-export-hooks.mjs`
+- `├─ src/dd/manifest.mjs`
+- `│  src/dd/manifest.mjs`
+- `├─ src/dd/config-schema.mjs`
+- `│  src/dd/config-schema.mjs`
+- `├─ src/dd/drift.mjs`
+- `│  src/dd/drift.mjs`
+- `│  └─ src/dd/manifest.mjs`
+- `│     src/dd/manifest.mjs`
+- `├─ src/dd/plan-compliance.mjs`
+- `│  src/dd/plan-compliance.mjs`
+- `├─ src/commands/llm.mjs`
+- `│  src/commands/llm.mjs`
+- `│  └─ src/platform/providers/impl/llm.anthropic.ts`
+- `│     src/platform/providers/impl/llm.anthropic.ts`
+- `│     ├─ src/platform/providers/llm.ts`
+- `│     │  src/platform/providers/llm.ts`
+- `│     │  └─ src/platform/providers/types.ts`
+- `│     │     src/platform/providers/types.ts`
+- `│     └─ src/platform/providers/types.ts`
+- `│        src/platform/providers/types.ts`
+- `├─ src/commands/auth.mjs`
+- `│  src/commands/auth.mjs`
+- `│  └─ src/platform/providers/impl/auth.supabase.ts`
+- `│     src/platform/providers/impl/auth.supabase.ts`
+- `│     ├─ src/platform/providers/auth.ts`
+- `│     │  src/platform/providers/auth.ts`
+- `│     │  └─ src/platform/providers/types.ts`
+- `│     │     src/platform/providers/types.ts`
+- `│     └─ src/platform/providers/types.ts`
+- `│        src/platform/providers/types.ts`
 - `├─ scripts/orchestrator/project-config.mjs`
 - `│  scripts/orchestrator/project-config.mjs`
 - `└─ scripts/orchestrator/capability-engine.mjs`
@@ -60,8 +98,20 @@ Used for: onboarding, refactors, capability ownership
 
 ## Reverse graph (What depends on this file)
 
+- `src/dd/post-export-hooks.mjs` <- `bin/framework.js`
+- `src/dd/manifest.mjs` <- `bin/framework.js`, `src/dd/drift.mjs`
+- `src/dd/config-schema.mjs` <- `bin/framework.js`
+- `src/dd/drift.mjs` <- `bin/framework.js`
+- `src/dd/plan-compliance.mjs` <- `bin/framework.js`
+- `src/commands/llm.mjs` <- `bin/framework.js`
+- `src/commands/auth.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
+- `src/platform/providers/impl/llm.anthropic.ts` <- `src/commands/llm.mjs`
+- `src/platform/providers/impl/auth.supabase.ts` <- `src/commands/auth.mjs`
+- `src/platform/providers/llm.ts` <- `src/platform/providers/impl/llm.anthropic.ts`
+- `src/platform/providers/types.ts` <- `src/platform/providers/impl/llm.anthropic.ts`, `src/platform/providers/impl/auth.supabase.ts`, `src/platform/providers/llm.ts`, `src/platform/providers/auth.ts`
+- `src/platform/providers/auth.ts` <- `src/platform/providers/impl/auth.supabase.ts`
 
 ## Notes
 - Optional integrations should never block progress. If env is missing, skip with a clear message.

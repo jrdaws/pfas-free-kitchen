@@ -61,6 +61,7 @@ framework export saas ./my-project --dry-run
    - `README.md` - Project readme with getting started instructions
    - `.gitignore` - Sensible defaults for Node.js projects
    - `.dd/config.json` - Framework configuration with `plan: "free"`
+   - `.dd/health.sh` - Health check script (if available in package)
    - `START_PROMPT.md` - Cursor prompt template (if available in package)
 3. **Initializes git** - `git init` with specified branch
 4. **Creates initial commit** - Commits all files

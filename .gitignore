@@ -14,3 +14,5 @@ test-project/
 
 # npm pack artifacts
 *.tgz
+.dd/secrets.json
+.dd/secrets.enc

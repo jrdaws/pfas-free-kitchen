@@ -8,20 +8,28 @@
   },
   "files": [
     "bin/",
-    "prompts/",
-    "templates/",
-    ".cursor/",
+    "src/",
     "scripts/",
+    "prompts/",
+    "docs/",
+    "templates/",
     "tasks/",
+    ".cursor/",
+    ".dd/health.sh",
+    ".dd/after-install.sh",
     "orchestrator.config.json",
     ".env.example",
+    "FRAMEWORK_MAP.md",
     "README.md"
   ],
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "@supabase/supabase-js": "^2.47.10",
     "degit": "^2.8.4",
     "dotenv": "^17.2.3",
     "fs-extra": "^11.2.0",
     "prompts": "^2.4.2",
+    "stripe": "^14.0.0",
     "zod": "^4.2.1"
   },
   "scripts": {
@@ -29,15 +37,21 @@
     "cost:summary": "node scripts/orchestrator/cost-summary.mjs",
     "map:generate": "node scripts/meta/generate-framework-map.mjs",
     "docs:map": "node scripts/orchestrator/generate-framework-map.mjs",
-    "prepare": "husky",
     "framework:map": "node scripts/orchestrator/framework-map.mjs",
     "map:gen": "node scripts/orchestrator/framework-map.mjs",
-    "health": "node scripts/orchestrator/health.mjs",
+    "health": "node --import tsx scripts/orchestrator/health.mjs",
     "entitlements:test": "node scripts/orchestrator/entitlements-test.mjs",
     "audit:tail": "node scripts/orchestrator/audit-tail.mjs",
-    "test": "node --test"
+    "test": "node --test 'tests/*.test.mjs' 'tests/**/*.test.mjs'",
+    "prepare": "husky",
+    "caps:validate": "node scripts/orchestrator/validate-capabilities.mjs",
+    "matrix:smoke": "node tests/matrix/smoke.mjs",
+    "caps:explain": "node scripts/orchestrator/caps-explain.mjs",
+    "caps:diff": "node scripts/orchestrator/caps-diff.mjs",
+    "framework:map:check": "npm run framework:map >/dev/null && git diff --exit-code -- FRAMEWORK_MAP.md || (git checkout -- FRAMEWORK_MAP.md && echo \"ERROR: FRAMEWORK_MAP.md is out of date. Run: npm run framework:map\" && exit 1)"
   },
   "devDependencies": {
-    "husky": "^9.1.7"
+    "husky": "^9.1.7",
+    "tsx": "^4.21.0"
   }
 }

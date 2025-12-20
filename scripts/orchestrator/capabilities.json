@@ -1,104 +1,161 @@
 {
-  "caps": [
+  "version": "1",
+  "capabilities": [
     {
-      "id": "start.prompt",
-      "phrase": "Print framework start prompt",
-      "command": "framework start",
+      "id": "integrations.github.connect",
+      "label": "GitHub Connect",
+      "group": "Integrations",
       "tier": "free",
-      "optional": false,
-      "color": "green",
-      "requiresEnv": [],
-      "paths": [
-        "prompts/tasks/framework-start.md",
-        "bin/framework.js"
-      ]
+      "requires": [],
+      "conflicts": [],
+      "provides": ["oauth.github"],
+      "filesOwned": ["src/app/api/dd/integrations/github/**", "src/dd/secrets/**"],
+      "templates": [],
+      "env": [
+        {
+          "key": "GITHUB_CLIENT_ID",
+          "required": true,
+          "runtime": "server",
+          "secret": false
+        },
+        {
+          "key": "GITHUB_CLIENT_SECRET",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": ["node scripts/orchestrator/validate-capabilities.mjs"]
     },
     {
-      "id": "figma.parse",
-      "phrase": "Parse Figma (sections + frames)",
-      "command": "framework figma:parse",
+      "id": "billing.stripe",
+      "label": "Stripe Billing",
+      "group": "Billing",
       "tier": "pro",
-      "optional": true,
-      "color": "blue",
-      "requiresEnv": [
-        "FIGMA_TOKEN",
-        "FIGMA_FILE_KEY"
+      "requires": [],
+      "conflicts": ["billing.paddle", "billing.lemon-squeezy"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.stripe.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "STRIPE_SECRET_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        },
+        {
+          "key": "STRIPE_PUBLISHABLE_KEY",
+          "required": true,
+          "runtime": "client",
+          "secret": false
+        }
       ],
-      "paths": [
-        "scripts/figma/parse-figma.mjs",
-        ".env.example",
-        "bin/framework.js"
-      ]
+      "postInstall": [],
+      "tests": []
     },
     {
-      "id": "cost.logging",
-      "phrase": "Show cost summary",
-      "command": "framework cost:summary",
+      "id": "billing.paddle",
+      "label": "Paddle Billing",
+      "group": "Billing",
+      "tier": "pro",
+      "requires": [],
+      "conflicts": ["billing.stripe", "billing.lemon-squeezy"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.paddle.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "PADDLE_VENDOR_ID",
+          "required": true,
+          "runtime": "server",
+          "secret": false
+        },
+        {
+          "key": "PADDLE_AUTH_CODE",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
+    },
+    {
+      "id": "billing.lemon-squeezy",
+      "label": "Lemon Squeezy Billing",
+      "group": "Billing",
+      "tier": "team",
+      "requires": [],
+      "conflicts": ["billing.stripe", "billing.paddle"],
+      "provides": ["billing"],
+      "filesOwned": ["src/platform/providers/impl/billing.lemon-squeezy.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "LEMON_SQUEEZY_API_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
+    },
+    {
+      "id": "llm.anthropic",
+      "label": "Anthropic Claude LLM",
+      "group": "LLM",
       "tier": "free",
-      "optional": true,
-      "color": "purple",
-      "requiresEnv": [],
-      "paths": [
-        "scripts/orchestrator/cost.mjs",
-        "scripts/orchestrator/cost-summary.mjs",
-        "bin/framework.js"
-      ]
+      "requires": [],
+      "conflicts": [],
+      "provides": ["llm"],
+      "filesOwned": ["src/platform/providers/impl/llm.anthropic.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "ANTHROPIC_API_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        }
+      ],
+      "postInstall": [],
+      "tests": []
     },
     {
-      "id": "integrations.google.gmail",
-      "phrase": "Enable Google OAuth + Gmail API scaffolding",
-      "command": "docs: open docs/integrations/google-gmail.md",
-      "tier": "team",
-      "optional": true,
-      "color": "blue",
-      "requiresEnv": [
-        "GOOGLE_CLIENT_ID",
-        "GOOGLE_CLIENT_SECRET",
-        "GOOGLE_REDIRECT_URI"
+      "id": "auth.supabase",
+      "label": "Supabase Auth",
+      "group": "Auth",
+      "tier": "free",
+      "requires": [],
+      "conflicts": [],
+      "provides": ["auth"],
+      "filesOwned": ["src/platform/providers/impl/auth.supabase.ts"],
+      "templates": [],
+      "env": [
+        {
+          "key": "SUPABASE_URL",
+          "required": true,
+          "runtime": "server",
+          "secret": false
+        },
+        {
+          "key": "SUPABASE_ANON_KEY",
+          "required": true,
+          "runtime": "server",
+          "secret": true
+        },
+        {
+          "key": "SUPABASE_SERVICE_KEY",
+          "required": false,
+          "runtime": "server",
+          "secret": true
+        }
       ],
-      "paths": [
-        "src/platform/integrations/google/index.ts",
-        "docs/integrations/google-gmail.md",
-        ".env.example"
-      ]
-    },
-    {
-      "id": "integrations.meta.graph",
-      "phrase": "Enable Meta OAuth + Graph API scaffolding",
-      "command": "docs: open docs/integrations/meta.md",
-      "tier": "team",
-      "optional": true,
-      "color": "blue",
-      "requiresEnv": [
-        "META_APP_ID",
-        "META_APP_SECRET",
-        "META_REDIRECT_URI"
-      ],
-      "paths": [
-        "src/platform/integrations/meta/index.ts",
-        "docs/integrations/meta.md",
-        ".env.example"
-      ]
-    },
-    {
-      "id": "auth.apple",
-      "phrase": "Enable Apple Sign In scaffolding",
-      "command": "docs: open docs/integrations/apple.md",
-      "tier": "team",
-      "optional": true,
-      "color": "blue",
-      "requiresEnv": [
-        "APPLE_TEAM_ID",
-        "APPLE_CLIENT_ID",
-        "APPLE_KEY_ID",
-        "APPLE_PRIVATE_KEY_P8",
-        "APPLE_REDIRECT_URI"
-      ],
-      "paths": [
-        "src/platform/integrations/apple/index.ts",
-        "docs/integrations/apple.md",
-        ".env.example"
-      ]
+      "postInstall": [],
+      "tests": []
     }
   ]
 }

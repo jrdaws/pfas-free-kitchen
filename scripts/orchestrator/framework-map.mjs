@@ -165,7 +165,7 @@ function rel(p) {
 function recentChanges(n = 20) {
   try {
     const out = execSync(`git log -n ${n} --pretty=format:%h\\ %ad\\ %s --date=short`, { cwd: REPO_ROOT, stdio: ["ignore", "pipe", "ignore"] }).toString();
-    return out.trim().split("\\n");
+    return out.trim().split("\n");
   } catch {
     return [];
   }
@@ -201,7 +201,7 @@ function main() {
   const lines = [];
   lines.push(`# FRAMEWORK_MAP`);
   lines.push(``);
-  lines.push(`Generated: ${new Date().toISOString()}`);
+  lines.push(`Generated: (deterministic)`);
   lines.push(`Hash: ${sha1(outline.map(x=>x.file).join("|"))}`);
   lines.push(``);
 
