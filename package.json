@@ -48,7 +48,8 @@
     "matrix:smoke": "node tests/matrix/smoke.mjs",
     "caps:explain": "node scripts/orchestrator/caps-explain.mjs",
     "caps:diff": "node scripts/orchestrator/caps-diff.mjs",
-    "framework:map:check": "npm run framework:map >/dev/null && git diff --exit-code -- FRAMEWORK_MAP.md || (git checkout -- FRAMEWORK_MAP.md && echo \"ERROR: FRAMEWORK_MAP.md is out of date. Run: npm run framework:map\" && exit 1)"
+    "framework:map:check": "npm run framework:map >/dev/null && git diff --exit-code -- FRAMEWORK_MAP.md || (git checkout -- FRAMEWORK_MAP.md && echo \"ERROR: FRAMEWORK_MAP.md is out of date. Run: npm run framework:map\" && exit 1)",
+    "changelog:generate": "node scripts/generate-changelog.mjs"
   },
   "devDependencies": {
     "husky": "^9.1.7",

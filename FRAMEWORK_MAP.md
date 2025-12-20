@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 3cce48cf1e
 
 ## Recent changes
+- e362000 2025-12-19 feat(cli): add version and upgrade commands
 - 5e9dbbf 2025-12-19 feat(webhooks): add standard webhook provider
 - da361a1 2025-12-19 feat(billing): add Paddle and Lemon Squeezy providers
 - a0c8c49 2025-12-19 chore: clean up test artifacts
@@ -28,7 +29,6 @@ Hash: 3cce48cf1e
 - c8e5c9b 2025-12-19 chore(deps): add stripe npm package for billing provider
 - 3c9b9ef 2025-12-19 test(matrix): add matrix smoke test script for all templates
 - ab239db 2025-12-19 feat(compliance): add plan compliance checking
-- 62d1744 2025-12-19 feat(capabilities): add conflict detection and composition rules
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
