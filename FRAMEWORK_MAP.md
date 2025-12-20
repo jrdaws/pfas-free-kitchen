@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 3ce07cadef
+Hash: 1cca075d21
 
 ## Recent changes
+- 8e5b829 2025-12-20 feat(configurator): implement Phase 2 core user flow
 - 41cc8c9 2025-12-20 feat(configurator): add state management with Zustand and navigation components
 - b8599c8 2025-12-19 fix(website): remove outputDirectory from vercel.json
 - 2a34328 2025-12-19 fix(website): remove static export for Vercel compatibility
@@ -28,7 +29,6 @@ Hash: 3ce07cadef
 - d026157 2025-12-19 feat(cli): add failure recovery guidance
 - 3639d8c 2025-12-19 feat(cli): add structured step logging with timing
 - 2158038 2025-12-19 feat(cli): comprehensive --dry-run output
-- 7039463 2025-12-19 Merge pull request: feat: Add LLM (Anthropic) and Auth (Supabase) providers
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -50,6 +50,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/dd/plugins.mjs`
   - `src/dd/logger.mjs`
   - `src/dd/version.mjs`
+  - `src/dd/agent-safety.mjs`
   - `src/dd/integrations.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
@@ -118,6 +119,8 @@ Used for: onboarding, refactors, capability ownership
 - `│  src/dd/logger.mjs`
 - `├─ src/dd/version.mjs`
 - `│  src/dd/version.mjs`
+- `├─ src/dd/agent-safety.mjs`
+- `│  src/dd/agent-safety.mjs`
 - `├─ src/dd/integrations.mjs`
 - `│  src/dd/integrations.mjs`
 - `│  └─ src/dd/integration-schema.mjs`
@@ -143,6 +146,7 @@ Used for: onboarding, refactors, capability ownership
 - `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
 - `src/dd/logger.mjs` <- `bin/framework.js`
 - `src/dd/version.mjs` <- `bin/framework.js`, `src/commands/templates.mjs`
+- `src/dd/agent-safety.mjs` <- `bin/framework.js`
 - `src/dd/integrations.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`

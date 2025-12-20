@@ -18,6 +18,7 @@ import { cmdTemplates } from "../src/commands/templates.mjs";
 import { executeHooks } from "../src/dd/plugins.mjs";
 import * as logger from "../src/dd/logger.mjs";
 import { getCurrentVersion, checkForUpdates, getUpgradeCommand, getPackageName } from "../src/dd/version.mjs";
+import { createCheckpoint, restoreCheckpoint, listCheckpoints, cleanupCheckpoints, getAuditLog } from "../src/dd/agent-safety.mjs";
 import { validateIntegrations, applyIntegrations } from "../src/dd/integrations.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -1065,6 +1066,96 @@ async function cmdVersion() {
   console.log(`${packageName} v${version}`);
 }
 
+async function cmdCheckpoint(args) {
+  const [subcommand, arg1, arg2] = args;
+
+  if (!subcommand || subcommand === "help") {
+    console.log(`
+Checkpoint Commands (AI Agent Safety):
+
+  framework checkpoint create <description>  Create a checkpoint before major changes
+  framework checkpoint list                  List available checkpoints  
+  framework checkpoint restore <id>          Restore from a checkpoint
+  framework checkpoint cleanup [keep]        Remove old checkpoints (default: keep 5)
+  framework checkpoint log                   Show audit log
+
+Examples:
+  framework checkpoint create "Before auth refactor"
+  framework checkpoint restore agent-checkpoint-1734567890
+  framework checkpoint cleanup 3
+`);
+    return;
+  }
+
+  if (subcommand === "create") {
+    const description = arg1 || "Manual checkpoint";
+    const result = createCheckpoint(description);
+    if (result.created) {
+      console.log(`✅ ${result.message}`);
+      console.log(`   To restore: framework checkpoint restore ${result.id}`);
+    } else {
+      console.log(`ℹ️  ${result.message}`);
+    }
+    return;
+  }
+
+  if (subcommand === "list") {
+    const checkpoints = listCheckpoints();
+    if (checkpoints.length === 0) {
+      console.log("No checkpoints found.");
+      return;
+    }
+    console.log(`Found ${checkpoints.length} checkpoint(s):\n`);
+    for (const cp of checkpoints) {
+      console.log(`  ${cp.stashRef} | ${cp.id}`);
+      console.log(`    ${cp.description}\n`);
+    }
+    return;
+  }
+
+  if (subcommand === "restore") {
+    if (!arg1) {
+      console.error("❌ Please provide a checkpoint ID.");
+      console.error("   Run 'framework checkpoint list' to see available checkpoints.");
+      process.exit(1);
+    }
+    const result = restoreCheckpoint(arg1);
+    if (result.restored) {
+      console.log(`✅ ${result.message}`);
+    } else {
+      console.error(`❌ ${result.message}`);
+      process.exit(1);
+    }
+    return;
+  }
+
+  if (subcommand === "cleanup") {
+    const keep = arg1 ? parseInt(arg1, 10) : 5;
+    const result = cleanupCheckpoints(keep);
+    console.log(`Removed ${result.removed} checkpoint(s), kept ${result.kept}.`);
+    return;
+  }
+
+  if (subcommand === "log") {
+    const log = getAuditLog();
+    if (log.length === 0) {
+      console.log("No audit log entries.");
+      return;
+    }
+    console.log(`Audit log (${log.length} entries):\n`);
+    for (const entry of log.slice(-20)) {
+      console.log(`  ${entry.timestamp} | ${entry.action} | ${entry.checkpointId}`);
+      if (entry.description) console.log(`    ${entry.description}`);
+      if (entry.error) console.log(`    ❌ ${entry.error}`);
+    }
+    return;
+  }
+
+  console.error(`Unknown checkpoint command: ${subcommand}`);
+  console.error("Run 'framework checkpoint help' for usage.");
+  process.exit(1);
+}
+
 async function cmdUpgrade(dryRun = false) {
   console.log(`🔍 Checking for updates${dryRun ? ' (dry-run mode)' : ''}...\n`);
 
@@ -1157,6 +1248,7 @@ if (isEntrypoint) {
   if (a === "auth") { await cmdAuth([b, c, d]); process.exit(0); }
   if (a === "plugin") { await cmdPlugin([b, c, d]); process.exit(0); }
   if (a === "templates") { await cmdTemplates([b, c, d]); process.exit(0); }
+  if (a === "checkpoint") { await cmdCheckpoint([b, c, d]); process.exit(0); }
   if (a === "demo") {
     const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
     await cmdDemo(restArgs);

@@ -5,14 +5,23 @@ import { parseExportFlags } from "../bin/framework.js";
 function defaults() {
   return {
     afterInstall: "prompt",
-  templateSource: "auto",
-  frameworkVersion: null,
+    templateSource: "auto",
+    frameworkVersion: null,
     name: null,
     remote: null,
     push: false,
     branch: "main",
     dryRun: false,
     force: false,
+    integrations: {
+      auth: null,
+      payments: null,
+      email: null,
+      db: null,
+      ai: null,
+      analytics: null,
+      storage: null,
+    },
   };
 }
 
