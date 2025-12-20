@@ -14,6 +14,7 @@ import { checkPlanCompliance } from "../src/dd/plan-compliance.mjs";
 import { cmdLLM } from "../src/commands/llm.mjs";
 import { cmdAuth } from "../src/commands/auth.mjs";
 import * as logger from "../src/dd/logger.mjs";
+import { getCurrentVersion, checkForUpdates, getUpgradeCommand, getPackageName } from "../src/dd/version.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -737,6 +738,8 @@ import { resolveEnabledCaps, requiredEnvKeysForCap, detectConflicts } from "../s
 async function cmdHelp() {
   console.log(`Usage:
   framework help
+  framework version
+  framework upgrade
   framework start [projectDir]
   framework capabilities [projectDir]
   framework phrases [projectDir]
@@ -923,6 +926,39 @@ async function cmdDrift(projectDirArg) {
   console.log(`\n   Unchanged: ${result.unchanged} files`);
 }
 
+async function cmdVersion() {
+  const version = getCurrentVersion();
+  const packageName = getPackageName();
+  console.log(`${packageName} v${version}`);
+}
+
+async function cmdUpgrade() {
+  console.log("🔍 Checking for updates...\n");
+
+  const result = await checkForUpdates();
+
+  if (result.error) {
+    console.error(`❌ Failed to check for updates: ${result.error}`);
+    console.error("\nYou can check manually:");
+    console.error(`   npm view ${result.packageName || '@jrdaws/framework'} version`);
+    process.exit(1);
+  }
+
+  console.log(`   Current version: ${result.current}`);
+  console.log(`   Latest version:  ${result.latest}`);
+
+  if (!result.hasUpdate) {
+    console.log("\n✅ You're already on the latest version!");
+    return;
+  }
+
+  console.log("\n📦 A new version is available!");
+  console.log("\nTo upgrade, run:");
+  console.log(`   ${getUpgradeCommand(result.packageName)}`);
+  console.log("\nOr use npm:");
+  console.log(`   npm install -g ${result.packageName}@latest`);
+}
+
 /**
  * Unified dispatcher (single source of truth)
  */
@@ -951,10 +987,12 @@ if (isEntrypoint) {
   if (a === "cost:summary") { await cmdCostSummary(); process.exit(0); }
   if (a === "doctor") { await cmdDoctor(b); process.exit(0); }
   if (a === "drift") { await cmdDrift(b); process.exit(0); }
+  if (a === "version") { await cmdVersion(); process.exit(0); }
+  if (a === "upgrade") { await cmdUpgrade(); process.exit(0); }
   if (a === "llm") { await cmdLLM([b, c, d]); process.exit(0); }
   if (a === "auth") { await cmdAuth([b, c, d]); process.exit(0); }
   if (a === "demo") {
-    const restArgs = process.argv.slice(4); // Everything after "framework demo"
+    const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
     await cmdDemo(restArgs);
     process.exit(0);
   }

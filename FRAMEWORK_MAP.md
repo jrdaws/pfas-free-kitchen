@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 6d67cca890
+Hash: 3cce48cf1e
 
 ## Recent changes
+- 5e9dbbf 2025-12-19 feat(webhooks): add standard webhook provider
 - da361a1 2025-12-19 feat(billing): add Paddle and Lemon Squeezy providers
 - a0c8c49 2025-12-19 chore: clean up test artifacts
 - d026157 2025-12-19 feat(cli): add failure recovery guidance
@@ -28,7 +29,6 @@ Hash: 6d67cca890
 - 3c9b9ef 2025-12-19 test(matrix): add matrix smoke test script for all templates
 - ab239db 2025-12-19 feat(compliance): add plan compliance checking
 - 62d1744 2025-12-19 feat(capabilities): add conflict detection and composition rules
-- fa6eeca 2025-12-19 feat(drift): add drift detection command
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -46,6 +46,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/commands/llm.mjs`
   - `src/commands/auth.mjs`
   - `src/dd/logger.mjs`
+  - `src/dd/version.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
     - `src/dd/recovery-guidance.mjs`
@@ -97,6 +98,8 @@ Used for: onboarding, refactors, capability ownership
 - `│        src/platform/providers/types.ts`
 - `├─ src/dd/logger.mjs`
 - `│  src/dd/logger.mjs`
+- `├─ src/dd/version.mjs`
+- `│  src/dd/version.mjs`
 - `├─ scripts/orchestrator/project-config.mjs`
 - `│  scripts/orchestrator/project-config.mjs`
 - `└─ scripts/orchestrator/capability-engine.mjs`
@@ -114,6 +117,7 @@ Used for: onboarding, refactors, capability ownership
 - `src/commands/llm.mjs` <- `bin/framework.js`
 - `src/commands/auth.mjs` <- `bin/framework.js`
 - `src/dd/logger.mjs` <- `bin/framework.js`
+- `src/dd/version.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
 - `src/dd/recovery-guidance.mjs` <- `src/commands/llm.mjs`, `src/commands/auth.mjs`
