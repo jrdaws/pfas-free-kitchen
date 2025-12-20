@@ -883,6 +883,7 @@ async function cmdHelp() {
   framework plugin <add|remove|list|hooks|info>
   framework templates <list|search|info|categories|tags>
   framework export <templateId> <projectDir> [options]
+  framework pull <token> [output-dir]
   framework <templateId> <projectDir>
 
 Export Options:
@@ -907,6 +908,7 @@ Examples:
   framework doctor .
   framework export seo-directory ~/Documents/Cursor/my-app
   framework export saas ~/Documents/Cursor/my-saas --remote https://github.com/me/my-saas.git --push
+  framework pull fast-lion-1234     # Pull project from web platform
 `);
 }
 
@@ -1215,6 +1217,179 @@ async function cmdUpgrade(dryRun = false) {
 }
 
 /**
+ * Pull a project from the web platform using a token
+ * Usage: framework pull <token> [output-dir]
+ */
+async function cmdPull(token, extraArgs = []) {
+  if (!token) {
+    console.error("❌ Error: Token is required");
+    console.log("\nUsage: framework pull <token> [output-dir]");
+    console.log("\nExample:");
+    console.log("  framework pull fast-lion-1234");
+    console.log("  framework pull fast-lion-1234 ./my-project");
+    process.exit(1);
+  }
+
+  const outputDir = extraArgs[0] || null;
+
+  console.log(`\n🔍 Fetching project configuration for token: ${token}...\n`);
+
+  try {
+    // Fetch project from API
+    const apiUrl = process.env.FRAMEWORK_PLATFORM_URL || "https://dawson-does-framework-bv8x.vercel.app";
+    const response = await fetch(`${apiUrl}/api/projects/${token}`);
+
+    if (!response.ok) {
+      const error = await response.json();
+
+      if (response.status === 404) {
+        console.error(`❌ Project not found: "${token}"`);
+        console.log("\nPossible reasons:");
+        console.log("  • Token is incorrect");
+        console.log("  • Project was deleted");
+        console.log("  • Token has expired (projects expire after 30 days)");
+      } else if (response.status === 410) {
+        console.error(`❌ Project has expired: "${token}"`);
+        console.log("\nProjects created on the web platform expire after 30 days.");
+        console.log("Please create a new project at:");
+        console.log(`  ${apiUrl}/configure`);
+      } else {
+        console.error(`❌ Failed to fetch project: ${error.message || error.error}`);
+      }
+      process.exit(1);
+    }
+
+    const { project } = await response.json();
+
+    console.log(`✅ Found project: "${project.project_name}"`);
+    console.log(`   Template: ${project.template}`);
+    console.log(`   Integrations: ${Object.keys(project.integrations || {}).filter(k => project.integrations[k]).join(", ") || "none"}`);
+    console.log("");
+
+    // Determine output directory
+    const targetDir = outputDir || project.output_dir || `./${project.project_name}`;
+    const absTargetDir = path.resolve(targetDir);
+
+    // Check if directory exists
+    if (fs.existsSync(absTargetDir)) {
+      console.error(`❌ Directory already exists: ${absTargetDir}`);
+      console.log("\nPlease choose a different directory or remove the existing one.");
+      process.exit(1);
+    }
+
+    console.log(`📦 Exporting to: ${absTargetDir}\n`);
+
+    // Build export flags from project configuration
+    const exportFlags = [];
+
+    // Add integrations
+    if (project.integrations) {
+      for (const [type, provider] of Object.entries(project.integrations)) {
+        if (provider) {
+          exportFlags.push(`--${type}`, provider);
+        }
+      }
+    }
+
+    // Add project name
+    if (project.project_name) {
+      exportFlags.push("--name", project.project_name);
+    }
+
+    // Call the export command with the project configuration
+    await cmdExport(project.template, absTargetDir, exportFlags);
+
+    // After export, write additional .dd files with context
+    const ddDir = path.join(absTargetDir, ".dd");
+    fs.mkdirSync(ddDir, { recursive: true });
+
+    // Write vision/mission/success criteria if provided
+    if (project.vision) {
+      fs.writeFileSync(path.join(ddDir, "vision.md"), project.vision, "utf8");
+      console.log("   ✓ Vision written to .dd/vision.md");
+    }
+
+    if (project.mission) {
+      fs.writeFileSync(path.join(ddDir, "mission.md"), project.mission, "utf8");
+      console.log("   ✓ Mission written to .dd/mission.md");
+    }
+
+    if (project.success_criteria) {
+      fs.writeFileSync(path.join(ddDir, "success-criteria.md"), project.success_criteria, "utf8");
+      console.log("   ✓ Success criteria written to .dd/success-criteria.md");
+    }
+
+    // Write description if provided
+    if (project.description) {
+      fs.writeFileSync(path.join(ddDir, "description.md"), project.description, "utf8");
+      console.log("   ✓ Description written to .dd/description.md");
+    }
+
+    // Write inspirations if provided
+    if (project.inspirations && project.inspirations.length > 0) {
+      const inspirationsContent = project.inspirations
+        .map((insp, idx) => `${idx + 1}. [${insp.type}] ${insp.value}`)
+        .join("\n");
+      fs.writeFileSync(path.join(ddDir, "inspirations.md"), inspirationsContent, "utf8");
+      console.log("   ✓ Inspirations written to .dd/inspirations.md");
+    }
+
+    // Update .env.local with env_keys if provided
+    if (project.env_keys && Object.keys(project.env_keys).length > 0) {
+      const envPath = path.join(absTargetDir, ".env.local");
+      const envExamplePath = path.join(absTargetDir, ".env.local.example");
+
+      // Read .env.local.example if it exists
+      let envContent = "";
+      if (fs.existsSync(envExamplePath)) {
+        envContent = fs.readFileSync(envExamplePath, "utf8");
+      }
+
+      // Replace placeholders with actual values
+      for (const [key, value] of Object.entries(project.env_keys)) {
+        if (value) {
+          const regex = new RegExp(`${key}=.*`, "g");
+          if (envContent.match(regex)) {
+            envContent = envContent.replace(regex, `${key}=${value}`);
+          } else {
+            envContent += `\n${key}=${value}`;
+          }
+        }
+      }
+
+      fs.writeFileSync(envPath, envContent, "utf8");
+      console.log("   ✓ Environment variables written to .env.local");
+    }
+
+    // Write a metadata file with the pull info
+    const pullMetadata = {
+      pulledAt: new Date().toISOString(),
+      token: project.token,
+      platformUrl: apiUrl,
+      template: project.template,
+      integrations: project.integrations,
+    };
+    fs.writeFileSync(
+      path.join(ddDir, "pull-metadata.json"),
+      JSON.stringify(pullMetadata, null, 2),
+      "utf8"
+    );
+
+    console.log("\n✅ Project pulled successfully from platform!\n");
+    console.log("Next steps:");
+    console.log(`  cd ${targetDir}`);
+    console.log(`  npm install`);
+    console.log(`  npm run dev`);
+  } catch (error) {
+    console.error(`\n❌ Failed to pull project: ${error.message}`);
+    if (process.env.NODE_ENV === "development") {
+      console.error(error.stack);
+    }
+    process.exit(1);
+  }
+}
+
+/**
  * Unified dispatcher (single source of truth)
  */
 const selfPath = realpathSync(fileURLToPath(import.meta.url));
@@ -1249,6 +1424,7 @@ if (isEntrypoint) {
   if (a === "plugin") { await cmdPlugin([b, c, d]); process.exit(0); }
   if (a === "templates") { await cmdTemplates([b, c, d]); process.exit(0); }
   if (a === "checkpoint") { await cmdCheckpoint([b, c, d]); process.exit(0); }
+  if (a === "pull") { await cmdPull(b, [c, d]); process.exit(0); }
   if (a === "demo") {
     const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
     await cmdDemo(restArgs);

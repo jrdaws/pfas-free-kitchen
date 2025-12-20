@@ -29,8 +29,10 @@ export function ExportView({
   envKeys,
 }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
-  const [selectedOption, setSelectedOption] = useState<"cli" | "zip" | "wizard" | null>(null);
+  const [selectedOption, setSelectedOption] = useState<"cli" | "zip" | "wizard" | "pull" | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [projectToken, setProjectToken] = useState<string | null>(null);
   const [wizardStep, setWizardStep] = useState(0);
 
   const command = buildCommand({ template, projectName, outputDir, integrations });
@@ -61,6 +63,41 @@ export function ExportView({
       alert("Failed to generate ZIP. Please try the CLI command instead.");
     } finally {
       setIsDownloading(false);
+    }
+  };
+
+  const handleSaveToPlatform = async () => {
+    setIsSaving(true);
+    try {
+      const response = await fetch("/api/projects/save", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          template,
+          project_name: projectName,
+          output_dir: outputDir,
+          integrations,
+          env_keys: envKeys,
+          vision,
+          mission,
+          success_criteria: successCriteria,
+        }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to save project");
+      }
+
+      const data = await response.json();
+      setProjectToken(data.token);
+    } catch (error: any) {
+      console.error("Save failed:", error);
+      alert(`Failed to save to platform: ${error.message}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -109,7 +146,7 @@ export function ExportView({
         </div>
 
         {/* Export Options */}
-        <div className="grid md:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-4 gap-4">
           {/* Option A: CLI Command */}
           <button
             onClick={() => setSelectedOption(selectedOption === "cli" ? null : "cli")}
@@ -170,7 +207,46 @@ export function ExportView({
             </div>
           </button>
 
-          {/* Option C: Install Wizard */}
+          {/* Option C: Pull from Platform */}
+          <button
+            onClick={() => {
+              if (selectedOption === "pull") {
+                setSelectedOption(null);
+              } else {
+                setSelectedOption("pull");
+                if (!projectToken) {
+                  handleSaveToPlatform();
+                }
+              }
+            }}
+            className={`terminal-window cursor-pointer transition-all hover:scale-105 ${
+              selectedOption === "pull" ? "border-terminal-accent shadow-lg shadow-terminal-accent/20" : ""
+            }`}
+          >
+            <div className="terminal-header">
+              <div className="terminal-dot bg-terminal-error"></div>
+              <div className="terminal-dot bg-terminal-warning"></div>
+              <div className="terminal-dot bg-terminal-text"></div>
+              <span className="text-xs text-terminal-dim ml-2">
+                <ExternalLink className="inline h-3 w-3 mr-1" />
+                Option C
+              </span>
+            </div>
+            <div className="terminal-content text-center py-6">
+              <ExternalLink className="h-12 w-12 mx-auto mb-3 text-terminal-accent" />
+              <h3 className="font-display font-bold text-terminal-text mb-2">
+                Pull from Platform
+              </h3>
+              <p className="text-xs text-terminal-dim">
+                Save and pull later with a token
+              </p>
+              <p className="text-xs text-terminal-accent mt-2 font-mono">
+                {projectToken ? "Saved!" : "Cloud sync"}
+              </p>
+            </div>
+          </button>
+
+          {/* Option D: Install Wizard */}
           <button
             onClick={() => setSelectedOption(selectedOption === "wizard" ? null : "wizard")}
             className={`terminal-window cursor-pointer transition-all hover:scale-105 ${
@@ -183,7 +259,7 @@ export function ExportView({
               <div className="terminal-dot bg-terminal-text"></div>
               <span className="text-xs text-terminal-dim ml-2">
                 <Wand2 className="inline h-3 w-3 mr-1" />
-                Option C
+                Option D
               </span>
             </div>
             <div className="terminal-content text-center py-6">
@@ -195,7 +271,7 @@ export function ExportView({
                 Guided setup with system detection
               </p>
               <p className="text-xs text-terminal-accent mt-2 font-mono">
-                Opens in Cursor
+                Coming soon
               </p>
             </div>
           </button>
@@ -339,6 +415,105 @@ export function ExportView({
                   </li>
                 </ol>
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* Pull from Platform Details */}
+        {selectedOption === "pull" && (
+          <div className="terminal-window border-terminal-accent">
+            <div className="terminal-header">
+              <div className="terminal-dot bg-terminal-error"></div>
+              <div className="terminal-dot bg-terminal-warning"></div>
+              <div className="terminal-dot bg-terminal-text"></div>
+              <span className="text-xs text-terminal-accent ml-2">
+                <ExternalLink className="inline h-3 w-3 mr-1" />
+                Pull from Platform
+              </span>
+            </div>
+            <div className="terminal-content space-y-4">
+              {isSaving && (
+                <div className="flex items-center justify-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin text-terminal-accent" />
+                  <span className="ml-3 text-terminal-text">Saving to platform...</span>
+                </div>
+              )}
+
+              {projectToken && !isSaving && (
+                <>
+                  <div>
+                    <p className="text-sm text-terminal-text mb-4">
+                      ✅ Project saved to platform! Use this command to pull it later:
+                    </p>
+                    <div className="relative">
+                      <pre className="text-xs text-terminal-text bg-terminal-bg/50 p-4 rounded border border-terminal-text/20 overflow-x-auto font-mono">
+                        <code>npx @jrdaws/framework pull {projectToken}</code>
+                      </pre>
+                    </div>
+                  </div>
+
+                  <Button
+                    onClick={() => {
+                      navigator.clipboard.writeText(`npx @jrdaws/framework pull ${projectToken}`);
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 2000);
+                    }}
+                    className="w-full bg-terminal-accent hover:bg-terminal-accent/80 text-terminal-bg font-mono"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4" />
+                        Copied!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Copy Pull Command
+                      </>
+                    )}
+                  </Button>
+
+                  <div className="border-t border-terminal-accent/20 pt-4">
+                    <p className="text-sm text-terminal-dim mb-2">How it works:</p>
+                    <ol className="space-y-2 text-sm text-terminal-dim">
+                      <li className="flex gap-3">
+                        <span className="text-terminal-accent font-mono font-bold flex-shrink-0">1.</span>
+                        <span>Your configuration is saved to the platform with token: <code className="text-terminal-accent">{projectToken}</code></span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-terminal-accent font-mono font-bold flex-shrink-0">2.</span>
+                        <span>Run the pull command from anywhere to download the configured project</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-terminal-accent font-mono font-bold flex-shrink-0">3.</span>
+                        <span>All integrations, env variables, and context will be included</span>
+                      </li>
+                      <li className="flex gap-3">
+                        <span className="text-terminal-accent font-mono font-bold flex-shrink-0">4.</span>
+                        <span>Project expires after 30 days for security</span>
+                      </li>
+                    </ol>
+                  </div>
+
+                  <div className="bg-terminal-accent/10 border border-terminal-accent/30 rounded p-4">
+                    <p className="text-xs text-terminal-text">
+                      💡 <strong>Tip:</strong> Share this token with your team to collaborate, or use it on a different machine to continue working on the project.
+                    </p>
+                  </div>
+                </>
+              )}
+
+              {!projectToken && !isSaving && (
+                <div className="text-center py-4">
+                  <p className="text-terminal-dim mb-4">Something went wrong. Please try again.</p>
+                  <Button
+                    onClick={handleSaveToPlatform}
+                    className="bg-terminal-accent hover:bg-terminal-accent/80 text-terminal-bg font-mono"
+                  >
+                    Retry Save
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
         )}
