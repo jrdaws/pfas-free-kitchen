@@ -1,0 +1,26 @@
+{
+  "id": "seo-directory",
+  "name": "SEO Directory",
+  "version": "1.0.0",
+  "description": "SEO-optimized directory template with static generation, search functionality, and beautiful UI. Ideal for building curated lists and directories.",
+  "author": "Dawson Framework Team",
+  "category": "Directory",
+  "tags": ["nextjs", "react", "seo", "directory", "static", "shadcn"],
+  "minFrameworkVersion": "0.1.0",
+  "capabilities": [],
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0"
+  },
+  "features": [
+    "Next.js 15 with App Router",
+    "Static site generation",
+    "SEO optimization",
+    "shadcn/ui components",
+    "TypeScript support",
+    "Tailwind CSS",
+    "Search and filtering",
+    "Responsive design"
+  ],
+  "license": "MIT"
+}
