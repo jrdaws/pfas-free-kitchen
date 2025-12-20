@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 1cca075d21
 
 ## Recent changes
+- 8f5a146 2025-12-20 feat(configurator): implement all 8 steps with full UI
 - 8e5b829 2025-12-20 feat(configurator): implement Phase 2 core user flow
 - 41cc8c9 2025-12-20 feat(configurator): add state management with Zustand and navigation components
 - b8599c8 2025-12-19 fix(website): remove outputDirectory from vercel.json
@@ -28,7 +29,6 @@ Hash: 1cca075d21
 - a0c8c49 2025-12-19 chore: clean up test artifacts
 - d026157 2025-12-19 feat(cli): add failure recovery guidance
 - 3639d8c 2025-12-19 feat(cli): add structured step logging with timing
-- 2158038 2025-12-19 feat(cli): comprehensive --dry-run output
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
