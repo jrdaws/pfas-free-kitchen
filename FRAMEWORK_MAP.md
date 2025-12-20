@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 05a6897405
 
 ## Recent changes
+- 4f5f59e 2025-12-19 docs(registry): add comprehensive template registry documentation
 - 2639e84 2025-12-19 test(registry): add comprehensive template registry tests
 - 4ead1c7 2025-12-19 feat(cli): add framework templates command suite
 - 0170bae 2025-12-19 feat(templates): add template.json metadata to existing templates
@@ -28,7 +29,6 @@ Hash: 05a6897405
 - 39c2fcf 2025-12-19 feat(cli): add framework auth test command
 - 517f1d9 2025-12-19 test(auth): add comprehensive Supabase auth provider tests
 - 9c98e21 2025-12-19 feat(auth): implement Supabase auth provider with health checks
-- c7ac391 2025-12-19 chore(deps): add @supabase/supabase-js for auth provider
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
