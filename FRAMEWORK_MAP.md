@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a5b61bc06d
 
 ## Recent changes
+- 39c2fcf 2025-12-19 feat(cli): add framework auth test command
 - 517f1d9 2025-12-19 test(auth): add comprehensive Supabase auth provider tests
 - 9c98e21 2025-12-19 feat(auth): implement Supabase auth provider with health checks
 - c7ac391 2025-12-19 chore(deps): add @supabase/supabase-js for auth provider
@@ -28,7 +29,6 @@ Hash: a5b61bc06d
 - cd87d1f 2025-12-18 chore: update framework map and fix localDir typo
 - 97e7a25 2025-12-18 chore(ci): add seo-directory smoke test job
 - 56bb214 2025-12-18 feat(templates): add ready signal to saas and seo-directory page components
-- 06c6762 2025-12-18 chore: add handoff tooling and move network tests
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

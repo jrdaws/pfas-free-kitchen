@@ -66,9 +66,11 @@ export function detectDrift(projectDir) {
     manifestFiles.set(file.path, file.sha256);
   }
 
-  // Get current files
+  // Get current files (normalize paths to forward slashes for cross-platform consistency)
   const currentFilesAbs = listTemplateFiles(projectDir);
-  const currentFiles = currentFilesAbs.map((abs) => path.relative(projectDir, abs));
+  const currentFiles = currentFilesAbs.map((abs) => 
+    path.relative(projectDir, abs).replaceAll("\\", "/")
+  );
 
   // Detect changes
   const added = [];
