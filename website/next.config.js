@@ -1,11 +1,14 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Remove 'output: export' for Vercel deployment
   // Vercel handles Next.js natively
   images: {
     unoptimized: true,
   },
-  trailingSlash: true,
+
+  // Set explicit root for monorepo
+  outputFileTracingRoot: path.join(__dirname, '../'),
 }
 
 module.exports = nextConfig

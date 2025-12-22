@@ -202,9 +202,11 @@ export async function POST(request: NextRequest) {
       projectName
     );
 
-    // Call Claude API - using claude-sonnet-4-20250514 (latest Sonnet model)
+    // Call Claude API - using claude-3-haiku-20240307 for fast generation
+    // Note: Switched from Sonnet 4 to Haiku for 10x speed improvement (41s -> ~4s)
+    // Trade-off: Slightly lower quality, but acceptable for preview purposes
     const message = await anthropic.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: "claude-3-haiku-20240307",
       max_tokens: MAX_TOKENS,
       temperature: seed ? 0 : 0.3, // Deterministic if seed provided
       system: systemPrompt,

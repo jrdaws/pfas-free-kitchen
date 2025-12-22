@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabase, generateToken, CreateProjectInput } from "@/lib/supabase";
 import { checkRateLimit } from "@/lib/rate-limiter";
+import { apiError, apiSuccess, ErrorCodes } from "@/lib/api-errors";
 
 // CORS headers for CLI access
 const corsHeaders = {
@@ -17,20 +18,20 @@ export async function OPTIONS() {
 export async function POST(request: NextRequest) {
   try {
     // Rate limiting: use IP or session identifier
-    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0] || 
-                     request.headers.get("x-real-ip") || 
+    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0] ||
+                     request.headers.get("x-real-ip") ||
                      "anonymous";
-    
+
     const rateLimitResult = await checkRateLimit(`save:${clientIp}`);
-    
+
     if (!rateLimitResult.allowed) {
-      return NextResponse.json(
-        { 
-          error: "Rate limit exceeded", 
-          message: "Too many requests. Please try again later.",
-          resetAt: rateLimitResult.resetAt,
-        },
-        { status: 429, headers: corsHeaders }
+      return apiError(
+        ErrorCodes.RATE_LIMITED,
+        "Too many requests. Please try again later.",
+        429,
+        { resetAt: rateLimitResult.resetAt },
+        "Wait a few minutes before trying again. Rate limits reset every 15 minutes.",
+        corsHeaders
       );
     }
 
@@ -38,16 +39,24 @@ export async function POST(request: NextRequest) {
 
     // Validate required fields
     if (!body.template) {
-      return NextResponse.json(
-        { error: "Validation failed", message: "Template is required" },
-        { status: 400, headers: corsHeaders }
+      return apiError(
+        ErrorCodes.MISSING_FIELD,
+        "Template is required",
+        400,
+        { field: "template" },
+        "Provide a template name in the request body. Available templates: saas, seo-directory, blog, dashboard, landing-page",
+        corsHeaders
       );
     }
 
     if (!body.project_name) {
-      return NextResponse.json(
-        { error: "Validation failed", message: "Project name is required" },
-        { status: 400, headers: corsHeaders }
+      return apiError(
+        ErrorCodes.MISSING_FIELD,
+        "Project name is required",
+        400,
+        { field: "project_name" },
+        "Provide a project_name in the request body",
+        corsHeaders
       );
     }
 
@@ -71,9 +80,13 @@ export async function POST(request: NextRequest) {
     }
 
     if (attempts >= maxAttempts) {
-      return NextResponse.json(
-        { error: "Token generation failed", message: "Could not generate unique token" },
-        { status: 500, headers: corsHeaders }
+      return apiError(
+        ErrorCodes.INTERNAL_ERROR,
+        "Could not generate unique token after multiple attempts",
+        500,
+        undefined,
+        "Try again in a few moments. If the issue persists, contact support.",
+        corsHeaders
       );
     }
 
@@ -105,35 +118,38 @@ export async function POST(request: NextRequest) {
 
     if (error) {
       console.error("[Project Save Error]", error);
-      return NextResponse.json(
-        { error: "Database error", message: "Failed to save project", details: error.message },
-        { status: 500, headers: corsHeaders }
+      return apiError(
+        ErrorCodes.DATABASE_ERROR,
+        "Failed to save project to database",
+        500,
+        process.env.NODE_ENV === "development" ? { details: error.message } : undefined,
+        "Try again in a few moments. If the issue persists, contact support.",
+        corsHeaders
       );
     }
 
     console.log(`[Project Saved] ${token} | ${body.template} | ${body.project_name}`);
 
-    return NextResponse.json(
+    return apiSuccess(
       {
-        success: true,
         token,
-        project: data,
+        expiresAt: expiresAt.toISOString(),
         pullCommand: `npx @jrdaws/framework pull ${token}`,
         url: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/configure?project=${token}`,
-        expiresAt: expiresAt.toISOString(),
       },
-      { headers: corsHeaders }
+      201,
+      corsHeaders
     );
   } catch (error: unknown) {
     console.error("[Project Save Error]", error);
     const errorMessage = error instanceof Error ? error.message : "Unknown error";
-    return NextResponse.json(
-      {
-        error: "Internal server error",
-        message: "Failed to save project",
-        details: process.env.NODE_ENV === "development" ? errorMessage : undefined,
-      },
-      { status: 500, headers: corsHeaders }
+    return apiError(
+      ErrorCodes.INTERNAL_ERROR,
+      "Failed to save project",
+      500,
+      process.env.NODE_ENV === "development" ? { details: errorMessage } : undefined,
+      "Try again in a few moments. If the issue persists, contact support.",
+      corsHeaders
     );
   }
 }

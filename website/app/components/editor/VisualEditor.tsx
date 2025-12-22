@@ -13,9 +13,10 @@ interface VisualEditorProps {
   html: string;
   onHtmlChange?: (html: string) => void;
   className?: string;
+  viewport?: 'desktop' | 'tablet' | 'mobile';
 }
 
-function VisualEditorContent({ html, onHtmlChange, className }: VisualEditorProps) {
+function VisualEditorContent({ html, onHtmlChange, className, viewport = 'desktop' }: VisualEditorProps) {
   const {
     iframeRef,
     registerIframe,
@@ -127,6 +128,13 @@ function VisualEditorContent({ html, onHtmlChange, className }: VisualEditorProp
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectElement, undo, redo]);
 
+  // Viewport width mapping
+  const viewportWidths = {
+    desktop: '100%',
+    tablet: '768px',
+    mobile: '375px',
+  };
+
   return (
     <div className={`flex h-full ${className || ""}`}>
       {/* Left Sidebar - Component Tree */}
@@ -160,19 +168,27 @@ function VisualEditorContent({ html, onHtmlChange, className }: VisualEditorProp
         </div>
 
         {/* Preview */}
-        <div className="flex-1 relative overflow-auto">
-          <div className="relative min-h-full">
-            <iframe
-              ref={(iframe) => {
-                if (iframe) registerIframe(iframe);
+        <div className="flex-1 relative overflow-auto bg-gray-100">
+          <div className="flex justify-center min-h-full p-4">
+            <div
+              className="relative transition-all duration-300"
+              style={{
+                width: viewportWidths[viewport],
+                maxWidth: '100%'
               }}
-              srcDoc={enhancedHtml}
-              className="w-full h-full border-0"
-              style={{ minHeight: "600px" }}
-              sandbox="allow-scripts allow-same-origin"
-              title="Visual Editor Preview"
-            />
-            {selectedElement && <SelectionOverlay />}
+            >
+              <iframe
+                ref={(iframe) => {
+                  if (iframe) registerIframe(iframe);
+                }}
+                srcDoc={enhancedHtml}
+                className="w-full border-0 bg-white shadow-lg"
+                style={{ minHeight: "600px", height: "100%" }}
+                sandbox="allow-scripts allow-same-origin"
+                title="Visual Editor Preview"
+              />
+              {selectedElement && <SelectionOverlay />}
+            </div>
           </div>
         </div>
       </div>

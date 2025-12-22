@@ -24,6 +24,7 @@ interface CollaborativeVisualEditorProps {
   userId?: string;
   userName?: string;
   enableCollaboration?: boolean;
+  viewport?: 'desktop' | 'tablet' | 'mobile';
 }
 
 function CollaborativeVisualEditorContent({
@@ -33,6 +34,7 @@ function CollaborativeVisualEditorContent({
   projectId = "default-project",
   userId = "default-user",
   userName = "Default User",
+  viewport = 'desktop',
 }: Omit<CollaborativeVisualEditorProps, "enableCollaboration">) {
   const {
     iframeRef,
@@ -252,6 +254,13 @@ function CollaborativeVisualEditorContent({
     return () => window.removeEventListener("message", handlePositionMessage);
   }, []);
 
+  // Viewport width mapping
+  const viewportWidths = {
+    desktop: '100%',
+    tablet: '768px',
+    mobile: '375px',
+  };
+
   return (
     <div className={`flex flex-col h-full ${className || ""}`}>
       {/* Presence Indicator */}
@@ -279,19 +288,26 @@ function CollaborativeVisualEditorContent({
         </div>
 
         {/* Center - Preview with Overlay */}
-        <div className="flex-1 relative overflow-auto bg-white">
-          <div className="relative min-h-full">
-            <iframe
-              ref={(iframe) => {
-                if (iframe) registerIframe(iframe);
+        <div className="flex-1 relative overflow-auto bg-gray-100">
+          <div className="flex justify-center min-h-full p-4">
+            <div
+              className="relative transition-all duration-300"
+              style={{
+                width: viewportWidths[viewport],
+                maxWidth: '100%'
               }}
-              srcDoc={enhancedHtml}
-              className="w-full h-full border-0"
-              style={{ minHeight: "600px" }}
-              sandbox="allow-scripts allow-same-origin"
-              title="Collaborative Visual Editor"
-            />
-            {selectedElement && <SelectionOverlay />}
+            >
+              <iframe
+                ref={(iframe) => {
+                  if (iframe) registerIframe(iframe);
+                }}
+                srcDoc={enhancedHtml}
+                className="w-full border-0 bg-white shadow-lg"
+                style={{ minHeight: "600px", height: "100%" }}
+                sandbox="allow-scripts allow-same-origin"
+                title="Collaborative Visual Editor"
+              />
+              {selectedElement && <SelectionOverlay />}
 
             {/* Render remote cursors */}
             {Array.from(cursors.entries()).map(([userId, cursor]) => {
@@ -301,17 +317,18 @@ function CollaborativeVisualEditorContent({
               ) : null;
             })}
 
-            {/* Render editing indicators for elements being edited by others */}
-            {Array.from(editingIndicators.entries()).map(([elementId, indicator]) => {
-              if (!indicator.position) return null;
-              return (
-                <ElementEditingIndicator
-                  key={elementId}
-                  user={indicator.user}
-                  elementPosition={indicator.position}
-                />
-              );
-            })}
+              {/* Render editing indicators for elements being edited by others */}
+              {Array.from(editingIndicators.entries()).map(([elementId, indicator]) => {
+                if (!indicator.position) return null;
+                return (
+                  <ElementEditingIndicator
+                    key={elementId}
+                    user={indicator.user}
+                    elementPosition={indicator.position}
+                  />
+                );
+              })}
+            </div>
           </div>
         </div>
 
@@ -329,6 +346,7 @@ export function CollaborativeVisualEditor({
   userId,
   userName,
   enableCollaboration = true,
+  viewport,
   ...props
 }: CollaborativeVisualEditorProps) {
   return (
@@ -343,6 +361,7 @@ export function CollaborativeVisualEditor({
         projectId={projectId}
         userId={userId}
         userName={userName}
+        viewport={viewport}
       />
     </CollaborativeEditorProvider>
   );

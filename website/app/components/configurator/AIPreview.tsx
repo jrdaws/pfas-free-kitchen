@@ -357,44 +357,44 @@ export function AIPreview({
             {/* Preview Generated - Show Controls */}
             {localPreviewHtml && !isGenerating && (
               <div className="flex items-center justify-between">
-                {!editMode && (
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setViewport("desktop")}
-                      className={`p-2 rounded transition-colors ${
-                        viewport === "desktop"
-                          ? "bg-terminal-accent text-terminal-bg"
-                          : "text-terminal-text hover:bg-terminal-text/10"
-                      }`}
-                      title="Desktop View"
-                    >
-                      <Monitor className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewport("tablet")}
-                      className={`p-2 rounded transition-colors ${
-                        viewport === "tablet"
-                          ? "bg-terminal-accent text-terminal-bg"
-                          : "text-terminal-text hover:bg-terminal-text/10"
-                      }`}
-                      title="Tablet View"
-                    >
-                      <Tablet className="h-4 w-4" />
-                    </button>
-                    <button
-                      onClick={() => setViewport("mobile")}
-                      className={`p-2 rounded transition-colors ${
-                        viewport === "mobile"
-                          ? "bg-terminal-accent text-terminal-bg"
-                          : "text-terminal-text hover:bg-terminal-text/10"
-                      }`}
-                      title="Mobile View"
-                    >
-                      <Smartphone className="h-4 w-4" />
-                    </button>
-                  </div>
-                )}
-                {editMode && <div />}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setViewport("desktop")}
+                    className={`p-2 rounded transition-colors ${
+                      viewport === "desktop"
+                        ? "bg-terminal-accent text-terminal-bg"
+                        : "text-terminal-text hover:bg-terminal-text/10"
+                    }`}
+                    title="Desktop View"
+                  >
+                    <Monitor className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewport("tablet")}
+                    className={`p-2 rounded transition-colors ${
+                      viewport === "tablet"
+                        ? "bg-terminal-accent text-terminal-bg"
+                        : "text-terminal-text hover:bg-terminal-text/10"
+                    }`}
+                    title="Tablet View"
+                  >
+                    <Tablet className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => setViewport("mobile")}
+                    className={`p-2 rounded transition-colors ${
+                      viewport === "mobile"
+                        ? "bg-terminal-accent text-terminal-bg"
+                        : "text-terminal-text hover:bg-terminal-text/10"
+                    }`}
+                    title="Mobile View"
+                  >
+                    <Smartphone className="h-4 w-4" />
+                  </button>
+                  <span className="text-xs text-terminal-dim ml-2">
+                    {viewport.charAt(0).toUpperCase() + viewport.slice(1)}
+                  </span>
+                </div>
 
                 <div className="flex gap-2">
                   <Button
@@ -501,6 +501,7 @@ export function AIPreview({
                     userId={getUserId()}
                     userName={getUserName()}
                     enableCollaboration={true}
+                    viewport={viewport}
                   />
                 </div>
               </div>

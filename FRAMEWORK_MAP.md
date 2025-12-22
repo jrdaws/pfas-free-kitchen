@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 47308e7 2025-12-22 docs(cli): update CLI memory with documentation enhancement session
 - 4922ba7 2025-12-22 docs(cli): add comprehensive pull command examples to README and docs
 - 3f22d24 2025-12-22 docs(cli): add pull integration test results to CLI memory
 - 6e425a8 2025-12-22 docs(agents): create agent governance system v1.0
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 3abd367 2025-12-20 feat: implement framework pull command with web platform integration
 - 7099ddf 2025-12-20 chore: session recovery and framework state documentation
 - c086d40 2025-12-20 feat: production-ready deployment with AI preview
-- 196b128 2025-12-20 feat(configurator): add client-side ZIP download
 
 ## Agent Governance Structure
 
