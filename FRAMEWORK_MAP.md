@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 921f61c 2025-12-22 docs(governance): add comprehensive governance and standards documentation
 - 98af1c4 2025-12-22 docs(agents): update Template Agent memory with responsive design session
 - 472d98b 2025-12-22 feat(templates): add comprehensive responsive breakpoints to all templates
 - 4eb2b52 2025-12-22 fix(templates): update blog template for Next.js 15 async params
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 55fabd7 2025-12-22 fix(tests): make environment-dependent tests more resilient
 - 47308e7 2025-12-22 docs(cli): update CLI memory with documentation enhancement session
 - 4922ba7 2025-12-22 docs(cli): add comprehensive pull command examples to README and docs
-- 3f22d24 2025-12-22 docs(cli): add pull integration test results to CLI memory
 
 ## Agent Governance Structure
 
