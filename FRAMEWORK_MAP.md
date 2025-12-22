@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- bdd877d 2025-12-22 feat(governance): add session management, validation, and token authentication
 - dba703d 2025-12-22 feat(governance): add mandatory agent workflow and acknowledgment requirements
 - 87ac335 2025-12-22 feat(governance): add enforcement mechanisms for agent coordination
 - 6b09c0f 2025-12-22 test(website): improve configure page test reliability across browsers
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 921f61c 2025-12-22 docs(governance): add comprehensive governance and standards documentation
 - 98af1c4 2025-12-22 docs(agents): update Template Agent memory with responsive design session
 - 472d98b 2025-12-22 feat(templates): add comprehensive responsive breakpoints to all templates
-- 4eb2b52 2025-12-22 fix(templates): update blog template for Next.js 15 async params
 
 ## Agent Governance Structure
 
