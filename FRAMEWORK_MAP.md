@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 4922ba7 2025-12-22 docs(cli): add comprehensive pull command examples to README and docs
 - 3f22d24 2025-12-22 docs(cli): add pull integration test results to CLI memory
 - 6e425a8 2025-12-22 docs(agents): create agent governance system v1.0
 - a6c8eb7 2025-12-21 docs(templates): add comprehensive template documentation
@@ -28,7 +29,85 @@ Hash: dd6ce1c0d2
 - 7099ddf 2025-12-20 chore: session recovery and framework state documentation
 - c086d40 2025-12-20 feat: production-ready deployment with AI preview
 - 196b128 2025-12-20 feat(configurator): add client-side ZIP download
-- 4678616 2025-12-20 fix(configurator): update AI model and improve env setup UX
+
+## Agent Governance Structure
+
+The project uses a role-based agent system for AI-assisted development.
+
+### Core Governance Documents
+
+| File | Purpose | Version |
+|------|---------|---------|
+| `AGENT_CONTEXT.md` | Mandatory context for all agents, verification test | Required reading |
+| `CLAUDE.md` | Claude Code CLI auto-loaded instructions | Auto-loaded |
+| `prompts/agents/AGENT_POLICIES.md` | Universal agent policies and protocols | v1.0 |
+| `prompts/agents/HANDOFF_TEMPLATE.md` | Template for cross-agent handoffs | - |
+
+### Agent Roles
+
+7 specialized agents with distinct domains:
+
+| Role | Files | Domain | Key Responsibilities |
+|------|-------|--------|---------------------|
+| **CLI Agent** | `prompts/agents/roles/CLI_AGENT.md` | `bin/framework.js`, `src/dd/*.mjs`, `src/commands/*.mjs` | CLI commands, core framework logic, integrations system |
+| **Website Agent** | `prompts/agents/roles/WEBSITE_AGENT.md` | `website/`, Next.js app | Web configurator, UI components, API routes |
+| **Template Agent** | `prompts/agents/roles/TEMPLATE_AGENT.md` | `templates/`, `template.json` | Starter templates, template structure, content |
+| **Integration Agent** | `prompts/agents/roles/INTEGRATION_AGENT.md` | `src/platform/providers/` | Auth, payments, analytics, third-party integrations |
+| **Documentation Agent** | `prompts/agents/roles/DOCUMENTATION_AGENT.md` | `docs/`, `*.md`, governance | User docs, guides, agent context, governance |
+| **Testing Agent** | `prompts/agents/roles/TESTING_AGENT.md` | `tests/`, CI/CD | Unit tests, E2E tests, coverage, quality assurance |
+| **Platform Agent** | `prompts/agents/roles/PLATFORM_AGENT.md` | `packages/`, API routes | Platform APIs, deployment, preview, packages |
+
+### Agent Memory System
+
+Session continuity tracked in `prompts/agents/memory/`:
+
+- `CLI_MEMORY.md` - CLI Agent session history
+- `WEBSITE_MEMORY.md` - Website Agent session history
+- `TEMPLATE_MEMORY.md` - Template Agent session history
+- `INTEGRATION_MEMORY.md` - Integration Agent session history
+- `DOCUMENTATION_MEMORY.md` - Documentation Agent session history
+- `TESTING_MEMORY.md` - Testing Agent session history
+- `PLATFORM_MEMORY.md` - Platform Agent session history
+
+Each memory file tracks:
+- Current priorities
+- Known blockers
+- Session history with date, work completed, next steps
+- Handoff notes for continuity
+
+### Agent Initialization Flow
+
+```
+1. Read AGENT_CONTEXT.md (mandatory)
+2. Pass verification test (5 questions)
+3. Read AGENT_POLICIES.md
+4. Identify role from task assignment
+5. Load role file: prompts/agents/roles/[ROLE]_AGENT.md
+6. Load memory: prompts/agents/memory/[ROLE]_MEMORY.md
+7. Establish continuity from previous sessions
+8. Confirm ready and begin work
+```
+
+### Session Completion Protocol
+
+Every agent must:
+1. Update their memory file with session entry
+2. Run `npm test` before committing
+3. Provide summary of work completed
+4. Document blockers and next priorities
+5. Provide handoff notes if cross-role work needed
+
+### Code Standards by Agent
+
+- **CLI Agent**: JavaScript (.mjs), no semicolons, 2-space indent, use `logger.mjs`
+- **Website/Platform Agents**: TypeScript (.ts/.tsx), semicolons, 2-space indent
+- **All Agents**: Conventional commits, run tests before commit, update docs
+
+### Governance Version
+
+- **Version**: 1.0
+- **Created**: 2025-12-22
+- **Status**: Operational
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

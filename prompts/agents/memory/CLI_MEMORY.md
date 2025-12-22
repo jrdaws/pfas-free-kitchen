@@ -10,8 +10,9 @@
 
 1. ✅ Pull command fully implemented and tested
 2. ✅ E2E integration tests passing (8/8 tests)
-3. (Optional) Add pull command examples to main README.md
+3. ✅ Pull command examples added to README.md and docs/cli/pull.md
 4. Review other CLI commands for consistency with pull patterns
+5. Consider live API testing with production endpoint
 
 ---
 
@@ -22,6 +23,53 @@
 ---
 
 ## Session History
+
+### Session: 2025-12-22 (Documentation Enhancement)
+
+**Work Completed**
+- ✅ Enhanced pull command documentation in README.md
+- ✅ Expanded "Pull from Web Configurator" section with comprehensive examples
+- ✅ Added 6 usage examples covering all flags and scenarios
+- ✅ Added "What gets created" section listing all generated files
+- ✅ Added troubleshooting guide for common errors
+- ✅ Fixed file location inaccuracies in docs/cli/pull.md
+- ✅ Updated project structure to match actual implementation
+- ✅ Committed changes with detailed commit message
+
+**Documentation Updates**
+- **README.md** (+48 lines):
+  - Comprehensive pull examples section
+  - Basic pull, custom directory, --cursor, --open, --dry-run, --force
+  - "What gets created" list
+  - "After pulling" instructions
+  - Troubleshooting section
+  - Enhanced integrations and AI-native sections
+- **docs/cli/pull.md** (+5 lines, -6 lines):
+  - Fixed START_PROMPT.md location (root dir, not .dd/)
+  - Updated project structure with correct files
+  - Added context.json and pull-metadata.json to structure
+
+**Files Modified**
+- `README.md` - Enhanced pull command examples and mentions
+- `docs/cli/pull.md` - Fixed file locations and structure
+
+**Blockers Encountered**
+- None
+
+**Next Priorities**
+1. All pull command tasks completed (implementation, testing, documentation)
+2. Pull command is fully production-ready
+3. Consider applying similar documentation patterns to other CLI commands
+4. Optional: Live API testing with real production token
+
+**Handoff Notes**
+- Pull command work is **complete** - implementation, tests, and documentation all done
+- 51 total tests passing (43 unit + 8 integration)
+- Comprehensive README and docs/cli/pull.md documentation
+- All flags documented with examples
+- Ready for production use
+
+---
 
 ### Session: 2025-12-22 (Integration Tests Execution)
 
