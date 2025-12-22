@@ -1,5 +1,7 @@
 # Governance Documentation Roadmap
 
+> **Version: 2.0** | Last Updated: 2025-12-22
+
 This document outlines the complete set of governance documents needed for consistent, scalable AI agent collaboration.
 
 ## Current State: ✅ Implemented

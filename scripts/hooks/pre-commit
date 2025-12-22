@@ -1,0 +1,103 @@
+#!/bin/bash
+# Pre-commit hook for dawson-does-framework
+# Verifies protected files exist before allowing commit
+# 
+# Version: 1.0
+# Last Updated: 2025-12-22
+#
+# Installation: Run `./scripts/install-hooks.sh` or manually:
+#   cp scripts/hooks/pre-commit .git/hooks/pre-commit
+#   chmod +x .git/hooks/pre-commit
+
+set -e
+
+echo "🛡️  Checking protected files..."
+
+# Core protected files that must exist
+CRITICAL_FILES=(
+    "AGENT_CONTEXT.md"
+    "CLAUDE.md"
+    ".cursorrules"
+    ".protected-files"
+)
+
+# Check if critical files exist
+MISSING=()
+for file in "${CRITICAL_FILES[@]}"; do
+    if [ ! -f "$file" ]; then
+        MISSING+=("$file")
+    fi
+done
+
+# Check if any critical files are being deleted in this commit
+DELETED_CRITICAL=()
+for file in "${CRITICAL_FILES[@]}"; do
+    if git diff --cached --name-only --diff-filter=D | grep -q "^${file}$"; then
+        DELETED_CRITICAL+=("$file")
+    fi
+done
+
+# Check protected files from .protected-files manifest
+if [ -f ".protected-files" ]; then
+    while IFS= read -r line || [ -n "$line" ]; do
+        # Skip comments and empty lines
+        [[ "$line" =~ ^#.*$ ]] && continue
+        [[ -z "$line" ]] && continue
+        
+        # Skip glob patterns (we only check explicit files)
+        [[ "$line" =~ \* ]] && continue
+        
+        # Check if this file is being deleted
+        if git diff --cached --name-only --diff-filter=D | grep -q "^${line}$"; then
+            DELETED_CRITICAL+=("$line")
+        fi
+    done < ".protected-files"
+fi
+
+# Report missing files
+if [ ${#MISSING[@]} -gt 0 ]; then
+    echo ""
+    echo "❌ ERROR: Critical files are missing from working directory!"
+    echo ""
+    for file in "${MISSING[@]}"; do
+        echo "   Missing: $file"
+    done
+    echo ""
+    echo "   Restore with: git checkout HEAD -- <file>"
+    echo ""
+    exit 1
+fi
+
+# Report deleted files
+if [ ${#DELETED_CRITICAL[@]} -gt 0 ]; then
+    echo ""
+    echo "❌ ERROR: Cannot delete protected files!"
+    echo ""
+    for file in "${DELETED_CRITICAL[@]}"; do
+        echo "   Attempting to delete: $file"
+    done
+    echo ""
+    echo "   These files are protected. Unstage with:"
+    echo "   git reset HEAD -- <file>"
+    echo ""
+    exit 1
+fi
+
+# Check for .agent-lock file (warn if committing while locked by another agent)
+if [ -f ".agent-lock" ]; then
+    LOCK_AGENT=$(head -1 .agent-lock 2>/dev/null || echo "unknown")
+    LOCK_TIME=$(sed -n '2p' .agent-lock 2>/dev/null || echo "unknown")
+    
+    echo ""
+    echo "⚠️  WARNING: Agent lock file exists!"
+    echo "   Locked by: $LOCK_AGENT"
+    echo "   Since: $LOCK_TIME"
+    echo ""
+    echo "   If this is your lock, proceed. Otherwise, coordinate with the other agent."
+    echo ""
+    # Don't block, just warn
+fi
+
+echo "✅ Protected files check passed"
+exit 0
+

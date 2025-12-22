@@ -1,5 +1,7 @@
 # CLAUDE.md - Automatic Context for Claude Code CLI
 
+> **Governance Version: 2.0** | Last Updated: 2025-12-22
+> 
 > **This file is automatically read by Claude Code CLI when starting a session in this project.**
 
 ## 🛑 MANDATORY FIRST STEPS (Do ALL Before Any Work)

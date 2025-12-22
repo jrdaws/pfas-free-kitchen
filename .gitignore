@@ -5,6 +5,9 @@ node_modules
 .env
 *.log
 
+# Agent lock file (local only, not tracked)
+.agent-lock
+
 # local dev scratch
 next-seo-template/
 test-project/

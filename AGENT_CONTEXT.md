@@ -1,5 +1,7 @@
 # Agent Context - Read This First
 
+> **Governance Version: 2.0** | Last Updated: 2025-12-22
+> 
 > This file provides essential context for AI agents working on the dawson-does-framework.
 > **Every agent must read this file before starting work.**
 
@@ -208,9 +210,20 @@ ls -la ~/.cursor/projects/*/terminals/
 |----------|---------|
 | `prompts/agents/UNIVERSAL_BOOTSTRAP.md` | For initializing agents on any platform |
 | `prompts/agents/roles/ROLE_PROTOCOL.md` | Agent lifecycle and memory management |
+| `prompts/agents/MEMORY_FORMAT.md` | Standard format for memory files (append-only) |
 | `docs/CONSOLIDATION_CHECKLIST.md` | Human checklist for daily branch consolidation |
 | `.protected-files` | List of files agents must never delete |
 
+## 🛠️ Scripts for Agents
+
+| Script | Usage |
+|--------|-------|
+| `./scripts/agent-lock.sh acquire <role>` | Acquire workspace lock before starting |
+| `./scripts/agent-lock.sh release` | Release lock when done |
+| `./scripts/agent-lock.sh status` | Check if workspace is locked |
+| `./scripts/git-push-safe.sh` | Push with auto-retry on conflict |
+| `./scripts/install-hooks.sh` | Install git hooks (run once after clone) |
+
 ---
-*This context applies to all agents working on dawson-does-framework.*
+*Governance Version 2.0 | This context applies to all agents working on dawson-does-framework.*
 

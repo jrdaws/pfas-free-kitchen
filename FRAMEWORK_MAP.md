@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 6b09c0f 2025-12-22 test(website): improve configure page test reliability across browsers
 - ace4b27 2025-12-22 docs(agents): update Testing Agent memory with Stripe test enablement session
 - db47e37 2025-12-22 chore: update framework map hash
 - 6d8fb25 2025-12-22 chore: update framework map after test improvements
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 4eb2b52 2025-12-22 fix(templates): update blog template for Next.js 15 async params
 - ada33cd 2025-12-22 chore: update Next.js types and fix E2E test selectors
 - 1fcdcc4 2025-12-22 chore(templates): standardize dependencies across saas and seo-directory
-- 2efa50e 2025-12-22 docs(agents): update Template Agent memory with dark mode session
 
 ## Agent Governance Structure
 

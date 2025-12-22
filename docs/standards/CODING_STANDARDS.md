@@ -1,5 +1,7 @@
 # Coding Standards
 
+> **Version: 2.0** | Last Updated: 2025-12-22
+> 
 > **Required reading for all agents writing code in dawson-does-framework.**
 
 ## Quick Reference
