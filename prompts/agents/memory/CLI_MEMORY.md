@@ -13,8 +13,9 @@
 3. ✅ Pull command examples added to README.md and docs/cli/pull.md
 4. ✅ CLI commands consistency audit completed
 5. ✅ Priority 1 consistency fixes implemented (export command)
-6. Consider Priority 2 enhancements (standardized error helper)
-7. Consider live API testing with production endpoint
+6. ✅ Priority 2 enhancements implemented (standardized error helpers)
+7. Consider Priority 3: Document CLI patterns in CONTRIBUTING.md
+8. Consider live API testing with production endpoint
 
 ---
 
@@ -25,6 +26,97 @@
 ---
 
 ## Session History
+
+### Session: 2025-12-22 (Standardized Error Helpers - Priority 2)
+
+**Work Completed**
+- ✅ Implemented Priority 2: Standardized error helper functions
+- ✅ Added 4 new helper functions to logger.mjs
+- ✅ Created comprehensive JSDoc documentation
+- ✅ Tested all helper functions with example scenarios
+- ✅ Verified output formatting and behavior
+
+**Functions Added to logger.mjs**
+1. **showError(message, options)** - Standardized error display
+   - Shows error message with ❌ emoji
+   - Optional reasons array (possible causes)
+   - Optional solutions array (numbered actionable fixes)
+   - Configurable exit behavior (exit: true/false)
+   - Always visible even in quiet mode
+
+2. **showWarning(message, options)** - Warning display
+   - Shows warning with ⚠️ emoji
+   - Optional details array
+   - Optional suggestions array
+
+3. **showInfo(message, options)** - Info display
+   - Shows info with ℹ️ emoji
+   - Optional details array
+
+4. **showSuccess(message, options)** - Success display
+   - Shows success with ✅ emoji
+   - Optional details array
+   - Optional nextSteps array
+
+**API Design**
+- Consistent options pattern across all functions
+- Arrays for multi-line content (reasons, solutions, details, etc.)
+- Non-destructive (exit: false for testing)
+- Follows "What → Why → How" pattern for errors
+
+**Testing Results**
+- ✅ Error with reasons and solutions - formatted correctly
+- ✅ Warning with details and suggestions - formatted correctly
+- ✅ Info with details - formatted correctly
+- ✅ Success with next steps - formatted correctly
+- ✅ Simple error (no options) - works
+- ✅ Error with only reasons - works
+- ✅ Error with only solutions - works
+
+**Code Changes**
+- **File**: `src/dd/logger.mjs`
+- **Lines Added**: ~157 lines (4 functions + JSDoc)
+- **No breaking changes**: All existing functions preserved
+
+**Usage Example**
+```javascript
+import { showError } from './src/dd/logger.mjs'
+
+showError('Project not found', {
+  reasons: [
+    'Token is incorrect or misspelled',
+    'Project was deleted',
+    'Token has expired'
+  ],
+  solutions: [
+    'Check the token is correct',
+    'Create a new project at https://dawson.dev'
+  ]
+})
+```
+
+**Impact**
+- Commands can now use standardized error formatting
+- Consistent UX across all CLI commands
+- Better user experience with recovery guidance
+- Easier to maintain error messages
+- Ready for adoption in all commands
+
+**Blockers Encountered**
+- None
+
+**Next Priorities**
+1. (Optional) Refactor existing commands to use new error helpers
+2. (Optional) Document CLI patterns in CONTRIBUTING.md
+3. Continue with other CLI improvements
+
+**Handoff Notes**
+- Priority 2 complete
+- Error helpers ready for use across all commands
+- Backward compatible - can adopt incrementally
+- No changes to existing command behavior required
+
+---
 
 ### Session: 2025-12-22 (Export Command Consistency Fixes)
 

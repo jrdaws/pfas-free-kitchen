@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- b83a654 2025-12-22 docs(readme): add Projects API documentation section
 - 527e4e6 2025-12-22 docs(agents): update Template Agent memory with saas fix session
 - d6893be 2025-12-22 fix(templates): exclude integrations from saas template build
 - 5926740 2025-12-22 feat(cli): add help flag support to export command and fix help text output
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 44a3ea1 2025-12-21 chore: update dependencies and configuration for testing
 - 5cb5249 2025-12-21 feat(packages): add monorepo structure with ai-agent and collaboration packages
 - a5f829c 2025-12-21 feat(testing): comprehensive test infrastructure with CI/CD pipelines
-- c4c9e2e 2025-12-21 feat(website): add visual editor and project download endpoint
 
 ## Agent Governance Structure
 
