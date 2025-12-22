@@ -1,63 +1,95 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Configurator', () => {
-  test('should load configurator page', async ({ page }) => {
+  test('homepage loads successfully', async ({ page }) => {
     await page.goto('/');
-
-    // Look for configurator-related elements
-    // This may need adjustment based on actual page structure
     await page.waitForLoadState('networkidle');
 
-    // Check that page is interactive
-    const body = page.locator('body');
-    await expect(body).toBeVisible();
+    // Check hero section loads
+    await expect(page.locator('h1')).toContainText('From idea to production');
+    await expect(page.locator('body')).toBeVisible();
   });
 
-  test('should allow template selection', async ({ page }) => {
+  test('homepage displays terminal animation', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Look for template selection UI
-    // Adjust selectors based on actual implementation
-    const templateButtons = page.locator('button, [role="button"]');
-    const count = await templateButtons.count();
+    // Wait for terminal to appear
+    const terminal = page.locator('.terminal-window').first();
+    await expect(terminal).toBeVisible();
 
-    // Should have some interactive elements
-    expect(count).toBeGreaterThan(0);
+    // Check for the install command (use first match)
+    await expect(page.locator('text=npm install').first()).toBeVisible({ timeout: 10000 });
   });
 
-  test('should allow integration configuration', async ({ page }) => {
+  test('Configure Project link navigates to configure page', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Look for integration options (auth, payments, etc.)
-    // This is a placeholder - adjust based on your UI
-    const page_content = await page.content();
+    // Find and click the Configure Project link
+    const configureLink = page.locator('a[href="/configure"]');
+    await expect(configureLink).toBeVisible();
+    await configureLink.click();
 
-    // Check for integration-related keywords
-    const hasIntegrations =
-      page_content.includes('auth') ||
-      page_content.includes('payment') ||
-      page_content.includes('database') ||
-      page_content.toLowerCase().includes('integration');
-
-    // At least some configuration options should be present
-    expect(hasIntegrations || page_content.length > 0).toBeTruthy();
+    // Should navigate to configure page
+    await expect(page).toHaveURL('/configure');
+    await page.waitForLoadState('networkidle');
   });
 
-  test('should handle form validation', async ({ page }) => {
+  test('GitHub link is present and functional', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
 
-    // Try to find and interact with form elements
-    const inputs = page.locator('input[type="text"], input[type="email"]');
-    const inputCount = await inputs.count();
+    // Find GitHub link (the main CTA button)
+    const githubLink = page.locator('a[href*="github.com"]').first();
+    await expect(githubLink).toBeVisible();
+    await expect(githubLink).toHaveAttribute('target', '_blank');
+  });
 
-    if (inputCount > 0) {
-      // Test that inputs are functional
-      const firstInput = inputs.first();
-      await firstInput.fill('test');
-      await expect(firstInput).toHaveValue('test');
-    }
+  test('homepage displays feature grid', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Check for key features section
+    await expect(page.locator('text=Built for Speed, Trust & Scale')).toBeVisible();
+
+    // Check for feature cards (should have 6)
+    const featureCards = page.locator('.feature-card');
+    const count = await featureCards.count();
+    expect(count).toBeGreaterThanOrEqual(6);
+
+    // Verify specific features are mentioned
+    await expect(page.locator('text=Template Registry')).toBeVisible();
+    await expect(page.locator('text=Plugin System')).toBeVisible();
+    await expect(page.locator('text=Provider Integrations')).toBeVisible();
+  });
+
+  test('beginner/advanced toggle works', async ({ page }) => {
+    await page.goto('/');
+    await page.waitForLoadState('networkidle');
+
+    // Find toggle buttons
+    const beginnerBtn = page.locator('button:has-text("Beginner")');
+    const advancedBtn = page.locator('button:has-text("Advanced")');
+
+    await expect(beginnerBtn).toBeVisible();
+    await expect(advancedBtn).toBeVisible();
+
+    // Click advanced and verify content changes
+    await advancedBtn.click();
+    await expect(page.locator('text=framework templates search saas')).toBeVisible();
+
+    // Click beginner and verify content changes
+    await beginnerBtn.click();
+    await expect(page.locator('text=framework export saas ./my-app')).toBeVisible();
+  });
+
+  test('configure page loads', async ({ page }) => {
+    await page.goto('/configure');
+    await page.waitForLoadState('networkidle');
+
+    // Check the test page content
+    await expect(page.locator('h1')).toContainText('Test Page');
+    await expect(page.locator('text=Testing Button component')).toBeVisible();
   });
 });

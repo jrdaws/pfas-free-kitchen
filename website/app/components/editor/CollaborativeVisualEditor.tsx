@@ -5,7 +5,7 @@ import {
   CollaborativeEditorProvider,
   useCollaborativeEditor,
 } from "./CollaborativeEditorContext";
-import { useEditor } from "./EditorContext";
+import { EditorProvider, useEditor } from "./EditorContext";
 import { SelectionOverlay } from "./SelectionOverlay";
 import { PropertiesPanel } from "./PropertiesPanel";
 import { ComponentTree } from "./ComponentTree";
@@ -350,19 +350,21 @@ export function CollaborativeVisualEditor({
   ...props
 }: CollaborativeVisualEditorProps) {
   return (
-    <CollaborativeEditorProvider
-      projectId={projectId}
-      userId={userId}
-      userName={userName}
-      enabled={enableCollaboration}
-    >
-      <CollaborativeVisualEditorContent
-        {...props}
+    <EditorProvider>
+      <CollaborativeEditorProvider
         projectId={projectId}
         userId={userId}
         userName={userName}
-        viewport={viewport}
-      />
-    </CollaborativeEditorProvider>
+        enabled={enableCollaboration}
+      >
+        <CollaborativeVisualEditorContent
+          {...props}
+          projectId={projectId}
+          userId={userId}
+          userName={userName}
+          viewport={viewport}
+        />
+      </CollaborativeEditorProvider>
+    </EditorProvider>
   );
 }

@@ -28,7 +28,9 @@ const previewCache = new Map<string, CacheEntry>();
 const CACHE_TTL = 30 * 60 * 1000; // 30 minutes
 
 // Cost control: Maximum tokens to prevent runaway generations
-const MAX_TOKENS = 4096;
+// Reduced from 4096 to 2000 for performance optimization (2025-12-22)
+// Trade-off: Simpler previews focused on key components vs full multi-page generation
+const MAX_TOKENS = 2000;
 const MAX_INPUT_LENGTH = 10000; // Prevent extremely long prompts
 
 /**

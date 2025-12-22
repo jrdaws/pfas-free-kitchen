@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 import { generatePreview } from "@/lib/preview-generator";
 import { useConfiguratorStore } from "@/lib/configurator-state";
-import { CollaborativeVisualEditor } from "@/app/components/editor";
+import { CollaborativeVisualEditor } from "@/app/components/editor/CollaborativeVisualEditor";
 
 interface AIPreviewProps {
   template: string;
