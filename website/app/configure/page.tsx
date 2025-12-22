@@ -1,21 +1,24 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { useConfiguratorStore, Step } from "@/lib/configurator-state";
-import { StepIndicator } from "@/app/components/configurator/StepIndicator";
-import { ModeToggle } from "@/app/components/configurator/ModeToggle";
-import { TemplateSelector } from "@/app/components/configurator/TemplateSelector";
-import { InspirationUpload } from "@/app/components/configurator/InspirationUpload";
-import { ProjectDetails } from "@/app/components/configurator/ProjectDetails";
-import { IntegrationSelector } from "@/app/components/configurator/IntegrationSelector";
-import { EnvironmentKeys } from "@/app/components/configurator/EnvironmentKeys";
-import { AIPreview } from "@/app/components/configurator/AIPreview";
-import { ProjectGenerator } from "@/app/components/configurator/ProjectGenerator";
-import { ContextFields } from "@/app/components/configurator/ContextFields";
-import { ExportView } from "@/app/components/configurator/ExportView";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TEMPLATES } from "@/lib/templates";
 import { useState } from "react";
+
+// Dynamically import components to avoid SSR issues
+const StepIndicator = dynamic(() => import("@/app/components/configurator/StepIndicator").then(mod => ({ default: mod.StepIndicator })), { ssr: false });
+const ModeToggle = dynamic(() => import("@/app/components/configurator/ModeToggle").then(mod => ({ default: mod.ModeToggle })), { ssr: false });
+const TemplateSelector = dynamic(() => import("@/app/components/configurator/TemplateSelector").then(mod => ({ default: mod.TemplateSelector })), { ssr: false });
+const InspirationUpload = dynamic(() => import("@/app/components/configurator/InspirationUpload").then(mod => ({ default: mod.InspirationUpload })), { ssr: false });
+const ProjectDetails = dynamic(() => import("@/app/components/configurator/ProjectDetails").then(mod => ({ default: mod.ProjectDetails })), { ssr: false });
+const IntegrationSelector = dynamic(() => import("@/app/components/configurator/IntegrationSelector").then(mod => ({ default: mod.IntegrationSelector })), { ssr: false });
+const EnvironmentKeys = dynamic(() => import("@/app/components/configurator/EnvironmentKeys").then(mod => ({ default: mod.EnvironmentKeys })), { ssr: false });
+const AIPreview = dynamic(() => import("@/app/components/configurator/AIPreview").then(mod => ({ default: mod.AIPreview })), { ssr: false });
+const ProjectGenerator = dynamic(() => import("@/app/components/configurator/ProjectGenerator").then(mod => ({ default: mod.ProjectGenerator })), { ssr: false });
+const ContextFields = dynamic(() => import("@/app/components/configurator/ContextFields").then(mod => ({ default: mod.ContextFields })), { ssr: false });
+const ExportView = dynamic(() => import("@/app/components/configurator/ExportView").then(mod => ({ default: mod.ExportView })), { ssr: false });
 
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"preview" | "generate">("preview");

@@ -1,11 +1,13 @@
 {
-  "name": "flagship-saas",
-  "displayName": "Flagship SaaS",
+  "id": "flagship-saas",
+  "name": "Flagship SaaS",
   "description": "Enterprise SaaS template with entitlements, audit logs, usage tracking, and provider health monitoring",
   "category": "saas",
   "tags": ["saas", "enterprise", "dashboard", "entitlements", "audit-log", "usage-tracking", "monitoring"],
   "version": "0.1.0",
   "author": "Dawson Does Framework",
+  "minFrameworkVersion": "0.3.0",
+  "capabilities": ["entitlements", "audit-log", "usage-tracking", "provider-health", "enterprise"],
   "license": "MIT",
   "repository": "https://github.com/jrdaws/dawson-does-framework",
   "features": [

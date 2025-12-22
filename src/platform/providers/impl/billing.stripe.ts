@@ -267,6 +267,7 @@ const provider: BillingProvider = {
         ok: false,
         provider: "billing.stripe",
         details: {
+          configured: Boolean(process.env.STRIPE_SECRET_KEY),
           error: error instanceof Error ? error.message : String(error),
           code: error instanceof Stripe.errors.StripeError ? error.code : "unknown",
         },
