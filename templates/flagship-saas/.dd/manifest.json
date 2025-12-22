@@ -1,8 +1,7 @@
 {
-  "version": "1.0.0",
   "template": "flagship-saas",
-  "framework": "next",
-  "exported": "2025-12-22T00:00:00.000Z",
-  "integrations": {},
-  "files": []
+  "version": "0.1.0",
+  "capabilities": ["auth", "billing", "subscriptions", "user-management", "analytics", "multi-tenancy"],
+  "description": "Enterprise-grade SaaS application with advanced features",
+  "framework_version": "0.3.0"
 }

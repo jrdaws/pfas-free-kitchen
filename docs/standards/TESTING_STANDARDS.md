@@ -71,10 +71,10 @@ describe("ModuleName", () => {
       // Arrange
       const input = { key: "value" }
       const expected = { result: true }
-      
+
       // Act
       const actual = functionToTest(input)
-      
+
       // Assert
       assert.deepStrictEqual(actual, expected)
     })
@@ -221,10 +221,10 @@ test("parseFlags extracts template and output", () => {
 // Integration test example
 test("full export creates working project", async () => {
   const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "test-"))
-  
+
   try {
     await exportTemplate("saas", tempDir, { auth: "supabase" })
-    
+
     // Verify structure
     assert.ok(fs.existsSync(path.join(tempDir, "package.json")))
     assert.ok(fs.existsSync(path.join(tempDir, "app/layout.tsx")))

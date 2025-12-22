@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 3a4615a 2025-12-22 feat(integrations): add Clerk auth integration for saas template
 - 5063e8f 2025-12-22 docs(agents): update DOCS_MEMORY with handoff note
 - d0c5b93 2025-12-22 feat(templates): complete flagship-saas template with advanced features
 - f1feb26 2025-12-22 feat(templates): add subscription management to saas Stripe integration
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 942d8bb 2025-12-22 feat(cli): add standardized error helper functions to logger
 - b83a654 2025-12-22 docs(readme): add Projects API documentation section
 - 527e4e6 2025-12-22 docs(agents): update Template Agent memory with saas fix session
-- d6893be 2025-12-22 fix(templates): exclude integrations from saas template build
 
 ## Agent Governance Structure
 
