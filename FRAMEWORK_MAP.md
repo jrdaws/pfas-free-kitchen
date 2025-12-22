@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- ea01403 2025-12-22 feat(templates): add dark mode support to all templates
 - 00dd8d3 2025-12-22 feat(templates): add dark mode support to blog, dashboard, and landing-page
 - 1c4406c 2025-12-22 docs(agents): update agent memory files with recent sessions
 - ad7bd61 2025-12-22 docs(cli): update CLI memory with API format update session
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - b33247a 2025-12-21 feat(website): complete Projects API and CLI pull integration
 - 8d8aab8 2025-12-21 docs(test): add comprehensive test coverage documentation and improve logger tests
 - 570a242 2025-12-21 fix(tests): fix all failing tests and improve coverage to 78% (core)
-- 770b22b 2025-12-21 fix(tests): achieve 100% test pass rate (291/306 passing, 15 skipped)
 
 ## Agent Governance Structure
 
