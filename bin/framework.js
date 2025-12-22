@@ -285,20 +285,58 @@ function isGitAvailable() {
  * Export command: clone template into a new project directory and initialize git
  */
 async function cmdExport(templateId, projectDir, restArgs) {
+  // Handle help flag
+  if (!templateId || templateId === "--help" || templateId === "-h" || templateId === "help") {
+    console.log(`Usage: framework export <templateId> <projectDir> [options]
+
+Export a template to create a new project.
+
+Arguments:
+  templateId    Template to export (see list below)
+  projectDir    Output directory for the project
+
+Options:
+  --name <repoName>     Name for the project (defaults to folder name)
+  --remote <gitUrl>     Git remote URL to add as origin
+  --push                Push to remote after init (requires --remote)
+  --branch <branch>     Branch name (default: main)
+  --dry-run             Show what would happen without making changes
+  --force               Overwrite existing directory
+
+Integration Options:
+  --auth <provider>      Auth integration (supabase, clerk, nextauth)
+  --payments <provider>  Payments integration (stripe, paddle, lemon-squeezy)
+  --email <provider>     Email integration (resend, sendgrid, postmark)
+  --ai <provider>        AI integration (openai, anthropic)
+  --analytics <provider> Analytics integration (posthog, plausible, mixpanel)
+  --storage <provider>   Storage integration (supabase, cloudflare, s3)
+
+Valid templates: ${Object.keys(TEMPLATES).join(", ")}
+
+Examples:
+  framework export saas ./my-app
+  framework export saas ./my-app --auth supabase --payments stripe
+  framework export blog ./my-blog --dry-run
+  framework export dashboard ./admin --force
+`);
+    return;
+  }
+
   const flags = parseExportFlags(restArgs || []);
 const dryRun = flags.dryRun;
 
   // Validate required args BEFORE resolving template
-  if (!templateId || !projectDir) {
-    console.error("Usage: framework export <templateId> <projectDir> [options]\n");
-    console.error("Options:");
-    console.error("  --name <repoName>    Name for the project (defaults to folder name)");
-    console.error("  --remote <gitUrl>    Git remote URL to add as origin");
-    console.error("  --push               Push to remote after init (requires --remote)");
-    console.error("  --branch <branch>    Branch name (default: main)");
-    console.error("  --dry-run            Show what would happen without making changes");
-    console.error("  --force              Overwrite existing directory");
-    console.error("\nValid templates:", Object.keys(TEMPLATES).join(", "));
+  if (!projectDir) {
+    console.log("Usage: framework export <templateId> <projectDir> [options]\n");
+    console.log("Options:");
+    console.log("  --name <repoName>    Name for the project (defaults to folder name)");
+    console.log("  --remote <gitUrl>    Git remote URL to add as origin");
+    console.log("  --push               Push to remote after init (requires --remote)");
+    console.log("  --branch <branch>    Branch name (default: main)");
+    console.log("  --dry-run            Show what would happen without making changes");
+    console.log("  --force              Overwrite existing directory");
+    console.log("\nValid templates:", Object.keys(TEMPLATES).join(", "));
+    console.log("\nRun 'framework export --help' for more details.");
     process.exit(1);
   }
 
@@ -1283,22 +1321,27 @@ Examples:
   const result = await fetchProject(token, apiUrl);
 
   if (!result.success) {
-    if (result.status === 404) {
-      console.error(`❌ Project not found: "${token}"`);
-      console.log("\nPossible reasons:");
-      console.log("  • Token is incorrect or misspelled");
-      console.log("  • Project was deleted");
-      console.log("  • Token has expired (projects expire after 30 days)");
-      console.log("\nTo create a new project, visit:");
-      console.log(`  ${apiUrl}/configure`);
-    } else if (result.status === 410) {
-      console.error(`❌ Project has expired: "${token}"`);
-      console.log("\nProjects created on the web platform expire after 30 days.");
-      console.log("Please create a new project at:");
-      console.log(`  ${apiUrl}/configure`);
+    console.error(`❌ Failed to fetch project: ${result.error}`);
+
+    // Display recovery guidance if provided by API
+    if (result.recovery) {
+      console.log(`\n💡 ${result.recovery}`);
     } else {
-      console.error(`❌ Failed to fetch project: ${result.error}`);
+      // Fallback guidance for older API or network errors
+      if (result.status === 404) {
+        console.log("\nPossible reasons:");
+        console.log("  • Token is incorrect or misspelled");
+        console.log("  • Project was deleted");
+        console.log("  • Token has expired (projects expire after 30 days)");
+        console.log("\nTo create a new project, visit:");
+        console.log(`  ${apiUrl}/configure`);
+      } else if (result.status === 410) {
+        console.log("\nProjects created on the web platform expire after 30 days.");
+        console.log("Please create a new project at:");
+        console.log(`  ${apiUrl}/configure`);
+      }
     }
+
     process.exit(1);
   }
 
