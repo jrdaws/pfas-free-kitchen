@@ -94,8 +94,9 @@ test("CLI: unknown command shows error", () => {
 
 test("CLI: export requires templateId and projectDir", () => {
   const result = runFramework(["export"]);
-  assert.notEqual(result.status, 0, "should fail without required args");
-  assert.ok(result.stderr.includes("Usage"), "should show usage error");
+  // After Priority 1 fix, export with no args shows help (exit 0), not error
+  assert.equal(result.status, 0, "should show help text with no args");
+  assert.ok(result.stdout.includes("Usage"), "should show usage in help text");
 });
 
 test("CLI: export with unknown template fails", () => {

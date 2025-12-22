@@ -96,7 +96,11 @@ test('fetchProject: handles successful response', async () => {
   global.fetch = async () => ({
     ok: true,
     status: 200,
-    json: async () => ({ project: mockProject }),
+    json: async () => ({
+      success: true,
+      data: mockProject,
+      meta: { timestamp: new Date().toISOString() },
+    }),
   });
 
   const result = await fetchProject('test-token', 'https://dawson.dev');
@@ -112,12 +116,22 @@ test('fetchProject: handles 404 error', async () => {
   global.fetch = async () => ({
     ok: false,
     status: 404,
-    json: async () => ({ error: 'Not found' }),
+    json: async () => ({
+      success: false,
+      error: {
+        code: 'TOKEN_NOT_FOUND',
+        message: 'Project with token "invalid-token" not found',
+        recovery: 'Verify the token is correct. If the project expired (after 30 days), create a new one at https://dawson.dev/configure',
+      },
+      meta: { timestamp: new Date().toISOString() },
+    }),
   });
 
   const result = await fetchProject('invalid-token', 'https://dawson.dev');
   assert.equal(result.success, false);
   assert.equal(result.status, 404);
+  assert(result.error.includes('not found'));
+  assert(result.recovery.includes('Verify the token'));
 
   global.fetch = originalFetch;
 });

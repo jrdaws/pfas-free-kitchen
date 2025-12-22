@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 1e7811d 2025-12-22 docs: create CONTRIBUTING.md with comprehensive CLI patterns documentation
 - 942d8bb 2025-12-22 feat(cli): add standardized error helper functions to logger
 - b83a654 2025-12-22 docs(readme): add Projects API documentation section
 - 527e4e6 2025-12-22 docs(agents): update Template Agent memory with saas fix session
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 44ea472 2025-12-21 feat(testing): add test documentation and fix test imports
 - ba338d2 2025-12-21 fix(tests): add template manifests and fix test utility imports
 - 44a3ea1 2025-12-21 chore: update dependencies and configuration for testing
-- 5cb5249 2025-12-21 feat(packages): add monorepo structure with ai-agent and collaboration packages
 
 ## Agent Governance Structure
 

@@ -58,14 +58,26 @@ export function getApiUrl(dev = false) {
  * Fetch project from API
  * @param {string} token - Project token
  * @param {string} apiUrl - API base URL
- * @returns {Promise<{success: boolean, project?: object, error?: string, status?: number}>}
+ * @returns {Promise<{success: boolean, project?: object, error?: string, recovery?: string, status?: number}>}
  */
 export async function fetchProject(token, apiUrl) {
   try {
     const response = await fetch(`${apiUrl}/api/projects/${token}`);
-    
+
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
+
+      // New API format: error is nested with code, message, and recovery
+      if (errorData.error && errorData.error.message) {
+        return {
+          success: false,
+          error: errorData.error.message,
+          recovery: errorData.error.recovery,
+          status: response.status,
+        };
+      }
+
+      // Fallback for unexpected error format
       return {
         success: false,
         error: errorData.message || errorData.error || `HTTP ${response.status}`,
@@ -74,9 +86,11 @@ export async function fetchProject(token, apiUrl) {
     }
 
     const data = await response.json();
+
+    // New API format: project data is nested under 'data' key
     return {
       success: true,
-      project: data.project,
+      project: data.data || data.project, // Support both new and old formats for transition
     };
   } catch (error) {
     return {
