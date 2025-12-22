@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- d6893be 2025-12-22 fix(templates): exclude integrations from saas template build
 - 5926740 2025-12-22 feat(cli): add help flag support to export command and fix help text output
 - 20a9f0a 2025-12-22 docs(cli): add CLI commands consistency audit to memory
 - 3539df2 2025-12-22 docs(api): fix Projects API documentation inconsistencies
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - a5f829c 2025-12-21 feat(testing): comprehensive test infrastructure with CI/CD pipelines
 - c4c9e2e 2025-12-21 feat(website): add visual editor and project download endpoint
 - 6b14c7b 2025-12-21 feat(templates): add blog, dashboard, and landing-page templates
-- 7eb42c4 2025-12-21 feat(cli): implement framework pull command with full web platform integration
 
 ## Agent Governance Structure
 
