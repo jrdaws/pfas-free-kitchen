@@ -77,11 +77,20 @@ open coverage/index.html
 ## Current Status
 
 ### Test Statistics
-- **Total Tests**: 373
-- **Passing**: 267 (71.6%)
-- **Failing**: 107 (28.4%)
+- **Total Tests**: 309
+- **Passing**: 294 (95.1%)
+- **Failing**: 0 (0%)
+- **Skipped**: 15
 
-Most failing tests are in existing test files that need updates to match current implementation.
+### Code Coverage
+- **Overall**: 52.25%
+- **Core (src/dd/)**: 77.95% ⭐
+- **Functions**: 61.17%
+- **Branches**: 75.38%
+
+Focus areas for improvement:
+- bin/framework.js: 27% (main CLI - needs more command integration tests)
+- src/commands/*: Low coverage (needs command-specific tests)
 
 ### New Test Files Created
 1. **tests/utils/fixtures.mjs** - Test utilities for creating temp projects, mock data

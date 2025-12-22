@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 770b22b 2025-12-21 fix(tests): achieve 100% test pass rate (291/306 passing, 15 skipped)
 - a94bd34 2025-12-21 fix(tests): resolve remaining test failures
 - 44ea472 2025-12-21 feat(testing): add test documentation and fix test imports
 - ba338d2 2025-12-21 fix(tests): add template manifests and fix test utility imports
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 2a34328 2025-12-19 fix(website): remove static export for Vercel compatibility
 - e483db1 2025-12-19 docs(website): add comprehensive deployment guide
 - 7d54b4c 2025-12-19 feat(website): add terminal-aesthetic landing page
-- 0603f05 2025-12-19 chore: bump version to v0.3.0
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
