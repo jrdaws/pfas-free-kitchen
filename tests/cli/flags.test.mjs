@@ -102,6 +102,7 @@ test('parsePullFlags: ignores unknown flags gracefully', () => {
 // Edge cases
 test('parseExportFlags: handles empty string values', () => {
   const flags = parseExportFlags(['--name', '']);
+  // Empty strings are treated as missing values by the hasValue helper
   assert.equal(flags.name, '');
 });
 
