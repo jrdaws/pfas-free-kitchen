@@ -29,12 +29,12 @@ export default function DashboardPage() {
 
   return (
     <div className="flex h-screen">
-      {/* Sidebar */}
-      <aside className={`${sidebarOpen ? 'w-60' : 'w-0'} bg-gray-800 dark:bg-gray-950 text-white transition-all duration-300 overflow-hidden flex flex-col`}>
-        <div className="p-6 border-b border-gray-700 dark:border-gray-800">
-          <h2 className="m-0 text-xl">Dashboard</h2>
+      {/* Sidebar - Hidden on mobile by default */}
+      <aside className={`${sidebarOpen ? 'w-60' : 'w-0'} md:w-60 bg-gray-800 dark:bg-gray-950 text-white transition-all duration-300 overflow-hidden flex flex-col fixed md:static h-full z-20`}>
+        <div className="p-4 md:p-6 border-b border-gray-700 dark:border-gray-800">
+          <h2 className="m-0 text-lg md:text-xl">Dashboard</h2>
         </div>
-        <nav className="flex-1 py-4">
+        <nav className="flex-1 py-2 md:py-4">
           {[
             { label: "Overview", icon: "📊", active: true },
             { label: "Analytics", icon: "📈" },
@@ -46,73 +46,73 @@ export default function DashboardPage() {
             <a
               key={i}
               href={item.label === "Settings" ? "/settings" : "#"}
-              className={`flex items-center gap-3 px-6 py-3 text-white no-underline ${item.active ? 'bg-gray-700 dark:bg-gray-900 border-l-[3px] border-l-blue-500' : 'border-l-[3px] border-l-transparent hover:bg-gray-700 dark:hover:bg-gray-900'}`}
+              className={`flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2.5 md:py-3 text-sm md:text-base text-white no-underline ${item.active ? 'bg-gray-700 dark:bg-gray-900 border-l-[3px] border-l-blue-500' : 'border-l-[3px] border-l-transparent hover:bg-gray-700 dark:hover:bg-gray-900'}`}
             >
               <span>{item.icon}</span>
               <span>{item.label}</span>
             </a>
           ))}
         </nav>
-        <div className="p-6 border-t border-gray-700 dark:border-gray-800">
-          <div className="text-sm text-gray-400">Logged in as</div>
-          <div className="font-medium mt-1">admin@example.com</div>
+        <div className="p-4 md:p-6 border-t border-gray-700 dark:border-gray-800">
+          <div className="text-xs md:text-sm text-gray-400">Logged in as</div>
+          <div className="text-sm md:text-base font-medium mt-1 truncate">admin@example.com</div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col overflow-auto w-full">
         {/* Header */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4 flex justify-between items-center">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="bg-transparent border-none text-xl cursor-pointer hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
+            className="md:hidden bg-transparent border-none text-xl cursor-pointer hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100"
           >
             ☰
           </button>
-          <div className="flex items-center gap-4">
-            <button className="bg-transparent border-none text-xl cursor-pointer hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100">
+          <div className="flex items-center gap-3 sm:gap-4 ml-auto">
+            <button className="bg-transparent border-none text-lg sm:text-xl cursor-pointer hover:text-gray-600 dark:text-gray-300 dark:hover:text-gray-100">
               🔔
             </button>
-            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold text-sm">
               A
             </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <main className="flex-1 p-6 bg-gray-50 dark:bg-gray-900">
-          <h1 className="mb-6 text-3xl font-semibold dark:text-white">Overview</h1>
+        <main className="flex-1 p-4 sm:p-6 bg-gray-50 dark:bg-gray-900">
+          <h1 className="mb-4 sm:mb-6 text-2xl sm:text-3xl font-semibold dark:text-white">Overview</h1>
 
           {/* Stats Cards */}
-          <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {stats.map((stat, i) => (
-              <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-                <div className="text-sm text-gray-500 dark:text-gray-400 mb-2">{stat.label}</div>
-                <div className="text-3xl font-semibold mb-2 dark:text-white">{stat.value}</div>
-                <div className={`text-sm ${stat.positive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
+              <div key={i} className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+                <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-1 sm:mb-2">{stat.label}</div>
+                <div className="text-2xl sm:text-3xl font-semibold mb-1 sm:mb-2 dark:text-white">{stat.value}</div>
+                <div className={`text-xs sm:text-sm ${stat.positive ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'}`}>
                   {stat.change} from last month
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="grid grid-cols-[2fr_1fr] gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-4 sm:mb-6">
             {/* Chart Placeholder */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-              <h2 className="mb-4 text-lg font-semibold dark:text-white">Revenue Chart</h2>
-              <div className="h-[300px] bg-gradient-to-b from-blue-500 to-blue-800 rounded-lg flex items-center justify-center text-white text-lg">
+            <div className="lg:col-span-2 bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h2 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold dark:text-white">Revenue Chart</h2>
+              <div className="h-[250px] sm:h-[300px] bg-gradient-to-b from-blue-500 to-blue-800 rounded-lg flex items-center justify-center text-white text-sm sm:text-lg">
                 Chart Component Placeholder
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-              <h2 className="mb-4 text-lg font-semibold dark:text-white">Recent Activity</h2>
-              <div className="flex flex-col gap-4">
+            <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+              <h2 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold dark:text-white">Recent Activity</h2>
+              <div className="flex flex-col gap-3 sm:gap-4">
                 {recentActivity.map((activity, i) => (
-                  <div key={i} className={`pb-4 ${i < recentActivity.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}>
-                    <div className="font-medium text-sm dark:text-white">{activity.user}</div>
-                    <div className="text-[13px] text-gray-500 dark:text-gray-400 mt-1">{activity.action}</div>
+                  <div key={i} className={`pb-3 sm:pb-4 ${i < recentActivity.length - 1 ? 'border-b border-gray-200 dark:border-gray-700' : ''}`}>
+                    <div className="font-medium text-xs sm:text-sm dark:text-white">{activity.user}</div>
+                    <div className="text-xs sm:text-[13px] text-gray-500 dark:text-gray-400 mt-1">{activity.action}</div>
                     <div className="text-xs text-gray-400 dark:text-gray-500 mt-1">{activity.time}</div>
                   </div>
                 ))}
@@ -121,26 +121,26 @@ export default function DashboardPage() {
           </div>
 
           {/* Data Table */}
-          <div className="bg-white dark:bg-gray-800 p-6 rounded-lg border border-gray-200 dark:border-gray-700">
-            <h2 className="mb-4 text-lg font-semibold dark:text-white">Recent Orders</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full border-collapse">
+          <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg border border-gray-200 dark:border-gray-700">
+            <h2 className="mb-3 sm:mb-4 text-base sm:text-lg font-semibold dark:text-white">Recent Orders</h2>
+            <div className="overflow-x-auto -mx-4 sm:mx-0">
+              <table className="w-full border-collapse min-w-[600px]">
                 <thead>
                   <tr className="border-b border-gray-200 dark:border-gray-700">
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Customer</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Status</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Amount</th>
-                    <th className="p-3 text-left text-sm font-medium text-gray-500 dark:text-gray-400">Date</th>
+                    <th className="p-2 sm:p-3 text-left text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Order ID</th>
+                    <th className="p-2 sm:p-3 text-left text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Customer</th>
+                    <th className="p-2 sm:p-3 text-left text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Status</th>
+                    <th className="p-2 sm:p-3 text-left text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Amount</th>
+                    <th className="p-2 sm:p-3 text-left text-xs sm:text-sm font-medium text-gray-500 dark:text-gray-400">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tableData.map((row, i) => (
                     <tr key={i} className="border-b border-gray-200 dark:border-gray-700">
-                      <td className="p-3 text-sm dark:text-gray-300">{row.id}</td>
-                      <td className="p-3 text-sm dark:text-gray-300">{row.customer}</td>
-                      <td className="p-3">
-                        <span className={`px-3 py-1 rounded-xl text-xs font-medium ${
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm dark:text-gray-300">{row.id}</td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm dark:text-gray-300">{row.customer}</td>
+                      <td className="p-2 sm:p-3">
+                        <span className={`px-2 sm:px-3 py-0.5 sm:py-1 rounded-xl text-xs font-medium ${
                           row.status === "Completed" ? 'bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-300' :
                           row.status === "Pending" ? 'bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-300' :
                           'bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-300'
@@ -148,8 +148,8 @@ export default function DashboardPage() {
                           {row.status}
                         </span>
                       </td>
-                      <td className="p-3 text-sm font-medium dark:text-gray-200">{row.amount}</td>
-                      <td className="p-3 text-sm text-gray-500 dark:text-gray-400">{row.date}</td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm font-medium dark:text-gray-200">{row.amount}</td>
+                      <td className="p-2 sm:p-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">{row.date}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -75,50 +75,50 @@ export default function BlogHome() {
   return (
     <div className="min-h-screen">
       {/* Header */}
-      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 sm:px-6 py-4">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-xl font-bold dark:text-white">My Blog</div>
-          <div className="flex gap-6 items-center">
-            <a href="/" className="text-gray-800 dark:text-gray-200 no-underline hover:text-gray-900 dark:hover:text-white">Home</a>
-            <a href="#" className="text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">About</a>
-            <a href="#" className="text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">Contact</a>
+          <div className="text-lg sm:text-xl font-bold dark:text-white">My Blog</div>
+          <div className="hidden sm:flex gap-4 md:gap-6 items-center">
+            <a href="/" className="text-sm md:text-base text-gray-800 dark:text-gray-200 no-underline hover:text-gray-900 dark:hover:text-white">Home</a>
+            <a href="#" className="text-sm md:text-base text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">About</a>
+            <a href="#" className="text-sm md:text-base text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">Contact</a>
           </div>
         </nav>
       </header>
 
-      <main className="max-w-7xl mx-auto px-6 py-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h1 className="text-5xl font-bold mb-4 dark:text-white">
+        <div className="text-center mb-8 sm:mb-12">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-3 sm:mb-4 dark:text-white">
             Welcome to My Blog
           </h1>
-          <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto px-4">
             Thoughts, stories, and ideas about web development, technology, and more.
           </p>
         </div>
 
         {/* Search Bar */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <input
             type="text"
             placeholder="Search posts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full px-4 py-3 text-base border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base border border-gray-200 dark:border-gray-700 rounded-lg bg-white dark:bg-gray-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Category Filter */}
-        <div className="flex gap-3 mb-12 overflow-x-auto pb-2">
+        <div className="flex gap-2 sm:gap-3 mb-8 sm:mb-12 overflow-x-auto pb-2">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-full border-none ${
+              className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-full border-none ${
                 selectedCategory === cat
                   ? 'bg-blue-600 text-white'
                   : 'bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-200 shadow-sm'
-              } cursor-pointer text-sm font-medium whitespace-nowrap hover:opacity-90`}
+              } cursor-pointer text-xs sm:text-sm font-medium whitespace-nowrap hover:opacity-90`}
             >
               {cat}
             </button>
@@ -126,32 +126,32 @@ export default function BlogHome() {
         </div>
 
         {/* Posts Grid */}
-        <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-8 sm:mb-12">
           {filteredPosts.map(post => (
             <article
               key={post.slug}
               className="bg-white dark:bg-gray-800 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700 transition-all duration-200 cursor-pointer hover:shadow-lg hover:-translate-y-1"
             >
-              <div className="h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600" />
-              <div className="p-6">
-                <div className="flex gap-2 mb-3">
-                  <span className="px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-medium">
+              <div className="h-[180px] sm:h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600" />
+              <div className="p-4 sm:p-6">
+                <div className="flex gap-2 mb-2 sm:mb-3">
+                  <span className="px-2 sm:px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300 text-xs font-medium">
                     {post.category}
                   </span>
                   <span className="text-xs text-gray-400 dark:text-gray-500">{post.readTime}</span>
                 </div>
-                <h2 className="text-[22px] font-semibold mb-3 leading-snug dark:text-white">
+                <h2 className="text-lg sm:text-[22px] font-semibold mb-2 sm:mb-3 leading-snug dark:text-white">
                   {post.title}
                 </h2>
-                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-4">
+                <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-3 sm:mb-4">
                   {post.excerpt}
                 </p>
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">
+                <div className="flex items-center gap-3 pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
+                  <div className="w-7 sm:w-8 h-7 sm:h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
                     {post.author[0]}
                   </div>
                   <div>
-                    <div className="text-sm font-medium dark:text-white">{post.author}</div>
+                    <div className="text-xs sm:text-sm font-medium dark:text-white">{post.author}</div>
                     <div className="text-xs text-gray-400 dark:text-gray-500">{post.date}</div>
                   </div>
                 </div>
@@ -161,26 +161,26 @@ export default function BlogHome() {
         </div>
 
         {filteredPosts.length === 0 && (
-          <div className="text-center py-12 text-gray-600 dark:text-gray-400">
+          <div className="text-center py-8 sm:py-12 text-gray-600 dark:text-gray-400">
             No posts found matching your search.
           </div>
         )}
 
         {/* Newsletter Section */}
-        <div className="bg-white dark:bg-gray-800 p-12 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
-          <h2 className="text-3xl font-semibold mb-3 dark:text-white">
+        <div className="bg-white dark:bg-gray-800 p-6 sm:p-8 md:p-12 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
+          <h2 className="text-2xl sm:text-3xl font-semibold mb-2 sm:mb-3 dark:text-white">
             Subscribe to the Newsletter
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 mb-6">
+          <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-4 sm:mb-6">
             Get the latest posts delivered right to your inbox.
           </p>
-          <div className="flex gap-3 max-w-lg mx-auto">
+          <div className="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
             <input
               type="email"
               placeholder="Your email address"
-              className="flex-1 px-4 py-3 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="flex-1 px-4 py-2.5 sm:py-3 border border-gray-200 dark:border-gray-700 rounded-lg text-sm bg-white dark:bg-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="bg-blue-600 text-white border-none rounded-lg px-6 py-3 text-sm font-medium cursor-pointer whitespace-nowrap hover:bg-blue-700">
+            <button className="bg-blue-600 text-white border-none rounded-lg px-6 py-2.5 sm:py-3 text-sm font-medium cursor-pointer whitespace-nowrap hover:bg-blue-700">
               Subscribe
             </button>
           </div>

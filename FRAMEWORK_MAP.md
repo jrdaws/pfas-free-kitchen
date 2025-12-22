@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 4eb2b52 2025-12-22 fix(templates): update blog template for Next.js 15 async params
 - ada33cd 2025-12-22 chore: update Next.js types and fix E2E test selectors
 - 1fcdcc4 2025-12-22 chore(templates): standardize dependencies across saas and seo-directory
 - 2efa50e 2025-12-22 docs(agents): update Template Agent memory with dark mode session
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 3f22d24 2025-12-22 docs(cli): add pull integration test results to CLI memory
 - 6e425a8 2025-12-22 docs(agents): create agent governance system v1.0
 - a6c8eb7 2025-12-21 docs(templates): add comprehensive template documentation
-- 5e8cd30 2025-12-21 chore: bump version to 0.3.1
 
 ## Agent Governance Structure
 
