@@ -114,6 +114,9 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Validate and normalize inspirations (ensure it's always an array)
+    const safeInspirations = Array.isArray(inspirations) ? inspirations : [];
+
     // Cost control: Limit input size
     const descriptionLength = description?.length || 0;
     if (descriptionLength > MAX_INPUT_LENGTH) {
@@ -134,7 +137,7 @@ export async function POST(request: NextRequest) {
         template,
         projectName,
         integrations,
-        inspirations,
+        inspirations: safeInspirations,
         description,
         vision,
         mission,
@@ -192,7 +195,7 @@ export async function POST(request: NextRequest) {
     const userPrompt = buildUserPrompt(
       template,
       integrations,
-      inspirations,
+      safeInspirations,
       description,
       vision,
       mission,

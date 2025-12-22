@@ -12,7 +12,8 @@
     }
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && npm run copy-prompts",
+    "copy-prompts": "mkdir -p dist/prompts && cp src/prompts/*.md dist/prompts/",
     "dev": "tsc --watch",
     "test": "node --test tests/**/*.test.mjs",
     "clean": "rm -rf dist"

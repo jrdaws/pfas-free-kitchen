@@ -1,0 +1,50 @@
+# Dawson-Does Framework - Cursor Rules
+
+## First Steps for Any Agent
+Before starting work, read AGENT_CONTEXT.md for project vision, philosophy, and standards.
+
+## Project Structure
+- `bin/framework.js` - CLI entry point (JavaScript ESM)
+- `src/dd/` - Core modules (JavaScript ESM, .mjs)
+- `website/` - Next.js 15 web configurator (TypeScript)
+- `templates/` - Starter templates
+- `packages/` - Shared packages
+
+## Code Style
+- CLI/Core: JavaScript ESM (.mjs), no semicolons, 2-space indent
+- Website: TypeScript, semicolons, 2-space indent
+- Use existing patterns - check similar files first
+- Prefer explicit over clever
+
+## Commit Messages
+Use conventional commits:
+- `feat(scope): add new feature`
+- `fix(scope): fix bug`
+- `docs(scope): update docs`
+- `chore(scope): maintenance`
+
+## Testing
+- Run `npm test` before committing
+- CLI tests: `tests/*.test.mjs`
+- Website tests: `website/tests/`
+
+## Key Principles
+1. Export-first: Everything designed for local ownership
+2. Zero lock-in: Platform optional after export
+3. Transparency: No magic, explicit complexity
+4. Fail gracefully: Helpful errors with recovery guidance
+
+## What to Avoid
+- Adding unrequested features
+- Changing shared configs without coordination
+- Breaking existing tests
+- Committing secrets or .env files
+
+## Useful Commands
+```bash
+npm test              # Run tests
+npm run lint          # Check linting
+framework doctor .    # Health check
+framework drift .     # Check template drift
+```
+

@@ -16,4 +16,5 @@ export { PropertiesPanel } from "./PropertiesPanel";
 export { ComponentTree } from "./ComponentTree";
 export { RemoteCursor } from "./RemoteCursor";
 export { PresenceIndicator } from "./PresenceIndicator";
+export { ElementEditingIndicator } from "./ElementEditingIndicator";
 export * from "./types";

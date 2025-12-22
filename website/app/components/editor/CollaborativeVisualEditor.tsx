@@ -11,6 +11,7 @@ import { PropertiesPanel } from "./PropertiesPanel";
 import { ComponentTree } from "./ComponentTree";
 import { RemoteCursor } from "./RemoteCursor";
 import { PresenceIndicator } from "./PresenceIndicator";
+import { ElementEditingIndicator } from "./ElementEditingIndicator";
 import { useCollaborativeHTML } from "./useCollaborativeHTML";
 import { getInjectionScript } from "./iframe-injector";
 import { EditorMessage, SelectedElement } from "./types";
@@ -41,7 +42,14 @@ function CollaborativeVisualEditorContent({
     selectedElement,
   } = useEditor();
 
-  const { users, cursors, isConnected, currentUserId } = useCollaborativeEditor();
+  const {
+    users,
+    cursors,
+    isConnected,
+    currentUserId,
+    updateSelectedElement,
+    getUserEditingElement,
+  } = useCollaborativeEditor();
 
   // Use collaborative HTML hook for real-time synchronization
   const {
@@ -59,6 +67,11 @@ function CollaborativeVisualEditorContent({
 
   // Track if we're in the middle of an update to prevent loops
   const [isUpdating, setIsUpdating] = useState(false);
+
+  // Track elements being edited by other users
+  const [editingIndicators, setEditingIndicators] = useState<
+    Map<string, { user: any; position: any }>
+  >(new Map());
 
   // Inject the selection script into the HTML
   const enhancedHtml = React.useMemo(() => {
@@ -80,7 +93,16 @@ function CollaborativeVisualEditorContent({
 
       switch (message.type) {
         case "selection":
-          selectElement(message.payload as SelectedElement);
+          {
+            const element = message.payload as SelectedElement;
+            selectElement(element);
+            // Broadcast selection to other users
+            if (element) {
+              updateSelectedElement(element.id, element.path);
+            } else {
+              updateSelectedElement(null);
+            }
+          }
           break;
         case "hover":
           hoverElement(message.payload as SelectedElement);
@@ -117,7 +139,7 @@ function CollaborativeVisualEditorContent({
           break;
       }
     },
-    [selectElement, hoverElement, iframeRef, updateHtml, isUpdating]
+    [selectElement, hoverElement, iframeRef, updateHtml, isUpdating, updateSelectedElement]
   );
 
   useEffect(() => {
@@ -153,6 +175,82 @@ function CollaborativeVisualEditorContent({
       window.removeEventListener("editor:htmlUpdate" as any, handleEditorUpdate);
     };
   }, [updateHtml, isUpdating]);
+
+  // Update editing indicators when users' selections change
+  useEffect(() => {
+    if (!iframeRef.current?.contentWindow) return;
+
+    const newIndicators = new Map();
+
+    // Check each user for selected elements
+    users.forEach((user) => {
+      if (user.id === currentUserId) return; // Skip current user
+
+      // Get awareness state for this user
+      const awarenessStates = users.map((u) => {
+        const states = Array.from(
+          (iframeRef.current as any)?.__yjs_awareness?.getStates() || []
+        ) as Array<[any, any]>;
+        return states.find(([clientId, state]) => state.user?.id === u.id);
+      });
+
+      // Find selected element for this user
+      const userState = awarenessStates.find((state) => {
+        if (!state) return false;
+        const [, stateData] = state;
+        return stateData.user?.id === user.id;
+      });
+
+      if (userState) {
+        const [, stateData] = userState;
+        const selectedEl = stateData.selectedElement;
+
+        if (selectedEl?.elementId && iframeRef.current?.contentWindow) {
+          // Query iframe for element position
+          iframeRef.current.contentWindow.postMessage(
+            {
+              type: "getElementPosition",
+              payload: { elementId: selectedEl.elementId },
+            },
+            "*"
+          );
+
+          // Store temporarily (will be updated when position response arrives)
+          newIndicators.set(selectedEl.elementId, {
+            user,
+            position: null, // Will be filled by message response
+          });
+        }
+      }
+    });
+
+    if (newIndicators.size !== editingIndicators.size) {
+      setEditingIndicators(newIndicators);
+    }
+  }, [users, currentUserId, iframeRef]);
+
+  // Handle element position responses from iframe
+  useEffect(() => {
+    const handlePositionMessage = (event: MessageEvent) => {
+      if (event.data.type === "elementPosition") {
+        const { elementId, position } = event.data.payload;
+        if (position) {
+          setEditingIndicators((prev) => {
+            const indicator = prev.get(elementId);
+            if (indicator) {
+              const newMap = new Map(prev);
+              newMap.set(elementId, { ...indicator, position });
+              return newMap;
+            }
+            return prev;
+          });
+        }
+      }
+    };
+
+    window.addEventListener("message", handlePositionMessage);
+    return () => window.removeEventListener("message", handlePositionMessage);
+  }, []);
 
   return (
     <div className={`flex flex-col h-full ${className || ""}`}>
@@ -201,6 +299,18 @@ function CollaborativeVisualEditorContent({
               return user && user.id !== currentUserId ? (
                 <RemoteCursor key={userId} user={user} cursor={cursor} />
               ) : null;
+            })}
+
+            {/* Render editing indicators for elements being edited by others */}
+            {Array.from(editingIndicators.entries()).map(([elementId, indicator]) => {
+              if (!indicator.position) return null;
+              return (
+                <ElementEditingIndicator
+                  key={elementId}
+                  user={indicator.user}
+                  elementPosition={indicator.position}
+                />
+              );
             })}
           </div>
         </div>

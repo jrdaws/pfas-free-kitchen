@@ -62,93 +62,43 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
   };
 
   return (
-    <div style={{ minHeight: "100vh", background: "#fafafa" }}>
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <header style={{
-        background: "white",
-        borderBottom: "1px solid #e5e7eb",
-        padding: "16px 24px"
-      }}>
-        <nav style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}>
-          <a href="/" style={{ fontSize: "20px", fontWeight: "bold", color: "#111", textDecoration: "none" }}>
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <nav className="max-w-7xl mx-auto flex justify-between items-center">
+          <a href="/" className="text-xl font-bold text-gray-900 no-underline hover:text-gray-700">
             ← Back to Blog
           </a>
         </nav>
       </header>
 
-      <article style={{ maxWidth: "800px", margin: "0 auto", padding: "48px 24px" }}>
+      <article className="max-w-3xl mx-auto px-6 py-12">
         {/* Post Header */}
-        <div style={{
-          background: "white",
-          padding: "48px",
-          borderRadius: "12px",
-          marginBottom: "32px",
-          border: "1px solid #e5e7eb"
-        }}>
-          <div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-            <span style={{
-              padding: "4px 12px",
-              borderRadius: "12px",
-              background: "#eff6ff",
-              color: "#2563eb",
-              fontSize: "12px",
-              fontWeight: "500"
-            }}>
+        <div className="bg-white p-12 rounded-xl mb-8 border border-gray-200">
+          <div className="flex gap-2 mb-4">
+            <span className="px-3 py-1 rounded-xl bg-blue-50 text-blue-600 text-xs font-medium">
               {post.category}
             </span>
-            <span style={{ fontSize: "12px", color: "#999" }}>{post.readTime}</span>
+            <span className="text-xs text-gray-400">{post.readTime}</span>
           </div>
 
-          <h1 style={{
-            fontSize: "40px",
-            fontWeight: "bold",
-            margin: "0 0 16px 0",
-            lineHeight: 1.2
-          }}>
+          <h1 className="text-4xl font-bold mb-4 leading-tight">
             {post.title}
           </h1>
 
-          <div style={{
-            display: "flex",
-            alignItems: "center",
-            gap: "12px",
-            marginBottom: "24px"
-          }}>
-            <div style={{
-              width: "48px",
-              height: "48px",
-              borderRadius: "50%",
-              background: "#2563eb",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontWeight: "600",
-              fontSize: "20px"
-            }}>
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-xl">
               {post.author[0]}
             </div>
             <div>
-              <div style={{ fontSize: "16px", fontWeight: "600" }}>{post.author}</div>
-              <div style={{ fontSize: "14px", color: "#666" }}>{post.date}</div>
+              <div className="text-base font-semibold">{post.author}</div>
+              <div className="text-sm text-gray-600">{post.date}</div>
             </div>
           </div>
 
-          <div style={{ display: "flex", gap: "8px", flexWrap: "wrap" }}>
+          <div className="flex gap-2 flex-wrap">
             {post.tags.map(tag => (
-              <span key={tag} style={{
-                padding: "4px 12px",
-                borderRadius: "12px",
-                background: "#f3f4f6",
-                color: "#666",
-                fontSize: "12px"
-              }}>
+              <span key={tag} className="px-3 py-1 rounded-xl bg-gray-100 text-gray-600 text-xs">
                 #{tag}
               </span>
             ))}
@@ -156,41 +106,19 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
         </div>
 
         {/* Post Content */}
-        <div style={{
-          background: "white",
-          padding: "48px",
-          borderRadius: "12px",
-          marginBottom: "32px",
-          border: "1px solid #e5e7eb"
-        }}>
-          <div style={{
-            fontSize: "18px",
-            lineHeight: 1.8,
-            color: "#333"
-          }}>
+        <div className="bg-white p-12 rounded-xl mb-8 border border-gray-200">
+          <div className="text-lg leading-relaxed text-gray-800">
             {post.content.split('\n\n').map((paragraph, i) => {
               if (paragraph.startsWith('##')) {
                 return (
-                  <h2 key={i} style={{
-                    fontSize: "28px",
-                    fontWeight: "600",
-                    margin: "32px 0 16px 0"
-                  }}>
+                  <h2 key={i} className="text-3xl font-semibold mt-8 mb-4">
                     {paragraph.replace('## ', '')}
                   </h2>
                 );
               }
               if (paragraph.startsWith('```')) {
                 return (
-                  <pre key={i} style={{
-                    background: "#1f2937",
-                    color: "#f9fafb",
-                    padding: "24px",
-                    borderRadius: "8px",
-                    overflow: "auto",
-                    fontSize: "14px",
-                    margin: "24px 0"
-                  }}>
+                  <pre key={i} className="bg-gray-800 text-gray-50 p-6 rounded-lg overflow-auto text-sm my-6">
                     <code>{paragraph.replace(/```\w*\n?/g, '')}</code>
                   </pre>
                 );
@@ -198,12 +126,9 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
               if (paragraph.match(/^\d\./)) {
                 const items = paragraph.split('\n');
                 return (
-                  <ol key={i} style={{
-                    margin: "16px 0",
-                    paddingLeft: "24px"
-                  }}>
+                  <ol key={i} className="my-4 pl-6">
                     {items.map((item, j) => (
-                      <li key={j} style={{ margin: "8px 0" }}>
+                      <li key={j} className="my-2">
                         {item.replace(/^\d\.\s/, '')}
                       </li>
                     ))}
@@ -213,12 +138,9 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
               if (paragraph.startsWith('-')) {
                 const items = paragraph.split('\n');
                 return (
-                  <ul key={i} style={{
-                    margin: "16px 0",
-                    paddingLeft: "24px"
-                  }}>
+                  <ul key={i} className="my-4 pl-6">
                     {items.map((item, j) => (
-                      <li key={j} style={{ margin: "8px 0" }}>
+                      <li key={j} className="my-2">
                         {item.replace(/^-\s/, '')}
                       </li>
                     ))}
@@ -226,7 +148,7 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
                 );
               }
               return (
-                <p key={i} style={{ margin: "16px 0" }}>
+                <p key={i} className="my-4">
                   {paragraph}
                 </p>
               );
@@ -235,37 +157,19 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
         </div>
 
         {/* Author Bio */}
-        <div style={{
-          background: "white",
-          padding: "32px",
-          borderRadius: "12px",
-          marginBottom: "32px",
-          border: "1px solid #e5e7eb"
-        }}>
-          <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "600" }}>
+        <div className="bg-white p-8 rounded-xl mb-8 border border-gray-200">
+          <h3 className="mb-4 text-lg font-semibold">
             About the Author
           </h3>
-          <div style={{ display: "flex", gap: "16px", alignItems: "start" }}>
-            <div style={{
-              width: "64px",
-              height: "64px",
-              borderRadius: "50%",
-              background: "#2563eb",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontWeight: "600",
-              fontSize: "24px",
-              flexShrink: 0
-            }}>
+          <div className="flex gap-4 items-start">
+            <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-2xl flex-shrink-0">
               {post.author[0]}
             </div>
             <div>
-              <div style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px" }}>
+              <div className="text-lg font-semibold mb-2">
                 {post.author}
               </div>
-              <p style={{ margin: 0, color: "#666", lineHeight: 1.6 }}>
+              <p className="m-0 text-gray-600 leading-relaxed">
                 {post.authorBio}
               </p>
             </div>
@@ -273,27 +177,16 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
         </div>
 
         {/* Share Section */}
-        <div style={{
-          background: "white",
-          padding: "32px",
-          borderRadius: "12px",
-          border: "1px solid #e5e7eb",
-          textAlign: "center"
-        }}>
-          <h3 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "600" }}>
+        <div className="bg-white p-8 rounded-xl border border-gray-200 text-center">
+          <h3 className="mb-4 text-lg font-semibold">
             Share this article
           </h3>
-          <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
+          <div className="flex gap-3 justify-center">
             {['Twitter', 'LinkedIn', 'Facebook'].map(platform => (
-              <button key={platform} style={{
-                padding: "10px 20px",
-                borderRadius: "8px",
-                border: "1px solid #e5e7eb",
-                background: "white",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "500"
-              }}>
+              <button
+                key={platform}
+                className="px-5 py-2.5 rounded-lg border border-gray-200 bg-white cursor-pointer text-sm font-medium hover:bg-gray-50"
+              >
                 {platform}
               </button>
             ))}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, useState, ReactNode, useCallback } from "react";
 import { EditorProvider, useEditor } from "./EditorContext";
 import {
   useCollaboration,
@@ -15,6 +15,8 @@ interface CollaborativeEditorContextType {
   isConnected: boolean;
   collaborationEnabled: boolean;
   currentUserId: string | null;
+  updateSelectedElement: (elementId: string | null, elementPath?: string) => void;
+  getUserEditingElement: (elementId: string) => UserPresence | null;
 }
 
 const CollaborativeEditorContext = createContext<
@@ -52,6 +54,8 @@ export function CollaborativeEditorProvider({
     cursors,
     isConnected,
     updateCursor,
+    updateSelection,
+    clearSelection,
   } = useCollaboration({
     projectId: sessionProjectId,
     userId: sessionUserId,
@@ -98,12 +102,59 @@ export function CollaborativeEditorProvider({
     };
   }, [collaborationEnabled, isConnected, updateCursor]);
 
+  // Update selected element in presence
+  const updateSelectedElement = useCallback(
+    (elementId: string | null, elementPath?: string) => {
+      if (!session || !isConnected) return;
+
+      if (elementId) {
+        console.log(`🎯 [CollaborativeEditor] User selected element: ${elementId}`);
+        // Update presence with selected element info
+        session.provider.awareness.setLocalStateField("selectedElement", {
+          elementId,
+          elementPath: elementPath || elementId,
+          timestamp: Date.now(),
+        });
+      } else {
+        console.log("🎯 [CollaborativeEditor] User deselected element");
+        // Clear selected element
+        session.provider.awareness.setLocalStateField("selectedElement", null);
+      }
+    },
+    [session, isConnected]
+  );
+
+  // Get user who is editing a specific element
+  const getUserEditingElement = useCallback(
+    (elementId: string): UserPresence | null => {
+      if (!elementId) return null;
+
+      // Find user whose selectedElement matches this elementId
+      for (const user of users) {
+        const awarenessState = session?.provider.awareness.getStates();
+        if (!awarenessState) continue;
+
+        // Find this user's awareness state
+        for (const [clientId, state] of awarenessState.entries()) {
+          if (state.user?.id === user.id && state.selectedElement?.elementId === elementId) {
+            return user;
+          }
+        }
+      }
+
+      return null;
+    },
+    [users, session]
+  );
+
   const value: CollaborativeEditorContextType = {
     users,
     cursors,
     isConnected,
     collaborationEnabled,
     currentUserId: sessionUserId,
+    updateSelectedElement,
+    getUserEditingElement,
   };
 
   return (

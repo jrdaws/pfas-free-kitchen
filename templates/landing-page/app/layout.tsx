@@ -22,11 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
       </head>
-      <body style={{
-        fontFamily: "system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif",
-        margin: 0,
-        background: "white"
-      }}>
+      <body className="font-sans m-0 bg-white">
         {children}
       </body>
     </html>

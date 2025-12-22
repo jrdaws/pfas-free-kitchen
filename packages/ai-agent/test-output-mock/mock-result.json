@@ -1,0 +1,83 @@
+{
+  "intent": {
+    "category": "saas",
+    "confidence": 0.9,
+    "reasoning": "Project includes authentication and subscription features",
+    "suggestedTemplate": "saas",
+    "features": [
+      "user authentication",
+      "task management",
+      "mark complete"
+    ],
+    "integrations": {
+      "auth": "supabase",
+      "db": "supabase"
+    },
+    "complexity": "simple",
+    "keyEntities": [
+      "User",
+      "Task"
+    ]
+  },
+  "architecture": {
+    "template": "saas",
+    "pages": [
+      {
+        "path": "/",
+        "name": "Home",
+        "description": "Landing page",
+        "components": [
+          "Hero",
+          "Features"
+        ]
+      },
+      {
+        "path": "/dashboard",
+        "name": "Dashboard",
+        "description": "Main app",
+        "components": [
+          "TaskList"
+        ]
+      }
+    ],
+    "components": [
+      {
+        "name": "TaskList",
+        "type": "feature",
+        "description": "List of tasks",
+        "template": "create-new"
+      }
+    ],
+    "routes": [
+      {
+        "path": "/api/tasks",
+        "type": "api",
+        "method": "GET",
+        "description": "Fetch tasks"
+      }
+    ],
+    "integrations": {
+      "auth": "supabase",
+      "db": "supabase"
+    }
+  },
+  "code": {
+    "files": [
+      {
+        "path": "app/page.tsx",
+        "content": "// Page content here",
+        "overwrite": false
+      },
+      {
+        "path": "components/TaskList.tsx",
+        "content": "// Component here",
+        "overwrite": false
+      }
+    ],
+    "integrationCode": []
+  },
+  "context": {
+    "cursorrules": "# Project rules\n\nThis is a sample .cursorrules file",
+    "startPrompt": "# Start Prompt\n\nThis is a sample START_PROMPT.md file"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "provider": "openai",
+  "type": "ai",
+  "version": "1.0.0",
+  "description": "OpenAI API integration with GPT-4, chat completions, and streaming support",
+  "dependencies": {
+    "openai": "^4.28.0",
+    "ai": "^3.0.0"
+  },
+  "envVars": [
+    "OPENAI_API_KEY"
+  ],
+  "files": {
+    "lib": ["lib/openai.ts"],
+    "app": ["app/api/ai/**"],
+    "components": ["components/ai/**"]
+  },
+  "postInstallInstructions": "Create an OpenAI account at https://platform.openai.com, get your API key from https://platform.openai.com/api-keys, and add credits to your account"
+}

@@ -1,0 +1,18 @@
+{
+  "provider": "posthog",
+  "type": "analytics",
+  "version": "1.0.0",
+  "description": "PostHog analytics with event tracking, feature flags, and session recording",
+  "dependencies": {
+    "posthog-js": "^1.100.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "NEXT_PUBLIC_POSTHOG_HOST"
+  ],
+  "files": {
+    "lib": ["lib/posthog.ts"],
+    "components": ["components/analytics/**"]
+  },
+  "postInstallInstructions": "Create a PostHog account at https://posthog.com, create a project, and get your API key from project settings"
+}

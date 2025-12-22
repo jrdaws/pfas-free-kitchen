@@ -2,93 +2,57 @@
 
 export default function SettingsPage() {
   return (
-    <div style={{ padding: "24px", maxWidth: "800px", margin: "0 auto" }}>
-      <h1 style={{ fontSize: "28px", fontWeight: "600", marginBottom: "8px" }}>Settings</h1>
-      <p style={{ color: "#6b7280", marginBottom: "32px" }}>Manage your account settings and preferences</p>
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-3xl font-semibold mb-2">Settings</h1>
+      <p className="text-gray-500 mb-8">Manage your account settings and preferences</p>
 
       {/* Profile Settings */}
-      <div style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        marginBottom: "24px"
-      }}>
-        <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>Profile</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+        <h2 className="text-lg font-semibold mb-4">Profile</h2>
+        <div className="flex flex-col gap-4">
           <div>
-            <label style={{ display: "block", fontSize: "14px", fontWeight: "500", marginBottom: "8px" }}>
+            <label className="block text-sm font-medium mb-2">
               Full Name
             </label>
-            <input type="text" placeholder="John Doe" style={{
-              width: "100%",
-              padding: "8px 12px",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-              fontSize: "14px"
-            }} />
+            <input
+              type="text"
+              placeholder="John Doe"
+              className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
           <div>
-            <label style={{ display: "block", fontSize: "14px", fontWeight: "500", marginBottom: "8px" }}>
+            <label className="block text-sm font-medium mb-2">
               Email
             </label>
-            <input type="email" placeholder="john@example.com" style={{
-              width: "100%",
-              padding: "8px 12px",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-              fontSize: "14px"
-            }} />
+            <input
+              type="email"
+              placeholder="john@example.com"
+              className="w-full px-3 py-2 border border-gray-200 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
           </div>
-          <button style={{
-            background: "#3b82f6",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            padding: "10px 20px",
-            fontSize: "14px",
-            fontWeight: "500",
-            cursor: "pointer",
-            alignSelf: "flex-start"
-          }}>
+          <button className="bg-blue-500 text-white border-none rounded-md px-5 py-2.5 text-sm font-medium cursor-pointer self-start hover:bg-blue-600">
             Save Changes
           </button>
         </div>
       </div>
 
       {/* Notifications */}
-      <div style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "8px",
-        border: "1px solid #e5e7eb",
-        marginBottom: "24px"
-      }}>
-        <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>Notifications</h2>
-        <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+      <div className="bg-white p-6 rounded-lg border border-gray-200 mb-6">
+        <h2 className="text-lg font-semibold mb-4">Notifications</h2>
+        <div className="flex flex-col gap-4">
           {[
             { label: "Email notifications", description: "Receive email updates about your account" },
             { label: "Push notifications", description: "Receive push notifications on your devices" },
             { label: "Weekly reports", description: "Get weekly reports about your activity" }
           ].map((item, i) => (
-            <div key={i} style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div key={i} className="flex justify-between items-center">
               <div>
-                <div style={{ fontSize: "14px", fontWeight: "500" }}>{item.label}</div>
-                <div style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>{item.description}</div>
+                <div className="text-sm font-medium">{item.label}</div>
+                <div className="text-[13px] text-gray-500 mt-1">{item.description}</div>
               </div>
-              <label style={{ position: "relative", display: "inline-block", width: "44px", height: "24px" }}>
-                <input type="checkbox" defaultChecked={i === 0} style={{ opacity: 0, width: 0, height: 0 }} />
-                <span style={{
-                  position: "absolute",
-                  cursor: "pointer",
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  background: i === 0 ? "#3b82f6" : "#d1d5db",
-                  borderRadius: "24px",
-                  transition: "0.4s"
-                }} />
+              <label className="relative inline-block w-11 h-6">
+                <input type="checkbox" defaultChecked={i === 0} className="opacity-0 w-0 h-0" />
+                <span className={`absolute cursor-pointer inset-0 ${i === 0 ? 'bg-blue-500' : 'bg-gray-300'} rounded-full transition-all duration-400`} />
               </label>
             </div>
           ))}
@@ -96,26 +60,12 @@ export default function SettingsPage() {
       </div>
 
       {/* Danger Zone */}
-      <div style={{
-        background: "white",
-        padding: "24px",
-        borderRadius: "8px",
-        border: "1px solid #fee2e2"
-      }}>
-        <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "8px", color: "#dc2626" }}>Danger Zone</h2>
-        <p style={{ fontSize: "14px", color: "#6b7280", marginBottom: "16px" }}>
+      <div className="bg-white p-6 rounded-lg border border-red-200">
+        <h2 className="text-lg font-semibold mb-2 text-red-600">Danger Zone</h2>
+        <p className="text-sm text-gray-500 mb-4">
           Irreversible and destructive actions
         </p>
-        <button style={{
-          background: "white",
-          color: "#dc2626",
-          border: "1px solid #dc2626",
-          borderRadius: "6px",
-          padding: "10px 20px",
-          fontSize: "14px",
-          fontWeight: "500",
-          cursor: "pointer"
-        }}>
+        <button className="bg-white text-red-600 border border-red-600 rounded-md px-5 py-2.5 text-sm font-medium cursor-pointer hover:bg-red-50">
           Delete Account
         </button>
       </div>

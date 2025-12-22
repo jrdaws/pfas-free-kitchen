@@ -73,82 +73,52 @@ export default function BlogHome() {
   });
 
   return (
-    <div style={{ minHeight: "100vh" }}>
+    <div className="min-h-screen">
       {/* Header */}
-      <header style={{
-        background: "white",
-        borderBottom: "1px solid #e5e7eb",
-        padding: "16px 24px"
-      }}>
-        <nav style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}>
-          <div style={{ fontSize: "20px", fontWeight: "bold" }}>My Blog</div>
-          <div style={{ display: "flex", gap: "24px", alignItems: "center" }}>
-            <a href="/" style={{ color: "#333", textDecoration: "none" }}>Home</a>
-            <a href="#" style={{ color: "#666", textDecoration: "none" }}>About</a>
-            <a href="#" style={{ color: "#666", textDecoration: "none" }}>Contact</a>
+      <header className="bg-white border-b border-gray-200 px-6 py-4">
+        <nav className="max-w-7xl mx-auto flex justify-between items-center">
+          <div className="text-xl font-bold">My Blog</div>
+          <div className="flex gap-6 items-center">
+            <a href="/" className="text-gray-800 no-underline hover:text-gray-900">Home</a>
+            <a href="#" className="text-gray-600 no-underline hover:text-gray-900">About</a>
+            <a href="#" className="text-gray-600 no-underline hover:text-gray-900">Contact</a>
           </div>
         </nav>
       </header>
 
-      <main style={{ maxWidth: "1200px", margin: "0 auto", padding: "48px 24px" }}>
+      <main className="max-w-7xl mx-auto px-6 py-12">
         {/* Hero Section */}
-        <div style={{ textAlign: "center", marginBottom: "48px" }}>
-          <h1 style={{ fontSize: "48px", fontWeight: "bold", margin: "0 0 16px 0" }}>
+        <div className="text-center mb-12">
+          <h1 className="text-5xl font-bold mb-4">
             Welcome to My Blog
           </h1>
-          <p style={{ fontSize: "18px", color: "#666", maxWidth: "600px", margin: "0 auto" }}>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
             Thoughts, stories, and ideas about web development, technology, and more.
           </p>
         </div>
 
         {/* Search Bar */}
-        <div style={{ marginBottom: "32px" }}>
+        <div className="mb-8">
           <input
             type="text"
             placeholder="Search posts..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            style={{
-              width: "100%",
-              padding: "12px 16px",
-              fontSize: "16px",
-              border: "1px solid #e5e7eb",
-              borderRadius: "8px",
-              background: "white"
-            }}
+            className="w-full px-4 py-3 text-base border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
         {/* Category Filter */}
-        <div style={{
-          display: "flex",
-          gap: "12px",
-          marginBottom: "48px",
-          overflowX: "auto",
-          paddingBottom: "8px"
-        }}>
+        <div className="flex gap-3 mb-12 overflow-x-auto pb-2">
           {categories.map(cat => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              style={{
-                padding: "8px 16px",
-                borderRadius: "20px",
-                border: "none",
-                background: selectedCategory === cat ? "#2563eb" : "white",
-                color: selectedCategory === cat ? "white" : "#333",
-                cursor: "pointer",
-                fontSize: "14px",
-                fontWeight: "500",
-                whiteSpace: "nowrap",
-                boxShadow: selectedCategory === cat ? "none" : "0 1px 3px rgba(0,0,0,0.1)"
-              }}
+              className={`px-4 py-2 rounded-full border-none ${
+                selectedCategory === cat
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-white text-gray-800 shadow-sm'
+              } cursor-pointer text-sm font-medium whitespace-nowrap hover:opacity-90`}
             >
               {cat}
             </button>
@@ -156,79 +126,33 @@ export default function BlogHome() {
         </div>
 
         {/* Posts Grid */}
-        <div style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))",
-          gap: "32px",
-          marginBottom: "48px"
-        }}>
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(350px,1fr))] gap-8 mb-12">
           {filteredPosts.map(post => (
-            <article key={post.slug} style={{
-              background: "white",
-              borderRadius: "12px",
-              overflow: "hidden",
-              border: "1px solid #e5e7eb",
-              transition: "transform 0.2s, box-shadow 0.2s",
-              cursor: "pointer"
-            }}>
-              <div style={{
-                height: "200px",
-                background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)"
-              }} />
-              <div style={{ padding: "24px" }}>
-                <div style={{ display: "flex", gap: "8px", marginBottom: "12px" }}>
-                  <span style={{
-                    padding: "4px 12px",
-                    borderRadius: "12px",
-                    background: "#eff6ff",
-                    color: "#2563eb",
-                    fontSize: "12px",
-                    fontWeight: "500"
-                  }}>
+            <article
+              key={post.slug}
+              className="bg-white rounded-xl overflow-hidden border border-gray-200 transition-all duration-200 cursor-pointer hover:shadow-lg hover:-translate-y-1"
+            >
+              <div className="h-[200px] bg-gradient-to-br from-indigo-500 to-purple-600" />
+              <div className="p-6">
+                <div className="flex gap-2 mb-3">
+                  <span className="px-3 py-1 rounded-xl bg-blue-50 text-blue-600 text-xs font-medium">
                     {post.category}
                   </span>
-                  <span style={{ fontSize: "12px", color: "#999" }}>{post.readTime}</span>
+                  <span className="text-xs text-gray-400">{post.readTime}</span>
                 </div>
-                <h2 style={{
-                  fontSize: "22px",
-                  fontWeight: "600",
-                  margin: "0 0 12px 0",
-                  lineHeight: 1.3
-                }}>
+                <h2 className="text-[22px] font-semibold mb-3 leading-snug">
                   {post.title}
                 </h2>
-                <p style={{
-                  color: "#666",
-                  fontSize: "14px",
-                  lineHeight: 1.6,
-                  margin: "0 0 16px 0"
-                }}>
+                <p className="text-gray-600 text-sm leading-relaxed mb-4">
                   {post.excerpt}
                 </p>
-                <div style={{
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "12px",
-                  paddingTop: "16px",
-                  borderTop: "1px solid #e5e7eb"
-                }}>
-                  <div style={{
-                    width: "32px",
-                    height: "32px",
-                    borderRadius: "50%",
-                    background: "#2563eb",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    color: "white",
-                    fontWeight: "600",
-                    fontSize: "14px"
-                  }}>
+                <div className="flex items-center gap-3 pt-4 border-t border-gray-200">
+                  <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-sm">
                     {post.author[0]}
                   </div>
                   <div>
-                    <div style={{ fontSize: "14px", fontWeight: "500" }}>{post.author}</div>
-                    <div style={{ fontSize: "12px", color: "#999" }}>{post.date}</div>
+                    <div className="text-sm font-medium">{post.author}</div>
+                    <div className="text-xs text-gray-400">{post.date}</div>
                   </div>
                 </div>
               </div>
@@ -237,57 +161,26 @@ export default function BlogHome() {
         </div>
 
         {filteredPosts.length === 0 && (
-          <div style={{
-            textAlign: "center",
-            padding: "48px",
-            color: "#666"
-          }}>
+          <div className="text-center py-12 text-gray-600">
             No posts found matching your search.
           </div>
         )}
 
         {/* Newsletter Section */}
-        <div style={{
-          background: "white",
-          padding: "48px",
-          borderRadius: "12px",
-          border: "1px solid #e5e7eb",
-          textAlign: "center"
-        }}>
-          <h2 style={{ fontSize: "28px", fontWeight: "600", margin: "0 0 12px 0" }}>
+        <div className="bg-white p-12 rounded-xl border border-gray-200 text-center">
+          <h2 className="text-3xl font-semibold mb-3">
             Subscribe to the Newsletter
           </h2>
-          <p style={{ color: "#666", marginBottom: "24px" }}>
+          <p className="text-gray-600 mb-6">
             Get the latest posts delivered right to your inbox.
           </p>
-          <div style={{
-            display: "flex",
-            gap: "12px",
-            maxWidth: "500px",
-            margin: "0 auto"
-          }}>
+          <div className="flex gap-3 max-w-lg mx-auto">
             <input
               type="email"
               placeholder="Your email address"
-              style={{
-                flex: 1,
-                padding: "12px 16px",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                fontSize: "14px"
-              }}
+              className="flex-1 px-4 py-3 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button style={{
-              background: "#2563eb",
-              color: "white",
-              border: "none",
-              borderRadius: "8px",
-              padding: "12px 24px",
-              fontSize: "14px",
-              fontWeight: "500",
-              cursor: "pointer",
-              whiteSpace: "nowrap"
-            }}>
+            <button className="bg-blue-600 text-white border-none rounded-lg px-6 py-3 text-sm font-medium cursor-pointer whitespace-nowrap hover:bg-blue-700">
               Subscribe
             </button>
           </div>
@@ -295,50 +188,32 @@ export default function BlogHome() {
       </main>
 
       {/* Footer */}
-      <footer style={{
-        background: "#111",
-        color: "white",
-        padding: "48px 24px",
-        marginTop: "64px"
-      }}>
-        <div style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-          gap: "32px"
-        }}>
+      <footer className="bg-gray-900 text-white px-6 py-12 mt-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-8">
           <div>
-            <h3 style={{ margin: "0 0 16px 0", fontSize: "18px" }}>My Blog</h3>
-            <p style={{ color: "#999", margin: 0, fontSize: "14px", lineHeight: 1.6 }}>
+            <h3 className="mb-4 text-lg">My Blog</h3>
+            <p className="text-gray-400 m-0 text-sm leading-relaxed">
               Sharing knowledge and insights about web development.
             </p>
           </div>
           <div>
-            <h4 style={{ margin: "0 0 16px 0", fontSize: "14px" }}>Categories</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>Tutorial</a>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>Development</a>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>Backend</a>
+            <h4 className="mb-4 text-sm">Categories</h4>
+            <div className="flex flex-col gap-2">
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">Tutorial</a>
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">Development</a>
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">Backend</a>
             </div>
           </div>
           <div>
-            <h4 style={{ margin: "0 0 16px 0", fontSize: "14px" }}>Social</h4>
-            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>Twitter</a>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>GitHub</a>
-              <a href="#" style={{ color: "#999", fontSize: "14px", textDecoration: "none" }}>LinkedIn</a>
+            <h4 className="mb-4 text-sm">Social</h4>
+            <div className="flex flex-col gap-2">
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">Twitter</a>
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">GitHub</a>
+              <a href="#" className="text-gray-400 text-sm no-underline hover:text-white">LinkedIn</a>
             </div>
           </div>
         </div>
-        <div style={{
-          borderTop: "1px solid #333",
-          marginTop: "32px",
-          paddingTop: "24px",
-          textAlign: "center",
-          color: "#999",
-          fontSize: "14px"
-        }}>
+        <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400 text-sm">
           © 2024 My Blog. All rights reserved.
         </div>
       </footer>

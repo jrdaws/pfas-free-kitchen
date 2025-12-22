@@ -112,3 +112,54 @@ test("CLI: export --push requires --remote", () => {
     "should show requirement error"
   );
 });
+
+test("CLI: templates list command", () => {
+  const result = runFramework(["templates", "list"]);
+  assert.equal(result.status, 0, "templates list should exit with 0");
+  assert.ok(
+    result.stdout.includes("Available Templates") || result.stdout.includes("No templates found"),
+    "should show templates list"
+  );
+});
+
+test("CLI: templates help command", () => {
+  const result = runFramework(["templates", "help"]);
+  assert.equal(result.status, 0, "templates help should exit with 0");
+  assert.ok(result.stdout.includes("Template Management Commands"), "should show templates help");
+});
+
+test("CLI: plugin help command", () => {
+  const result = runFramework(["plugin", "help"]);
+  assert.equal(result.status, 0, "plugin help should exit with 0");
+  assert.ok(result.stdout.includes("Plugin Management Commands"), "should show plugin help");
+});
+
+test("CLI: plugin hooks command", () => {
+  const result = runFramework(["plugin", "hooks"]);
+  assert.equal(result.status, 0, "plugin hooks should exit with 0");
+  assert.ok(result.stdout.includes("Available Hook Points"), "should show hook points");
+});
+
+test("CLI: no command shows help", () => {
+  const result = runFramework([]);
+  assert.equal(result.status, 0, "no command should exit with 0");
+  assert.ok(result.stdout.includes("Usage:"), "should show usage information");
+});
+
+test("CLI: capabilities command", () => {
+  const result = runFramework(["capabilities"]);
+  assert.equal(result.status, 0, "capabilities should exit with 0");
+  // Should show capabilities output or help
+});
+
+test("CLI: doctor command", () => {
+  const result = runFramework(["doctor"]);
+  assert.equal(result.status, 0, "doctor should exit with 0 or run successfully");
+  // Doctor command may have various outputs depending on system state
+});
+
+test("CLI: pull command without token shows usage", () => {
+  const result = runFramework(["pull"]);
+  // Pull without token shows usage, which may exit with 0 or 1
+  assert.ok(result.stdout.includes("Usage") || result.stdout.includes("token"), "should show usage");
+});

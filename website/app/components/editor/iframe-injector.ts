@@ -274,6 +274,33 @@ export function getInjectionScript(): string {
             }, '*');
             break;
           }
+          case 'getElementPosition': {
+            // Return element position for collaborative editing indicators
+            const { elementId } = message.payload;
+
+            // Find element by ID
+            let targetElement = null;
+            document.querySelectorAll('*').forEach(el => {
+              if (getElementId(el) === elementId) {
+                targetElement = el;
+              }
+            });
+
+            if (targetElement) {
+              const position = getElementPosition(targetElement);
+              window.parent.postMessage({
+                type: 'elementPosition',
+                payload: { elementId, position },
+              }, '*');
+            } else {
+              // Element not found, send null position
+              window.parent.postMessage({
+                type: 'elementPosition',
+                payload: { elementId, position: null },
+              }, '*');
+            }
+            break;
+          }
         }
       }
 

@@ -28,21 +28,13 @@ export default function DashboardPage() {
   ];
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div className="flex h-screen">
       {/* Sidebar */}
-      <aside style={{
-        width: sidebarOpen ? "240px" : "0",
-        background: "#1f2937",
-        color: "white",
-        transition: "width 0.3s",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column"
-      }}>
-        <div style={{ padding: "24px", borderBottom: "1px solid #374151" }}>
-          <h2 style={{ margin: 0, fontSize: "20px" }}>Dashboard</h2>
+      <aside className={`${sidebarOpen ? 'w-60' : 'w-0'} bg-gray-800 text-white transition-all duration-300 overflow-hidden flex flex-col`}>
+        <div className="p-6 border-b border-gray-700">
+          <h2 className="m-0 text-xl">Dashboard</h2>
         </div>
-        <nav style={{ flex: 1, padding: "16px 0" }}>
+        <nav className="flex-1 py-4">
           {[
             { label: "Overview", icon: "📊", active: true },
             { label: "Analytics", icon: "📈" },
@@ -51,129 +43,77 @@ export default function DashboardPage() {
             { label: "Products", icon: "📦" },
             { label: "Settings", icon: "⚙️" }
           ].map((item, i) => (
-            <a key={i} href={item.label === "Settings" ? "/settings" : "#"} style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "12px",
-              padding: "12px 24px",
-              color: "white",
-              textDecoration: "none",
-              background: item.active ? "#374151" : "transparent",
-              borderLeft: item.active ? "3px solid #3b82f6" : "3px solid transparent"
-            }}>
+            <a
+              key={i}
+              href={item.label === "Settings" ? "/settings" : "#"}
+              className={`flex items-center gap-3 px-6 py-3 text-white no-underline ${item.active ? 'bg-gray-700 border-l-[3px] border-l-blue-500' : 'border-l-[3px] border-l-transparent hover:bg-gray-700'}`}
+            >
               <span>{item.icon}</span>
               <span>{item.label}</span>
             </a>
           ))}
         </nav>
-        <div style={{ padding: "24px", borderTop: "1px solid #374151" }}>
-          <div style={{ fontSize: "14px", color: "#9ca3af" }}>Logged in as</div>
-          <div style={{ fontWeight: "500", marginTop: "4px" }}>admin@example.com</div>
+        <div className="p-6 border-t border-gray-700">
+          <div className="text-sm text-gray-400">Logged in as</div>
+          <div className="font-medium mt-1">admin@example.com</div>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "auto" }}>
+      <div className="flex-1 flex flex-col overflow-auto">
         {/* Header */}
-        <header style={{
-          background: "white",
-          borderBottom: "1px solid #e5e7eb",
-          padding: "16px 24px",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center"
-        }}>
-          <button onClick={() => setSidebarOpen(!sidebarOpen)} style={{
-            background: "none",
-            border: "none",
-            fontSize: "20px",
-            cursor: "pointer"
-          }}>☰</button>
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-            <button style={{
-              background: "none",
-              border: "none",
-              fontSize: "20px",
-              cursor: "pointer"
-            }}>🔔</button>
-            <div style={{
-              width: "32px",
-              height: "32px",
-              borderRadius: "50%",
-              background: "#3b82f6",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              color: "white",
-              fontWeight: "600"
-            }}>A</div>
+        <header className="bg-white border-b border-gray-200 px-6 py-4 flex justify-between items-center">
+          <button
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            className="bg-transparent border-none text-xl cursor-pointer hover:text-gray-600"
+          >
+            ☰
+          </button>
+          <div className="flex items-center gap-4">
+            <button className="bg-transparent border-none text-xl cursor-pointer hover:text-gray-600">
+              🔔
+            </button>
+            <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
+              A
+            </div>
           </div>
         </header>
 
         {/* Dashboard Content */}
-        <main style={{ flex: 1, padding: "24px" }}>
-          <h1 style={{ margin: "0 0 24px 0", fontSize: "28px", fontWeight: "600" }}>Overview</h1>
+        <main className="flex-1 p-6 bg-gray-50">
+          <h1 className="mb-6 text-3xl font-semibold">Overview</h1>
 
           {/* Stats Cards */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-            gap: "24px",
-            marginBottom: "24px"
-          }}>
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(250px,1fr))] gap-6 mb-6">
             {stats.map((stat, i) => (
-              <div key={i} style={{
-                background: "white",
-                padding: "24px",
-                borderRadius: "8px",
-                border: "1px solid #e5e7eb"
-              }}>
-                <div style={{ fontSize: "14px", color: "#6b7280", marginBottom: "8px" }}>{stat.label}</div>
-                <div style={{ fontSize: "28px", fontWeight: "600", marginBottom: "8px" }}>{stat.value}</div>
-                <div style={{ fontSize: "14px", color: stat.positive ? "#10b981" : "#ef4444" }}>
+              <div key={i} className="bg-white p-6 rounded-lg border border-gray-200">
+                <div className="text-sm text-gray-500 mb-2">{stat.label}</div>
+                <div className="text-3xl font-semibold mb-2">{stat.value}</div>
+                <div className={`text-sm ${stat.positive ? 'text-green-600' : 'text-red-600'}`}>
                   {stat.change} from last month
                 </div>
               </div>
             ))}
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: "24px", marginBottom: "24px" }}>
+          <div className="grid grid-cols-[2fr_1fr] gap-6 mb-6">
             {/* Chart Placeholder */}
-            <div style={{
-              background: "white",
-              padding: "24px",
-              borderRadius: "8px",
-              border: "1px solid #e5e7eb"
-            }}>
-              <h2 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "600" }}>Revenue Chart</h2>
-              <div style={{
-                height: "300px",
-                background: "linear-gradient(180deg, #3b82f6 0%, #1e40af 100%)",
-                borderRadius: "8px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                color: "white",
-                fontSize: "18px"
-              }}>
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h2 className="mb-4 text-lg font-semibold">Revenue Chart</h2>
+              <div className="h-[300px] bg-gradient-to-b from-blue-500 to-blue-800 rounded-lg flex items-center justify-center text-white text-lg">
                 Chart Component Placeholder
               </div>
             </div>
 
             {/* Recent Activity */}
-            <div style={{
-              background: "white",
-              padding: "24px",
-              borderRadius: "8px",
-              border: "1px solid #e5e7eb"
-            }}>
-              <h2 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "600" }}>Recent Activity</h2>
-              <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+            <div className="bg-white p-6 rounded-lg border border-gray-200">
+              <h2 className="mb-4 text-lg font-semibold">Recent Activity</h2>
+              <div className="flex flex-col gap-4">
                 {recentActivity.map((activity, i) => (
-                  <div key={i} style={{ paddingBottom: "16px", borderBottom: i < recentActivity.length - 1 ? "1px solid #e5e7eb" : "none" }}>
-                    <div style={{ fontWeight: "500", fontSize: "14px" }}>{activity.user}</div>
-                    <div style={{ fontSize: "13px", color: "#6b7280", marginTop: "4px" }}>{activity.action}</div>
-                    <div style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>{activity.time}</div>
+                  <div key={i} className={`pb-4 ${i < recentActivity.length - 1 ? 'border-b border-gray-200' : ''}`}>
+                    <div className="font-medium text-sm">{activity.user}</div>
+                    <div className="text-[13px] text-gray-500 mt-1">{activity.action}</div>
+                    <div className="text-xs text-gray-400 mt-1">{activity.time}</div>
                   </div>
                 ))}
               </div>
@@ -181,43 +121,35 @@ export default function DashboardPage() {
           </div>
 
           {/* Data Table */}
-          <div style={{
-            background: "white",
-            padding: "24px",
-            borderRadius: "8px",
-            border: "1px solid #e5e7eb"
-          }}>
-            <h2 style={{ margin: "0 0 16px 0", fontSize: "18px", fontWeight: "600" }}>Recent Orders</h2>
-            <div style={{ overflowX: "auto" }}>
-              <table style={{ width: "100%", borderCollapse: "collapse" }}>
+          <div className="bg-white p-6 rounded-lg border border-gray-200">
+            <h2 className="mb-4 text-lg font-semibold">Recent Orders</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full border-collapse">
                 <thead>
-                  <tr style={{ borderBottom: "1px solid #e5e7eb" }}>
-                    <th style={{ padding: "12px", textAlign: "left", fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>Order ID</th>
-                    <th style={{ padding: "12px", textAlign: "left", fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>Customer</th>
-                    <th style={{ padding: "12px", textAlign: "left", fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>Status</th>
-                    <th style={{ padding: "12px", textAlign: "left", fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>Amount</th>
-                    <th style={{ padding: "12px", textAlign: "left", fontSize: "14px", fontWeight: "500", color: "#6b7280" }}>Date</th>
+                  <tr className="border-b border-gray-200">
+                    <th className="p-3 text-left text-sm font-medium text-gray-500">Order ID</th>
+                    <th className="p-3 text-left text-sm font-medium text-gray-500">Customer</th>
+                    <th className="p-3 text-left text-sm font-medium text-gray-500">Status</th>
+                    <th className="p-3 text-left text-sm font-medium text-gray-500">Amount</th>
+                    <th className="p-3 text-left text-sm font-medium text-gray-500">Date</th>
                   </tr>
                 </thead>
                 <tbody>
                   {tableData.map((row, i) => (
-                    <tr key={i} style={{ borderBottom: "1px solid #e5e7eb" }}>
-                      <td style={{ padding: "12px", fontSize: "14px" }}>{row.id}</td>
-                      <td style={{ padding: "12px", fontSize: "14px" }}>{row.customer}</td>
-                      <td style={{ padding: "12px" }}>
-                        <span style={{
-                          padding: "4px 12px",
-                          borderRadius: "12px",
-                          fontSize: "12px",
-                          fontWeight: "500",
-                          background: row.status === "Completed" ? "#dcfce7" : row.status === "Pending" ? "#fef3c7" : "#fee2e2",
-                          color: row.status === "Completed" ? "#166534" : row.status === "Pending" ? "#92400e" : "#991b1b"
-                        }}>
+                    <tr key={i} className="border-b border-gray-200">
+                      <td className="p-3 text-sm">{row.id}</td>
+                      <td className="p-3 text-sm">{row.customer}</td>
+                      <td className="p-3">
+                        <span className={`px-3 py-1 rounded-xl text-xs font-medium ${
+                          row.status === "Completed" ? 'bg-green-100 text-green-800' :
+                          row.status === "Pending" ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-red-100 text-red-800'
+                        }`}>
                           {row.status}
                         </span>
                       </td>
-                      <td style={{ padding: "12px", fontSize: "14px", fontWeight: "500" }}>{row.amount}</td>
-                      <td style={{ padding: "12px", fontSize: "14px", color: "#6b7280" }}>{row.date}</td>
+                      <td className="p-3 text-sm font-medium">{row.amount}</td>
+                      <td className="p-3 text-sm text-gray-500">{row.date}</td>
                     </tr>
                   ))}
                 </tbody>
