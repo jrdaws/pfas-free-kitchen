@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import { listTemplateFiles, sha256File } from "../src/dd/manifest.mjs";
+import { listTemplateFiles, sha256File } from "../../src/dd/manifest.mjs";
 
 test("manifest: listTemplateFiles skips .dd and node_modules and is stable", () => {
   const root = path.resolve("tests/fixtures/template-mini");

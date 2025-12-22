@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { checkPlanCompliance } from "../src/dd/plan-compliance.mjs";
+import { checkPlanCompliance } from "../../src/dd/plan-compliance.mjs";
 
 test("compliance: all capabilities compliant on free plan", () => {
   const caps = [

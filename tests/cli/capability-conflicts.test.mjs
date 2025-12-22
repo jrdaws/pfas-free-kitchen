@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { detectConflicts } from "../scripts/orchestrator/capability-engine.mjs";
+import { detectConflicts } from "../../scripts/orchestrator/capability-engine.mjs";
 
 test("conflicts: no conflicts when no capabilities enabled", () => {
   const caps = [

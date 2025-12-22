@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { validateConfig } from "../src/dd/config-schema.mjs";
+import { validateConfig } from "../../src/dd/config-schema.mjs";
 
 test("config validation: valid config passes", () => {
   const config = {

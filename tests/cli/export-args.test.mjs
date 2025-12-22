@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { parseExportFlags } from "../bin/framework.js";
+import { parseExportFlags } from "../../bin/framework.js";
 
 function defaults() {
   return {

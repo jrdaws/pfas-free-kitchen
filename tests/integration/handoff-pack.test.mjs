@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { buildChatIndex, extractContentByIndex } from "../tools/handoff-pack/lib/chat_index_write.mjs";
-import { sha256String } from "../tools/handoff-pack/lib/hash.mjs";
+import { buildChatIndex, extractContentByIndex } from "../../tools/handoff-pack/lib/chat_index_write.mjs";
+import { sha256String } from "../../tools/handoff-pack/lib/hash.mjs";
 
 test("handoff-pack: chat_index offsets slice exact content and sha matches", () => {
   const raw =

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { canCore } from "../src/platform/entitlements/can-core.ts";
+import { canCore } from "../../src/platform/entitlements/can-core.ts";
 
 test("free cannot access pro", () => {
   const r = canCore({ id: "x", tier: "pro", enabled: true }, { plan: "free" });

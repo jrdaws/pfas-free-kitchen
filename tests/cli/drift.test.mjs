@@ -1,6 +1,6 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { detectDrift } from "../src/dd/drift.mjs";
+import { detectDrift } from "../../src/dd/drift.mjs";
 import path from "node:path";
 import fs from "node:fs";
 import fse from "fs-extra";

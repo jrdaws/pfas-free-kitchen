@@ -13,7 +13,7 @@ import {
   executeHooks,
   getHookPoints,
   HOOK_POINTS,
-} from "../src/dd/plugins.mjs";
+} from "../../src/dd/plugins.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const FIXTURES_DIR = path.join(__dirname, "fixtures", "plugins");

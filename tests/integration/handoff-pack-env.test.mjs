@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
-import { captureRepoArtifacts } from "../tools/handoff-pack/lib/repo_capture.mjs";
+import { captureRepoArtifacts } from "../../tools/handoff-pack/lib/repo_capture.mjs";
 
 test("handoff-pack env: warns when key is interactive-only", async () => {
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), "ddfw-envtest-"));

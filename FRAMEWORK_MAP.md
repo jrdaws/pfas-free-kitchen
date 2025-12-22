@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- c4c9e2e 2025-12-21 feat(website): add visual editor and project download endpoint
 - 6b14c7b 2025-12-21 feat(templates): add blog, dashboard, and landing-page templates
 - 7eb42c4 2025-12-21 feat(cli): implement framework pull command with full web platform integration
 - a2d922f 2025-12-21 feat(website): integrate Supabase client library
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 0170bae 2025-12-19 feat(templates): add template.json metadata to existing templates
 - 935dab3 2025-12-19 feat(registry): add template registry and discovery system
 - 619faad 2025-12-19 chore: bump version to v0.2.0
-- e005888 2025-12-19 feat(plugins): add plugin system with hook architecture
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
