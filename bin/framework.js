@@ -15,11 +15,14 @@ import { cmdLLM } from "../src/commands/llm.mjs";
 import { cmdAuth } from "../src/commands/auth.mjs";
 import { cmdPlugin } from "../src/commands/plugin.mjs";
 import { cmdTemplates } from "../src/commands/templates.mjs";
+import { cmdDeploy, cmdDeployAuth } from "../src/commands/deploy.mjs";
 import { executeHooks } from "../src/dd/plugins.mjs";
 import * as logger from "../src/dd/logger.mjs";
 import { getCurrentVersion, checkForUpdates, getUpgradeCommand, getPackageName } from "../src/dd/version.mjs";
 import { createCheckpoint, restoreCheckpoint, listCheckpoints, cleanupCheckpoints, getAuditLog } from "../src/dd/agent-safety.mjs";
 import { validateIntegrations, applyIntegrations } from "../src/dd/integrations.mjs";
+import { parsePullFlags, getApiUrl, fetchProject, generateEnvExample, generateContext, openInCursor, formatIntegrations } from "../src/dd/pull.mjs";
+import { generateCursorRules, generateStartPrompt } from "../src/dd/cursorrules.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -28,6 +31,9 @@ const __cwd = process.cwd();
 const TEMPLATES = {
   "seo-directory": "jrdaws/dawson-does-framework/templates/seo-directory",
   "saas": "jrdaws/dawson-does-framework/templates/saas",
+  "blog": "jrdaws/dawson-does-framework/templates/blog",
+  "dashboard": "jrdaws/dawson-does-framework/templates/dashboard",
+  "landing-page": "jrdaws/dawson-does-framework/templates/landing-page",
   // "internal-tool": "jrdaws/dawson-does-framework/templates/internal-tool",  // TODO: add template content
   // "automation": "jrdaws/dawson-does-framework/templates/automation",        // TODO: add template content
 };
@@ -883,7 +889,7 @@ async function cmdHelp() {
   framework plugin <add|remove|list|hooks|info>
   framework templates <list|search|info|categories|tags>
   framework export <templateId> <projectDir> [options]
-  framework pull <token> [output-dir]
+  framework pull <token> [output-dir] [options]
   framework <templateId> <projectDir>
 
 Export Options:
@@ -893,6 +899,13 @@ Export Options:
   --branch <branch>    Branch name (default: main)
   --dry-run            Show what would happen without making changes
   --force              Overwrite existing directory
+
+Pull Options:
+  --cursor             Generate .cursorrules and START_PROMPT.md for AI
+  --open               Open the project in Cursor after scaffolding
+  --dry-run            Show what would happen without making changes
+  --force              Overwrite existing directory
+  --dev                Use localhost:3002 instead of production API
 
 Valid Templates:
   ${Object.keys(TEMPLATES).join(", ")}
@@ -908,7 +921,9 @@ Examples:
   framework doctor .
   framework export seo-directory ~/Documents/Cursor/my-app
   framework export saas ~/Documents/Cursor/my-saas --remote https://github.com/me/my-saas.git --push
-  framework pull fast-lion-1234     # Pull project from web platform
+  framework pull fast-lion-1234                      # Pull project from web platform
+  framework pull fast-lion-1234 --cursor --open      # Pull with Cursor AI files and open
+  framework pull fast-lion-1234 ./my-app --dry-run   # Preview without making changes
 `);
 }
 
@@ -1218,174 +1233,325 @@ async function cmdUpgrade(dryRun = false) {
 
 /**
  * Pull a project from the web platform using a token
- * Usage: framework pull <token> [output-dir]
+ * Usage: framework pull <token> [output-dir] [--cursor] [--open] [--dry-run] [--force]
  */
 async function cmdPull(token, extraArgs = []) {
-  if (!token) {
-    console.error("❌ Error: Token is required");
-    console.log("\nUsage: framework pull <token> [output-dir]");
-    console.log("\nExample:");
-    console.log("  framework pull fast-lion-1234");
-    console.log("  framework pull fast-lion-1234 ./my-project");
+  // Handle help
+  if (!token || token === "--help" || token === "-h" || token === "help") {
+    console.log(`Usage: framework pull <token> [output-dir] [options]
+
+Download a project configuration from the Dawson-Does platform and scaffold it locally.
+
+Arguments:
+  token         Project token (e.g., swift-eagle-1234)
+  output-dir    Output directory (default: ./<project-name>)
+
+Options:
+  --cursor      Generate .cursorrules and START_PROMPT.md for Cursor AI
+  --open        Open the project in Cursor after scaffolding
+  --dry-run     Show what would happen without making changes
+  --force       Overwrite existing directory
+  --dev         Use localhost:3002 instead of production API
+
+Examples:
+  framework pull swift-eagle-1234
+  framework pull swift-eagle-1234 ./my-project
+  framework pull swift-eagle-1234 --cursor --open
+  framework pull swift-eagle-1234 --dry-run
+`);
+    if (!token) process.exit(1);
+    return;
+  }
+
+  // Parse flags
+  // First arg after token might be output-dir or a flag
+  let outputDir = null;
+  let flagArgs = extraArgs;
+  
+  if (extraArgs[0] && !extraArgs[0].startsWith("--")) {
+    outputDir = extraArgs[0];
+    flagArgs = extraArgs.slice(1);
+  }
+  
+  const flags = parsePullFlags(flagArgs);
+  const apiUrl = getApiUrl(flags.dev);
+
+  logger.log(`\n🔍 Fetching project configuration for token: ${token}...`);
+  logger.log(`   API: ${apiUrl}\n`);
+
+  // Fetch project from API
+  const result = await fetchProject(token, apiUrl);
+
+  if (!result.success) {
+    if (result.status === 404) {
+      console.error(`❌ Project not found: "${token}"`);
+      console.log("\nPossible reasons:");
+      console.log("  • Token is incorrect or misspelled");
+      console.log("  • Project was deleted");
+      console.log("  • Token has expired (projects expire after 30 days)");
+      console.log("\nTo create a new project, visit:");
+      console.log(`  ${apiUrl}/configure`);
+    } else if (result.status === 410) {
+      console.error(`❌ Project has expired: "${token}"`);
+      console.log("\nProjects created on the web platform expire after 30 days.");
+      console.log("Please create a new project at:");
+      console.log(`  ${apiUrl}/configure`);
+    } else {
+      console.error(`❌ Failed to fetch project: ${result.error}`);
+    }
     process.exit(1);
   }
 
-  const outputDir = extraArgs[0] || null;
+  const project = result.project;
 
-  console.log(`\n🔍 Fetching project configuration for token: ${token}...\n`);
+  logger.log(`✅ Found project: "${project.project_name}"`);
+  logger.log(`   Template: ${project.template}`);
+  logger.log(`   Integrations: ${formatIntegrations(project.integrations)}`);
+  if (project.vision) logger.log(`   Vision: ${project.vision.substring(0, 60)}${project.vision.length > 60 ? '...' : ''}`);
+  logger.log("");
 
-  try {
-    // Fetch project from API
-    const apiUrl = process.env.FRAMEWORK_PLATFORM_URL || "https://dawson-does-framework-bv8x.vercel.app";
-    const response = await fetch(`${apiUrl}/api/projects/${token}`);
+  // Determine output directory
+  const targetDir = outputDir || project.output_dir || `./${project.project_name}`;
+  const absTargetDir = path.resolve(targetDir);
 
-    if (!response.ok) {
-      const error = await response.json();
-
-      if (response.status === 404) {
-        console.error(`❌ Project not found: "${token}"`);
-        console.log("\nPossible reasons:");
-        console.log("  • Token is incorrect");
-        console.log("  • Project was deleted");
-        console.log("  • Token has expired (projects expire after 30 days)");
-      } else if (response.status === 410) {
-        console.error(`❌ Project has expired: "${token}"`);
-        console.log("\nProjects created on the web platform expire after 30 days.");
-        console.log("Please create a new project at:");
-        console.log(`  ${apiUrl}/configure`);
-      } else {
-        console.error(`❌ Failed to fetch project: ${error.message || error.error}`);
-      }
+  // Check if directory exists
+  if (fs.existsSync(absTargetDir)) {
+    if (!flags.force) {
+      console.error(`❌ Directory already exists: ${absTargetDir}`);
+      console.log("\nUse --force to overwrite, or choose a different directory.");
       process.exit(1);
     }
+    if (!flags.dryRun) {
+      logger.log(`⚠️  Overwriting existing directory (--force)`);
+    }
+  }
 
-    const { project } = await response.json();
-
-    console.log(`✅ Found project: "${project.project_name}"`);
-    console.log(`   Template: ${project.template}`);
-    console.log(`   Integrations: ${Object.keys(project.integrations || {}).filter(k => project.integrations[k]).join(", ") || "none"}`);
+  // Dry run mode
+  if (flags.dryRun) {
+    console.log("DRY RUN - The following operations would be performed:\n");
+    console.log(`Project: ${project.project_name}`);
+    console.log(`Token: ${token}`);
+    console.log(`Directory: ${absTargetDir}`);
+    console.log(`Template: ${project.template}`);
     console.log("");
 
-    // Determine output directory
-    const targetDir = outputDir || project.output_dir || `./${project.project_name}`;
-    const absTargetDir = path.resolve(targetDir);
+    console.log(`[1/6] Clone template`);
+    console.log(`      Template: ${project.template}`);
+    console.log(`      Destination: ${absTargetDir}`);
 
-    // Check if directory exists
-    if (fs.existsSync(absTargetDir)) {
-      console.error(`❌ Directory already exists: ${absTargetDir}`);
-      console.log("\nPlease choose a different directory or remove the existing one.");
-      process.exit(1);
+    console.log(`\n[2/6] Apply integrations`);
+    const integrations = project.integrations || {};
+    const activeIntegrations = Object.entries(integrations).filter(([, v]) => v);
+    if (activeIntegrations.length > 0) {
+      for (const [type, provider] of activeIntegrations) {
+        console.log(`      - ${type}: ${provider}`);
+      }
+    } else {
+      console.log(`      (no integrations selected)`);
     }
 
-    console.log(`📦 Exporting to: ${absTargetDir}\n`);
+    console.log(`\n[3/6] Write project context`);
+    console.log(`      - .dd/context.json (project metadata)`);
+    console.log(`      - .dd/manifest.json (template manifest)`);
+    if (project.vision) console.log(`      - .dd/vision.md`);
+    if (project.mission) console.log(`      - .dd/mission.md`);
+    if (project.success_criteria) console.log(`      - .dd/success-criteria.md`);
+    if (project.description) console.log(`      - .dd/description.md`);
+    if (project.inspirations?.length > 0) console.log(`      - .dd/inspirations.md`);
 
-    // Build export flags from project configuration
-    const exportFlags = [];
+    console.log(`\n[4/6] Generate environment files`);
+    console.log(`      - .env.example (required env vars)`);
 
-    // Add integrations
-    if (project.integrations) {
-      for (const [type, provider] of Object.entries(project.integrations)) {
-        if (provider) {
-          exportFlags.push(`--${type}`, provider);
+    console.log(`\n[5/6] Generate Cursor files`);
+    if (flags.cursor) {
+      console.log(`      - .cursorrules (AI context)`);
+      console.log(`      - START_PROMPT.md (onboarding prompt)`);
+    } else {
+      console.log(`      (skipped - use --cursor to generate)`);
+    }
+
+    console.log(`\n[6/6] Initialize git repository`);
+    console.log(`      git init -b main`);
+    console.log(`      git add -A`);
+    console.log(`      git commit -m "Initial commit (pulled via framework)"`);
+
+    if (flags.open) {
+      console.log(`\n[Post] Open in Cursor`);
+      console.log(`      Would open: ${absTargetDir}`);
+    }
+
+    console.log("\n" + "─".repeat(60));
+    console.log("DRY RUN complete. No changes made.");
+    console.log("Run without --dry-run to execute these operations.");
+    return;
+  }
+
+  // ---- ACTUAL OPERATIONS (not dry run) ----
+
+  logger.log(`📦 Exporting to: ${absTargetDir}\n`);
+
+  // Build export flags from project configuration
+  const exportFlags = ["--force"]; // Force since we already checked above
+
+  // Add integrations
+  if (project.integrations) {
+    for (const [type, provider] of Object.entries(project.integrations)) {
+      if (provider) {
+        exportFlags.push(`--${type}`, provider);
+      }
+    }
+  }
+
+  // Add project name
+  if (project.project_name) {
+    exportFlags.push("--name", project.project_name);
+  }
+
+  // Call the export command with the project configuration
+  await cmdExport(project.template, absTargetDir, exportFlags);
+
+  // After export, write additional .dd files with context
+  const ddDir = path.join(absTargetDir, ".dd");
+  fs.mkdirSync(ddDir, { recursive: true });
+
+  logger.log("");
+  logger.startStep("context", "Writing project context...");
+
+  // Write context.json
+  const contextData = generateContext(project);
+  fs.writeFileSync(
+    path.join(ddDir, "context.json"),
+    JSON.stringify(contextData, null, 2),
+    "utf8"
+  );
+  logger.stepSuccess("context.json written");
+
+  // Write vision/mission/success criteria if provided
+  if (project.vision) {
+    fs.writeFileSync(path.join(ddDir, "vision.md"), project.vision, "utf8");
+    logger.stepSuccess("vision.md written");
+  }
+
+  if (project.mission) {
+    fs.writeFileSync(path.join(ddDir, "mission.md"), project.mission, "utf8");
+    logger.stepSuccess("mission.md written");
+  }
+
+  if (project.success_criteria) {
+    fs.writeFileSync(path.join(ddDir, "success-criteria.md"), project.success_criteria, "utf8");
+    logger.stepSuccess("success-criteria.md written");
+  }
+
+  if (project.description) {
+    fs.writeFileSync(path.join(ddDir, "description.md"), project.description, "utf8");
+    logger.stepSuccess("description.md written");
+  }
+
+  if (project.inspirations && project.inspirations.length > 0) {
+    const inspirationsContent = project.inspirations
+      .map((insp, idx) => `${idx + 1}. [${insp.type}] ${insp.value}`)
+      .join("\n");
+    fs.writeFileSync(path.join(ddDir, "inspirations.md"), inspirationsContent, "utf8");
+    logger.stepSuccess("inspirations.md written");
+  }
+
+  logger.endStep("context", "     Project context ready");
+
+  // Generate .env.example
+  logger.startStep("env", "Generating environment template...");
+  const envExampleContent = generateEnvExample(project);
+  fs.writeFileSync(path.join(absTargetDir, ".env.example"), envExampleContent, "utf8");
+  logger.stepSuccess(".env.example generated");
+
+  // Also write .env.local with any provided values
+  if (project.env_keys && Object.keys(project.env_keys).length > 0) {
+    let envLocalContent = envExampleContent;
+    for (const [key, value] of Object.entries(project.env_keys)) {
+      if (value) {
+        const regex = new RegExp(`${key}=.*`, "g");
+        if (envLocalContent.match(regex)) {
+          envLocalContent = envLocalContent.replace(regex, `${key}=${value}`);
+        } else {
+          envLocalContent += `\n${key}=${value}`;
         }
       }
     }
+    fs.writeFileSync(path.join(absTargetDir, ".env.local"), envLocalContent, "utf8");
+    logger.stepSuccess(".env.local populated with provided values");
+  }
+  logger.endStep("env", "     Environment files ready");
 
-    // Add project name
-    if (project.project_name) {
-      exportFlags.push("--name", project.project_name);
+  // Generate Cursor files if --cursor flag
+  if (flags.cursor) {
+    logger.startStep("cursor", "Generating Cursor AI files...");
+    
+    // Generate .cursorrules
+    const cursorRulesContent = generateCursorRules(project);
+    fs.writeFileSync(path.join(absTargetDir, ".cursorrules"), cursorRulesContent, "utf8");
+    logger.stepSuccess(".cursorrules generated");
+
+    // Generate START_PROMPT.md
+    const startPromptContent = generateStartPrompt(project);
+    fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
+    logger.stepSuccess("START_PROMPT.md generated");
+    
+    logger.endStep("cursor", "     Cursor files ready");
+  }
+
+  // Write pull metadata
+  const pullMetadata = {
+    pulledAt: new Date().toISOString(),
+    token: project.token,
+    platformUrl: apiUrl,
+    template: project.template,
+    integrations: project.integrations,
+    flags: {
+      cursor: flags.cursor,
+      open: flags.open,
+    },
+  };
+  fs.writeFileSync(
+    path.join(ddDir, "pull-metadata.json"),
+    JSON.stringify(pullMetadata, null, 2),
+    "utf8"
+  );
+
+  // Amend the git commit to include our new files
+  try {
+    runIn(absTargetDir, "git", ["add", "-A"]);
+    runIn(absTargetDir, "git", ["commit", "--amend", "-q", "-m", `Initial commit (pulled via framework: ${token})`]);
+  } catch {
+    // Non-fatal if git amend fails
+    logger.stepInfo("Note: Could not amend git commit with context files");
+  }
+
+  logger.log(`\n✅ Project pulled successfully from platform!\n`);
+  logger.log(`Token: ${token}`);
+  logger.log(`Directory: ${absTargetDir}`);
+  logger.log("");
+
+  // Open in Cursor if --open flag
+  if (flags.open) {
+    logger.log("Opening in Cursor...");
+    const opened = openInCursor(absTargetDir);
+    if (opened) {
+      logger.log("   ✓ Opened in Cursor");
+    } else {
+      logger.log("   ⚠️  Could not open in Cursor automatically");
+      logger.log(`   Open manually: cursor ${absTargetDir}`);
     }
+    logger.log("");
+  }
 
-    // Call the export command with the project configuration
-    await cmdExport(project.template, absTargetDir, exportFlags);
-
-    // After export, write additional .dd files with context
-    const ddDir = path.join(absTargetDir, ".dd");
-    fs.mkdirSync(ddDir, { recursive: true });
-
-    // Write vision/mission/success criteria if provided
-    if (project.vision) {
-      fs.writeFileSync(path.join(ddDir, "vision.md"), project.vision, "utf8");
-      console.log("   ✓ Vision written to .dd/vision.md");
-    }
-
-    if (project.mission) {
-      fs.writeFileSync(path.join(ddDir, "mission.md"), project.mission, "utf8");
-      console.log("   ✓ Mission written to .dd/mission.md");
-    }
-
-    if (project.success_criteria) {
-      fs.writeFileSync(path.join(ddDir, "success-criteria.md"), project.success_criteria, "utf8");
-      console.log("   ✓ Success criteria written to .dd/success-criteria.md");
-    }
-
-    // Write description if provided
-    if (project.description) {
-      fs.writeFileSync(path.join(ddDir, "description.md"), project.description, "utf8");
-      console.log("   ✓ Description written to .dd/description.md");
-    }
-
-    // Write inspirations if provided
-    if (project.inspirations && project.inspirations.length > 0) {
-      const inspirationsContent = project.inspirations
-        .map((insp, idx) => `${idx + 1}. [${insp.type}] ${insp.value}`)
-        .join("\n");
-      fs.writeFileSync(path.join(ddDir, "inspirations.md"), inspirationsContent, "utf8");
-      console.log("   ✓ Inspirations written to .dd/inspirations.md");
-    }
-
-    // Update .env.local with env_keys if provided
-    if (project.env_keys && Object.keys(project.env_keys).length > 0) {
-      const envPath = path.join(absTargetDir, ".env.local");
-      const envExamplePath = path.join(absTargetDir, ".env.local.example");
-
-      // Read .env.local.example if it exists
-      let envContent = "";
-      if (fs.existsSync(envExamplePath)) {
-        envContent = fs.readFileSync(envExamplePath, "utf8");
-      }
-
-      // Replace placeholders with actual values
-      for (const [key, value] of Object.entries(project.env_keys)) {
-        if (value) {
-          const regex = new RegExp(`${key}=.*`, "g");
-          if (envContent.match(regex)) {
-            envContent = envContent.replace(regex, `${key}=${value}`);
-          } else {
-            envContent += `\n${key}=${value}`;
-          }
-        }
-      }
-
-      fs.writeFileSync(envPath, envContent, "utf8");
-      console.log("   ✓ Environment variables written to .env.local");
-    }
-
-    // Write a metadata file with the pull info
-    const pullMetadata = {
-      pulledAt: new Date().toISOString(),
-      token: project.token,
-      platformUrl: apiUrl,
-      template: project.template,
-      integrations: project.integrations,
-    };
-    fs.writeFileSync(
-      path.join(ddDir, "pull-metadata.json"),
-      JSON.stringify(pullMetadata, null, 2),
-      "utf8"
-    );
-
-    console.log("\n✅ Project pulled successfully from platform!\n");
-    console.log("Next steps:");
-    console.log(`  cd ${targetDir}`);
-    console.log(`  npm install`);
-    console.log(`  npm run dev`);
-  } catch (error) {
-    console.error(`\n❌ Failed to pull project: ${error.message}`);
-    if (process.env.NODE_ENV === "development") {
-      console.error(error.stack);
-    }
-    process.exit(1);
+  logger.log("Next steps:");
+  logger.log(`  cd ${targetDir}`);
+  logger.log(`  npm install`);
+  logger.log(`  npm run dev`);
+  
+  if (!flags.cursor) {
+    logger.log("");
+    logger.log("💡 Tip: Use --cursor flag to generate .cursorrules for AI assistance:");
+    logger.log(`  framework pull ${token} --cursor`);
   }
 }
 
@@ -1424,7 +1590,21 @@ if (isEntrypoint) {
   if (a === "plugin") { await cmdPlugin([b, c, d]); process.exit(0); }
   if (a === "templates") { await cmdTemplates([b, c, d]); process.exit(0); }
   if (a === "checkpoint") { await cmdCheckpoint([b, c, d]); process.exit(0); }
-  if (a === "pull") { await cmdPull(b, [c, d]); process.exit(0); }
+  if (a === "deploy") {
+    const deployArgs = process.argv.slice(3); // Everything after "framework deploy"
+    await cmdDeploy(deployArgs);
+    process.exit(0);
+  }
+  if (a === "deploy:auth") {
+    const authArgs = process.argv.slice(3); // Everything after "framework deploy:auth"
+    await cmdDeployAuth(authArgs);
+    process.exit(0);
+  }
+  if (a === "pull") { 
+    const pullArgs = process.argv.slice(4); // Everything after "framework pull <token>"
+    await cmdPull(b, pullArgs); 
+    process.exit(0); 
+  }
   if (a === "demo") {
     const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
     await cmdDemo(restArgs);

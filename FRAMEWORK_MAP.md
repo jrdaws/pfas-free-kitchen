@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 1cca075d21
+Hash: dd6ce1c0d2
 
 ## Recent changes
+- a2d922f 2025-12-21 feat(website): integrate Supabase client library
 - 3abd367 2025-12-20 feat: implement framework pull command with web platform integration
 - 7099ddf 2025-12-20 chore: session recovery and framework state documentation
 - c086d40 2025-12-20 feat: production-ready deployment with AI preview
@@ -28,7 +29,6 @@ Hash: 1cca075d21
 - e005888 2025-12-19 feat(plugins): add plugin system with hook architecture
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
-- 8bbab03 2025-12-19 chore: prepare for npm publish
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
@@ -47,21 +47,30 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/commands/auth.mjs`
   - `src/commands/plugin.mjs`
   - `src/commands/templates.mjs`
+  - `src/commands/deploy.mjs`
   - `src/dd/plugins.mjs`
   - `src/dd/logger.mjs`
   - `src/dd/version.mjs`
   - `src/dd/agent-safety.mjs`
   - `src/dd/integrations.mjs`
+  - `src/dd/pull.mjs`
+  - `src/dd/cursorrules.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
     - `src/dd/recovery-guidance.mjs`
     - `src/platform/providers/impl/llm.anthropic.ts`
     - `src/platform/providers/impl/auth.supabase.ts`
     - `src/dd/registry.mjs`
+    - `src/dd/credentials.mjs`
+    - `src/dd/deployment-detector.mjs`
+    - `src/platform/providers/impl/deploy.vercel.ts`
+    - `src/platform/providers/impl/deploy.netlify.ts`
+    - `src/platform/providers/impl/deploy.railway.ts`
     - `src/dd/integration-schema.mjs`
       - `src/platform/providers/llm.ts`
       - `src/platform/providers/types.ts`
       - `src/platform/providers/auth.ts`
+      - `src/platform/providers/deploy.ts`
 
 ## Dependency Tree (Structural)
 Used for: onboarding, refactors, capability ownership
@@ -113,6 +122,32 @@ Used for: onboarding, refactors, capability ownership
 - `│  │  src/dd/registry.mjs`
 - `│  └─ src/dd/version.mjs`
 - `│     src/dd/version.mjs`
+- `├─ src/commands/deploy.mjs`
+- `│  src/commands/deploy.mjs`
+- `│  ├─ src/dd/credentials.mjs`
+- `│  │  src/dd/credentials.mjs`
+- `│  ├─ src/dd/deployment-detector.mjs`
+- `│  │  src/dd/deployment-detector.mjs`
+- `│  ├─ src/platform/providers/impl/deploy.vercel.ts`
+- `│  │  src/platform/providers/impl/deploy.vercel.ts`
+- `│  │  ├─ src/platform/providers/deploy.ts`
+- `│  │  │  src/platform/providers/deploy.ts`
+- `│  │  │  └─ src/platform/providers/types.ts`
+- `│  │  │     src/platform/providers/types.ts`
+- `│  │  └─ src/platform/providers/types.ts`
+- `│  │     src/platform/providers/types.ts`
+- `│  ├─ src/platform/providers/impl/deploy.netlify.ts`
+- `│  │  src/platform/providers/impl/deploy.netlify.ts`
+- `│  │  ├─ src/platform/providers/deploy.ts`
+- `│  │  │  src/platform/providers/deploy.ts`
+- `│  │  └─ src/platform/providers/types.ts`
+- `│  │     src/platform/providers/types.ts`
+- `│  └─ src/platform/providers/impl/deploy.railway.ts`
+- `│     src/platform/providers/impl/deploy.railway.ts`
+- `│     ├─ src/platform/providers/deploy.ts`
+- `│     │  src/platform/providers/deploy.ts`
+- `│     └─ src/platform/providers/types.ts`
+- `│        src/platform/providers/types.ts`
 - `├─ src/dd/plugins.mjs`
 - `│  src/dd/plugins.mjs`
 - `├─ src/dd/logger.mjs`
@@ -125,6 +160,10 @@ Used for: onboarding, refactors, capability ownership
 - `│  src/dd/integrations.mjs`
 - `│  └─ src/dd/integration-schema.mjs`
 - `│     src/dd/integration-schema.mjs`
+- `├─ src/dd/pull.mjs`
+- `│  src/dd/pull.mjs`
+- `├─ src/dd/cursorrules.mjs`
+- `│  src/dd/cursorrules.mjs`
 - `├─ scripts/orchestrator/project-config.mjs`
 - `│  scripts/orchestrator/project-config.mjs`
 - `└─ scripts/orchestrator/capability-engine.mjs`
@@ -143,21 +182,30 @@ Used for: onboarding, refactors, capability ownership
 - `src/commands/auth.mjs` <- `bin/framework.js`
 - `src/commands/plugin.mjs` <- `bin/framework.js`
 - `src/commands/templates.mjs` <- `bin/framework.js`
+- `src/commands/deploy.mjs` <- `bin/framework.js`
 - `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
 - `src/dd/logger.mjs` <- `bin/framework.js`
 - `src/dd/version.mjs` <- `bin/framework.js`, `src/commands/templates.mjs`
 - `src/dd/agent-safety.mjs` <- `bin/framework.js`
 - `src/dd/integrations.mjs` <- `bin/framework.js`
+- `src/dd/pull.mjs` <- `bin/framework.js`
+- `src/dd/cursorrules.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
 - `src/dd/recovery-guidance.mjs` <- `src/commands/llm.mjs`, `src/commands/auth.mjs`
 - `src/platform/providers/impl/llm.anthropic.ts` <- `src/commands/llm.mjs`
 - `src/platform/providers/impl/auth.supabase.ts` <- `src/commands/auth.mjs`
 - `src/dd/registry.mjs` <- `src/commands/templates.mjs`
+- `src/dd/credentials.mjs` <- `src/commands/deploy.mjs`
+- `src/dd/deployment-detector.mjs` <- `src/commands/deploy.mjs`
+- `src/platform/providers/impl/deploy.vercel.ts` <- `src/commands/deploy.mjs`
+- `src/platform/providers/impl/deploy.netlify.ts` <- `src/commands/deploy.mjs`
+- `src/platform/providers/impl/deploy.railway.ts` <- `src/commands/deploy.mjs`
 - `src/dd/integration-schema.mjs` <- `src/dd/integrations.mjs`
 - `src/platform/providers/llm.ts` <- `src/platform/providers/impl/llm.anthropic.ts`
-- `src/platform/providers/types.ts` <- `src/platform/providers/impl/llm.anthropic.ts`, `src/platform/providers/impl/auth.supabase.ts`, `src/platform/providers/llm.ts`, `src/platform/providers/auth.ts`
+- `src/platform/providers/types.ts` <- `src/platform/providers/impl/llm.anthropic.ts`, `src/platform/providers/impl/auth.supabase.ts`, `src/platform/providers/impl/deploy.vercel.ts`, `src/platform/providers/impl/deploy.netlify.ts`, `src/platform/providers/impl/deploy.railway.ts`, `src/platform/providers/llm.ts`, `src/platform/providers/auth.ts`, `src/platform/providers/deploy.ts`
 - `src/platform/providers/auth.ts` <- `src/platform/providers/impl/auth.supabase.ts`
+- `src/platform/providers/deploy.ts` <- `src/platform/providers/impl/deploy.vercel.ts`, `src/platform/providers/impl/deploy.netlify.ts`, `src/platform/providers/impl/deploy.railway.ts`
 
 ## Notes
 - Optional integrations should never block progress. If env is missing, skip with a clear message.
