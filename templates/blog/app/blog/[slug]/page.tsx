@@ -1,6 +1,6 @@
-"use client";
-
-export default function BlogPost({ params }: { params: { slug: string } }) {
+export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
+  // In Next.js 15, params is a Promise
+  const { slug } = await params;
   // In a real app, fetch post data based on slug
   const post = {
     title: "Getting Started with Next.js 15",
