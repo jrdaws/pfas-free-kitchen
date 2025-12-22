@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- d710faf 2025-12-21 docs(governance): add mandatory agent context verification system
 - b33247a 2025-12-21 feat(website): complete Projects API and CLI pull integration
 - 8d8aab8 2025-12-21 docs(test): add comprehensive test coverage documentation and improve logger tests
 - 570a242 2025-12-21 fix(tests): fix all failing tests and improve coverage to 78% (core)
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 8f5a146 2025-12-20 feat(configurator): implement all 8 steps with full UI
 - 8e5b829 2025-12-20 feat(configurator): implement Phase 2 core user flow
 - 41cc8c9 2025-12-20 feat(configurator): add state management with Zustand and navigation components
-- b8599c8 2025-12-19 fix(website): remove outputDirectory from vercel.json
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
