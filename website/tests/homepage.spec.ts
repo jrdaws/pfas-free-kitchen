@@ -11,13 +11,20 @@ test.describe('Homepage', () => {
     await expect(page).toHaveTitle(/Framework/i);
   });
 
-  test('should display main navigation', async ({ page }) => {
+  test('should display main content sections', async ({ page }) => {
     await page.goto('/');
+    await page.waitForLoadState('networkidle');
 
-    // Check for common navigation elements
-    // Adjust selectors based on your actual navigation structure
-    const nav = page.locator('nav, header');
-    await expect(nav).toBeVisible();
+    // Check for hero section with main heading
+    await expect(page.locator('h1').first()).toContainText('From idea to production');
+
+    // Check for feature sections (should have multiple)
+    const sectionCount = await page.locator('section').count();
+    expect(sectionCount).toBeGreaterThanOrEqual(2);
+
+    // Check for main CTA buttons
+    await expect(page.locator('a[href="/configure"]')).toBeVisible();
+    await expect(page.locator('a[href*="github.com"]').first()).toBeVisible();
   });
 
   test('should be responsive', async ({ page }) => {

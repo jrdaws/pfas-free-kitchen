@@ -14,14 +14,14 @@ test.describe('Export Functionality', () => {
     await page.waitForLoadState('networkidle');
 
     // Switch to advanced mode to see more commands
-    const advancedBtn = page.locator('button:has-text("Advanced")');
+    const advancedBtn = page.locator('button:has-text("Advanced")').first();
     await advancedBtn.click();
 
-    // Check for various framework commands
-    await expect(page.locator('text=framework templates search saas')).toBeVisible();
-    await expect(page.locator('text=framework health')).toBeVisible();
-    await expect(page.locator('text=framework drift')).toBeVisible();
-    await expect(page.locator('text=framework plugin add')).toBeVisible();
+    // Check for various framework commands (use first match)
+    await expect(page.locator('text=framework templates search saas').first()).toBeVisible();
+    await expect(page.locator('text=framework health').first()).toBeVisible();
+    await expect(page.locator('text=framework drift').first()).toBeVisible();
+    await expect(page.locator('text=framework plugin add').first()).toBeVisible();
   });
 
   test('homepage shows before/after comparison with export', async ({ page }) => {
