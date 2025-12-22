@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 7eb42c4 2025-12-21 feat(cli): implement framework pull command with full web platform integration
 - a2d922f 2025-12-21 feat(website): integrate Supabase client library
 - 3abd367 2025-12-20 feat: implement framework pull command with web platform integration
 - 7099ddf 2025-12-20 chore: session recovery and framework state documentation
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 619faad 2025-12-19 chore: bump version to v0.2.0
 - e005888 2025-12-19 feat(plugins): add plugin system with hook architecture
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
-- 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |

@@ -1,0 +1,34 @@
+{
+  "id": "landing-page",
+  "name": "Landing Page",
+  "version": "1.0.0",
+  "description": "Modern marketing landing page with hero, features, testimonials, pricing, FAQ, and CTA sections. Perfect for product launches and marketing campaigns.",
+  "author": "Dawson Framework Team",
+  "category": "Marketing",
+  "tags": ["nextjs", "react", "landing-page", "marketing", "conversion", "shadcn"],
+  "minFrameworkVersion": "0.1.0",
+  "capabilities": [],
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0"
+  },
+  "features": [
+    "Next.js 15 with App Router",
+    "Hero section with gradient background",
+    "Features grid with icons",
+    "Testimonials carousel",
+    "Pricing section",
+    "FAQ accordion",
+    "CTA sections",
+    "TypeScript support",
+    "Tailwind CSS",
+    "Responsive design",
+    "SEO optimized"
+  ],
+  "supportedIntegrations": {
+    "payments": ["stripe", "paddle"],
+    "email": ["resend", "sendgrid"],
+    "analytics": ["posthog", "plausible"]
+  },
+  "license": "MIT"
+}

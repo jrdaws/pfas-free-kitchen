@@ -1,0 +1,34 @@
+{
+  "id": "blog",
+  "name": "Blog",
+  "version": "1.0.0",
+  "description": "Content-focused blog with post list, single post view, author bio, categories, and search. Perfect for content creators and publishers.",
+  "author": "Dawson Framework Team",
+  "category": "Content",
+  "tags": ["nextjs", "react", "blog", "content", "markdown", "seo", "rss"],
+  "minFrameworkVersion": "0.1.0",
+  "capabilities": [],
+  "dependencies": {
+    "next": "^14.2.0",
+    "react": "^18.3.0"
+  },
+  "features": [
+    "Next.js 15 with App Router",
+    "Post list with excerpts",
+    "Single post view",
+    "Author bio component",
+    "Categories and tags",
+    "Search functionality",
+    "RSS feed ready",
+    "TypeScript support",
+    "Tailwind CSS",
+    "SEO optimized",
+    "Responsive design"
+  ],
+  "supportedIntegrations": {
+    "cms": ["contentful", "sanity"],
+    "analytics": ["posthog", "plausible"],
+    "email": ["resend", "sendgrid"]
+  },
+  "license": "MIT"
+}
