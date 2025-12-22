@@ -1,4 +1,4 @@
-import type { ProjectInput, ProjectIntent } from "./types";
+import type { ProjectInput, ProjectIntent } from "./types.js";
 /**
  * Analyze user's project description and extract structured intent
  *

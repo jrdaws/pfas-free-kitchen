@@ -46,92 +46,27 @@ Return ONLY valid JSON without markdown formatting or code blocks:
   ]
 }
 
-ARCHITECTURE PRINCIPLES:
+PRINCIPLES:
+1. Next.js 15 App Router: pages→app/[route]/page.tsx | API→app/api/[route]/route.ts | layouts for shared structure
+2. Reuse components: buttons|cards|forms|nav|footer|hero → use-existing | custom business logic only → create-new
+3. Component types: ui=generic | feature=business-specific | layout=structure
+4. Pages: 1 purpose each, list components, specify layout (default|auth|dashboard)
+5. API: RESTful (GET=fetch, POST=create), mirror integrations, keep simple
+6. Integration-aware: auth→login+protected | payments→pricing+checkout | db→fetching | email→notifications
 
-1. **Follow Next.js 15 App Router conventions**
-   - Pages go in `app/[route]/page.tsx`
-   - API routes in `app/api/[route]/route.ts`
-   - Layouts for shared structure
+TEMPLATE PATTERNS:
+SaaS: /|/dashboard|/settings|/pricing → Hero|Features|Pricing|DashboardLayout|SettingsForm → /api/auth|billing|user
+Landing: /|/about|/contact → Hero|Features|Testimonials|CTA|ContactForm → /api/contact|newsletter
+Dashboard: /|/reports|/settings → Sidebar|MetricsCard|Chart|DataTable|Filters → /api/metrics|reports|export
+Blog: /|/[slug]|/about|/admin → PostCard|PostContent|Sidebar|AuthorBio|CommentSection → /api/posts|comments|admin
+Directory: /|/[id]|/submit|/categories → ListingCard|SearchBar|Filters|DetailView|SubmitForm → /api/listings|search|submit
+Ecommerce: /|/products|/product/[id]|/cart|/checkout → ProductCard|ProductDetail|Cart|CheckoutForm|OrderSummary → /api/products|cart|checkout|orders
 
-2. **Reuse template components where possible**
-   - Common UI components (buttons, cards, forms) → `template: "use-existing"`
-   - Navigation, Footer, Hero sections → `template: "use-existing"`
-   - Only create custom components for unique business logic
+COMPONENT SELECTION:
+use-existing: buttons|inputs|cards|modals|nav|footer|hero|features|auth|payment components
+create-new: business logic (WorkoutLogger, RecipeBuilder)|custom viz|unique workflows|custom integrations
 
-3. **Component Types**
-   - `ui`: Generic UI components (buttons, cards, modals)
-   - `feature`: Business logic components (specific to this project)
-   - `layout`: Page structure components (headers, sidebars, wrappers)
-
-4. **Page Structure**
-   - Keep pages focused - one primary purpose per page
-   - List components that will be used on each page
-   - Specify layout type (default, auth, dashboard)
-
-5. **API Routes**
-   - Mirror integration patterns (auth endpoints, payment webhooks)
-   - RESTful conventions (GET for fetch, POST for create, etc.)
-   - Keep routes simple and focused
-
-6. **Integration-Aware Design**
-   - Auth integration → include login/signup pages and auth-protected routes
-   - Payments integration → include pricing page and checkout flow
-   - Database integration → plan data fetching patterns
-   - Email integration → include notification triggers
-
-EXAMPLES BY TEMPLATE:
-
-**SaaS Template:**
-Pages: `/` (landing), `/dashboard` (main app), `/settings`, `/pricing`
-Components: Hero, Features, Pricing, DashboardLayout, SettingsForm
-Routes: `/api/auth/*`, `/api/billing/*`, `/api/user/*`
-
-**Landing Page Template:**
-Pages: `/` (landing), `/about`, `/contact`
-Components: Hero, Features, Testimonials, CTA, ContactForm
-Routes: `/api/contact`, `/api/newsletter`
-
-**Dashboard Template:**
-Pages: `/` (dashboard), `/reports`, `/settings`
-Components: Sidebar, MetricsCard, Chart, DataTable, Filters
-Routes: `/api/metrics`, `/api/reports`, `/api/export`
-
-**Blog Template:**
-Pages: `/` (posts list), `/[slug]` (post detail), `/about`, `/admin`
-Components: PostCard, PostContent, Sidebar, AuthorBio, CommentSection
-Routes: `/api/posts`, `/api/comments`, `/api/admin`
-
-**Directory Template:**
-Pages: `/` (listings), `/[id]` (detail), `/submit`, `/categories`
-Components: ListingCard, SearchBar, Filters, DetailView, SubmitForm
-Routes: `/api/listings`, `/api/search`, `/api/submit`
-
-**E-commerce Template:**
-Pages: `/` (home), `/products`, `/product/[id]`, `/cart`, `/checkout`
-Components: ProductCard, ProductDetail, Cart, CheckoutForm, OrderSummary
-Routes: `/api/products`, `/api/cart`, `/api/checkout`, `/api/orders`
-
-COMPONENT GUIDELINES:
-
-**When to use `template: "use-existing"`:**
-- Standard UI components (buttons, inputs, cards, modals)
-- Common sections (nav, footer, hero, features grid)
-- Layout components (page wrappers, containers)
-- Auth components provided by template
-- Payment components provided by template
-
-**When to use `template: "create-new"`:**
-- Business-specific logic (e.g., "WorkoutLogger", "RecipeBuilder")
-- Custom data visualizations unique to this project
-- Unique workflows or forms specific to user's requirements
-- Custom integrations beyond template defaults
-
-ROUTING CONVENTIONS:
-
-- Root page `/`: Usually landing page or main dashboard
-- Dynamic routes: `/[param]` or `/[slug]`
-- Auth-protected routes: Typically under `/dashboard`, `/app`, or `/admin`
-- Public pages: `/about`, `/pricing`, `/contact`, `/blog`
-- API routes: `/api/*` for all backend endpoints
+ROUTES:
+/=landing|dashboard | /[param]=dynamic | /dashboard|/app|/admin=protected | /about|/pricing|/contact|/blog=public | /api/*=backend
 
 Return ONLY the JSON object, no additional text or markdown formatting.

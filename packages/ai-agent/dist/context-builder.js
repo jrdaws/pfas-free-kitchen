@@ -2,8 +2,14 @@ import { LLMClient } from "./utils/llm-client.js";
 import { PromptLoader } from "./utils/prompt-loader.js";
 import { withRetry } from "./utils/retry-strategy.js";
 import { handleLLMError } from "./error-handler.js";
+// Delimiters for parsing combined response
+const CURSORRULES_DELIMITER = "---CURSORRULES---";
+const STARTPROMPT_DELIMITER = "---STARTPROMPT---";
 /**
  * Build Cursor context files (.cursorrules and START_PROMPT.md)
+ *
+ * OPTIMIZED: Generates both files in a single API call using delimiter format
+ * This reduces API calls from 2 to 1 (~$0.02 savings per generation)
  *
  * @param input - Project context (intent, architecture, code)
  * @param apiKey - Optional Anthropic API key
@@ -27,54 +33,91 @@ export async function buildCursorContext(input, apiKey) {
         features: featuresList,
         timestamp: new Date().toISOString(),
     };
-    // Generate .cursorrules
-    const cursorrules = await withRetry(async () => {
+    // Try consolidated single-call approach first
+    const result = await withRetry(async () => {
         try {
-            const systemPrompt = await prompts.load("cursor-rules", variables);
+            // Load both prompts
+            const cursorRulesPrompt = await prompts.load("cursor-rules", variables);
+            const startPromptPrompt = await prompts.load("start-prompt", variables);
+            // Consolidated system prompt for both files
+            const consolidatedPrompt = `You will generate TWO files for this project. Output them using the exact delimiter format specified.
+
+=== FILE 1: .cursorrules ===
+${cursorRulesPrompt}
+
+=== FILE 2: START_PROMPT.md ===
+${startPromptPrompt}
+
+=== OUTPUT FORMAT (CRITICAL) ===
+You MUST output both files using this exact delimiter format:
+
+${CURSORRULES_DELIMITER}
+[.cursorrules content here]
+${STARTPROMPT_DELIMITER}
+[START_PROMPT.md content here]
+
+Do NOT include any other text before ${CURSORRULES_DELIMITER} or after the START_PROMPT.md content.`;
+            // Single consolidated API call (saves ~$0.02 per generation)
             const response = await client.complete({
                 model: "claude-sonnet-4-20250514",
                 temperature: 0.3, // Slightly creative for documentation
-                maxTokens: 4096,
+                maxTokens: 8192, // Combined limit for both files
                 messages: [
                     {
                         role: "user",
-                        content: "Generate the .cursorrules file content.",
+                        content: "Generate both the .cursorrules and START_PROMPT.md files using the specified delimiter format.",
                     },
                 ],
-                system: systemPrompt,
-            });
-            return response.text.trim();
+                system: consolidatedPrompt,
+            }, "context" // Track as context stage
+            );
+            // Parse the combined response
+            const parsed = parseConsolidatedResponse(response.text);
+            if (parsed) {
+                return parsed;
+            }
+            // If parsing failed, throw to trigger fallback
+            throw new Error("Failed to parse consolidated response - will retry with fallback");
         }
         catch (error) {
             throw handleLLMError(error);
         }
     });
-    // Generate START_PROMPT.md
-    const startPrompt = await withRetry(async () => {
-        try {
-            const systemPrompt = await prompts.load("start-prompt", variables);
-            const response = await client.complete({
-                model: "claude-sonnet-4-20250514",
-                temperature: 0.3, // Slightly creative for documentation
-                maxTokens: 4096,
-                messages: [
-                    {
-                        role: "user",
-                        content: "Generate the START_PROMPT.md file content.",
-                    },
-                ],
-                system: systemPrompt,
-            });
-            return response.text.trim();
+    return result;
+}
+/**
+ * Parse the consolidated response into separate files
+ */
+function parseConsolidatedResponse(text) {
+    try {
+        const cursorrulesStart = text.indexOf(CURSORRULES_DELIMITER);
+        const startPromptStart = text.indexOf(STARTPROMPT_DELIMITER);
+        if (cursorrulesStart === -1 || startPromptStart === -1) {
+            console.warn("[ContextBuilder] Delimiter parsing failed - delimiters not found");
+            return null;
         }
-        catch (error) {
-            throw handleLLMError(error);
+        // Extract .cursorrules content (between first delimiter and second delimiter)
+        const cursorrules = text
+            .substring(cursorrulesStart + CURSORRULES_DELIMITER.length, startPromptStart)
+            .trim();
+        // Extract START_PROMPT.md content (after second delimiter)
+        const startPrompt = text
+            .substring(startPromptStart + STARTPROMPT_DELIMITER.length)
+            .trim();
+        // Validate we got meaningful content
+        if (cursorrules.length < 100 || startPrompt.length < 100) {
+            console.warn("[ContextBuilder] Parsed content too short - may be incomplete");
+            return null;
         }
-    });
-    return {
-        cursorrules,
-        startPrompt,
-    };
+        return {
+            cursorrules,
+            startPrompt,
+        };
+    }
+    catch (error) {
+        console.warn("[ContextBuilder] Parse error:", error.message);
+        return null;
+    }
 }
 /**
  * Build a human-readable summary of the architecture

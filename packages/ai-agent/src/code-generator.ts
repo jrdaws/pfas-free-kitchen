@@ -1,11 +1,11 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
-import { LLMClient } from "./utils/llm-client";
-import { PromptLoader } from "./utils/prompt-loader";
-import { withRetry } from "./utils/retry-strategy";
-import { handleLLMError, handleValidationError } from "./error-handler";
-import { CodeSchema } from "./validators/code-schema";
-import type { ProjectArchitecture, GeneratedCode, ProjectInput } from "./types";
+import { LLMClient } from "./utils/llm-client.js";
+import { PromptLoader } from "./utils/prompt-loader.js";
+import { withRetry } from "./utils/retry-strategy.js";
+import { handleLLMError, handleValidationError } from "./error-handler.js";
+import { CodeSchema } from "./validators/code-schema.js";
+import type { ProjectArchitecture, GeneratedCode, ProjectInput } from "./types.js";
 
 /**
  * Generate code files from project architecture
@@ -35,19 +35,24 @@ export async function generateCode(
         templateReference,
       });
 
-      // Call Claude with higher token limit for code generation
-      const response = await client.complete({
-        model: "claude-sonnet-4-20250514",
-        temperature: 0, // Deterministic
-        maxTokens: 8192,
-        messages: [
-          {
-            role: "user",
-            content: "Generate the code files based on the architecture definition.",
-          },
-        ],
-        system: systemPrompt,
-      });
+      // Call Claude Sonnet for complex code generation (requires reasoning)
+      // Token limit reduced from 8192 to 4096 (output tokens are 5x cost of input)
+      // If truncation occurs, consider dynamic sizing based on architecture.pages.length
+      const response = await client.complete(
+        {
+          model: "claude-sonnet-4-20250514",
+          temperature: 0, // Deterministic
+          maxTokens: 4096,
+          messages: [
+            {
+              role: "user",
+              content: "Generate the code files based on the architecture definition.",
+            },
+          ],
+          system: systemPrompt,
+        },
+        "code" // Track as code stage
+      );
 
       // Extract JSON
       const jsonMatch = response.text.match(/\{[\s\S]*\}/);

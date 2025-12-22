@@ -26,11 +26,13 @@ export async function generateCode(architecture, input, apiKey) {
                 projectName: input?.projectName || "MyApp",
                 templateReference,
             });
-            // Call Claude with higher token limit for code generation
+            // Call Claude Sonnet for complex code generation (requires reasoning)
+            // Token limit reduced from 8192 to 4096 (output tokens are 5x cost of input)
+            // If truncation occurs, consider dynamic sizing based on architecture.pages.length
             const response = await client.complete({
                 model: "claude-sonnet-4-20250514",
                 temperature: 0, // Deterministic
-                maxTokens: 8192,
+                maxTokens: 4096,
                 messages: [
                     {
                         role: "user",
@@ -38,7 +40,8 @@ export async function generateCode(architecture, input, apiKey) {
                     },
                 ],
                 system: systemPrompt,
-            });
+            }, "code" // Track as code stage
+            );
             // Extract JSON
             const jsonMatch = response.text.match(/\{[\s\S]*\}/);
             if (!jsonMatch) {

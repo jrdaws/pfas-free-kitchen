@@ -1,4 +1,5 @@
 import Anthropic from "@anthropic-ai/sdk";
+import { getGlobalTracker } from "./token-tracker.js";
 // Singleton Anthropic client
 let _client = null;
 function getAnthropicClient(apiKey) {
@@ -12,11 +13,25 @@ function getAnthropicClient(apiKey) {
     return _client;
 }
 export class LLMClient {
-    constructor(apiKey) {
-        this.apiKey = apiKey;
+    constructor(apiKeyOrOptions) {
+        if (typeof apiKeyOrOptions === "string") {
+            this.apiKey = apiKeyOrOptions;
+            this.trackUsage = true;
+        }
+        else {
+            this.apiKey = apiKeyOrOptions?.apiKey;
+            this.trackUsage = apiKeyOrOptions?.trackUsage ?? true;
+        }
     }
-    async complete(req) {
+    /**
+     * Complete a request with optional token tracking
+     *
+     * @param req - LLM request parameters
+     * @param stage - Pipeline stage for token tracking (optional)
+     */
+    async complete(req, stage) {
         const client = getAnthropicClient(this.apiKey);
+        const startTime = Date.now();
         try {
             // Separate system messages from others
             const systemMessages = req.messages.filter((m) => m.role === "system");
@@ -26,8 +41,9 @@ export class LLMClient {
             if (systemMessages.length > 0) {
                 systemPrompt = systemMessages.map((m) => m.content).join("\n");
             }
+            const model = req.model || "claude-sonnet-4-20250514";
             const response = await client.messages.create({
-                model: req.model || "claude-sonnet-4-20250514",
+                model,
                 max_tokens: req.maxTokens || 4096,
                 temperature: req.temperature ?? 0, // Deterministic by default
                 system: systemPrompt || undefined,
@@ -36,18 +52,33 @@ export class LLMClient {
                     content: m.content,
                 })),
             });
+            const durationMs = Date.now() - startTime;
             // Extract text from response
             const text = response.content
                 .filter((block) => block.type === "text")
                 .map((block) => block.text)
                 .join("");
+            const usage = {
+                inputTokens: response.usage.input_tokens,
+                outputTokens: response.usage.output_tokens,
+            };
+            // Track token usage if stage is provided
+            if (this.trackUsage && stage) {
+                const tracker = getGlobalTracker();
+                tracker.record({
+                    stage,
+                    inputTokens: usage.inputTokens,
+                    outputTokens: usage.outputTokens,
+                    model,
+                    timestamp: new Date(),
+                    cached: false, // TODO: detect cache hits when Anthropic supports it
+                    durationMs,
+                });
+            }
             return {
                 id: response.id,
                 text,
-                usage: {
-                    inputTokens: response.usage.input_tokens,
-                    outputTokens: response.usage.output_tokens,
-                },
+                usage,
             };
         }
         catch (error) {

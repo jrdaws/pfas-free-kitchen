@@ -79,37 +79,13 @@ ARCHITECTURE PRINCIPLES:
    - Database integration → plan data fetching patterns
    - Email integration → include notification triggers
 
-EXAMPLES BY TEMPLATE:
-
-**SaaS Template:**
-Pages: `/` (landing), `/dashboard` (main app), `/settings`, `/pricing`
-Components: Hero, Features, Pricing, DashboardLayout, SettingsForm
-Routes: `/api/auth/*`, `/api/billing/*`, `/api/user/*`
-
-**Landing Page Template:**
-Pages: `/` (landing), `/about`, `/contact`
-Components: Hero, Features, Testimonials, CTA, ContactForm
-Routes: `/api/contact`, `/api/newsletter`
-
-**Dashboard Template:**
-Pages: `/` (dashboard), `/reports`, `/settings`
-Components: Sidebar, MetricsCard, Chart, DataTable, Filters
-Routes: `/api/metrics`, `/api/reports`, `/api/export`
-
-**Blog Template:**
-Pages: `/` (posts list), `/[slug]` (post detail), `/about`, `/admin`
-Components: PostCard, PostContent, Sidebar, AuthorBio, CommentSection
-Routes: `/api/posts`, `/api/comments`, `/api/admin`
-
-**Directory Template:**
-Pages: `/` (listings), `/[id]` (detail), `/submit`, `/categories`
-Components: ListingCard, SearchBar, Filters, DetailView, SubmitForm
-Routes: `/api/listings`, `/api/search`, `/api/submit`
-
-**E-commerce Template:**
-Pages: `/` (home), `/products`, `/product/[id]`, `/cart`, `/checkout`
-Components: ProductCard, ProductDetail, Cart, CheckoutForm, OrderSummary
-Routes: `/api/products`, `/api/cart`, `/api/checkout`, `/api/orders`
+TEMPLATE PATTERNS:
+SaaS: /|/dashboard|/settings|/pricing → Hero|Features|Pricing|DashboardLayout|SettingsForm → /api/auth|billing|user
+Landing: /|/about|/contact → Hero|Features|Testimonials|CTA|ContactForm → /api/contact|newsletter
+Dashboard: /|/reports|/settings → Sidebar|MetricsCard|Chart|DataTable|Filters → /api/metrics|reports|export
+Blog: /|/[slug]|/about|/admin → PostCard|PostContent|Sidebar|AuthorBio|CommentSection → /api/posts|comments|admin
+Directory: /|/[id]|/submit|/categories → ListingCard|SearchBar|Filters|DetailView|SubmitForm → /api/listings|search|submit
+Ecommerce: /|/products|/product/[id]|/cart|/checkout → ProductCard|ProductDetail|Cart|CheckoutForm|OrderSummary → /api/products|cart|checkout|orders
 
 COMPONENT GUIDELINES:
 

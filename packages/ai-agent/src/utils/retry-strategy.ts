@@ -1,4 +1,4 @@
-import { isRetryableError } from "../error-handler";
+import { isRetryableError } from "../error-handler.js";
 
 export async function withRetry<T>(
   fn: () => Promise<T>,

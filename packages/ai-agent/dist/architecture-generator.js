@@ -28,9 +28,10 @@ export async function generateArchitecture(intent, apiKey) {
                 features: template.features.join(", "),
                 supportedIntegrations: JSON.stringify(template.supportedIntegrations, null, 2),
             });
-            // Call Claude
+            // Call Claude Haiku for cost-efficient architecture design
+            // Haiku is sufficient for structured architecture tasks (33% cost reduction)
             const response = await client.complete({
-                model: "claude-sonnet-4-20250514",
+                model: "claude-3-haiku-20240307",
                 temperature: 0, // Deterministic
                 maxTokens: 4096,
                 messages: [
@@ -40,7 +41,8 @@ export async function generateArchitecture(intent, apiKey) {
                     },
                 ],
                 system: systemPrompt,
-            });
+            }, "architecture" // Track as architecture stage
+            );
             // Extract JSON
             const jsonMatch = response.text.match(/\{[\s\S]*\}/);
             if (!jsonMatch) {

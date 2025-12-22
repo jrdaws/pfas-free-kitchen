@@ -1,4 +1,4 @@
-import type { ProjectArchitecture, GeneratedCode, ProjectInput } from "./types";
+import type { ProjectArchitecture, GeneratedCode, ProjectInput } from "./types.js";
 /**
  * Generate code files from project architecture
  *

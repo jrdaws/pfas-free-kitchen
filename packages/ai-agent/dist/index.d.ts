@@ -1,13 +1,15 @@
-export { analyzeIntent } from "./intent-analyzer";
-export { generateArchitecture } from "./architecture-generator";
-export { generateCode } from "./code-generator";
-export { buildCursorContext } from "./context-builder";
-export type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext, PageDefinition, ComponentDefinition, RouteDefinition, FileDefinition, IntegrationRequirements, TemplateMetadata, Inspiration, } from "./types";
-export { AIAgentError, handleLLMError, handleValidationError } from "./error-handler";
-export { LLMClient } from "./utils/llm-client";
-export { PromptLoader } from "./utils/prompt-loader";
-export { TemplateSelector } from "./template-selector";
-import type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext } from "./types";
+export { analyzeIntent } from "./intent-analyzer.js";
+export { generateArchitecture } from "./architecture-generator.js";
+export { generateCode } from "./code-generator.js";
+export { buildCursorContext } from "./context-builder.js";
+export type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext, PageDefinition, ComponentDefinition, RouteDefinition, FileDefinition, IntegrationRequirements, TemplateMetadata, Inspiration, } from "./types.js";
+export { AIAgentError, handleLLMError, handleValidationError } from "./error-handler.js";
+export { LLMClient } from "./utils/llm-client.js";
+export { PromptLoader } from "./utils/prompt-loader.js";
+export { TemplateSelector } from "./template-selector.js";
+export { TokenTracker, getGlobalTracker, resetGlobalTracker } from "./utils/token-tracker.js";
+export type { TokenUsage, TokenSummary, PipelineStage } from "./utils/token-tracker.js";
+import type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext } from "./types.js";
 export interface GenerateProjectResult {
     intent: ProjectIntent;
     architecture: ProjectArchitecture;
@@ -40,5 +42,9 @@ export interface GenerateProjectResult {
  * console.log(result.context.cursorrules); // .cursorrules content
  * ```
  */
-export declare function generateProject(input: ProjectInput, apiKey?: string): Promise<GenerateProjectResult>;
+export interface GenerateProjectOptions {
+    apiKey?: string;
+    logTokenUsage?: boolean;
+}
+export declare function generateProject(input: ProjectInput, apiKeyOrOptions?: string | GenerateProjectOptions): Promise<GenerateProjectResult>;
 //# sourceMappingURL=index.d.ts.map

@@ -1,10 +1,10 @@
-import { LLMClient } from "./utils/llm-client";
-import { PromptLoader } from "./utils/prompt-loader";
-import { withRetry } from "./utils/retry-strategy";
-import { handleLLMError, handleValidationError } from "./error-handler";
-import { ArchitectureSchema } from "./validators/architecture-schema";
-import { TemplateSelector } from "./template-selector";
-import type { ProjectIntent, ProjectArchitecture } from "./types";
+import { LLMClient } from "./utils/llm-client.js";
+import { PromptLoader } from "./utils/prompt-loader.js";
+import { withRetry } from "./utils/retry-strategy.js";
+import { handleLLMError, handleValidationError } from "./error-handler.js";
+import { ArchitectureSchema } from "./validators/architecture-schema.js";
+import { TemplateSelector } from "./template-selector.js";
+import type { ProjectIntent, ProjectArchitecture } from "./types.js";
 
 /**
  * Generate project architecture from analyzed intent
@@ -37,19 +37,23 @@ export async function generateArchitecture(
         supportedIntegrations: JSON.stringify(template.supportedIntegrations, null, 2),
       });
 
-      // Call Claude
-      const response = await client.complete({
-        model: "claude-sonnet-4-20250514",
-        temperature: 0, // Deterministic
-        maxTokens: 4096,
-        messages: [
-          {
-            role: "user",
-            content: "Design the project architecture based on the intent analysis.",
-          },
-        ],
-        system: systemPrompt,
-      });
+      // Call Claude Haiku for cost-efficient architecture design
+      // Haiku is sufficient for structured architecture tasks (33% cost reduction)
+      const response = await client.complete(
+        {
+          model: "claude-3-haiku-20240307",
+          temperature: 0, // Deterministic
+          maxTokens: 4096,
+          messages: [
+            {
+              role: "user",
+              content: "Design the project architecture based on the intent analysis.",
+            },
+          ],
+          system: systemPrompt,
+        },
+        "architecture" // Track as architecture stage
+      );
 
       // Extract JSON
       const jsonMatch = response.text.match(/\{[\s\S]*\}/);

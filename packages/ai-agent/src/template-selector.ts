@@ -1,6 +1,6 @@
 import { readFile } from "fs/promises";
 import { join } from "path";
-import type { ProjectIntent, TemplateMetadata, IntegrationRequirements } from "./types";
+import type { ProjectIntent, TemplateMetadata, IntegrationRequirements } from "./types.js";
 
 export class TemplateSelector {
   private templatesDir: string;

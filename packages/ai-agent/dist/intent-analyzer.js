@@ -19,9 +19,10 @@ export async function analyzeIntent(input, apiKey) {
             const systemPrompt = await prompts.load("intent-analysis", {
                 description: input.description,
             });
-            // Call Claude with deterministic temperature
+            // Call Claude Haiku for cost-efficient intent analysis
+            // Haiku is sufficient for pattern-matching tasks (33% cost reduction)
             const response = await client.complete({
-                model: "claude-sonnet-4-20250514",
+                model: "claude-3-haiku-20240307",
                 temperature: 0, // Deterministic
                 maxTokens: 2048,
                 messages: [
@@ -31,7 +32,8 @@ export async function analyzeIntent(input, apiKey) {
                     },
                 ],
                 system: systemPrompt,
-            });
+            }, "intent" // Track as intent stage
+            );
             // Extract JSON from response
             const jsonMatch = response.text.match(/\{[\s\S]*\}/);
             if (!jsonMatch) {

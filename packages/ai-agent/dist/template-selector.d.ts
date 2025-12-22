@@ -1,4 +1,4 @@
-import type { ProjectIntent, TemplateMetadata, IntegrationRequirements } from "./types";
+import type { ProjectIntent, TemplateMetadata, IntegrationRequirements } from "./types.js";
 export declare class TemplateSelector {
     private templatesDir;
     constructor(templatesDir?: string);

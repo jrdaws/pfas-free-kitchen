@@ -1,9 +1,9 @@
-import { LLMClient } from "./utils/llm-client";
-import { PromptLoader } from "./utils/prompt-loader";
-import { withRetry } from "./utils/retry-strategy";
-import { handleLLMError, handleValidationError } from "./error-handler";
-import { IntentSchema } from "./validators/intent-schema";
-import type { ProjectInput, ProjectIntent } from "./types";
+import { LLMClient } from "./utils/llm-client.js";
+import { PromptLoader } from "./utils/prompt-loader.js";
+import { withRetry } from "./utils/retry-strategy.js";
+import { handleLLMError, handleValidationError } from "./error-handler.js";
+import { IntentSchema } from "./validators/intent-schema.js";
+import type { ProjectInput, ProjectIntent } from "./types.js";
 
 /**
  * Analyze user's project description and extract structured intent
@@ -26,19 +26,23 @@ export async function analyzeIntent(
         description: input.description,
       });
 
-      // Call Claude with deterministic temperature
-      const response = await client.complete({
-        model: "claude-sonnet-4-20250514",
-        temperature: 0, // Deterministic
-        maxTokens: 2048,
-        messages: [
-          {
-            role: "user",
-            content: `Analyze this project description: ${input.description}`,
-          },
-        ],
-        system: systemPrompt,
-      });
+      // Call Claude Haiku for cost-efficient intent analysis
+      // Haiku is sufficient for pattern-matching tasks (33% cost reduction)
+      const response = await client.complete(
+        {
+          model: "claude-3-haiku-20240307",
+          temperature: 0, // Deterministic
+          maxTokens: 2048,
+          messages: [
+            {
+              role: "user",
+              content: `Analyze this project description: ${input.description}`,
+            },
+          ],
+          system: systemPrompt,
+        },
+        "intent" // Track as intent stage
+      );
 
       // Extract JSON from response
       const jsonMatch = response.text.match(/\{[\s\S]*\}/);

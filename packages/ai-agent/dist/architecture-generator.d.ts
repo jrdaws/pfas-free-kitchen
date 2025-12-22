@@ -1,4 +1,4 @@
-import type { ProjectIntent, ProjectArchitecture } from "./types";
+import type { ProjectIntent, ProjectArchitecture } from "./types.js";
 /**
  * Generate project architecture from analyzed intent
  *
