@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- f1feb26 2025-12-22 feat(templates): add subscription management to saas Stripe integration
 - 9daf6a0 2025-12-22 docs(testing): update memory with test fixes session
 - daef293 2025-12-22 chore: update agent memory, API docs, templates, and E2E tests
 - 47889c7 2025-12-22 docs(governance): create Documentation Agent memory file
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - d6893be 2025-12-22 fix(templates): exclude integrations from saas template build
 - 5926740 2025-12-22 feat(cli): add help flag support to export command and fix help text output
 - 20a9f0a 2025-12-22 docs(cli): add CLI commands consistency audit to memory
-- 3539df2 2025-12-22 docs(api): fix Projects API documentation inconsistencies
 
 ## Agent Governance Structure
 

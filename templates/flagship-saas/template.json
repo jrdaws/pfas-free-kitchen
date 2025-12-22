@@ -1,0 +1,34 @@
+{
+  "name": "flagship-saas",
+  "displayName": "Flagship SaaS",
+  "description": "Enterprise SaaS template with entitlements, audit logs, usage tracking, and provider health monitoring",
+  "category": "saas",
+  "tags": ["saas", "enterprise", "dashboard", "entitlements", "audit-log", "usage-tracking", "monitoring"],
+  "version": "0.1.0",
+  "author": "Dawson Does Framework",
+  "license": "MIT",
+  "repository": "https://github.com/jrdaws/dawson-does-framework",
+  "features": [
+    "Entitlements system with role-based capability checks",
+    "Append-only audit logging for compliance",
+    "Usage tracking with budget enforcement",
+    "Provider health aggregation and monitoring",
+    "Responsive dark mode dashboard",
+    "TypeScript + Next.js 15 + Tailwind CSS"
+  ],
+  "dependencies": {
+    "next": "^15.1.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "typescript": "^5.6.3",
+    "tailwindcss": "^3.4.0"
+  },
+  "supportedIntegrations": {
+    "auth": ["supabase", "clerk"],
+    "payments": ["stripe"],
+    "ai": ["anthropic", "openai"],
+    "database": ["supabase", "postgres"]
+  },
+  "defaultIntegrations": [],
+  "requiredIntegrations": []
+}
