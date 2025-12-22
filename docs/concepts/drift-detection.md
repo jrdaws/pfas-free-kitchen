@@ -1,5 +1,7 @@
 # Drift Detection
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Drift detection tracks how your project changes from its original template, providing visibility into customizations and helping you make informed decisions about updates and maintenance.
 
 ## Table of Contents

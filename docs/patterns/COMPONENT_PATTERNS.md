@@ -1,8 +1,8 @@
 # Component Patterns
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > Reusable UI patterns and best practices for building consistent components in dawson-does-framework.
-
-**Last Updated**: 2024-12-22
 
 ---
 

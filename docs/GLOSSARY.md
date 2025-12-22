@@ -1,5 +1,7 @@
 # Glossary
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > **Project-specific terminology for dawson-does-framework.**
 >
 > This document defines all terms, concepts, and abbreviations used throughout the project. Read this to establish a common vocabulary.
@@ -825,4 +827,4 @@ If you encounter a term not defined here:
 
 ---
 
-*Last updated: 2024-12-22*
+*Version 1.0 | Last updated: 2025-12-22*

@@ -1,5 +1,7 @@
 # Design Decisions
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Key architectural and design decisions made in the Dawson Does Framework, including rationale, alternatives considered, and trade-offs.
 
 ## Table of Contents

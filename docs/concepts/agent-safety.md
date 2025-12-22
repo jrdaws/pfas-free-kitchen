@@ -1,5 +1,7 @@
 # Agent Safety
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 The Dawson Does Framework includes built-in safety features designed for AI agents making autonomous changes to codebases. These features prevent destructive operations, enable rollback, and maintain audit trails.
 
 ## Table of Contents

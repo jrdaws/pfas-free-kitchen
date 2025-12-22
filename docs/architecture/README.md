@@ -1,5 +1,7 @@
 # Architecture Overview
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 The Dawson Does Framework is a TypeScript/JavaScript framework for rapidly exporting production-ready web applications with integrated services. This document describes the high-level system architecture and design principles.
 
 ## Table of Contents

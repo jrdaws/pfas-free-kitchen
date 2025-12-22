@@ -1,5 +1,7 @@
 # Error Handling Patterns
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > Standard patterns for error handling in dawson-does-framework
 
 This document defines how to handle, log, and communicate errors consistently across the codebase.

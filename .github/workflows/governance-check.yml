@@ -1,8 +1,8 @@
 # Governance Compliance Check
-# Runs on every push and PR to ensure protected files exist
-# and coding standards are followed.
+# Runs on every push and PR to ensure governance rules are followed.
+# This is the automated enforcement of agent governance policies.
 #
-# Version: 1.0
+# Version: 2.0
 # Last Updated: 2025-12-22
 
 name: Governance Check
@@ -14,6 +14,35 @@ on:
     branches: [main]
 
 jobs:
+  validate-governance:
+    name: Full Governance Validation
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2  # Need history for diff checks
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      
+      - name: Install Dependencies
+        run: npm ci
+      
+      - name: Run Full Validation Script
+        run: |
+          chmod +x scripts/validate-agent-work.sh
+          ./scripts/validate-agent-work.sh
+      
+      - name: Check Pre-commit Hook Would Pass
+        run: |
+          chmod +x scripts/hooks/pre-commit
+          ./scripts/hooks/pre-commit --ci-mode
+
   protected-files:
     name: Verify Protected Files
     runs-on: ubuntu-latest
@@ -31,7 +60,6 @@ jobs:
             "CLAUDE.md"
             ".cursorrules"
             ".protected-files"
-            "docs/GOVERNANCE_ROADMAP.md"
             "prompts/agents/UNIVERSAL_BOOTSTRAP.md"
           )
           
@@ -55,25 +83,46 @@ jobs:
           
           echo "✅ All critical files present"
       
-      - name: Check Governance Version
+      - name: Check Governance Version Consistency
         run: |
           echo "📋 Checking governance version..."
           
-          # Extract version from AGENT_CONTEXT.md
-          VERSION=$(grep -o "Governance Version: [0-9.]*" AGENT_CONTEXT.md | head -1 || echo "none")
-          echo "   AGENT_CONTEXT.md: $VERSION"
+          EXPECTED_VERSION="2.0"
           
-          # Verify CLAUDE.md matches
-          CLAUDE_VERSION=$(grep -o "Governance Version: [0-9.]*" CLAUDE.md | head -1 || echo "none")
-          echo "   CLAUDE.md: $CLAUDE_VERSION"
+          # Extract version from each file
+          AGENT_VERSION=$(grep -o "Governance Version: [0-9.]*" AGENT_CONTEXT.md | head -1 | sed 's/Governance Version: //' || echo "none")
+          CLAUDE_VERSION=$(grep -o "Governance Version: [0-9.]*" CLAUDE.md | head -1 | sed 's/Governance Version: //' || echo "none")
+          CURSOR_VERSION=$(grep -o "Governance Version: [0-9.]*" .cursorrules | head -1 | sed 's/Governance Version: //' || echo "none")
           
-          if [ "$VERSION" != "$CLAUDE_VERSION" ]; then
-            echo ""
-            echo "⚠️ WARNING: Governance versions don't match!"
-            echo "   This may cause agent confusion."
+          echo "   Expected: v$EXPECTED_VERSION"
+          echo "   AGENT_CONTEXT.md: v$AGENT_VERSION"
+          echo "   CLAUDE.md: v$CLAUDE_VERSION"
+          echo "   .cursorrules: v$CURSOR_VERSION"
+          
+          ERRORS=0
+          
+          if [ "$AGENT_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "   ❌ AGENT_CONTEXT.md version mismatch!"
+            ERRORS=$((ERRORS + 1))
           fi
           
-          echo "✅ Version check complete"
+          if [ "$CLAUDE_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "   ❌ CLAUDE.md version mismatch!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          if [ "$CURSOR_VERSION" != "$EXPECTED_VERSION" ]; then
+            echo "   ❌ .cursorrules version mismatch!"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          if [ $ERRORS -gt 0 ]; then
+            echo ""
+            echo "❌ Governance versions are inconsistent!"
+            exit 1
+          fi
+          
+          echo "✅ All governance files at v$EXPECTED_VERSION"
 
   tests:
     name: Run Tests

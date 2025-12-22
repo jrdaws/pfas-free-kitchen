@@ -1,5 +1,7 @@
 # Templates
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Templates are the foundation of the Dawson Does Framework. They provide complete, production-ready project structures that you can customize and extend for your specific needs.
 
 ## Table of Contents

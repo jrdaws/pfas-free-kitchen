@@ -1,5 +1,7 @@
 # Core Concepts
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 This section explains the fundamental concepts that power the Dawson Does Framework. Understanding these concepts will help you effectively use the framework to build and deploy production-ready applications.
 
 ## What is the Dawson Does Framework?

@@ -1,8 +1,8 @@
 #!/bin/bash
 # Pre-commit hook for dawson-does-framework
-# Verifies protected files exist before allowing commit
+# Runs validation checks before allowing commit
 # 
-# Version: 1.0
+# Version: 2.0
 # Last Updated: 2025-12-22
 #
 # Installation: Run `./scripts/install-hooks.sh` or manually:
@@ -11,7 +11,18 @@
 
 set -e
 
-echo "🛡️  Checking protected files..."
+# Check if running in CI mode (called from GitHub Actions)
+CI_MODE=false
+if [ "${1:-}" = "--ci-mode" ]; then
+    CI_MODE=true
+fi
+
+echo ""
+echo "🛡️  Pre-commit Validation (Governance v2.0)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo ""
+
+echo "📋 Step 1: Checking protected files..."
 
 # Core protected files that must exist
 CRITICAL_FILES=(
@@ -99,5 +110,72 @@ if [ -f ".agent-lock" ]; then
 fi
 
 echo "✅ Protected files check passed"
+echo ""
+
+# ============================================================================
+# Step 2: Check for forbidden patterns
+# ============================================================================
+echo "📋 Step 2: Checking for forbidden patterns..."
+
+ERRORS=0
+WARNINGS=0
+
+# Check for console.log in .mjs files (should use logger)
+STAGED_MJS=$(git diff --cached --name-only -- '*.mjs' 2>/dev/null || true)
+if [ -n "$STAGED_MJS" ]; then
+    CONSOLE_LOGS=$(echo "$STAGED_MJS" | xargs grep -l "console\.log" 2>/dev/null || true)
+    if [ -n "$CONSOLE_LOGS" ]; then
+        echo "   ⚠️  console.log found in .mjs files (use logger.mjs):"
+        echo "$CONSOLE_LOGS" | sed 's/^/      /'
+        WARNINGS=$((WARNINGS + 1))
+    fi
+fi
+
+# Check for .env files being committed
+ENV_FILES=$(git diff --cached --name-only 2>/dev/null | grep -E "^\.env" || true)
+if [ -n "$ENV_FILES" ]; then
+    echo "   ❌ ERROR: .env files staged for commit:"
+    echo "$ENV_FILES" | sed 's/^/      /'
+    ERRORS=$((ERRORS + 1))
+fi
+
+if [ $ERRORS -eq 0 ] && [ $WARNINGS -eq 0 ]; then
+    echo "   ✅ No forbidden patterns found"
+fi
+echo ""
+
+# ============================================================================
+# Step 3: Validate commit message format (if not CI mode)
+# ============================================================================
+if [ "$CI_MODE" = false ]; then
+    echo "📋 Step 3: Checking staged changes..."
+    
+    STAGED_COUNT=$(git diff --cached --name-only | wc -l | tr -d ' ')
+    echo "   Files staged: $STAGED_COUNT"
+    
+    if [ "$STAGED_COUNT" -eq 0 ]; then
+        echo "   ⚠️  No files staged for commit"
+        WARNINGS=$((WARNINGS + 1))
+    fi
+    echo ""
+fi
+
+# ============================================================================
+# Summary
+# ============================================================================
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+if [ $ERRORS -gt 0 ]; then
+    echo "❌ Pre-commit FAILED - $ERRORS error(s), $WARNINGS warning(s)"
+    echo ""
+    echo "   Fix errors before committing."
+    exit 1
+elif [ $WARNINGS -gt 0 ]; then
+    echo "⚠️  Pre-commit PASSED with $WARNINGS warning(s)"
+    echo ""
+else
+    echo "✅ Pre-commit PASSED - All checks OK"
+    echo ""
+fi
+
 exit 0
 

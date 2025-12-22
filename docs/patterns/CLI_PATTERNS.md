@@ -1,5 +1,7 @@
 # CLI Patterns
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > How to add new CLI commands to the dawson-does-framework
 
 This guide documents the patterns for creating new CLI commands. Follow these conventions to maintain consistency across the codebase.

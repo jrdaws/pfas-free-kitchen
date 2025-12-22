@@ -1,5 +1,7 @@
 # Project Structure
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Complete breakdown of the Dawson Does Framework codebase organization, module responsibilities, and file naming conventions.
 
 ## Table of Contents

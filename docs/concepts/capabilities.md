@@ -1,5 +1,7 @@
 # Capabilities
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Capabilities are plan-gated features in the Dawson Does Framework that control what functionality is available to users based on their subscription tier.
 
 ## Table of Contents

@@ -3,11 +3,12 @@
 #
 # Usage: 
 #   ./scripts/agent-lock.sh acquire <role>  - Acquire lock for an agent role
-#   ./scripts/agent-lock.sh release         - Release lock
+#   ./scripts/agent-lock.sh release         - Release lock (runs validation first)
+#   ./scripts/agent-lock.sh release --force - Release lock without validation
 #   ./scripts/agent-lock.sh status          - Check lock status
 #   ./scripts/agent-lock.sh force-release   - Force release (use with caution)
 #
-# Version: 1.0
+# Version: 2.0
 # Last Updated: 2025-12-22
 
 LOCK_FILE=".agent-lock"
@@ -75,9 +76,37 @@ acquire_lock() {
 }
 
 release_lock() {
+    local SKIP_VALIDATION="${1:-false}"
+    
     if [ ! -f "$LOCK_FILE" ]; then
         echo "ℹ️  No lock file exists."
         exit 0
+    fi
+    
+    # Run validation before releasing (unless --force)
+    if [ "$SKIP_VALIDATION" != "--force" ]; then
+        echo ""
+        echo "🔍 Running pre-release validation..."
+        echo ""
+        
+        if [ -x "./scripts/validate-agent-work.sh" ]; then
+            if ./scripts/validate-agent-work.sh; then
+                echo ""
+                echo "✅ Validation passed!"
+            else
+                echo ""
+                echo "❌ Validation FAILED!"
+                echo ""
+                echo "   Your work may not meet governance standards."
+                echo "   Options:"
+                echo "   1. Fix issues and try again"
+                echo "   2. Release anyway: $0 release --force"
+                echo ""
+                exit 1
+            fi
+        else
+            echo "   ⚠️  Validation script not found, skipping..."
+        fi
     fi
     
     rm -f "$LOCK_FILE"
@@ -142,7 +171,7 @@ case "${1:-}" in
         acquire_lock "$2"
         ;;
     release)
-        release_lock
+        release_lock "$2"  # Pass --force if provided
         ;;
     status)
         check_status

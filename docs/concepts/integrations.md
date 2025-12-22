@@ -1,5 +1,7 @@
 # Integrations
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Integrations extend templates with specific third-party services and functionality, allowing you to add authentication, payments, email, databases, and more to your projects.
 
 ## Table of Contents

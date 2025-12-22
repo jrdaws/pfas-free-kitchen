@@ -1,5 +1,7 @@
 # Plugins
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Plugins extend the Dawson Does Framework by hooking into key lifecycle events during template export, build, deploy, and other operations. They enable validation, automation, logging, and custom behavior without modifying core framework code.
 
 ## Table of Contents

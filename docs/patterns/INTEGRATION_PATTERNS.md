@@ -1,5 +1,7 @@
 # Integration Patterns
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > **Guide for creating and managing integrations in @jrdaws/framework templates**
 
 ## Overview

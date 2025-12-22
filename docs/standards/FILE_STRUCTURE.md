@@ -1,5 +1,7 @@
 # File Structure
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+>
 > **Required reading for all agents working on dawson-does-framework.**
 >
 > This guide explains where every type of file should go in the project.

@@ -5,8 +5,14 @@
 # Usage:
 #   ./scripts/validate-agent-work.sh           - Run all checks
 #   ./scripts/validate-agent-work.sh --strict  - Fail on any warning
+#   ./scripts/validate-agent-work.sh --quick   - Skip tests (faster)
 #
-# Version: 1.0
+# Integration Points:
+#   - Called by: scripts/agent-lock.sh release
+#   - Called by: .github/workflows/governance-check.yml
+#   - Called by: scripts/hooks/pre-commit (in CI mode)
+#
+# Version: 2.0
 # Last Updated: 2025-12-22
 
 set -e

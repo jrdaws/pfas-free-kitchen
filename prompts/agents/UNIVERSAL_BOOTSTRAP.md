@@ -33,15 +33,20 @@ git log --oneline --since="10 minutes ago"  # Check for active agents
 # 5. Run tests before committing
 npm test
 
-# 6. Commit (pre-commit hook verifies protected files)
+# 6. Validate your work (BEFORE committing)
+./scripts/validate-agent-work.sh
+
+# 7. Commit (pre-commit hook runs automatically)
 git add -A && git commit -m "feat(scope): description"
 
-# 7. Push with retry logic
+# 8. Push with retry logic
 ./scripts/git-push-safe.sh
 
-# 8. Release lock
+# 9. Release lock (runs validation again)
 ./scripts/agent-lock.sh release
 ```
+
+> **Note**: The `release` command runs validation automatically. If validation fails, you must fix issues before releasing.
 
 ---
 
@@ -139,21 +144,28 @@ npm test
 # 2. Update your memory file
 # Add session entry to: prompts/agents/memory/[ROLE]_MEMORY.md
 
-# 3. Commit your work
+# 3. Validate your work
+./scripts/validate-agent-work.sh
+
+# 4. Commit your work (pre-commit hook runs automatically)
 git add -A
 git commit -m "<type>(<scope>): <description>"
 
-# 4. Push with retry logic
+# 5. Push with retry logic
 ./scripts/git-push-safe.sh
 
-# 5. Release your lock
+# 6. Release your lock (validation runs automatically)
 ./scripts/agent-lock.sh release
 ```
+
+**⚠️ If validation fails**: Fix the issues before committing. Use `--force` flag on release only if truly necessary.
 
 Then in your final response, provide:
 1. **Summary** of achievements
 2. **Suggestions** (including recommended next agent)
 3. **Continuation Prompt** for next agent (copy-paste ready)
+
+**If you skip these steps, your work may be rejected by CI.**
 
 ---
 

@@ -1,5 +1,7 @@
 # Contributing to Dawson Does Framework
 
+> **Version**: 1.0 | **Last Updated**: 2025-12-22
+
 Welcome! This guide will help you contribute to the framework, whether you're fixing bugs, adding features, creating templates, or improving documentation.
 
 ## Table of Contents
