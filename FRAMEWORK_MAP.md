@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 1cca075d21
 
 ## Recent changes
+- 3abd367 2025-12-20 feat: implement framework pull command with web platform integration
 - 7099ddf 2025-12-20 chore: session recovery and framework state documentation
 - c086d40 2025-12-20 feat: production-ready deployment with AI preview
 - 196b128 2025-12-20 feat(configurator): add client-side ZIP download
@@ -28,7 +29,6 @@ Hash: 1cca075d21
 - 9da864e 2025-12-19 chore: simplify prepublishOnly script in package.json
 - 2df3285 2025-12-19 feat(cli): add safe upgrade with rollback support
 - 8bbab03 2025-12-19 chore: prepare for npm publish
-- b1867fb 2025-12-19 docs: add CHANGELOG.md and release process
 
 ## Capability registry
 | id | tier | optional | color | phrase | command | paths |
