@@ -17,7 +17,7 @@
 
 ## Known Blockers
 
-- ⚠️ Configure page has React rendering error: "Element type is invalid" - Website Agent needs to fix component exports in `/configure` page
+- None currently
 
 ---
 
@@ -135,6 +135,117 @@
 - `/website/tests/homepage.spec.ts` - Fixed navigation test
 - `/website/tests/configurator.spec.ts` - Made configure page test resilient
 - `/prompts/agents/memory/TESTING_MEMORY.md` - Updated with session notes
+
+---
+
+### Session: 2025-12-22 21:00 (Fix Configure Page React Error)
+
+**Work Completed**
+- ✅ Identified root cause: Server-side rendering (SSR) issue with components using browser-only APIs
+- ✅ Fixed by implementing dynamic imports with `ssr: false` for all configurator components
+- ✅ Changed imports in `/website/app/configure/page.tsx` to use Next.js `dynamic()` function
+- ✅ Build now succeeds - page generates static pages without errors
+- ✅ All configurator E2E tests passing (7/7)
+- ✅ Updated configurator test to handle dynamic component loading
+
+**Root Cause Analysis**
+The configure page components (especially AIPreview and ProjectGenerator) use browser APIs like:
+- `localStorage.getItem()` and `localStorage.setItem()`
+- `window` object
+- Client-side only hooks
+
+These fail during SSR because these APIs don't exist in Node.js environment.
+
+**Solution Implemented**
+Converted all configurator component imports to dynamic imports:
+```typescript
+const StepIndicator = dynamic(() => import("@/app/components/configurator/StepIndicator").then(mod => ({ default: mod.StepIndicator })), { ssr: false });
+// ... (repeated for all 11 configurator components)
+```
+
+This tells Next.js to:
+1. Skip SSR for these components
+2. Load them client-side only
+3. Show loading state during hydration
+
+**Test Results**
+- All 7 configurator tests: ✓ PASSING
+- Build: ✓ SUCCESS
+- `/configure` route: ✓ GENERATES SUCCESSFULLY
+
+**Blockers Encountered**
+- None - issue fully resolved
+
+**Next Priorities**
+1. Monitor for any performance impact from client-side only rendering
+2. Consider adding loading spinners for dynamic components
+3. Add more comprehensive configure page flow tests once UI is stable
+
+**Handoff Notes**
+- **React error completely fixed!**
+- Configure page now builds and runs without errors
+- Solution uses Next.js best practices for client-only components
+- All E2E tests remain passing
+- No functionality lost, just delayed hydration for configurator components
+
+**Files Modified**
+- `/website/app/configure/page.tsx` - Added dynamic imports with ssr:false
+- `/website/tests/configurator.spec.ts` - Updated test to handle dynamic loading
+- `/prompts/agents/memory/TESTING_MEMORY.md` - Updated session notes
+
+---
+
+### Session: 2025-12-22 12:00 - Enable Stripe TypeScript Tests
+
+**Work Completed**
+- ✅ Enabled all 15 Stripe billing provider tests (15 skipped → 0 skipped)
+- ✅ Created proper `tests/providers/billing-stripe.test.mjs` with 15 real tests
+- ✅ Removed placeholder `tests/integration/billing.stripe.test.mjs` file
+- ✅ Fixed test implementations to match Stripe provider interface
+- ✅ All 607 tests now passing with 0 skipped (was 591 pass, 15 skip)
+
+**Root Cause**
+- Placeholder test file had 15 empty `test.skip()` calls with no implementations
+- Comment claimed TypeScript couldn't be imported, but provider tests already support TS via tsx
+- Real issue: tests were never written, just placeholder stubs
+
+**Solution**
+- Created real tests in `tests/providers/` (following Paddle/LemonSqueezy pattern)
+- Tests import TypeScript providers directly using dynamic `import()`
+- Used proper `Headers` objects and correct method signatures
+- Adjusted health check expectations (Stripe makes real API call unlike Paddle)
+
+**Test Results**: 607 tests, 607 pass, 0 fail, 0 skipped ✅
+
+**Tests Implemented**
+1. Provider has correct name
+2. Has all required methods (ensureCustomer, createCheckoutSession, etc.)
+3. Health check structure and configured status
+4. Webhook verification (missing signature, invalid signature)
+5. Webhook event parsing (valid JSON, malformed JSON)
+6. Provider module structure validation
+
+**Changes Made**
+- Created: `tests/providers/billing-stripe.test.mjs` (15 tests, 137 lines)
+- Deleted: `tests/integration/billing.stripe.test.mjs` (placeholder stubs)
+
+**Blockers Encountered**
+- None (resolved method signature mismatches during development)
+
+**Next Priorities**
+1. Consider adding more comprehensive Stripe integration tests
+2. Test actual Stripe API calls with test mode keys (optional)
+3. Expand test coverage for other provider methods
+
+**Handoff Notes**
+- All Stripe provider tests now active and passing
+- Test pattern established for other TypeScript providers
+- Project now has 607 passing tests with 0 skipped - clean test suite!
+- User no longer confused by "15 tests skipped" message
+
+**Files Modified**
+- `tests/providers/billing-stripe.test.mjs` - created (new file)
+- `tests/integration/billing.stripe.test.mjs` - deleted (placeholder)
 
 ---
 
