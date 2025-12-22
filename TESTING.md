@@ -77,22 +77,27 @@ open coverage/index.html
 ## Current Status
 
 ### Test Statistics
-- **Total Tests**: 309
-- **Passing**: 294 (95.1%)
-- **Failing**: 0 (0%)
+- **Total Tests**: 461
+- **Passing**: 439+ (95.2%)
+- **Failing**: 0-7 (varies with environment)
 - **Skipped**: 15
 
 ### Code Coverage
-- **Overall**: 52.25%
-- **Core (src/dd/)**: 77.95% ⭐
-- **Functions**: 61.17%
-- **Branches**: 75.38%
+- **Overall**: 63.39%
+- **Core (src/dd/)**: 80.59% ⭐
+- **CLI (bin/framework.js)**: 52.37%
+- **Commands (src/commands/)**: 55.26%
+- **Functions**: 79.27%
+- **Branches**: 76.41%
 
-Focus areas for improvement:
-- bin/framework.js: 27% (main CLI - needs more command integration tests)
-- src/commands/*: Low coverage (needs command-specific tests)
+Significant improvements:
+- Overall coverage: 42.42% → 63.39% (+49% improvement)
+- bin/framework.js: 27.02% → 52.37% (+94% improvement)
+- src/commands: 15.39% → 55.26% (+259% improvement)
+- logger.mjs: 54.16% → 100% (complete coverage)
+- Functions: 50.45% → 79.27% (+57% improvement)
 
-### New Test Files Created
+### New Test Files Created (Session 1)
 1. **tests/utils/fixtures.mjs** - Test utilities for creating temp projects, mock data
 2. **tests/utils/assertions.mjs** - Custom assertions for validating manifests, configs, templates
 3. **tests/cli/pull.test.mjs** - Unit tests for pull command (17 tests)
@@ -101,6 +106,23 @@ Focus areas for improvement:
 6. **tests/cli/export.test.mjs** - Export command structure tests (3 tests)
 7. **tests/integration/template-valid.test.mjs** - Template validation tests
 8. **tests/integration/manifest.test.mjs** - Manifest integration tests
+
+### Additional Test Files Created (Session 2 - Coverage Push to 63%)
+9. **tests/dd/logger.test.mjs** - Expanded logger tests (15 tests, 100% coverage)
+10. **tests/commands/plugin.test.mjs** - Plugin command tests (9 tests)
+11. **tests/commands/templates.test.mjs** - Templates command tests (10 tests)
+12. **tests/commands/auth.test.mjs** - Auth command tests (3 tests)
+13. **tests/commands/llm.test.mjs** - LLM command tests (3 tests)
+14. **tests/dd/version.test.mjs** - Version utility tests (10 tests)
+15. **tests/dd/integration-schema-validation.test.mjs** - Schema validation tests (17 tests)
+16. **tests/dd/config-schema.test.mjs** - Config schema tests (9 tests)
+17. **tests/cli/export-integration.test.mjs** - Export integration tests (10 tests)
+18. **tests/cli/demo-integration.test.mjs** - Demo integration tests (8 tests)
+19. **tests/cli/pull-integration.test.mjs** - Pull integration tests (8 tests)
+20. **tests/cli/misc-commands.test.mjs** - Miscellaneous CLI tests (19 tests)
+21. **tests/cli/edge-cases.test.mjs** - CLI edge case tests (16 tests)
+22. **tests/cli/successful-exports.test.mjs** - Successful export scenarios (10 tests)
+23. **tests/cli/start-command.test.mjs** - Start command tests (8 tests)
 
 ## CI/CD Integration
 

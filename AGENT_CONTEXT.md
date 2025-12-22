@@ -3,6 +3,37 @@
 > This file provides essential context for AI agents working on the dawson-does-framework.
 > **Every agent must read this file before starting work.**
 
+---
+
+## 🛑 MANDATORY VERIFICATION TEST
+
+Before proceeding with ANY task, you must pass this verification. 
+**Include your answers in your first response:**
+
+### Questions (Answer All)
+
+1. **Philosophy**: What does "export-first" mean in this project?
+2. **Code Style**: What is the semicolon rule for `.mjs` files vs `.ts` files?
+3. **Architecture**: Where is the main CLI entry point located?
+4. **Forbidden**: Name 3 things you should NOT do.
+5. **Process**: What command must you run before committing?
+
+### Required Format
+```
+## Context Verification ✓
+1. Export-first means: [your answer]
+2. Semicolon rule: [your answer]
+3. CLI entry point: [your answer]
+4. Forbidden actions: [your answer]
+5. Pre-commit command: [your answer]
+
+I have read and understood AGENT_CONTEXT.md. Proceeding with task.
+```
+
+**If you cannot answer these questions, re-read this entire file before continuing.**
+
+---
+
 ## Project Vision
 Build a hybrid platform where users can prototype apps in a web UI, then export to full local ownership via a single `npx` command. Zero lock-in, unlimited customization.
 

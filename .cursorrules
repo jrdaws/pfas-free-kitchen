@@ -1,5 +1,17 @@
 # Dawson-Does Framework - Cursor Rules
 
+## 🛑 MANDATORY FIRST STEP - DO NOT SKIP
+
+Before responding to ANY prompt or doing ANY work:
+
+1. **Read**: `cat AGENT_CONTEXT.md`
+2. **Pass the verification test** at the top of that file
+3. **Include your answers** in your first response
+
+This is non-negotiable. Work submitted without context verification may be rejected.
+
+---
+
 ## First Steps for Any Agent
 Before starting work, read AGENT_CONTEXT.md for project vision, philosophy, and standards.
 
