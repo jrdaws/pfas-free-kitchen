@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 5a8244f 2025-12-22 docs(standards): add PROMPT_STANDARDS.md and update token counts
 - 68e325d 2025-12-22 feat(ai-agent): implement model tier selection with Haiku default
 - 15e93b0 2025-12-22 docs(governance): add mandatory Agent Identity Rule to all responses
 - 98a56d3 2025-12-22 perf(ai-agent): comprehensive prompt optimization rewrite
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - dba703d 2025-12-22 feat(governance): add mandatory agent workflow and acknowledgment requirements
 - 87ac335 2025-12-22 feat(governance): add enforcement mechanisms for agent coordination
 - 6b09c0f 2025-12-22 test(website): improve configure page test reliability across browsers
-- ace4b27 2025-12-22 docs(agents): update Testing Agent memory with Stripe test enablement session
 
 ## Agent Governance Structure
 

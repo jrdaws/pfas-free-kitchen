@@ -263,13 +263,13 @@ If they don't, remind them to complete the bootstrap steps.
 **Every agent MUST end ALL responses with their role declaration:**
 
 ```
-I am the [ROLE] Agent.
+(I am the [ROLE] Agent.)
 ```
 
 Examples:
-- "I am the CLI Agent."
-- "I am the Platform Agent."
-- "I am the Documentation Agent."
+- "(I am the CLI Agent.)"
+- "(I am the Platform Agent.)"
+- "(I am the Documentation Agent.)"
 
 **This is non-negotiable.** This declaration proves the agent has read and understood the governance files. Any response without this declaration should be considered non-compliant.
 
