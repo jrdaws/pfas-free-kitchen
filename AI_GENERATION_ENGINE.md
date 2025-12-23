@@ -406,8 +406,53 @@ Validates:
 ### Token Limits
 - **Intent Analysis:** 2,048 tokens
 - **Architecture:** 4,096 tokens
-- **Code Generation:** 8,192 tokens
+- **Code Generation:** 12,000 tokens (increased from 8,192 to prevent truncation)
 - **Cursor Context:** 4,096 tokens
+
+### Token Tracking (Added 2025-12-22)
+
+The package now includes built-in token usage tracking. After each generation, usage is logged:
+
+```
+[AI Agent] Generation complete:
+  Intent       :  538 in /  233 out (Sonnet)
+  Architecture :  995 in / 1489 out (Sonnet)
+  Code         : 4301 in / 7236 out (Sonnet)
+  Context      : 1793 in / 1536 out (Sonnet)
+  ────────────────────────────────────────
+  Total: 7627 in / 10494 out | Est. cost: $0.18
+```
+
+**Token Tracker API:**
+```typescript
+import { TokenTracker, getGlobalTracker, resetGlobalTracker } from '@dawson-framework/ai-agent';
+
+// Get session summary
+const tracker = getGlobalTracker();
+const summary = tracker.getSessionTotal();
+console.log(`Total cost: $${summary.estimatedCost}`);
+
+// Reset for new session
+resetGlobalTracker();
+```
+
+### Verified Cost Estimates (2025-12-22)
+
+*Based on actual E2E test with TodoApp project (~100 words description)*
+
+| Stage | Input Tokens | Output Tokens | Model | Est. Cost |
+|-------|-------------|---------------|-------|-----------|
+| Intent | 538 | 233 | Sonnet | $0.005 |
+| Architecture | 995 | 1,489 | Sonnet | $0.025 |
+| Code | 4,301 | 7,236 | Sonnet | $0.12 |
+| Context | 1,793 | 1,536 | Sonnet | $0.03 |
+| **Total** | **7,627** | **10,494** | - | **$0.18** |
+
+**Pricing (Claude Sonnet 4):**
+- Input: $3.00 per 1M tokens
+- Output: $15.00 per 1M tokens
+
+*Actual costs depend on project complexity and description length. Simpler projects cost less.*
 
 ### Prompt Token Usage (After Optimization)
 
@@ -421,15 +466,6 @@ Validates:
 | cursor-rules.md | ~839 tokens | ~640 tokens | -24% |
 | start-prompt.md | ~1,100 tokens | ~847 tokens | -23% |
 | **Total Prompts** | **~4,242 tokens** | **~2,884 tokens** | **-32%** |
-
-### Cost Estimates (Approximate)
-- **Intent:** ~$0.008 per generation
-- **Architecture:** ~$0.015 per generation
-- **Code:** ~$0.04 per generation
-- **Context:** ~$0.015 per generation
-- **Total:** ~$0.08 per complete project
-
-*32% reduction from prompt optimization. Actual costs depend on project complexity and description length.*
 
 ## Prompts
 
@@ -556,10 +592,31 @@ npm run copy-prompts
 - [ ] API documentation generation
 
 ### Performance Optimizations
+- [x] Token usage tracking and cost estimation (Added 2025-12-22)
 - [ ] Parallel API calls for independent stages
 - [ ] Prompt caching
 - [ ] Streaming responses
 - [ ] Progressive file generation
+
+### Model Tier Optimization (Tested 2025-12-22)
+
+**Finding:** Claude Haiku is NOT recommended for schema-constrained tasks.
+
+**Testing Summary:**
+| Stage | Haiku Result | Sonnet Result |
+|-------|-------------|---------------|
+| Intent Analysis | ❌ Invalid enum values | ✅ Reliable |
+| Architecture | ❌ Invalid schema values | ✅ Reliable |
+| Code Generation | N/A (kept on Sonnet) | ✅ Works |
+| Context Building | N/A (kept on Sonnet) | ✅ Works |
+
+**Issues with Haiku:**
+1. Returns template names with descriptions: `"saas(auth+db)"` instead of `"saas"`
+2. Invalid enum values (categories, HTTP methods, layout types)
+3. Complex prop structures not matching schema
+4. Retry logic exhausted due to consistent failures
+
+**Recommendation:** Use Sonnet for all stages. Cost savings from Haiku are negated by retry overhead and validation failures.
 
 ### Quality Improvements
 - [ ] Few-shot examples in prompts

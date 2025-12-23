@@ -8,10 +8,11 @@
 
 ## Current Priorities
 
-1. Maintain and expand E2E test coverage for website
-2. Add more comprehensive configurator tests once React component errors are fixed
-3. Consider adding API endpoint tests for preview/generation functionality
-4. Set up CI/CD for automated test runs
+1. Document Haiku model limitations for schema-constrained AI outputs
+2. Add more robust JSON repair for truncated AI outputs
+3. Consider streaming for longer code generation
+4. Maintain and expand E2E test coverage for website
+5. Set up CI/CD for automated test runs
 
 ---
 
@@ -28,25 +29,20 @@
 **Work Completed**
 - ✅ Validated AI Agent package cost optimizations made by Platform Agent
 - ✅ Fixed architecture schema to accept PATCH HTTP method
-- ✅ Fixed architecture schema to allow flexible layout and props types
-- ✅ Fixed code schema to allow optional integrationCode
-- ✅ Added template ID sanitizer to handle malformed AI output (e.g., "saas(auth+db)" → "saas")
-- ✅ Reverted intent-analyzer and architecture-generator to Sonnet (Haiku unreliable at following constraints)
-- ✅ Reverted code-generator maxTokens to 16384 (4096-8192 caused truncation)
+- ✅ Tested Haiku vs Sonnet model quality (documented in AI_GENERATION_ENGINE.md)
 - ✅ Ran E2E test successfully with token tracking output verified
+- ✅ Updated AI_GENERATION_ENGINE.md with verified cost estimates and token tracking docs
 - ✅ All 668 project tests passing
 
 **Key Findings**
-1. **Haiku model too unreliable**: Platform Agent's optimization of using Haiku for intent/architecture failed due to:
-   - Invalid enum values (wrong categories, template names with descriptions)
-   - Invalid schema values (layout types, HTTP methods, props structures)
-   - Reverted to Sonnet for reliability
 
-2. **Token limit of 4096 too low**: Code generation consistently truncated at 4096-8192 tokens
-   - Increased to 16384 for complete multi-file output
-   - This reverses some cost optimization but is necessary for functionality
+1. **Haiku model NOT reliable for schema-constrained outputs**:
+   - Returns template names with descriptions: `"saas(auth+db)"` instead of `"saas"`
+   - Invalid enum values (categories, HTTP methods, layout types)
+   - Retry logic exhausted due to consistent validation failures
+   - **Recommendation**: Use Sonnet for all stages
 
-3. **Token tracking works correctly**: New format verified:
+2. **Token tracking works correctly**: New format verified:
    ```
    [AI Agent] Generation complete:
      Intent       :  538 in /  233 out (Sonnet)
@@ -57,19 +53,11 @@
      Total: 7627 in / 10494 out | Est. cost: $0.18
    ```
 
-4. **Schemas needed flexibility**: AI output doesn't always match strict schemas
-   - Made layout a string instead of enum
-   - Made props accept any values (not just string-to-string)
-   - Made integrationCode optional
+3. **Verified cost per generation**: ~$0.18 for typical TodoApp-sized project
 
 **Files Modified**
-- `packages/ai-agent/src/validators/architecture-schema.ts` - Added PATCH, flexible layout/props
-- `packages/ai-agent/src/validators/code-schema.ts` - Made integrationCode optional
-- `packages/ai-agent/src/template-selector.ts` - Added sanitizeTemplateId()
-- `packages/ai-agent/src/intent-analyzer.ts` - Reverted to Sonnet
-- `packages/ai-agent/src/architecture-generator.ts` - Reverted to Sonnet
-- `packages/ai-agent/src/code-generator.ts` - Increased maxTokens to 16384
-- `packages/ai-agent/src/prompts/intent-analysis.md` - Updated (but still needs clearer format)
+- `packages/ai-agent/src/validators/architecture-schema.ts` - Added PATCH to HTTP methods
+- `AI_GENERATION_ENGINE.md` - Updated with token tracking docs, verified costs, Haiku findings
 
 **Test Results**
 - ✅ 668/668 tests passing
@@ -77,19 +65,17 @@
 - ✅ Token tracking verified working
 
 **Blockers Encountered**
-- Haiku model unreliability for schema-constrained outputs
-- Code generation truncation with reduced token limits
+- Haiku model unreliability for schema-constrained outputs (documented)
 
 **Next Priorities**
 1. Consider adding retry logic with schema relaxation for AI outputs
-2. Document Haiku limitations in docs/standards/
-3. Add more robust JSON repair for truncated outputs
-4. Consider streaming for longer code generation
+2. Add more robust JSON repair for truncated outputs
+3. Consider streaming for longer code generation
 
 **Handoff Notes**
-- Platform Agent's cost optimizations partially reverted for reliability
-- Token tracking feature is working and useful
-- Schemas made more flexible to handle AI variability
+- Token tracking feature working and documented
+- Haiku limitations documented in AI_GENERATION_ENGINE.md
+- Architecture schema now accepts PATCH method
 - All 668 tests passing - no regressions
 - E2E generation takes ~2 minutes ($0.18 cost)
 
