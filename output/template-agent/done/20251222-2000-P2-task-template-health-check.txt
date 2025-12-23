@@ -1,0 +1,138 @@
+================================================================================
+TASK ASSIGNMENT: Template Health Check & Validation
+================================================================================
+Priority: P2 (MEDIUM)
+Target Agent: Template Agent
+Created By: Documentation Agent
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Perform a comprehensive health check on all templates to ensure they build,
+run, and follow current best practices.
+
+## Context
+
+Templates are the foundation of user-generated projects. Each template must:
+- Export successfully via CLI
+- Build without errors
+- Run in development mode
+- Include all required integrations
+- Follow project structure standards
+
+## Templates to Check
+
+1. **saas** - Primary template with auth, billing, dashboard
+2. **flagship-saas** - Premium variant
+3. **seo-directory** - SEO-focused directory
+4. **blog** - Content management
+5. **landing-page** - Marketing pages
+6. **dashboard** - Admin interface
+
+## Files to Review Per Template
+
+```
+templates/[template]/
+├── template.json          # Manifest - must be valid
+├── package.json           # Dependencies - must install
+├── app/                   # Next.js app router
+├── components/            # Shared components
+├── lib/                   # Utilities
+└── integrations/          # Optional integrations
+```
+
+## Execution Steps
+
+### Step 1: Run Existing Template Tests
+
+```bash
+npm test -- tests/templates/
+```
+
+### Step 2: Export Each Template
+
+```bash
+# Export each template to temp directory
+for template in saas flagship-saas seo-directory blog landing-page dashboard; do
+  echo "=== Testing $template ==="
+  node bin/framework.js export $template ./_test-$template --force --after-install off
+  
+  if [ $? -eq 0 ]; then
+    echo "✅ Export successful"
+  else
+    echo "❌ Export failed"
+  fi
+done
+```
+
+### Step 3: Build Check (for key templates)
+
+```bash
+cd _test-saas
+npm install
+npm run build
+
+cd ../_test-seo-directory
+npm install
+npm run build
+```
+
+### Step 4: Document Findings
+
+Create health report in workspace:
+`output/template-agent/workspace/health-report.txt`
+
+```
+Template Health Report - YYYY-MM-DD
+
+| Template | Export | Build | Integrations | Notes |
+|----------|--------|-------|--------------|-------|
+| saas | ✅ | ✅ | ✅ | All good |
+| ... | ... | ... | ... | ... |
+```
+
+### Step 5: Fix Any Issues
+
+If issues found:
+1. Document specific error
+2. Identify root cause
+3. Implement fix
+4. Re-test
+
+### Step 6: Update Memory
+
+Add session entry to `prompts/agents/memory/TEMPLATE_MEMORY.md`
+
+### Step 7: Cleanup
+
+```bash
+rm -rf _test-*
+```
+
+## Success Criteria
+
+- [ ] All templates export without errors
+- [ ] Key templates (saas, seo-directory) build successfully
+- [ ] template.json files are valid
+- [ ] Integrations directories structured correctly
+- [ ] Health report created in workspace
+- [ ] All tests pass
+
+## Estimated Effort
+
+30-45 minutes
+
+## Dependencies
+
+None
+
+## Notes
+
+This is maintenance work to ensure templates remain healthy as the
+framework evolves. Document any patterns that need updating across
+all templates.
+
+================================================================================
+END OF TASK
+================================================================================
+
