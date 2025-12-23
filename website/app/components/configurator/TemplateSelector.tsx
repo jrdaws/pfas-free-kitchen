@@ -1,16 +1,17 @@
 "use client";
 
 import { TEMPLATES } from "@/lib/templates";
-import { Package, ShoppingCart, FileText, BarChart3, Code, FolderTree } from "lucide-react";
+import { Package, ShoppingCart, FileText, BarChart3, Code, FolderTree, Rocket, LucideIcon } from "lucide-react";
 
-const TEMPLATE_ICONS = {
+const TEMPLATE_ICONS: Record<string, LucideIcon> = {
   saas: Package,
   ecommerce: ShoppingCart,
   blog: FileText,
   dashboard: BarChart3,
+  "landing-page": Rocket,
   "api-backend": Code,
   "seo-directory": FolderTree,
-} as const;
+};
 
 interface TemplateSelectorProps {
   selectedTemplate: string;
@@ -31,7 +32,7 @@ export function TemplateSelector({ selectedTemplate, onSelect }: TemplateSelecto
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Object.values(TEMPLATES).map((template) => {
-          const Icon = TEMPLATE_ICONS[template.id as keyof typeof TEMPLATE_ICONS];
+          const Icon = TEMPLATE_ICONS[template.id] || Package;
           const isSelected = selectedTemplate === template.id;
 
           return (
