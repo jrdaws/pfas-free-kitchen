@@ -4,7 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
-- 2a9f336 2025-12-22 perf(ai-agent): run code and context generation in parallel
+- 069de06 2025-12-22 perf(ai-agent): run code and context generation in parallel
 - aaeb3a5 2025-12-22 docs(agents): update Platform Memory with complete optimization summary
 - b23be67 2025-12-22 docs(governance): add PROMPT_STANDARDS.md references to all governance files
 - a4b8c61 2025-12-22 feat(ai-agent): add streaming support for real-time progress
@@ -207,6 +207,8 @@ Used for: onboarding, refactors, capability ownership
 - `│  │  src/dd/credentials.mjs`
 - `│  ├─ src/dd/deployment-detector.mjs`
 - `│  │  src/dd/deployment-detector.mjs`
+- `│  ├─ src/dd/logger.mjs`
+- `│  │  src/dd/logger.mjs`
 - `│  ├─ src/platform/providers/impl/deploy.vercel.ts`
 - `│  │  src/platform/providers/impl/deploy.vercel.ts`
 - `│  │  ├─ src/platform/providers/deploy.ts`
@@ -263,7 +265,7 @@ Used for: onboarding, refactors, capability ownership
 - `src/commands/templates.mjs` <- `bin/framework.js`
 - `src/commands/deploy.mjs` <- `bin/framework.js`
 - `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
-- `src/dd/logger.mjs` <- `bin/framework.js`
+- `src/dd/logger.mjs` <- `bin/framework.js`, `src/commands/deploy.mjs`
 - `src/dd/version.mjs` <- `bin/framework.js`, `src/commands/templates.mjs`
 - `src/dd/agent-safety.mjs` <- `bin/framework.js`
 - `src/dd/integrations.mjs` <- `bin/framework.js`
