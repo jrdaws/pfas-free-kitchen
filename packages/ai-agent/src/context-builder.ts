@@ -88,12 +88,15 @@ ${STARTPROMPT_DELIMITER}
 Do NOT include any other text before ${CURSORRULES_DELIMITER} or after the START_PROMPT.md content.`;
 
       // Use configured model (default to Haiku for cost efficiency)
+      // Haiku max output is 4096 tokens - sufficient for context files
       const model = opts.model || "claude-3-haiku-20240307";
+      const isHaiku = model.includes("haiku");
+      const maxTokens = isHaiku ? 4096 : 8192;
       const response = await client.complete(
         {
           model,
           temperature: 0.3, // Slightly creative for documentation
-          maxTokens: 8192, // Combined limit for both files
+          maxTokens,
           messages: [
             {
               role: "user",

@@ -1,0 +1,209 @@
+{
+  "timestamp": "2025-12-23T05:05:05.324Z",
+  "testType": "quick",
+  "tierTests": [
+    {
+      "tier": "fast",
+      "complexity": "simple",
+      "success": true,
+      "allValid": true,
+      "durationMs": 21311,
+      "tokens": {
+        "input": 6498,
+        "output": 3868
+      },
+      "cost": 0.0065,
+      "fileCount": 6,
+      "validations": {
+        "hasIntent": true,
+        "hasFeatures": true,
+        "hasPages": true,
+        "hasComponents": true,
+        "hasCode": true,
+        "hasContext": true,
+        "filesHaveContent": true
+      },
+      "byStage": {
+        "intent": {
+          "input": 471,
+          "output": 151,
+          "cost": 0.0003065
+        },
+        "architecture": {
+          "input": 857,
+          "output": 1222,
+          "cost": 0.00174175
+        },
+        "code": {
+          "input": 3878,
+          "output": 1555,
+          "cost": 0.00291325
+        },
+        "context": {
+          "input": 1292,
+          "output": 940,
+          "cost": 0.001498
+        }
+      }
+    },
+    {
+      "tier": "balanced",
+      "complexity": "simple",
+      "success": true,
+      "allValid": true,
+      "durationMs": 36604,
+      "tokens": {
+        "input": 6484,
+        "output": 4750
+      },
+      "cost": 0.0517,
+      "fileCount": 5,
+      "validations": {
+        "hasIntent": true,
+        "hasFeatures": true,
+        "hasPages": true,
+        "hasComponents": true,
+        "hasCode": true,
+        "hasContext": true,
+        "filesHaveContent": true
+      },
+      "byStage": {
+        "intent": {
+          "input": 471,
+          "output": 151,
+          "cost": 0.0003065
+        },
+        "architecture": {
+          "input": 857,
+          "output": 1218,
+          "cost": 0.00173675
+        },
+        "code": {
+          "input": 3864,
+          "output": 2441,
+          "cost": 0.048207
+        },
+        "context": {
+          "input": 1292,
+          "output": 940,
+          "cost": 0.001498
+        }
+      }
+    },
+    {
+      "tier": "quality",
+      "complexity": "simple",
+      "success": true,
+      "allValid": true,
+      "durationMs": 51078,
+      "tokens": {
+        "input": 6915,
+        "output": 5742
+      },
+      "cost": 0.1069,
+      "fileCount": 5,
+      "validations": {
+        "hasIntent": true,
+        "hasFeatures": true,
+        "hasPages": true,
+        "hasComponents": true,
+        "hasCode": true,
+        "hasContext": true,
+        "filesHaveContent": true
+      },
+      "byStage": {
+        "intent": {
+          "input": 471,
+          "output": 211,
+          "cost": 0.0045780000000000005
+        },
+        "architecture": {
+          "input": 904,
+          "output": 1374,
+          "cost": 0.023322
+        },
+        "code": {
+          "input": 4065,
+          "output": 3117,
+          "cost": 0.05895
+        },
+        "context": {
+          "input": 1475,
+          "output": 1040,
+          "cost": 0.020025
+        }
+      }
+    }
+  ],
+  "streaming": {
+    "success": true,
+    "chunkCount": 1106,
+    "totalChars": 16505,
+    "stageProgress": {
+      "intent": {
+        "started": true,
+        "chunks": 48,
+        "chars": 449,
+        "completed": true
+      },
+      "architecture": {
+        "started": true,
+        "chunks": 354,
+        "chars": 4136,
+        "completed": true
+      },
+      "code": {
+        "started": true,
+        "chunks": 448,
+        "chars": 8426,
+        "completed": true
+      },
+      "context": {
+        "started": true,
+        "chunks": 256,
+        "chars": 3494,
+        "completed": true
+      }
+    },
+    "durationMs": 37622
+  },
+  "tokenTracking": {
+    "success": true,
+    "summary": {
+      "input": 6494,
+      "output": 4739,
+      "estimatedCost": 0.0516,
+      "byStage": {
+        "intent": {
+          "input": 471,
+          "output": 151,
+          "cost": 0.0003065
+        },
+        "architecture": {
+          "input": 857,
+          "output": 1218,
+          "cost": 0.00173675
+        },
+        "code": {
+          "input": 3874,
+          "output": 2430,
+          "cost": 0.048072
+        },
+        "context": {
+          "input": 1292,
+          "output": 940,
+          "cost": 0.001498
+        }
+      },
+      "repairs": {
+        "enumNormalizations": 2,
+        "jsonExtractions": 1,
+        "truncationRepairs": 0,
+        "bracketBalances": 0
+      }
+    },
+    "inputMatch": true,
+    "outputMatch": true
+  },
+  "errors": []
+}

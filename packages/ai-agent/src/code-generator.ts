@@ -46,13 +46,17 @@ export async function generateCode(
       });
 
       // Use configured model (default to Sonnet for code quality)
-      // Token limit set to 12000 for complete multi-file output
+      // Haiku max output is 4096, Sonnet 4 supports up to 64K
+      // Use model-appropriate limits to prevent API errors
+      // Code generation needs high limits for multi-file JSON output
       const model = opts.model || "claude-sonnet-4-20250514";
+      const isHaiku = model.includes("haiku");
+      const maxTokens = isHaiku ? 4096 : 32000;
       const response = await client.complete(
         {
           model,
           temperature: 0, // Deterministic
-          maxTokens: 12000,
+          maxTokens,
           messages: [
             {
               role: "user",
