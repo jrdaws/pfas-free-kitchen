@@ -1,6 +1,6 @@
 # CLAUDE.md - Automatic Context for Claude Code CLI
 
-> **Governance Version: 2.0** | Last Updated: 2025-12-22
+> **Governance Version: 2.1** | Last Updated: 2025-12-22
 > 
 > **This file is automatically read by Claude Code CLI when starting a session in this project.**
 
@@ -16,10 +16,11 @@ Your FIRST response MUST begin with:
 
 ```
 ## ✓ Governance Acknowledgment
-- Governance Version: 2.0
+- Governance Version: 2.1
 - I have read CLAUDE.md and AGENT_CONTEXT.md
 - I understand: export-first philosophy, zero lock-in
-- I will NOT: delete protected files, create branches, skip sync
+- I understand: Fenced Output Integrity (one block, no splits)
+- I will NOT: delete protected files, create branches, skip sync, split fenced output
 - Pre-commit command: npm test
 ```
 
@@ -178,6 +179,57 @@ git commit -m "<type>(<scope>): <description>"
 ```
 
 **Never leave uncommitted work** - the next agent won't see it!
+
+---
+
+## 📝 Fenced Output Integrity (CRITICAL)
+
+**All agents MUST follow these rules when outputting code blocks, prompts, or documents.**
+
+### The One Block Rule
+1. **ONE BLOCK**: All related content goes in ONE fenced block - NEVER split across multiple fences
+2. **NO MID-FENCE BREAKS**: Never close a fence to add explanation, then reopen
+3. **COMMENTS OVER INTERRUPTIONS**: If clarification needed, use inline comments inside the fence
+4. **PRE-FLIGHT CHECK**: Before closing \`\`\`, verify: "Have I included ALL the requested content?"
+5. **EXPLANATION PLACEMENT**:
+   - Explanations go BEFORE the opening fence
+   - Follow-up notes go AFTER the closing fence
+   - NOTHING goes between multiple fences that should be one
+
+### Pre-Output Verification
+Before outputting fenced content, mentally verify:
+- [ ] Is this ONE continuous block?
+- [ ] Does it contain EVERYTHING requested?
+- [ ] Am I about to break out of the fence to explain something? (DON'T)
+- [ ] Is everything included?
+
+### ❌ Anti-Pattern (NEVER DO THIS)
+Splitting content across multiple fences forces users to copy from multiple locations:
+```
+Here's the first part:
+\`\`\`
+partial content...
+\`\`\`
+And here's more:
+\`\`\`
+rest of content...
+\`\`\`
+```
+
+### ✅ Correct Pattern (ALWAYS DO THIS)
+Keep everything in one copyable block:
+```
+Here's the complete content:
+\`\`\`
+ALL content in one block...
+including everything...
+\`\`\`
+```
+
+### If Content Is Too Long
+1. **SAY SO EXPLICITLY** - Don't silently split
+2. **ASK FIRST** - Get user confirmation before splitting
+3. **LOGICAL BOUNDARIES** - If splitting, use natural boundaries (by file, by section)
 
 ---
 

@@ -1,6 +1,6 @@
 # Universal Bootstrap Prompt
 
-> **Governance Version: 2.0** | Last Updated: 2025-12-22
+> **Governance Version: 2.1** | Last Updated: 2025-12-22
 > 
 > **Use this prompt to initialize ANY AI agent on ANY platform for dawson-does-framework work.**
 
@@ -127,11 +127,18 @@ Then say: "Ready for task assignment."
 - TypeScript: Semicolons, 2-space indent
 - Commits: Conventional format (feat:, fix:, docs:)
 
+**Output Formatting** (CRITICAL):
+- ONE fenced block for all related content - NEVER split
+- Explanations go BEFORE the fence, follow-ups go AFTER
+- Use inline comments instead of breaking out of fences
+- If content is too long, ASK before splitting - never split silently
+
 **Forbidden Actions**:
 - Adding unrequested features
 - Working outside your role
 - Skipping governance docs
 - Ending without handoff prompt
+- Splitting fenced content across multiple blocks (see Output Integrity rules)
 
 ## At Session End (MANDATORY)
 

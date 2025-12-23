@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- c8be40a 2025-12-22 fix(ai-agent): adjust token limits and add PATCH method support
 - b9e0f53 2025-12-22 perf(ai-agent): optimize prompts with 32% token reduction
 - 32bd821 2025-12-22 docs(agents): update Platform Agent memory with cost optimization session
 - 4c3cf19 2025-12-22 feat(ai-agent): optimize Anthropic API token usage
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 44d61f9 2025-12-22 fix(templates): resolve flagship-saas template test failures
 - e937da5 2025-12-22 chore: update framework map, testing standards, and flagship-saas manifest
 - 3a4615a 2025-12-22 feat(integrations): add Clerk auth integration for saas template
-- 5063e8f 2025-12-22 docs(agents): update DOCS_MEMORY with handoff note
 
 ## Agent Governance Structure
 

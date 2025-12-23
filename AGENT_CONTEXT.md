@@ -1,6 +1,6 @@
 # Agent Context - Read This First
 
-> **Governance Version: 2.0** | Last Updated: 2025-12-22
+> **Governance Version: 2.1** | Last Updated: 2025-12-22
 > 
 > This file provides essential context for AI agents working on the dawson-does-framework.
 > **Every agent must read this file before starting work.**
@@ -93,6 +93,35 @@ dawson-does-framework/
 - Don't commit .env files or secrets
 - **Don't delete protected files** (see below)
 - **Don't create feature branches** (work on `main` only)
+- **Don't split fenced output** (see Fenced Output Integrity below)
+
+---
+
+## 📝 Fenced Output Integrity (CRITICAL)
+
+**All agents MUST follow these rules when outputting code blocks, prompts, or documents.**
+
+### The One Block Rule
+1. **ONE BLOCK**: All related content goes in ONE fenced block - NEVER split
+2. **NO MID-FENCE BREAKS**: Never close a fence to add explanation, then reopen
+3. **COMMENTS OVER INTERRUPTIONS**: If clarification needed, use inline comments inside the fence
+4. **PRE-FLIGHT CHECK**: Before closing \`\`\`, verify: "Have I included ALL the requested content?"
+
+### Explanation Placement
+- **BEFORE**: Explanations go BEFORE the opening fence
+- **AFTER**: Follow-up notes go AFTER the closing fence
+- **NEVER BETWEEN**: NOTHING goes between multiple fences that should be one
+
+### Pre-Output Verification
+Before outputting fenced content:
+- [ ] Is this ONE continuous block?
+- [ ] Does it contain EVERYTHING requested?
+- [ ] Am I about to break out of the fence? (DON'T - use comments instead)
+
+### If Content Is Too Long
+1. **SAY SO EXPLICITLY** - Don't silently split
+2. **ASK FIRST** - Get user confirmation before splitting
+3. **LOGICAL BOUNDARIES** - If splitting, use natural boundaries (by file, by section)
 
 ---
 

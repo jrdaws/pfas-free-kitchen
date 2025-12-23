@@ -19,10 +19,11 @@ export async function analyzeIntent(input, apiKey) {
             const systemPrompt = await prompts.load("intent-analysis", {
                 description: input.description,
             });
-            // Call Claude Haiku for cost-efficient intent analysis
-            // Haiku is sufficient for pattern-matching tasks (33% cost reduction)
+            // Call Claude Sonnet for reliable intent analysis
+            // Haiku failed to reliably follow enum constraints - validation errors frequent
+            // Intent is the foundation; reliability outweighs cost savings here
             const response = await client.complete({
-                model: "claude-3-haiku-20240307",
+                model: "claude-sonnet-4-20250514",
                 temperature: 0, // Deterministic
                 maxTokens: 2048,
                 messages: [

@@ -1,5 +1,5 @@
 # Dawson-Does Framework - Cursor Rules
-# Governance Version: 2.0 | Last Updated: 2025-12-22
+# Governance Version: 2.1 | Last Updated: 2025-12-22
 
 ---
 
@@ -11,10 +11,11 @@ Your FIRST response MUST begin with:
 
 ```
 ## ✓ Governance Acknowledgment
-- Governance Version: 2.0
+- Governance Version: 2.1
 - I have read .cursorrules and AGENT_CONTEXT.md
 - I understand: export-first philosophy, zero lock-in
-- I will NOT: delete protected files, create branches, skip sync
+- I understand: Fenced Output Integrity (one block, no splits)
+- I will NOT: delete protected files, create branches, skip sync, split fenced output
 ```
 
 **Do not proceed until you have stated this acknowledgment.**

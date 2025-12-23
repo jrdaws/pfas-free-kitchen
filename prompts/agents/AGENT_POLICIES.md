@@ -1,7 +1,8 @@
 # Agent Policies
 
-> **Version**: 1.0
+> **Version**: 1.1
 > **Effective Date**: 2025-12-22
+> **Output Integrity Update**: Added Fenced Output Integrity standards
 > **Purpose**: Define operational policies and protocols for AI agents working on dawson-does-framework
 
 ---
@@ -163,6 +164,70 @@ Before ending a session, you must:
 
 ---
 
+## Output Formatting Standards
+
+### Fenced Output Integrity (MANDATORY)
+
+**All agents must follow these rules when outputting code blocks, prompts, or documents.**
+
+#### The One Block Rule
+1. **NEVER split** a single logical piece of content across multiple fenced blocks
+2. When asked for a complete file, prompt, or document - output the **ENTIRE** content in **ONE** fenced block
+3. Do not interrupt fenced content with explanatory text - put all explanations **BEFORE** or **AFTER** the fence
+4. If you need to add commentary about code, use **comments INSIDE the fence**, not by breaking out of it
+5. Before closing a fence, verify: "Have I included ALL the requested content?"
+
+#### Structure for Long Outputs
+When outputting long content, use this exact structure:
+1. Brief explanation (1-2 sentences max)
+2. ONE complete fenced block with ALL content
+3. Any follow-up notes AFTER the fence closes
+
+#### Pre-Output Verification
+Before outputting fenced content, mentally verify:
+1. Is this ONE continuous block?
+2. Does it contain EVERYTHING requested?
+3. Am I about to break out of the fence to explain something? (DON'T - use comments instead)
+4. Is everything included?
+
+#### ❌ Anti-Pattern (NEVER DO THIS)
+```
+Here's the first part:
+\`\`\`
+partial content...
+\`\`\`
+And here's more:
+\`\`\`
+rest of content...
+\`\`\`
+```
+
+The above pattern forces users to copy from multiple locations - this is FORBIDDEN.
+
+#### ✅ Correct Pattern (ALWAYS DO THIS)
+```
+Here's the complete content:
+\`\`\`
+ALL content in one block...
+including everything...
+nothing left out...
+\`\`\`
+```
+
+#### Explanation Placement Rules
+- **BEFORE**: All explanations go BEFORE the opening fence
+- **AFTER**: Follow-up notes go AFTER the closing fence
+- **NEVER BETWEEN**: NOTHING goes between multiple fences that should be one
+
+#### Content Too Long?
+If content is genuinely too long for one block:
+1. **SAY SO EXPLICITLY**: Tell the user it's too long
+2. **ASK FIRST**: Get confirmation before splitting
+3. **LOGICAL BOUNDARIES**: If splitting is approved, split at natural boundaries (by file, by section)
+4. **NEVER SILENTLY SPLIT**: Don't surprise the user with fragmented output
+
+---
+
 ## Code Quality Standards
 
 ### Forbidden Actions
@@ -321,6 +386,13 @@ test(integration): add E2E tests for configurator flow
 ---
 
 ## Version History
+
+### Version 1.1 (2025-12-22)
+- Added **Fenced Output Integrity** standards
+- Added Output Formatting Standards section
+- Updated forbidden actions to include output splitting
+- Added pre-output verification checklist
+- Added anti-pattern and correct pattern examples
 
 ### Version 1.0 (2025-12-22)
 - Initial release
