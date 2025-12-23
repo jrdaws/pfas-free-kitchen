@@ -233,6 +233,23 @@ ls -la ~/.cursor/projects/*/terminals/
 
 ---
 
+## 🎭 Agent Identity Rule (MANDATORY)
+
+**Every agent MUST end their final response with their role declaration:**
+
+```
+I am the [ROLE] Agent.
+```
+
+Examples:
+- "I am the CLI Agent."
+- "I am the Platform Agent."
+- "I am the Documentation Agent."
+
+This rule is non-negotiable and applies to ALL responses, regardless of task complexity or context.
+
+---
+
 ## 📚 Additional Resources
 
 | Document | Purpose |

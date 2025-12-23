@@ -18,6 +18,7 @@ export type {
   IntegrationRequirements,
   TemplateMetadata,
   Inspiration,
+  ModelTier,
 } from "./types.js";
 
 // Export error types
@@ -38,7 +39,7 @@ import { generateArchitecture } from "./architecture-generator.js";
 import { generateCode } from "./code-generator.js";
 import { buildCursorContext } from "./context-builder.js";
 import { getGlobalTracker, resetGlobalTracker } from "./utils/token-tracker.js";
-import type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext } from "./types.js";
+import type { ProjectInput, ProjectIntent, ProjectArchitecture, GeneratedCode, CursorContext, ModelTier } from "./types.js";
 
 export interface GenerateProjectResult {
   intent: ProjectIntent;
@@ -46,6 +47,33 @@ export interface GenerateProjectResult {
   code: GeneratedCode;
   context: CursorContext;
 }
+
+/**
+ * Model configuration for each tier
+ */
+export const MODEL_TIERS: Record<ModelTier, { intent: string; architecture: string; code: string; context: string }> = {
+  // Fast: Haiku everywhere except code (not recommended - Haiku unreliable for schemas)
+  fast: {
+    intent: "claude-3-haiku-20240307",
+    architecture: "claude-3-haiku-20240307",
+    code: "claude-sonnet-4-20250514", // Code always needs Sonnet
+    context: "claude-3-haiku-20240307",
+  },
+  // Balanced: Haiku for intent, Sonnet for everything else
+  balanced: {
+    intent: "claude-3-haiku-20240307",
+    architecture: "claude-sonnet-4-20250514",
+    code: "claude-sonnet-4-20250514",
+    context: "claude-sonnet-4-20250514",
+  },
+  // Quality: Sonnet everywhere (recommended - reliable output)
+  quality: {
+    intent: "claude-sonnet-4-20250514",
+    architecture: "claude-sonnet-4-20250514",
+    code: "claude-sonnet-4-20250514",
+    context: "claude-sonnet-4-20250514",
+  },
+};
 
 /**
  * Generate a complete project from a description
@@ -57,25 +85,34 @@ export interface GenerateProjectResult {
  * 4. Build Cursor context for continuation
  *
  * @param input - Project input with description and optional metadata
- * @param apiKey - Optional Anthropic API key (uses env var if not provided)
+ * @param apiKeyOrOptions - Optional Anthropic API key or options object
  * @returns Complete project generation result
  *
  * @example
  * ```typescript
+ * // Default (quality tier - recommended)
  * const result = await generateProject({
  *   description: 'A fitness tracking app with social features',
  *   projectName: 'FitTrack'
  * });
  *
- * console.log(result.intent.suggestedTemplate); // 'saas'
- * console.log(result.architecture.pages); // Array of pages
- * console.log(result.code.files); // Generated files
- * console.log(result.context.cursorrules); // .cursorrules content
+ * // With options
+ * const result = await generateProject(
+ *   { description: '...' },
+ *   { modelTier: 'fast', logTokenUsage: true } // Use Haiku where possible
+ * );
  * ```
  */
 export interface GenerateProjectOptions {
   apiKey?: string;
   logTokenUsage?: boolean;
+  /**
+   * Model tier selection:
+   * - 'fast': Use Haiku where possible (~$0.05/gen, less reliable)
+   * - 'balanced': Mix of Haiku and Sonnet (~$0.10/gen)
+   * - 'quality': Sonnet everywhere (~$0.18/gen, most reliable) [DEFAULT]
+   */
+  modelTier?: ModelTier;
 }
 
 export async function generateProject(

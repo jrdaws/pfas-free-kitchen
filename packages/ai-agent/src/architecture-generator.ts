@@ -4,6 +4,7 @@ import { withRetry } from "./utils/retry-strategy.js";
 import { handleLLMError, handleValidationError } from "./error-handler.js";
 import { ArchitectureSchema } from "./validators/architecture-schema.js";
 import { TemplateSelector } from "./template-selector.js";
+import { repairAndParseJSON } from "./utils/json-repair.js";
 import type { ProjectIntent, ProjectArchitecture } from "./types.js";
 
 /**
@@ -55,16 +56,19 @@ export async function generateArchitecture(
         "architecture" // Track as architecture stage
       );
 
-      // Extract JSON
-      const jsonMatch = response.text.match(/\{[\s\S]*\}/);
-      if (!jsonMatch) {
-        throw new Error("No JSON found in AI response. Response: " + response.text.substring(0, 500));
+      // Extract and parse JSON with repair fallback
+      const repairResult = repairAndParseJSON(response.text);
+
+      if (!repairResult.success) {
+        throw new Error(`Failed to parse AI response: ${repairResult.error}. Response: ${response.text.substring(0, 500)}`);
       }
 
-      const parsed = JSON.parse(jsonMatch[0]);
+      if (repairResult.repaired) {
+        console.log(`[ArchitectureGenerator] JSON repaired: ${repairResult.repairs.join(", ")}`);
+      }
 
       // Validate with Zod
-      const validated = ArchitectureSchema.parse(parsed);
+      const validated = ArchitectureSchema.parse(repairResult.data);
 
       // Return with validated integrations
       return {

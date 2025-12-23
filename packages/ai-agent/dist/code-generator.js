@@ -5,6 +5,7 @@ import { PromptLoader } from "./utils/prompt-loader.js";
 import { withRetry } from "./utils/retry-strategy.js";
 import { handleLLMError, handleValidationError } from "./error-handler.js";
 import { CodeSchema } from "./validators/code-schema.js";
+import { repairAndParseJSON } from "./utils/json-repair.js";
 /**
  * Generate code files from project architecture
  *
@@ -42,14 +43,16 @@ export async function generateCode(architecture, input, apiKey) {
                 system: systemPrompt,
             }, "code" // Track as code stage
             );
-            // Extract JSON
-            const jsonMatch = response.text.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) {
-                throw new Error("No JSON found in AI response. Response: " + response.text.substring(0, 500));
+            // Extract and parse JSON with repair fallback
+            const repairResult = repairAndParseJSON(response.text);
+            if (!repairResult.success) {
+                throw new Error(`Failed to parse AI response: ${repairResult.error}. Response: ${response.text.substring(0, 500)}`);
             }
-            const parsed = JSON.parse(jsonMatch[0]);
+            if (repairResult.repaired) {
+                console.log(`[CodeGenerator] JSON repaired: ${repairResult.repairs.join(", ")}`);
+            }
             // Validate with Zod
-            const validated = CodeSchema.parse(parsed);
+            const validated = CodeSchema.parse(repairResult.data);
             return validated;
         }
         catch (error) {

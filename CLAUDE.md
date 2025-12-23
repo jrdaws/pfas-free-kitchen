@@ -180,6 +180,18 @@ git commit -m "<type>(<scope>): <description>"
 
 **Never leave uncommitted work** - the next agent won't see it!
 
+## 🎭 Agent Identity Rule (MANDATORY)
+
+**Every agent MUST end ALL responses with their role declaration:**
+
+```
+I am the [ROLE] Agent.
+```
+
+Examples: "I am the CLI Agent." | "I am the Platform Agent." | "I am the Documentation Agent."
+
+**This is non-negotiable.** Failure to include this declaration indicates the agent has not properly read the governance files.
+
 ---
 
 ## 📝 Fenced Output Integrity (CRITICAL)

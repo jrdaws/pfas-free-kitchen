@@ -3,6 +3,7 @@ import { PromptLoader } from "./utils/prompt-loader.js";
 import { withRetry } from "./utils/retry-strategy.js";
 import { handleLLMError, handleValidationError } from "./error-handler.js";
 import { IntentSchema } from "./validators/intent-schema.js";
+import { repairAndParseJSON } from "./utils/json-repair.js";
 /**
  * Analyze user's project description and extract structured intent
  *
@@ -35,14 +36,16 @@ export async function analyzeIntent(input, apiKey) {
                 system: systemPrompt,
             }, "intent" // Track as intent stage
             );
-            // Extract JSON from response
-            const jsonMatch = response.text.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) {
-                throw new Error("No JSON found in AI response. Response: " + response.text.substring(0, 500));
+            // Extract and parse JSON with repair fallback
+            const repairResult = repairAndParseJSON(response.text);
+            if (!repairResult.success) {
+                throw new Error(`Failed to parse AI response: ${repairResult.error}. Response: ${response.text.substring(0, 500)}`);
             }
-            const parsed = JSON.parse(jsonMatch[0]);
+            if (repairResult.repaired) {
+                console.log(`[IntentAnalyzer] JSON repaired: ${repairResult.repairs.join(", ")}`);
+            }
             // Validate with Zod schema
-            const validated = IntentSchema.parse(parsed);
+            const validated = IntentSchema.parse(repairResult.data);
             return validated;
         }
         catch (error) {

@@ -1,3 +1,6 @@
+// Model tier selection for cost/quality tradeoff
+export type ModelTier = 'fast' | 'balanced' | 'quality';
+
 // Core Input Types
 export interface ProjectInput {
   description: string;

@@ -1,3 +1,4 @@
+export type ModelTier = 'fast' | 'balanced' | 'quality';
 export interface ProjectInput {
     description: string;
     template?: string;

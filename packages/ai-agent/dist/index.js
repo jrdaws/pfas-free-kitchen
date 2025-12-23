@@ -17,6 +17,32 @@ import { generateArchitecture } from "./architecture-generator.js";
 import { generateCode } from "./code-generator.js";
 import { buildCursorContext } from "./context-builder.js";
 import { getGlobalTracker, resetGlobalTracker } from "./utils/token-tracker.js";
+/**
+ * Model configuration for each tier
+ */
+export const MODEL_TIERS = {
+    // Fast: Haiku everywhere except code (not recommended - Haiku unreliable for schemas)
+    fast: {
+        intent: "claude-3-haiku-20240307",
+        architecture: "claude-3-haiku-20240307",
+        code: "claude-sonnet-4-20250514", // Code always needs Sonnet
+        context: "claude-3-haiku-20240307",
+    },
+    // Balanced: Haiku for intent, Sonnet for everything else
+    balanced: {
+        intent: "claude-3-haiku-20240307",
+        architecture: "claude-sonnet-4-20250514",
+        code: "claude-sonnet-4-20250514",
+        context: "claude-sonnet-4-20250514",
+    },
+    // Quality: Sonnet everywhere (recommended - reliable output)
+    quality: {
+        intent: "claude-sonnet-4-20250514",
+        architecture: "claude-sonnet-4-20250514",
+        code: "claude-sonnet-4-20250514",
+        context: "claude-sonnet-4-20250514",
+    },
+};
 export async function generateProject(input, apiKeyOrOptions) {
     // Parse options
     const options = typeof apiKeyOrOptions === "string"
