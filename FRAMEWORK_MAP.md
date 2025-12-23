@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: dd6ce1c0d2
+Hash: cc90b85a1f
 
 ## Recent changes
+- 247c696 2025-12-22 docs(templates): complete P2 template health check
 - 88b4cad 2025-12-22 docs(agents): verify quick start guide task completion
 - c48b2d7 2025-12-22 docs(platform): update memory with cost optimization session
 - 85832b3 2025-12-22 feat(ai-agent): reduce code generation token limit for cost optimization
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 15e93b0 2025-12-22 docs(governance): add mandatory Agent Identity Rule to all responses
 - 98a56d3 2025-12-22 perf(ai-agent): comprehensive prompt optimization rewrite
 - 5a1c4ce 2025-12-22 feat(ai-agent): add JSON repair utility and model tier selection
-- b930b1b 2025-12-22 perf(ai-agent): remove redundant meta-instructions from prompts
 
 ## Agent Governance Structure
 
@@ -127,6 +127,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/commands/plugin.mjs`
   - `src/commands/templates.mjs`
   - `src/commands/deploy.mjs`
+  - `src/dd/generate.mjs`
   - `src/dd/plugins.mjs`
   - `src/dd/logger.mjs`
   - `src/dd/version.mjs`
@@ -229,6 +230,10 @@ Used for: onboarding, refactors, capability ownership
 - `│     │  src/platform/providers/deploy.ts`
 - `│     └─ src/platform/providers/types.ts`
 - `│        src/platform/providers/types.ts`
+- `├─ src/dd/generate.mjs`
+- `│  src/dd/generate.mjs`
+- `│  └─ src/dd/logger.mjs`
+- `│     src/dd/logger.mjs`
 - `├─ src/dd/plugins.mjs`
 - `│  src/dd/plugins.mjs`
 - `├─ src/dd/logger.mjs`
@@ -264,8 +269,9 @@ Used for: onboarding, refactors, capability ownership
 - `src/commands/plugin.mjs` <- `bin/framework.js`
 - `src/commands/templates.mjs` <- `bin/framework.js`
 - `src/commands/deploy.mjs` <- `bin/framework.js`
+- `src/dd/generate.mjs` <- `bin/framework.js`
 - `src/dd/plugins.mjs` <- `bin/framework.js`, `src/commands/plugin.mjs`
-- `src/dd/logger.mjs` <- `bin/framework.js`, `src/commands/deploy.mjs`
+- `src/dd/logger.mjs` <- `bin/framework.js`, `src/commands/deploy.mjs`, `src/dd/generate.mjs`
 - `src/dd/version.mjs` <- `bin/framework.js`, `src/commands/templates.mjs`
 - `src/dd/agent-safety.mjs` <- `bin/framework.js`
 - `src/dd/integrations.mjs` <- `bin/framework.js`
