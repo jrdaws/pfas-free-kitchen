@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- c2f00e8 2025-12-22 perf(ai-agent): remove redundant meta-instructions from prompts
 - 7942d7d 2025-12-22 docs(ai-agent): add verified cost estimates and token tracking documentation
 - 091d4ce 2025-12-22 perf(ai-agent): optimize whitespace in prompt files
 - 412a6fe 2025-12-22 docs(agents): update Platform Agent memory with session 5
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 9d5ea8f 2025-12-22 test(providers): improve billing.stripe test assertions
 - fb218db 2025-12-22 chore: cleanup and standardize post-session changes
 - 0a489c6 2025-12-22 feat(governance): add parallel agent coordination policies
-- 39cc1b1 2025-12-22 feat(templates): add supportedIntegrations to seo-directory template
 
 ## Agent Governance Structure
 
