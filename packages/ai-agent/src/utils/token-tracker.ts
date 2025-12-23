@@ -5,13 +5,19 @@
  * - Provide visibility into actual API costs
  * - Enable cost optimization decisions
  * - Log usage summaries for monitoring
+ * - Track JSON repair activity for Haiku reliability
  *
  * Pricing (as of 2024):
  * - Claude Sonnet 4: $3/1M input, $15/1M output
  * - Claude Haiku: $0.25/1M input, $1.25/1M output
  */
 
+import { getRepairMetrics, resetRepairMetrics, type RepairMetrics } from "./json-repair.js";
+
 export type PipelineStage = "intent" | "architecture" | "code" | "context";
+
+// Re-export RepairMetrics for external use
+export type { RepairMetrics };
 
 export interface TokenUsage {
   stage: PipelineStage;
@@ -28,6 +34,7 @@ export interface TokenSummary {
   output: number;
   estimatedCost: number;
   byStage: Record<PipelineStage, { input: number; output: number; cost: number }>;
+  repairs: RepairMetrics;
 }
 
 // Model pricing per 1M tokens (USD)
@@ -95,6 +102,7 @@ export class TokenTracker {
       output: totalOutput,
       estimatedCost: Math.round(totalCost * 10000) / 10000, // 4 decimal places
       byStage,
+      repairs: getRepairMetrics(),
     };
   }
 
@@ -135,6 +143,15 @@ export class TokenTracker {
       `  Total: ${summary.input} in / ${summary.output} out | Est. cost: $${summary.estimatedCost.toFixed(2)}`
     );
 
+    // Add repair metrics if any repairs were made
+    const repairs = summary.repairs;
+    const totalRepairs = repairs.enumNormalizations + repairs.jsonExtractions + repairs.truncationRepairs + repairs.bracketBalances;
+    if (totalRepairs > 0) {
+      lines.push(
+        `  Repairs: ${repairs.enumNormalizations} enum, ${repairs.jsonExtractions} extract, ${repairs.truncationRepairs} truncation, ${repairs.bracketBalances} brackets`
+      );
+    }
+
     return lines.join("\n");
   }
 
@@ -157,6 +174,14 @@ export class TokenTracker {
   reset(): void {
     this.usage = [];
     this.startTime = new Date();
+    resetRepairMetrics();
+  }
+
+  /**
+   * Get current repair metrics
+   */
+  getRepairMetrics(): RepairMetrics {
+    return getRepairMetrics();
   }
 }
 

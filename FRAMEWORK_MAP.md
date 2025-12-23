@@ -4,6 +4,8 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 2a9f336 2025-12-22 perf(ai-agent): run code and context generation in parallel
+- aaeb3a5 2025-12-22 docs(agents): update Platform Memory with complete optimization summary
 - b23be67 2025-12-22 docs(governance): add PROMPT_STANDARDS.md references to all governance files
 - a4b8c61 2025-12-22 feat(ai-agent): add streaming support for real-time progress
 - 2c0d346 2025-12-22 feat(website): add model tier toggle to project generator
@@ -27,8 +29,6 @@ Hash: dd6ce1c0d2
 - 8a0a34f 2025-12-22 chore(test): remove test validation file
 - a397272 2025-12-22 test(governance): verify and enhance validation workflow
 - 0339f33 2025-12-22 feat(governance): integrate validation into review workflow
-- 6bee923 2025-12-22 docs: review and update cherry-picked documentation
-- 0e2b3ae 2025-12-22 docs: cherry-pick documentation and tests from stale branches
 
 ## Agent Governance Structure
 
