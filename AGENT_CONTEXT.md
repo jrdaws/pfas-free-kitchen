@@ -66,6 +66,7 @@ dawson-does-framework/
 - **Language**: TypeScript for website, JavaScript (.mjs) for CLI
 - **Style**: 2-space indent, no semicolons in .mjs, semicolons in .ts
 - **AI Prompts**: Follow `docs/standards/PROMPT_STANDARDS.md` (token-optimized from start)
+- **API Endpoints**: Follow `docs/standards/API_CONTRACTS.md` (use `apiError`/`apiSuccess` helpers)
 - **Naming**: camelCase for functions/variables, PascalCase for components/classes
 - **Commits**: Conventional commits (`feat:`, `fix:`, `docs:`, `chore:`)
 - **Testing**: Node.js test runner for CLI, Playwright for E2E
@@ -238,20 +239,35 @@ ls -la ~/.cursor/projects/*/terminals/
 
 ---
 
-## 🎭 Agent Identity Rule (MANDATORY)
+## 🏷️ Tab Naming & Agent Identity (MANDATORY)
 
-**Every agent MUST end their final response with their role declaration:**
+### Role Short Codes
+| Role | Code |
+|------|------|
+| CLI Agent | `CLI` |
+| Website Agent | `WEB` |
+| Documentation Agent | `DOC` |
+| Testing Agent | `TST` |
+| Platform Agent | `PLT` |
+| Template Agent | `TPL` |
+| Integration Agent | `INT` |
 
+### First Response Tab Suggestion
+In your FIRST response, suggest a short tab name:
 ```
-(I am the [ROLE] Agent.)
+**Tab**: `[CODE] [2-3 word task]`
+```
+Examples: `**Tab**: \`CLI pull cmd\`` | `**Tab**: \`DOC rules\`` | `**Tab**: \`WEB auth fix\``
+
+### Identity Declaration
+**Every agent MUST end ALL responses with:**
+```
+([CODE] Agent)
 ```
 
-Examples:
-- "(I am the CLI Agent.)"
-- "(I am the Platform Agent.)"
-- "(I am the Documentation Agent.)"
+Examples: `(CLI Agent)` | `(DOC Agent)` | `(WEB Agent)` | `(PLT Agent)`
 
-This rule is non-negotiable and applies to ALL responses, regardless of task complexity or context.
+This rule is non-negotiable and applies to ALL responses.
 
 ---
 
@@ -260,6 +276,7 @@ This rule is non-negotiable and applies to ALL responses, regardless of task com
 | Document | Purpose |
 |----------|---------|
 | `docs/standards/PROMPT_STANDARDS.md` | **Required** - Token-optimized AI prompt writing |
+| `docs/standards/API_CONTRACTS.md` | **Required** - Standard API response formats and error handling |
 | `docs/standards/CODING_STANDARDS.md` | Code style and conventions |
 | `prompts/agents/UNIVERSAL_BOOTSTRAP.md` | For initializing agents on any platform |
 | `prompts/agents/roles/ROLE_PROTOCOL.md` | Agent lifecycle and memory management |

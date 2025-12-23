@@ -1,0 +1,98 @@
+Template Health Report - 2025-12-22
+================================================================================
+
+## Summary
+
+| Template       | Export | Build | Integrations | template.json | Notes                          |
+|----------------|--------|-------|--------------|---------------|--------------------------------|
+| saas           | ✅     | ✅    | ✅           | ✅ Valid      | All good                       |
+| seo-directory  | ✅     | ✅    | N/A          | ✅ Valid      | All good                       |
+| blog           | ✅     | N/T   | N/A          | ✅ Valid      | Export only tested             |
+| landing-page   | ✅     | N/T   | N/A          | ✅ Valid      | Export only tested             |
+| dashboard      | ✅     | N/T   | N/A          | ✅ Valid      | Export only tested             |
+| flagship-saas  | ❌     | N/T   | N/A          | ✅ Valid      | **NOT REGISTERED IN CLI**      |
+
+Legend:
+- ✅ = Passed
+- ❌ = Failed
+- N/T = Not Tested
+- N/A = Not Applicable (no integrations directory)
+
+================================================================================
+
+## Test Results
+
+### Step 1: Unit Tests
+- **Status**: ✅ PASSED
+- **Details**: All 668 tests passed (14.75s)
+- **Coverage**: CLI, templates, integrations, providers
+
+### Step 2: Export Tests
+- **saas**: ✅ Exported successfully with all integrations
+- **seo-directory**: ✅ Exported successfully
+- **blog**: ✅ Exported successfully
+- **landing-page**: ✅ Exported successfully
+- **dashboard**: ✅ Exported successfully
+- **flagship-saas**: ❌ FAILED - "Unknown templateId"
+
+### Step 3: Build Tests
+- **saas**: ✅ Builds successfully (Next.js 15.5.9, 4 static pages)
+- **seo-directory**: ✅ Builds successfully (Next.js 15.5.9, 5 static pages)
+
+### Step 4: Validations
+- **template.json**: ✅ All 6 templates have valid JSON
+- **Integrations structure (saas)**: ✅ Correct structure
+  - ai/ (anthropic, openai)
+  - analytics/ (plausible, posthog)
+  - auth/ (clerk, supabase)
+  - db/ (supabase)
+  - email/ (resend)
+  - payments/ (stripe)
+
+================================================================================
+
+## Issues Found
+
+### ISSUE #1: flagship-saas Not Registered in CLI [CRITICAL]
+
+**Location**: `bin/framework.js` line 31-39
+
+**Problem**: The flagship-saas template exists in `/templates/flagship-saas/` with a valid
+template.json, but it is NOT included in the TEMPLATES constant in the CLI.
+
+**Impact**: Users cannot export the flagship-saas template via CLI.
+
+**Fix Required**: Add flagship-saas to the TEMPLATES constant:
+
+```javascript
+const TEMPLATES = {
+  "seo-directory": "jrdaws/dawson-does-framework/templates/seo-directory",
+  "saas": "jrdaws/dawson-does-framework/templates/saas",
+  "blog": "jrdaws/dawson-does-framework/templates/blog",
+  "dashboard": "jrdaws/dawson-does-framework/templates/dashboard",
+  "landing-page": "jrdaws/dawson-does-framework/templates/landing-page",
+  "flagship-saas": "jrdaws/dawson-does-framework/templates/flagship-saas",  // ADD THIS
+};
+```
+
+================================================================================
+
+## Recommendations
+
+1. **Fix flagship-saas registration** - High priority
+2. **Consider adding build tests** for all templates (not just key ones)
+3. **Add CI workflow** to run template health checks on PR
+
+================================================================================
+
+## Session Info
+
+- Date: 2025-12-22
+- Agent: Template Agent
+- Duration: ~30 minutes
+- Framework Version: 0.3.1
+
+================================================================================
+END OF REPORT
+================================================================================
+

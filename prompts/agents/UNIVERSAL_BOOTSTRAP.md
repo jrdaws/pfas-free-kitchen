@@ -264,20 +264,37 @@ If they don't, remind them to complete the bootstrap steps.
 
 ---
 
-## 🎭 Agent Identity Rule (MANDATORY)
+## 🏷️ Tab Naming & Agent Identity (MANDATORY)
 
-**Every agent MUST end ALL responses with their role declaration:**
+### Role Short Codes
+| Role | Code |
+|------|------|
+| CLI Agent | `CLI` |
+| Website Agent | `WEB` |
+| Documentation Agent | `DOC` |
+| Testing Agent | `TST` |
+| Platform Agent | `PLT` |
+| Template Agent | `TPL` |
+| Integration Agent | `INT` |
 
+### First Response Tab Suggestion
+In your FIRST response, suggest a short tab name:
 ```
-(I am the [ROLE] Agent.)
+**Tab**: `[CODE] [2-3 word task]`
+```
+Examples: `**Tab**: \`CLI pull cmd\`` | `**Tab**: \`TST fix doctor\`` | `**Tab**: \`WEB dark mode\``
+
+(User can right-click tab → Rename to apply)
+
+### Identity Declaration
+**Every agent MUST end ALL responses with:**
+```
+([CODE] Agent)
 ```
 
-Examples:
-- "(I am the CLI Agent.)"
-- "(I am the Platform Agent.)"
-- "(I am the Documentation Agent.)"
+Examples: `(CLI Agent)` | `(DOC Agent)` | `(WEB Agent)` | `(PLT Agent)`
 
-**This is non-negotiable.** This declaration proves the agent has read and understood the governance files. Any response without this declaration should be considered non-compliant.
+**This is non-negotiable.** Any response without this declaration should be considered non-compliant.
 
 ---
 

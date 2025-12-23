@@ -1,0 +1,170 @@
+# Testing Agent Task: Live API Validation & Quality Assurance
+
+================================================================================
+PRIORITY: HIGH
+AGENT: Testing Agent
+ESTIMATED TIME: 30-45 minutes
+================================================================================
+
+## Governance Acknowledgment
+Read AGENT_CONTEXT.md and follow all governance rules before proceeding.
+
+## Context
+The ai-agent package has been comprehensively updated:
+- Model tier selection (fast/balanced/quality) ✅
+- Token tracking with TokenTracker class ✅
+- JSON repair utility for Haiku fallback ✅
+- Streaming support for real-time progress ✅
+- 59% prompt token reduction ✅
+- Website model tier toggle ✅
+- All 668 mock tests passing ✅
+
+**CRITICAL GAP:** No live API testing has been performed with a real Anthropic key.
+
+## Your Task
+Validate all optimizations work correctly with real API calls.
+
+### Step 1: Setup
+```bash
+export ANTHROPIC_API_KEY=sk-ant-api03-xxxxx  # Your key
+cd packages/ai-agent
+```
+
+### Step 2: Basic E2E Test
+```bash
+node test-runner.mjs
+```
+
+Expected output:
+```
+[AI Agent] Generation complete:
+  Intent       :  XXX in /  XXX out (model)
+  Architecture :  XXX in /  XXX out (model)
+  Code         :  XXX in /  XXX out (model)
+  Context      :  XXX in /  XXX out (model)
+  ────────────────────────────────────────
+  Total: XXXX in / XXXX out | Est. cost: $X.XX
+```
+
+### Step 3: Streaming Test
+```bash
+node test-streaming.mjs
+```
+
+Verify:
+- [ ] Progress events fire for each stage (start → chunks → complete)
+- [ ] Final output matches non-streaming result
+- [ ] No data loss during streaming
+
+### Step 4: Model Tier Comparison
+Create `test-tiers.mjs` in `packages/ai-agent/`:
+
+```javascript
+import { generateProject, MODEL_TIERS } from './dist/index.js';
+
+const descriptions = [
+  { name: 'Simple', desc: 'A simple todo list app' },
+  { name: 'Moderate', desc: 'A blog platform with user authentication and comments' },
+  { name: 'Complex', desc: 'A SaaS platform with subscription billing, team management, and analytics dashboard' }
+];
+
+const tiers = ['fast', 'balanced', 'quality'];
+
+async function testTier(tier, description) {
+  console.log(`\n=== Testing ${tier.toUpperCase()} tier with "${description.name}" ===`);
+  const start = Date.now();
+  
+  try {
+    const result = await generateProject(
+      { description: description.desc, projectName: `Test-${tier}-${description.name}` },
+      { modelTier: tier, logTokenUsage: true }
+    );
+    
+    const duration = ((Date.now() - start) / 1000).toFixed(1);
+    console.log(`✅ Success in ${duration}s`);
+    console.log(`   Pages: ${result.architecture.pages.length}`);
+    console.log(`   Files: ${result.code.files.length}`);
+    return { success: true, duration, tier, complexity: description.name };
+  } catch (error) {
+    console.log(`❌ Failed: ${error.message}`);
+    return { success: false, error: error.message, tier, complexity: description.name };
+  }
+}
+
+async function main() {
+  console.log('=== Model Tier Comparison Test ===\n');
+  
+  const results = [];
+  
+  // Test each tier with simple description first
+  for (const tier of tiers) {
+    const result = await testTier(tier, descriptions[0]);
+    results.push(result);
+  }
+  
+  // Summary
+  console.log('\n=== RESULTS SUMMARY ===');
+  console.table(results.map(r => ({
+    Tier: r.tier,
+    Complexity: r.complexity,
+    Status: r.success ? '✅' : '❌',
+    Duration: r.duration ? `${r.duration}s` : 'N/A'
+  })));
+}
+
+main().catch(console.error);
+```
+
+Run it:
+```bash
+node test-tiers.mjs
+```
+
+### Step 5: Document Results
+Update `prompts/agents/memory/TESTING_MEMORY.md` with:
+
+```markdown
+### Session: [DATE] - Live API Validation
+
+**Work Completed**
+- ✅ E2E test with real API key
+- ✅ Streaming validation
+- ✅ Model tier comparison
+
+**Test Results**
+
+| Tier | Simple | Duration | Cost |
+|------|--------|----------|------|
+| fast | ✅/❌ | Xs | $X.XX |
+| balanced | ✅/❌ | Xs | $X.XX |
+| quality | ✅/❌ | Xs | $X.XX |
+
+**Token Tracking Verification**
+- Logged tokens: XXX in / XXX out
+- Anthropic dashboard: XXX in / XXX out
+- Match: ✅/❌
+
+**Streaming Validation**
+- Events fired correctly: ✅/❌
+- Output complete: ✅/❌
+
+**Recommendations**
+- [Your findings about which tier to use as default]
+- [Any issues discovered]
+
+**Handoff Notes**
+- [Context for next agent]
+```
+
+## Success Criteria
+- [ ] E2E test completes successfully
+- [ ] Token counts match expected ranges
+- [ ] Streaming works without data loss
+- [ ] At least one tier produces valid output
+- [ ] Results documented in TESTING_MEMORY.md
+- [ ] Commit changes with `test(ai-agent): add live API validation results`
+
+================================================================================
+END OF PROMPT
+================================================================================
+

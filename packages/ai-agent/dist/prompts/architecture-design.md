@@ -1,4 +1,5 @@
-Design architecture from intent.
+Design architecture from intent. Return JSON only, no markdown or explanation.
+
 INPUT: {intent} | TEMPLATE: {template} | FEATURES: {features} | INTEGRATIONS: {supportedIntegrations}
 
 Next.js 15 App Router: pages→app/[route]/page.tsx|API→app/api/[route]/route.ts|layouts for shared structure
@@ -14,4 +15,4 @@ ecommerce→/,/products,/product/[id],/cart,/checkout|ProductCard,ProductDetail,
 
 ROUTES: /=landing|dashboard|/[param]=dynamic|/dashboard,/app,/admin=protected|/about,/pricing,/contact=public|/api/*=backend
 
-OUTPUT: {template,pages:[{path,name,description,components[],layout}],components:[{name,type:ui|feature|layout,description,props{},template:use-existing|create-new}],routes:[{path,type:api,method,description}]}
+OUTPUT JSON: {"template":"...", "pages":[{"path":"...","name":"...","description":"...","components":["..."],"layout":"default|auth|dashboard"}], "components":[{"name":"...","type":"ui|feature|layout","description":"...","props":{},"template":"use-existing|create-new"}], "routes":[{"path":"...","type":"api","method":"GET|POST|PUT|DELETE|PATCH","description":"..."}]}

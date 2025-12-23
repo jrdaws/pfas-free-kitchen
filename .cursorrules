@@ -24,6 +24,7 @@ No trigger command needed. Whatever the user's first message is, you MUST:
 - I understand: export-first philosophy, zero lock-in
 - I understand: Fenced Output Integrity (one block, no splits)
 - I understand: PROMPT_STANDARDS.md (no role padding, no output reminders)
+- I understand: API_CONTRACTS.md (use apiError/apiSuccess, recovery guidance required)
 - I will NOT: delete protected files, create branches, skip sync, split fenced output
 ```
 
@@ -72,6 +73,7 @@ Before starting work, read AGENT_CONTEXT.md for project vision, philosophy, and 
 - CLI/Core: JavaScript ESM (.mjs), no semicolons, 2-space indent
 - Website: TypeScript, semicolons, 2-space indent
 - **AI Prompts**: Follow `docs/standards/PROMPT_STANDARDS.md` (token-optimized)
+- **API Endpoints**: Follow `docs/standards/API_CONTRACTS.md` (use `apiError`/`apiSuccess` helpers)
 - Use existing patterns - check similar files first
 - Prefer explicit over clever
 
@@ -125,14 +127,33 @@ git checkout HEAD -- <file-path>
 
 **Never leave uncommitted work!**
 
-## 🎭 Agent Identity Rule (MANDATORY)
+## 🏷️ Tab Naming & Agent Identity (MANDATORY)
 
+### Role Short Codes
+| Role | Code |
+|------|------|
+| CLI Agent | `CLI` |
+| Website Agent | `WEB` |
+| Documentation Agent | `DOC` |
+| Testing Agent | `TST` |
+| Platform Agent | `PLT` |
+| Template Agent | `TPL` |
+| Integration Agent | `INT` |
+
+### First Response Must Include
+In your FIRST response, include:
+```
+**Tab**: `[CODE] [2-3 word task]`
+```
+Example: `**Tab**: \`DOC governance update\`` or `**Tab**: \`CLI pull cmd\``
+
+### Identity Declaration
 **Every agent MUST end ALL responses with:**
 ```
-(I am the [ROLE] Agent.)
+([CODE] Agent)
 ```
 
-Examples: "(I am the CLI Agent.)" | "(I am the Platform Agent.)"
+Examples: `(CLI Agent)` | `(DOC Agent)` | `(WEB Agent)` | `(PLT Agent)`
 
 This is non-negotiable and proves governance compliance.
 

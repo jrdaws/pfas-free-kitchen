@@ -1,0 +1,32 @@
+================================================================================
+AGENT LAUNCH COMMANDS
+================================================================================
+Copy and paste ONE of these commands into a new Cursor AI chat.
+The agent will read the task file and begin work.
+================================================================================
+
+--- PRIORITY ORDER ---
+
+1. TESTING AGENT (P1 - HIGH PRIORITY)
+Read and execute the task in output/testing-agent/inbox/20251222-2000-P1-task-live-api-validation.txt
+
+2. PLATFORM AGENT (P2)
+Read and execute the task in output/platform-agent/inbox/20251222-2000-P2-task-parallel-stage-execution.txt
+
+3. CLI AGENT (P2)
+Read and execute the task in output/cli-agent/inbox/20251222-2000-P2-task-deploy-command-enhancement.txt
+
+4. WEBSITE AGENT (P2)
+Read and execute the task in output/website-agent/inbox/20251222-2000-P2-task-streaming-ui-integration.txt
+
+5. TEMPLATE AGENT (P2)
+Read and execute the task in output/template-agent/inbox/20251222-2000-P2-task-template-health-check.txt
+
+6. DOCUMENTATION AGENT (P2)
+Read and execute the task in output/documentation-agent/inbox/20251222-2000-P2-task-user-guide-creation.txt
+
+7. INTEGRATION AGENT (P3 - LOW PRIORITY)
+Read and execute the task in output/integration-agent/inbox/20251222-2000-P3-task-integration-inventory.txt
+
+================================================================================
+

@@ -1,0 +1,146 @@
+================================================================================
+TASK ASSIGNMENT: Streaming UI Integration
+================================================================================
+Priority: P2 (MEDIUM)
+Target Agent: Website Agent
+Created By: Documentation Agent
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Integrate the new streaming support from ai-agent package into the website's
+ProjectGenerator component to show real-time generation progress.
+
+## Context
+
+Platform Agent recently added streaming support to the ai-agent package:
+- StreamCallback type and StreamingLLMRequest interface
+- Progress events: start, chunk, complete per stage
+- Opt-in via `stream: true` option
+
+Currently the website waits for full generation before showing results.
+With streaming, we can show progress as each stage completes.
+
+## Files to Review
+
+- packages/ai-agent/src/index.ts (GenerateProjectOptions, StreamEvent)
+- packages/ai-agent/src/types.ts (StreamProgressCallback)
+- website/app/api/generate/project/route.ts (API endpoint)
+- website/app/components/configurator/ProjectGenerator.tsx (UI component)
+- website/lib/project-generator.ts (client library)
+
+## Files to Modify
+
+- website/app/api/generate/project/route.ts (add streaming response)
+- website/app/components/configurator/ProjectGenerator.tsx (show progress)
+- website/lib/project-generator.ts (handle streaming)
+
+## Design Options
+
+### Option A: Server-Sent Events (SSE)
+Transform API route to stream SSE events:
+```typescript
+// route.ts
+return new Response(
+  new ReadableStream({
+    start(controller) {
+      generateProject(input, {
+        stream: true,
+        onProgress: (event) => {
+          controller.enqueue(`data: ${JSON.stringify(event)}\n\n`);
+        }
+      }).then(result => {
+        controller.enqueue(`data: ${JSON.stringify({ type: 'complete', result })}\n\n`);
+        controller.close();
+      });
+    }
+  }),
+  { headers: { 'Content-Type': 'text/event-stream' } }
+);
+```
+
+### Option B: Polling with Progress
+Keep current API, add progress endpoint:
+- POST /api/generate/project → Returns job ID
+- GET /api/generate/project/[id]/status → Returns progress
+- GET /api/generate/project/[id]/result → Returns final result
+
+### Option C: WebSocket (More complex)
+For bidirectional communication if needed.
+
+## Recommended: Option A (SSE)
+
+Simplest integration, works with existing infrastructure.
+
+## UI Changes
+
+```tsx
+// ProjectGenerator.tsx
+const [progress, setProgress] = useState<{
+  stage: string;
+  message: string;
+  percent: number;
+}>({ stage: '', message: '', percent: 0 });
+
+// During generation
+const eventSource = new EventSource('/api/generate/project?...');
+eventSource.onmessage = (event) => {
+  const data = JSON.parse(event.data);
+  if (data.type === 'chunk') {
+    setProgress({
+      stage: data.stage,
+      message: data.message || 'Processing...',
+      percent: calculatePercent(data.stage)
+    });
+  }
+};
+```
+
+## Execution Steps
+
+### Step 1: Update API Route
+Add streaming response support to `/api/generate/project/route.ts`
+
+### Step 2: Update Client Library
+Handle EventSource in `lib/project-generator.ts`
+
+### Step 3: Update UI Component
+Add progress display to ProjectGenerator
+
+### Step 4: Test
+```bash
+cd website
+npm run build
+npm run dev
+# Test generation manually
+```
+
+### Step 5: Update Memory
+Add session entry to `prompts/agents/memory/WEBSITE_MEMORY.md`
+
+## Success Criteria
+
+- [ ] Generation shows stage progress (intent → architecture → code → context)
+- [ ] Percent complete updates in real-time
+- [ ] Final result displays correctly
+- [ ] Error handling works
+- [ ] No regressions in existing functionality
+
+## Estimated Effort
+
+45-60 minutes
+
+## Dependencies
+
+- Platform Agent's streaming implementation (DONE)
+- ai-agent package built with streaming support (DONE)
+
+## Notes
+
+This is a UX enhancement - users will see progress instead of a spinner.
+Start with basic progress display, enhance with details later.
+
+================================================================================
+END OF TASK
+================================================================================
+

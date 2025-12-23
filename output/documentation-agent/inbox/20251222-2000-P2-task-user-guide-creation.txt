@@ -1,0 +1,134 @@
+================================================================================
+TASK ASSIGNMENT: User Quick Start Guide
+================================================================================
+Priority: P2 (MEDIUM)
+Target Agent: Documentation Agent
+Created By: Documentation Agent (Self-assigned)
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Create a comprehensive Quick Start Guide for new users that covers the
+end-to-end journey from first visit to running app.
+
+## Context
+
+The framework now has:
+- Working CLI with export and pull commands
+- Web configurator with AI generation
+- Model tier selection (fast/balanced/quality)
+- Multiple templates with integrations
+
+But no unified user guide that walks through the complete flow.
+
+## Files to Create
+
+- docs/guides/QUICK_START.md
+
+## Files to Review
+
+- README.md (current state)
+- docs/cli/export.md
+- docs/cli/pull.md
+- website/app/configure/page.tsx (user flow)
+
+## Guide Structure
+
+```markdown
+# Quick Start Guide
+
+## Overview (30 seconds)
+What is this? What can you build?
+
+## Option 1: CLI Export (2 minutes)
+```bash
+npx @jrdaws/framework export saas my-app --auth supabase
+cd my-app
+npm run dev
+```
+
+## Option 2: Web Configurator (5 minutes)
+1. Visit dawson.dev/configure
+2. Choose template
+3. Add integrations
+4. Generate with AI
+5. Download or pull
+
+## Option 3: AI Description (10 minutes)
+1. Describe your app in natural language
+2. AI generates architecture
+3. Review and customize
+4. Export complete project
+
+## What You Get
+- Full Next.js 15 project
+- Selected integrations configured
+- .cursorrules for AI development
+- START_PROMPT.md for continuing with Claude
+
+## Next Steps
+- Customize your app
+- Add more features
+- Deploy to production
+
+## Troubleshooting
+Common issues and solutions
+```
+
+## Execution Steps
+
+### Step 1: Audit Current Documentation
+
+Review README.md and existing docs to understand current state.
+
+### Step 2: Define User Personas
+
+- **Beginner:** Never used CLI, wants quick result
+- **Developer:** Familiar with CLI, wants efficiency
+- **Explorer:** Wants to understand capabilities
+
+### Step 3: Write Guide
+
+Create `docs/guides/QUICK_START.md` with:
+- Clear headings
+- Copy-paste commands
+- Screenshots (if possible)
+- Troubleshooting section
+
+### Step 4: Link from README
+
+Add prominent link from README.md to new guide.
+
+### Step 5: Test Commands
+
+Verify all commands in guide actually work.
+
+### Step 6: Update Memory
+
+Add session entry to `prompts/agents/memory/DOCS_MEMORY.md`
+
+## Success Criteria
+
+- [ ] Guide covers all 3 options (CLI, web, AI)
+- [ ] Commands are tested and work
+- [ ] Troubleshooting section exists
+- [ ] Linked from README.md
+- [ ] Follows existing docs style
+
+## Estimated Effort
+
+45-60 minutes
+
+## Dependencies
+
+None
+
+## Notes
+
+Focus on getting users to a running app as fast as possible.
+Details can come later in other guides.
+
+================================================================================
+END OF TASK
+================================================================================
+

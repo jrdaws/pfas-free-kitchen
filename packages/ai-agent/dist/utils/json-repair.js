@@ -7,6 +7,54 @@
  * - Common syntax errors
  */
 /**
+ * Valid enum values for schema normalization
+ * Haiku often returns invalid values like "supabase(auth)" instead of "supabase"
+ */
+const VALID_ENUMS = {
+    // Template/category enums
+    suggestedTemplate: ["saas", "landing-page", "dashboard", "blog", "directory", "ecommerce"],
+    category: ["saas", "landing-page", "dashboard", "blog", "directory", "ecommerce"],
+    // Integration provider enums
+    auth: ["supabase", "clerk"],
+    payments: ["stripe", "paddle"],
+    email: ["resend", "sendgrid"],
+    db: ["supabase", "planetscale"],
+    ai: ["openai", "anthropic"],
+    analytics: ["posthog", "plausible"],
+    // Complexity enum
+    complexity: ["simple", "moderate", "complex"],
+    // Architecture schema enums
+    method: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    type: ["ui", "feature", "layout"],
+    routeType: ["page", "api"],
+    template: ["create-new", "use-existing"],
+    // Layout enum for pages
+    layout: ["default", "dashboard", "auth", "minimal", "full-width"],
+};
+let _repairMetrics = {
+    enumNormalizations: 0,
+    jsonExtractions: 0,
+    truncationRepairs: 0,
+    bracketBalances: 0,
+};
+/**
+ * Get current repair metrics
+ */
+export function getRepairMetrics() {
+    return { ..._repairMetrics };
+}
+/**
+ * Reset repair metrics (useful for testing)
+ */
+export function resetRepairMetrics() {
+    _repairMetrics = {
+        enumNormalizations: 0,
+        jsonExtractions: 0,
+        truncationRepairs: 0,
+        bracketBalances: 0,
+    };
+}
+/**
  * Attempt to parse and repair malformed JSON from AI output
  *
  * @param text - Raw AI output text
@@ -18,33 +66,48 @@ export function repairAndParseJSON(text) {
     let jsonText = extractJSON(text);
     if (jsonText !== text) {
         repairs.push("Extracted JSON from surrounding text");
+        _repairMetrics.jsonExtractions++;
     }
     // Step 2: Try parsing as-is first
     try {
         const data = JSON.parse(jsonText);
-        return { success: true, data, repaired: repairs.length > 0, repairs };
+        // Normalize enum values before returning
+        const enumRepairCountBefore = repairs.length;
+        const normalized = normalizeEnumValues(data, repairs);
+        if (repairs.length > enumRepairCountBefore) {
+            _repairMetrics.enumNormalizations++;
+        }
+        return { success: true, data: normalized, repaired: repairs.length > 0, repairs };
     }
-    catch (initialError) {
+    catch {
         // Continue with repairs
     }
     // Step 3: Fix common issues
     const fixers = [
-        { name: "Remove trailing comma", fn: removeTrailingCommas },
-        { name: "Close unterminated strings", fn: closeUnterminatedStrings },
-        { name: "Balance brackets", fn: balanceBrackets },
-        { name: "Fix truncated arrays", fn: fixTruncatedArrays },
-        { name: "Remove control characters", fn: removeControlCharacters },
+        { name: "Remove trailing comma", fn: removeTrailingCommas, metric: null },
+        { name: "Close unterminated strings", fn: closeUnterminatedStrings, metric: "truncationRepairs" },
+        { name: "Balance brackets", fn: balanceBrackets, metric: "bracketBalances" },
+        { name: "Fix truncated arrays", fn: fixTruncatedArrays, metric: "truncationRepairs" },
+        { name: "Remove control characters", fn: removeControlCharacters, metric: null },
     ];
     let currentText = jsonText;
     for (const fixer of fixers) {
         const fixed = fixer.fn(currentText);
         if (fixed !== currentText) {
             repairs.push(fixer.name);
+            if (fixer.metric) {
+                _repairMetrics[fixer.metric]++;
+            }
             currentText = fixed;
             // Try parsing after each fix
             try {
                 const data = JSON.parse(currentText);
-                return { success: true, data, repaired: true, repairs };
+                const enumRepairCountBefore = repairs.length;
+                const normalized = normalizeEnumValues(data, repairs);
+                if (repairs.length > enumRepairCountBefore) {
+                    _repairMetrics.enumNormalizations++;
+                }
+                return { success: true, data: normalized, repaired: true, repairs };
             }
             catch {
                 // Continue with next fixer
@@ -55,9 +118,15 @@ export function repairAndParseJSON(text) {
     const aggressiveResult = aggressiveRepair(currentText);
     if (aggressiveResult) {
         repairs.push("Aggressive truncation repair");
+        _repairMetrics.truncationRepairs++;
         try {
             const data = JSON.parse(aggressiveResult);
-            return { success: true, data, repaired: true, repairs };
+            const enumRepairCountBefore = repairs.length;
+            const normalized = normalizeEnumValues(data, repairs);
+            if (repairs.length > enumRepairCountBefore) {
+                _repairMetrics.enumNormalizations++;
+            }
+            return { success: true, data: normalized, repaired: true, repairs };
         }
         catch {
             // Fall through to error
@@ -267,4 +336,155 @@ function aggressiveRepair(text) {
         return null;
     }
     return result;
+}
+/**
+ * Normalize enum values that Haiku often gets wrong
+ * e.g., "supabase(auth+db)" → "supabase", "local" → null
+ */
+function normalizeEnumValues(data, repairs) {
+    if (data === null || data === undefined)
+        return data;
+    if (typeof data !== "object")
+        return data;
+    if (Array.isArray(data))
+        return data.map(item => normalizeEnumValues(item, repairs));
+    const obj = data;
+    const result = {};
+    for (const [key, value] of Object.entries(obj)) {
+        if (key === "integrations" && typeof value === "object" && value !== null) {
+            // Normalize integration enum values
+            const integrations = value;
+            const normalizedIntegrations = {};
+            for (const [intKey, intValue] of Object.entries(integrations)) {
+                const validValues = VALID_ENUMS[intKey];
+                if (validValues) {
+                    if (typeof intValue === "string") {
+                        const normalized = normalizeToEnum(intValue, validValues);
+                        if (normalized !== intValue) {
+                            repairs.push(`Normalized ${intKey}: "${intValue}" → ${normalized === null ? "null" : `"${normalized}"`}`);
+                        }
+                        normalizedIntegrations[intKey] = normalized;
+                    }
+                    else if (intValue === true) {
+                        // Haiku sometimes returns true instead of provider name - use first valid option
+                        const defaultValue = validValues[0];
+                        repairs.push(`Normalized ${intKey}: true → "${defaultValue}"`);
+                        normalizedIntegrations[intKey] = defaultValue;
+                    }
+                    else if (intValue === false || intValue === null) {
+                        normalizedIntegrations[intKey] = null;
+                    }
+                    else {
+                        normalizedIntegrations[intKey] = null;
+                    }
+                }
+                else {
+                    normalizedIntegrations[intKey] = intValue;
+                }
+            }
+            result[key] = normalizedIntegrations;
+        }
+        else if (key === "suggestedTemplate" && typeof value === "string") {
+            const normalized = normalizeToEnum(value, VALID_ENUMS.suggestedTemplate);
+            if (normalized !== value) {
+                repairs.push(`Normalized suggestedTemplate: "${value}" → "${normalized || "saas"}"`);
+            }
+            result[key] = normalized || "saas"; // Default to saas if invalid
+        }
+        else if (key === "category" && typeof value === "string") {
+            const normalized = normalizeToEnum(value, VALID_ENUMS.category);
+            if (normalized !== value) {
+                repairs.push(`Normalized category: "${value}" → "${normalized || "saas"}"`);
+            }
+            result[key] = normalized || "saas"; // Default to saas if invalid
+        }
+        else if (key === "layout" && typeof value === "string") {
+            const normalized = normalizeToEnum(value, VALID_ENUMS.layout);
+            if (normalized !== value) {
+                repairs.push(`Normalized layout: "${value}" → "${normalized || "default"}"`);
+            }
+            result[key] = normalized || "default"; // Default to default if invalid
+        }
+        else if (key === "complexity" && typeof value === "string") {
+            const normalized = normalizeToEnum(value, VALID_ENUMS.complexity);
+            if (normalized !== value) {
+                repairs.push(`Normalized complexity: "${value}" → "${normalized || "moderate"}"`);
+            }
+            result[key] = normalized || "moderate";
+        }
+        else if (key === "method" && typeof value === "string") {
+            // Normalize HTTP methods (GET, POST, etc.)
+            const normalized = normalizeToEnum(value.toUpperCase(), VALID_ENUMS.method);
+            if (normalized !== value.toUpperCase()) {
+                repairs.push(`Normalized method: "${value}" → "${normalized || "GET"}"`);
+            }
+            result[key] = normalized || "GET";
+        }
+        else if (key === "routes" && Array.isArray(value)) {
+            // Normalize route objects
+            result[key] = value.map((route) => normalizeEnumValues(route, repairs));
+        }
+        else if (key === "components" && Array.isArray(value)) {
+            // Normalize component objects
+            result[key] = value.map((comp) => normalizeEnumValues(comp, repairs));
+        }
+        else if (key === "type" && typeof value === "string" && obj["path"] !== undefined) {
+            // This is a route type (page|api)
+            const normalized = normalizeToEnum(value, VALID_ENUMS.routeType);
+            if (normalized !== value) {
+                repairs.push(`Normalized routeType: "${value}" → "${normalized || "api"}"`);
+            }
+            result[key] = normalized || "api";
+        }
+        else if (key === "type" && typeof value === "string" && obj["name"] !== undefined) {
+            // This is a component type (ui|feature|layout)
+            const normalized = normalizeToEnum(value, VALID_ENUMS.type);
+            if (normalized !== value) {
+                repairs.push(`Normalized componentType: "${value}" → "${normalized || "ui"}"`);
+            }
+            result[key] = normalized || "ui";
+        }
+        else if (key === "template" && typeof value === "string" && obj["name"] !== undefined) {
+            // This is a component template (create-new|use-existing)
+            const normalized = normalizeToEnum(value, VALID_ENUMS.template);
+            if (normalized !== value) {
+                repairs.push(`Normalized template: "${value}" → "${normalized || "create-new"}"`);
+            }
+            result[key] = normalized || "create-new";
+        }
+        else if (typeof value === "object") {
+            result[key] = normalizeEnumValues(value, repairs);
+        }
+        else {
+            result[key] = value;
+        }
+    }
+    return result;
+}
+/**
+ * Try to extract a valid enum value from a potentially malformed string
+ * e.g., "supabase(auth+db)" → "supabase", "supabase" → "supabase"
+ */
+function normalizeToEnum(value, validValues) {
+    if (!value)
+        return null;
+    // Direct match
+    const lower = value.toLowerCase().trim();
+    const directMatch = validValues.find(v => v.toLowerCase() === lower);
+    if (directMatch)
+        return directMatch;
+    // Check if value starts with a valid enum (handles "supabase(auth)" → "supabase")
+    for (const valid of validValues) {
+        if (lower.startsWith(valid.toLowerCase())) {
+            return valid;
+        }
+    }
+    // Check if valid enum appears anywhere in the value
+    for (const valid of validValues) {
+        if (lower.includes(valid.toLowerCase())) {
+            return valid;
+        }
+    }
+    // Invalid value - return null (will be treated as "no integration")
+    return null;
 }

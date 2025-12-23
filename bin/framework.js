@@ -34,6 +34,7 @@ const TEMPLATES = {
   "blog": "jrdaws/dawson-does-framework/templates/blog",
   "dashboard": "jrdaws/dawson-does-framework/templates/dashboard",
   "landing-page": "jrdaws/dawson-does-framework/templates/landing-page",
+  "flagship-saas": "jrdaws/dawson-does-framework/templates/flagship-saas",
   // "internal-tool": "jrdaws/dawson-does-framework/templates/internal-tool",  // TODO: add template content
   // "automation": "jrdaws/dawson-does-framework/templates/automation",        // TODO: add template content
 };

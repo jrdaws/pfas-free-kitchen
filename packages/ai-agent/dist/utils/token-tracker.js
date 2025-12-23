@@ -5,11 +5,13 @@
  * - Provide visibility into actual API costs
  * - Enable cost optimization decisions
  * - Log usage summaries for monitoring
+ * - Track JSON repair activity for Haiku reliability
  *
  * Pricing (as of 2024):
  * - Claude Sonnet 4: $3/1M input, $15/1M output
  * - Claude Haiku: $0.25/1M input, $1.25/1M output
  */
+import { getRepairMetrics, resetRepairMetrics } from "./json-repair.js";
 // Model pricing per 1M tokens (USD)
 const MODEL_PRICING = {
     "claude-sonnet-4-20250514": { input: 3.0, output: 15.0 },
@@ -64,6 +66,7 @@ export class TokenTracker {
             output: totalOutput,
             estimatedCost: Math.round(totalCost * 10000) / 10000, // 4 decimal places
             byStage,
+            repairs: getRepairMetrics(),
         };
     }
     /**
@@ -93,6 +96,12 @@ export class TokenTracker {
         }
         // Add totals
         lines.push(`  ${"─".repeat(40)}`, `  Total: ${summary.input} in / ${summary.output} out | Est. cost: $${summary.estimatedCost.toFixed(2)}`);
+        // Add repair metrics if any repairs were made
+        const repairs = summary.repairs;
+        const totalRepairs = repairs.enumNormalizations + repairs.jsonExtractions + repairs.truncationRepairs + repairs.bracketBalances;
+        if (totalRepairs > 0) {
+            lines.push(`  Repairs: ${repairs.enumNormalizations} enum, ${repairs.jsonExtractions} extract, ${repairs.truncationRepairs} truncation, ${repairs.bracketBalances} brackets`);
+        }
         return lines.join("\n");
     }
     /**
@@ -113,6 +122,13 @@ export class TokenTracker {
     reset() {
         this.usage = [];
         this.startTime = new Date();
+        resetRepairMetrics();
+    }
+    /**
+     * Get current repair metrics
+     */
+    getRepairMetrics() {
+        return getRepairMetrics();
     }
 }
 // Singleton instance for global tracking

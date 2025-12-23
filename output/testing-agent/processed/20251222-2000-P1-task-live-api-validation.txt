@@ -1,0 +1,128 @@
+================================================================================
+TASK ASSIGNMENT: Live API Validation & Quality Assurance
+================================================================================
+Priority: P1 (HIGH)
+Target Agent: Testing Agent
+Created By: Documentation Agent
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Validate all AI agent optimizations with real Anthropic API calls. The platform
+has been significantly updated but no live testing has been performed.
+
+## Context
+
+Recent changes to `packages/ai-agent/`:
+- Model tier selection (fast/balanced/quality)
+- Token tracking with TokenTracker class
+- JSON repair utility for Haiku fallback
+- Streaming support for real-time progress
+- 59% prompt token reduction
+- All 668 mock tests pass
+
+CRITICAL GAP: No live API testing with real Anthropic key.
+
+## Files to Review
+
+- packages/ai-agent/src/index.ts (main entry, model tiers)
+- packages/ai-agent/src/utils/token-tracker.ts (cost tracking)
+- packages/ai-agent/src/utils/llm-client.ts (streaming)
+- packages/ai-agent/test-runner.mjs (E2E test)
+- packages/ai-agent/test-streaming.mjs (streaming test)
+
+## Execution Steps
+
+### Step 1: Setup
+```bash
+export ANTHROPIC_API_KEY=sk-ant-api03-xxxxx
+cd packages/ai-agent
+```
+
+### Step 2: Basic E2E Test
+```bash
+node test-runner.mjs
+```
+
+Record the output - it should show token tracking:
+```
+[AI Agent] Generation complete:
+  Intent       :  XXX in /  XXX out (model)
+  Architecture :  XXX in /  XXX out (model)
+  Code         :  XXX in /  XXX out (model)
+  Context      :  XXX in /  XXX out (model)
+  ────────────────────────────────────────
+  Total: XXXX in / XXXX out | Est. cost: $X.XX
+```
+
+### Step 3: Streaming Test
+```bash
+node test-streaming.mjs
+```
+
+Verify:
+- Progress events fire for each stage (start → chunks → complete)
+- Final output matches non-streaming result
+- No data loss during streaming
+
+### Step 4: Model Tier Comparison (Optional but valuable)
+Create `test-tiers.mjs`:
+
+```javascript
+import { generateProject } from './dist/index.js';
+
+const tiers = ['fast', 'balanced', 'quality'];
+
+async function testTier(tier) {
+  console.log(`\n=== Testing ${tier.toUpperCase()} ===`);
+  const start = Date.now();
+  
+  try {
+    const result = await generateProject(
+      { description: 'A simple todo list app', projectName: `Test-${tier}` },
+      { modelTier: tier, logTokenUsage: true }
+    );
+    console.log(`✅ Success in ${((Date.now() - start) / 1000).toFixed(1)}s`);
+    console.log(`   Pages: ${result.architecture.pages.length}`);
+    console.log(`   Files: ${result.code.files.length}`);
+  } catch (error) {
+    console.log(`❌ Failed: ${error.message}`);
+  }
+}
+
+for (const tier of tiers) await testTier(tier);
+```
+
+Run: `node test-tiers.mjs`
+
+### Step 5: Document Results
+Update `prompts/agents/memory/TESTING_MEMORY.md` with full results.
+Write completion report to `output/testing-agent/outbox/`.
+
+## Success Criteria
+
+- [ ] E2E test completes successfully
+- [ ] Token counts logged and match expected ranges
+- [ ] Streaming works without data loss  
+- [ ] At least "balanced" tier produces valid output
+- [ ] Results documented in TESTING_MEMORY.md
+- [ ] Completion report written to outbox
+
+## Estimated Effort
+
+30-45 minutes (depends on API response times)
+
+## Dependencies
+
+- Anthropic API key with credits
+- Network access for API calls
+
+## Notes
+
+This is the critical validation step before considering AI generation
+production-ready. Focus on documenting actual costs and reliability.
+
+================================================================================
+END OF TASK
+================================================================================
+

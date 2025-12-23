@@ -29,6 +29,7 @@ This is non-negotiable. Every new conversation starts with bootstrap.
 - I understand: export-first philosophy, zero lock-in
 - I understand: Fenced Output Integrity (one block, no splits)
 - I understand: PROMPT_STANDARDS.md (no role padding, no output reminders)
+- I understand: API_CONTRACTS.md (use apiError/apiSuccess, recovery guidance required)
 - I will NOT: delete protected files, create branches, skip sync, split fenced output
 - Pre-commit command: npm test
 ```
@@ -105,6 +106,7 @@ A hybrid platform for building web apps with a visual configurator, then exporti
 - **JavaScript (.mjs)**: No semicolons, 2-space indent
 - **TypeScript (.ts/.tsx)**: Semicolons, 2-space indent
 - **AI Prompts**: Follow `docs/standards/PROMPT_STANDARDS.md` (token-optimized, no verbose schemas)
+- **API Endpoints**: Follow `docs/standards/API_CONTRACTS.md` (use `apiError`/`apiSuccess` helpers)
 - **Commits**: Conventional format (`feat:`, `fix:`, `docs:`, `chore:`)
 - **Tests**: Run `npm test` before committing
 
@@ -137,6 +139,8 @@ framework pull <token>      # Pull from platform
 - `FRAMEWORK_MAP.md` - Architecture and dependencies
 - `.cursorrules` - Cursor-specific rules
 - `bin/framework.js` - Main CLI entry point
+- `docs/standards/API_CONTRACTS.md` - API response format standards
+- `website/lib/api-errors.ts` - API error/success utilities
 
 ---
 
@@ -194,15 +198,35 @@ git commit -m "<type>(<scope>): <description>"
 
 **Never leave uncommitted work** - the next agent won't see it!
 
-## 🎭 Agent Identity Rule (MANDATORY)
+## 🏷️ Tab Naming & Agent Identity (MANDATORY)
 
-**Every agent MUST end ALL responses with their role declaration:**
+### Role Short Codes
+| Role | Code |
+|------|------|
+| CLI Agent | `CLI` |
+| Website Agent | `WEB` |
+| Documentation Agent | `DOC` |
+| Testing Agent | `TST` |
+| Platform Agent | `PLT` |
+| Template Agent | `TPL` |
+| Integration Agent | `INT` |
 
+### First Response Must Include
+In your FIRST response, suggest a tab name:
 ```
-(I am the [ROLE] Agent.)
+**Tab**: `[CODE] [2-3 word task]`
+```
+Example: `**Tab**: \`CLI pull cmd\`` or `**Tab**: \`DOC rules update\``
+
+(User can right-click tab → Rename to apply)
+
+### Identity Declaration
+**Every agent MUST end ALL responses with:**
+```
+([CODE] Agent)
 ```
 
-Examples: "(I am the CLI Agent.)" | "(I am the Platform Agent.)" | "(I am the Documentation Agent.)"
+Examples: `(CLI Agent)` | `(DOC Agent)` | `(WEB Agent)` | `(PLT Agent)`
 
 **This is non-negotiable.** Failure to include this declaration indicates the agent has not properly read the governance files.
 

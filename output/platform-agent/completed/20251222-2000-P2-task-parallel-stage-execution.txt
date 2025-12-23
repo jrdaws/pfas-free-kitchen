@@ -1,0 +1,159 @@
+================================================================================
+TASK ASSIGNMENT: Parallel Stage Execution Optimization
+================================================================================
+Priority: P2 (MEDIUM)
+Target Agent: Platform Agent
+Created By: Documentation Agent
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Optimize `generateProject()` to run Code and Context generation in parallel,
+saving ~10 seconds per generation (~13% improvement).
+
+## Context
+
+Current pipeline runs 4 stages sequentially:
+```
+Intent (~2s) → Architecture (~5s) → Code (~60s) → Context (~10s)
+Total: ~77 seconds
+```
+
+Optimization opportunity:
+```
+Intent → Architecture → [Code ‖ Context] (parallel)
+Expected: ~67 seconds
+```
+
+Code and Context stages are INDEPENDENT after Architecture completes.
+Context builder uses intent + architecture, NOT the generated code.
+
+## Files to Modify
+
+- packages/ai-agent/src/index.ts (generateProject function)
+
+## Files to Review
+
+- packages/ai-agent/src/context-builder.ts (verify no code dependency)
+- packages/ai-agent/src/code-generator.ts (understand output)
+
+## Execution Steps
+
+### Step 1: Verify Independence
+Check that context-builder doesn't use code output:
+
+```bash
+grep -n "code\." packages/ai-agent/src/context-builder.ts
+grep -n "files" packages/ai-agent/src/context-builder.ts
+```
+
+Confirm: Context generation uses `intent`, `architecture`, `projectName`,
+`description` but NOT the actual generated code files.
+
+### Step 2: Modify generateProject()
+
+In `packages/ai-agent/src/index.ts`, find the sequential code (~line 130-160):
+
+```typescript
+// Current: Sequential
+const code = await generateCode(architecture, input, {...});
+const context = await buildCursorContext({...}, {...});
+```
+
+Replace with parallel execution:
+
+```typescript
+// Optimized: Parallel
+const [code, context] = await Promise.all([
+  (async () => {
+    emit('code', 'start', { message: 'Generating code files...' });
+    const result = await generateCode(architecture, input, {
+      apiKey,
+      model: models.code,
+      stream,
+      onStream: stream ? (chunk, accumulated) => emit('code', 'chunk', { chunk, accumulated }) : undefined,
+    });
+    emit('code', 'complete', { message: 'Code generation complete' });
+    return result;
+  })(),
+  
+  (async () => {
+    emit('context', 'start', { message: 'Building Cursor context...' });
+    const result = await buildCursorContext(
+      {
+        intent,
+        architecture,
+        code: { files: [], integrationCode: [] }, // Empty - not used
+        projectName: input.projectName,
+        description: input.description,
+      },
+      {
+        apiKey,
+        model: models.context,
+        stream,
+        onStream: stream ? (chunk, accumulated) => emit('context', 'chunk', { chunk, accumulated }) : undefined,
+      }
+    );
+    emit('context', 'complete', { message: 'Cursor context complete' });
+    return result;
+  })()
+]);
+```
+
+### Step 3: Build and Test
+
+```bash
+cd packages/ai-agent
+npm run build
+node test-mock.mjs
+cd ../..
+npm test
+```
+
+### Step 4: Measure (if API key available)
+
+```bash
+# Time the execution
+time node packages/ai-agent/test-runner.mjs
+```
+
+Expected: ~10 second improvement.
+
+### Step 5: Update Memory
+
+Add session entry to `prompts/agents/memory/PLATFORM_MEMORY.md`
+
+### Step 6: Commit
+
+```bash
+git add -A
+git commit -m "perf(ai-agent): run code and context generation in parallel"
+```
+
+## Success Criteria
+
+- [ ] Verify context-builder doesn't need code output
+- [ ] Code and context run via Promise.all()
+- [ ] All 668 tests pass
+- [ ] Mock test passes
+- [ ] Streaming still works (interleaved events OK)
+- [ ] Token tracking accurate for both stages
+
+## Estimated Effort
+
+15-25 minutes
+
+## Dependencies
+
+None - can be done with mock tests only.
+
+## Notes
+
+- Streaming events from code and context will interleave - this is expected
+- Token tracker will record both stages correctly (same global tracker)
+- If context-builder DOES use code output, abort this task
+
+================================================================================
+END OF TASK
+================================================================================
+

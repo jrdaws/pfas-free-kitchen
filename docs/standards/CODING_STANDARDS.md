@@ -378,6 +378,122 @@ DETECT: saas→subscription|users|auth      # Pattern notation
 
 ---
 
+## API Endpoints (Website)
+
+### Location
+- `website/app/api/**/*.ts`
+
+### Required: Standard API Response Format
+
+All API endpoints **MUST** use the standardized utilities from `lib/api-errors.ts`.
+
+**Full specification:** `docs/standards/API_CONTRACTS.md`
+
+### Quick Reference
+
+```typescript
+import { apiError, apiSuccess, ErrorCodes } from "@/lib/api-errors";
+
+// ✅ GOOD: Use apiSuccess for success responses
+return apiSuccess(
+  { token, expiresAt },
+  201,
+  corsHeaders
+);
+
+// ✅ GOOD: Use apiError with recovery guidance
+return apiError(
+  ErrorCodes.TOKEN_NOT_FOUND,
+  `Project with token "${token}" not found`,
+  404,
+  undefined,
+  "Verify the token is correct. If the project expired, create a new one at https://dawson.dev/configure",
+  corsHeaders
+);
+
+// ❌ BAD: Raw NextResponse.json without standard format
+return NextResponse.json({ error: "Not found" }, { status: 404 });
+```
+
+### Error Codes
+Use the `ErrorCodes` enum for all errors:
+- `MISSING_FIELD` - Required field missing (400)
+- `INVALID_INPUT` - Field value invalid (400)
+- `TOKEN_NOT_FOUND` - Token doesn't exist (404)
+- `TOKEN_EXPIRED` - Token past expiration (410)
+- `RATE_LIMITED` - Rate limit exceeded (429)
+- `DATABASE_ERROR` - Database operation failed (500)
+- `INTERNAL_ERROR` - Unexpected error (500)
+
+### CORS Headers (Required for CLI-Accessible APIs)
+
+```typescript
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+// Always implement OPTIONS handler
+export async function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: corsHeaders });
+}
+```
+
+### Rate Limiting
+
+Use the standard rate limiter for all public endpoints:
+
+```typescript
+import { checkRateLimit } from "@/lib/rate-limiter";
+
+const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0] ||
+                 request.headers.get("x-real-ip") ||
+                 "anonymous";
+
+const rateLimitResult = await checkRateLimit(`endpoint:${clientIp}`);
+
+if (!rateLimitResult.allowed) {
+  return apiError(
+    ErrorCodes.RATE_LIMITED,
+    "Too many requests. Please try again later.",
+    429,
+    { resetAt: rateLimitResult.resetAt },
+    "Wait a few minutes before trying again.",
+    corsHeaders
+  );
+}
+```
+
+### Recovery Guidance (Required)
+
+Every error **MUST** include actionable recovery guidance:
+
+```typescript
+// ✅ GOOD: Specific and actionable
+"Provide a template name in the request body. Available templates: saas, seo-directory"
+"Create a new project configuration at https://dawson.dev/configure"
+
+// ❌ BAD: Vague and unhelpful
+"Invalid request"
+"Error occurred"
+"Try again"
+```
+
+### API Endpoint Checklist
+
+Before merging API code:
+- [ ] Uses `apiSuccess()` for all success responses
+- [ ] Uses `apiError()` with `ErrorCodes` for all errors
+- [ ] Every error has recovery guidance
+- [ ] CORS headers on all responses (success AND error)
+- [ ] OPTIONS handler implemented
+- [ ] Rate limiting configured
+- [ ] No sensitive info exposed in production (`NODE_ENV` check)
+- [ ] Uses 201 for resource creation, 200 for retrieval
+
+---
+
 ## Verification Checklist
 
 Before submitting code, verify:
@@ -391,6 +507,7 @@ Before submitting code, verify:
 - [ ] Public functions have JSDoc comments
 - [ ] File is <300 lines
 - [ ] **AI prompts follow PROMPT_STANDARDS.md**
+- [ ] **API endpoints follow API_CONTRACTS.md**
 - [ ] Tests pass: `npm test`
 
 ---

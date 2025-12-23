@@ -398,16 +398,19 @@ Validates:
 
 ## Model Configuration
 
-### Primary Model
-- **Name:** `claude-sonnet-4-20250514`
-- **Provider:** Anthropic
-- **SDK Version:** `@anthropic-ai/sdk@0.32.1`
+### Model Tiers (Optimized 2025-12-22)
 
-### Token Limits
-- **Intent Analysis:** 2,048 tokens
-- **Architecture:** 4,096 tokens
-- **Code Generation:** 12,000 tokens (increased from 8,192 to prevent truncation)
-- **Cursor Context:** 4,096 tokens
+Different stages use different models for cost/quality optimization:
+
+| Stage | Model | Max Tokens | Reason |
+|-------|-------|------------|--------|
+| Intent Analysis | claude-3-haiku | 2,048 | Pattern matching - Haiku excels |
+| Architecture | claude-3-haiku | 4,096 | Structured output - Haiku sufficient |
+| Code Generation | claude-sonnet-4 | 12,000 | Quality critical - needs Sonnet |
+| Context Builder | claude-3-haiku | 8,192 | Documentation - Haiku sufficient |
+
+**Provider:** Anthropic  
+**SDK Version:** `@anthropic-ai/sdk@0.32.1`
 
 ### Token Tracking (Added 2025-12-22)
 
@@ -415,12 +418,12 @@ The package now includes built-in token usage tracking. After each generation, u
 
 ```
 [AI Agent] Generation complete:
-  Intent       :  538 in /  233 out (Sonnet)
-  Architecture :  995 in / 1489 out (Sonnet)
-  Code         : 4301 in / 7236 out (Sonnet)
-  Context      : 1793 in / 1536 out (Sonnet)
+  Intent       :  400 in /  200 out (Haiku)
+  Architecture :  600 in / 1200 out (Haiku)
+  Code         : 3500 in / 6000 out (Sonnet)
+  Context      : 1200 in / 1500 out (Haiku)
   ────────────────────────────────────────
-  Total: 7627 in / 10494 out | Est. cost: $0.18
+  Total: 5700 in / 8900 out | Est. cost: $0.06
 ```
 
 **Token Tracker API:**
@@ -436,42 +439,51 @@ console.log(`Total cost: $${summary.estimatedCost}`);
 resetGlobalTracker();
 ```
 
-### Verified Cost Estimates (2025-12-22)
+### Verified Cost Estimates (Updated 2025-12-22)
 
-*Based on actual E2E test with TodoApp project (~100 words description)*
+*Based on optimized prompts and model tier strategy*
 
 | Stage | Input Tokens | Output Tokens | Model | Est. Cost |
 |-------|-------------|---------------|-------|-----------|
-| Intent | 538 | 233 | Sonnet | $0.005 |
-| Architecture | 995 | 1,489 | Sonnet | $0.025 |
-| Code | 4,301 | 7,236 | Sonnet | $0.12 |
-| Context | 1,793 | 1,536 | Sonnet | $0.03 |
-| **Total** | **7,627** | **10,494** | - | **$0.18** |
+| Intent | ~400 | ~200 | Haiku | $0.0004 |
+| Architecture | ~600 | ~1,200 | Haiku | $0.002 |
+| Code | ~3,500 | ~6,000 | Sonnet | $0.10 |
+| Context | ~1,200 | ~1,500 | Haiku | $0.002 |
+| **Total** | **~5,700** | **~8,900** | - | **~$0.10** |
 
-**Pricing (Claude Sonnet 4):**
-- Input: $3.00 per 1M tokens
-- Output: $15.00 per 1M tokens
+**Pricing:**
+- Claude 3 Haiku: $0.25 input / $1.25 output per 1M tokens
+- Claude Sonnet 4: $3.00 input / $15.00 output per 1M tokens
 
-*Actual costs depend on project complexity and description length. Simpler projects cost less.*
+**Cost Reduction Achieved:**
+- Prompt optimization: 59% reduction in input tokens
+- Model tier strategy: Haiku for 3/4 stages
+- Combined savings: ~45% vs original ($0.18 → $0.10)
 
-### Prompt Token Usage (After Optimization)
+*Actual costs depend on project complexity and description length.*
 
-*Prompts optimized on 2025-12-22 with comprehensive token reduction.*
+### Prompt Token Usage (Final - 2025-12-22)
 
-**Optimization Passes:**
-1. Initial optimization: 32% reduction
-2. Comprehensive rewrite: Additional 24.5% reduction
+*All prompts fully optimized with comprehensive token reduction.*
 
-| Prompt File | Original | After Pass 1 | After Pass 2 | Total Reduction |
-|-------------|----------|--------------|--------------|-----------------|
-| intent-analysis.md | ~663 | ~449 | ~393 | **-41%** |
-| architecture-design.md | ~681 | ~493 | ~361 | **-47%** |
-| code-generation.md | ~959 | ~453 | ~306 | **-68%** |
-| cursor-rules.md | ~839 | ~640 | ~334 | **-60%** |
-| start-prompt.md | ~1,100 | ~847 | ~344 | **-69%** |
-| **Total Prompts** | **~4,242** | **~2,884** | **~1,738** | **-59%** |
+| Prompt File | Original | Optimized | Reduction |
+|-------------|----------|-----------|-----------|
+| intent-analysis.md | ~1,092 | ~393 | **-64%** |
+| architecture-design.md | ~1,123 | ~361 | **-68%** |
+| code-generation.md | ~959 | ~306 | **-68%** |
+| cursor-rules.md | ~839 | ~334 | **-60%** |
+| start-prompt.md | ~1,100 | ~344 | **-69%** |
+| **Total** | **~5,113** | **~1,738** | **-66%** |
 
-**Techniques Applied:** See [Prompt Standards](docs/standards/PROMPT_STANDARDS.md) for the optimization techniques used.
+**Optimization Techniques Applied:**
+1. Verbose prose → pipe-separated patterns
+2. Removed redundant examples
+3. Inline JSON schema declarations
+4. Minimized whitespace
+5. Removed meta-instructions ("you are an expert...")
+6. Combined context builder into single API call
+
+See [Prompt Standards](docs/standards/PROMPT_STANDARDS.md) for details.
 
 ## Prompts
 

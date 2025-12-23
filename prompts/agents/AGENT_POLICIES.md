@@ -290,6 +290,24 @@ When work requires another agent:
 5. **Provide Success Criteria**
    Clear, testable criteria for the next agent
 
+6. **Suggest Tab Name**
+   Include a suggested tab name using short codes:
+   ```
+   **Suggested tab**: `[CODE] [2-3 word task]`
+   ```
+   Examples: `WEB auth fix` | `CLI pull cmd` | `TST doctor test`
+
+### Role Short Codes for Handoffs
+| Role | Code |
+|------|------|
+| CLI | `CLI` |
+| Website | `WEB` |
+| Documentation | `DOC` |
+| Testing | `TST` |
+| Platform | `PLT` |
+| Template | `TPL` |
+| Integration | `INT` |
+
 ---
 
 ## Error Handling Policy

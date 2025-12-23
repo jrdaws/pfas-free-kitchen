@@ -5,12 +5,15 @@
  * - Provide visibility into actual API costs
  * - Enable cost optimization decisions
  * - Log usage summaries for monitoring
+ * - Track JSON repair activity for Haiku reliability
  *
  * Pricing (as of 2024):
  * - Claude Sonnet 4: $3/1M input, $15/1M output
  * - Claude Haiku: $0.25/1M input, $1.25/1M output
  */
+import { type RepairMetrics } from "./json-repair.js";
 export type PipelineStage = "intent" | "architecture" | "code" | "context";
+export type { RepairMetrics };
 export interface TokenUsage {
     stage: PipelineStage;
     inputTokens: number;
@@ -29,6 +32,7 @@ export interface TokenSummary {
         output: number;
         cost: number;
     }>;
+    repairs: RepairMetrics;
 }
 /**
  * Token usage tracker for a single generation session
@@ -62,6 +66,10 @@ export declare class TokenTracker {
      * Reset the tracker for a new session
      */
     reset(): void;
+    /**
+     * Get current repair metrics
+     */
+    getRepairMetrics(): RepairMetrics;
 }
 /**
  * Get the global token tracker instance

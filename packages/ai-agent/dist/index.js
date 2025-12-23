@@ -82,30 +82,42 @@ export async function generateProject(input, apiKeyOrOptions) {
         onStream: stream ? (chunk, accumulated) => emit('architecture', 'chunk', { chunk, accumulated }) : undefined,
     });
     emit('architecture', 'complete', { message: 'Architecture design complete' });
-    // Step 3: Generate code
-    emit('code', 'start', { message: 'Generating code files...' });
-    const code = await generateCode(architecture, input, {
-        apiKey,
-        model: models.code,
-        stream,
-        onStream: stream ? (chunk, accumulated) => emit('code', 'chunk', { chunk, accumulated }) : undefined,
-    });
-    emit('code', 'complete', { message: 'Code generation complete' });
-    // Step 4: Build Cursor context
-    emit('context', 'start', { message: 'Building Cursor context...' });
-    const context = await buildCursorContext({
-        intent,
-        architecture,
-        code,
-        projectName: input.projectName,
-        description: input.description,
-    }, {
-        apiKey,
-        model: models.context,
-        stream,
-        onStream: stream ? (chunk, accumulated) => emit('context', 'chunk', { chunk, accumulated }) : undefined,
-    });
-    emit('context', 'complete', { message: 'Cursor context complete' });
+    // Steps 3 & 4: Generate code and context in PARALLEL
+    // Context builder doesn't use code output - it only uses intent/architecture
+    // Running in parallel saves ~10 seconds (context finishes while code generates)
+    const [code, context] = await Promise.all([
+        // Code generation
+        (async () => {
+            emit('code', 'start', { message: 'Generating code files...' });
+            const result = await generateCode(architecture, input, {
+                apiKey,
+                model: models.code,
+                stream,
+                onStream: stream ? (chunk, accumulated) => emit('code', 'chunk', { chunk, accumulated }) : undefined,
+            });
+            emit('code', 'complete', { message: 'Code generation complete' });
+            return result;
+        })(),
+        // Context building (runs in parallel with code generation)
+        (async () => {
+            emit('context', 'start', { message: 'Building Cursor context...' });
+            const result = await buildCursorContext({
+                intent,
+                architecture,
+                // Empty code - context builder doesn't use it (verified in context-builder.ts)
+                code: { files: [], integrationCode: [] },
+                projectName: input.projectName,
+                description: input.description,
+            }, {
+                apiKey,
+                model: models.context,
+                stream,
+                onStream: stream ? (chunk, accumulated) => emit('context', 'chunk', { chunk, accumulated }) : undefined,
+            });
+            emit('context', 'complete', { message: 'Cursor context complete' });
+            return result;
+        })(),
+    ]);
     // Log token usage summary
     if (logTokenUsage) {
         const tracker = getGlobalTracker();

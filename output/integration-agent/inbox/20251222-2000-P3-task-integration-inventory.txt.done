@@ -1,0 +1,130 @@
+================================================================================
+TASK ASSIGNMENT: Integration Inventory & Documentation
+================================================================================
+Priority: P3 (LOW)
+Target Agent: Integration Agent
+Created By: Documentation Agent
+Date: 2025-12-22 20:00
+
+## Task Description
+
+Create a comprehensive inventory of all integrations across all templates,
+documenting their status, dependencies, and configuration requirements.
+
+## Context
+
+Integrations are third-party service connections (auth, payments, analytics, etc.)
+that can be added to templates. Currently spread across multiple templates
+with varying implementations.
+
+## Integration Types
+
+- **auth/** - Authentication providers (Supabase, Clerk)
+- **payments/** - Payment providers (Stripe, Paddle, LemonSqueezy)
+- **email/** - Email providers (Resend, SendGrid)
+- **analytics/** - Analytics (PostHog, Plausible)
+- **storage/** - File storage (Supabase, S3)
+- **ai/** - AI services (OpenAI, Anthropic)
+- **deploy/** - Deployment (Vercel, Netlify, Railway)
+
+## Files to Review
+
+```
+templates/*/integrations/
+src/platform/providers/
+src/platform/providers/impl/
+```
+
+## Execution Steps
+
+### Step 1: Discover All Integrations
+
+```bash
+# Find all integration directories
+find templates -type d -name "integrations" -exec ls -la {} \;
+
+# Find all provider implementations
+ls -la src/platform/providers/impl/
+```
+
+### Step 2: Create Inventory
+
+For each integration, document:
+- Provider name
+- Template(s) that include it
+- Required environment variables
+- Dependencies added
+- Files created
+- Configuration steps
+
+### Step 3: Write Inventory Document
+
+Create `output/integration-agent/workspace/INTEGRATION_INVENTORY.md`:
+
+```markdown
+# Integration Inventory
+
+## Auth Providers
+
+### Supabase Auth
+- **Templates:** saas, flagship-saas
+- **Env Vars:** SUPABASE_URL, SUPABASE_ANON_KEY
+- **Dependencies:** @supabase/supabase-js
+- **Files:** lib/supabase.ts, middleware.ts
+- **Status:** ✅ Production Ready
+
+### Clerk Auth
+- **Templates:** saas (optional)
+- **Env Vars:** CLERK_SECRET_KEY, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+- ...
+
+## Payment Providers
+
+### Stripe
+- **Templates:** saas, flagship-saas
+- **Env Vars:** STRIPE_SECRET_KEY, STRIPE_WEBHOOK_SECRET
+- ...
+
+[Continue for all providers]
+```
+
+### Step 4: Identify Gaps
+
+Check for:
+- Missing documentation
+- Inconsistent implementations across templates
+- Missing environment variable validation
+- Incomplete error handling
+
+### Step 5: Update Memory
+
+Add session entry to `prompts/agents/memory/INTEGRATION_MEMORY.md`
+
+## Success Criteria
+
+- [ ] Complete inventory of all integrations
+- [ ] Each integration documented with env vars, deps, files
+- [ ] Status marked (production-ready, beta, needs-work)
+- [ ] Gaps and inconsistencies identified
+- [ ] Inventory saved to workspace
+
+## Estimated Effort
+
+45-60 minutes
+
+## Dependencies
+
+None
+
+## Notes
+
+This inventory will help with:
+- Onboarding new contributors
+- Planning integration improvements
+- Ensuring consistency across templates
+- Documentation updates
+
+================================================================================
+END OF TASK
+================================================================================
+
