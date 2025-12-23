@@ -1,0 +1,35 @@
+# Task: User Feedback Collection Endpoint
+
+Priority: P2
+Assigned To: Website Agent
+Depends On: T1 (Production Deployment)
+Estimated Effort: Medium
+
+## Context
+With Phase 1 complete and production deployment underway, we need to collect
+structured user feedback to guide Phase 2 development. This is essential for
+validating generation quality and UX decisions.
+
+## Objectives
+1. Create POST /api/feedback endpoint
+2. Store feedback in Supabase (simple schema)
+3. Include generation context (project config, tier used)
+4. Basic rate limiting (prevent spam)
+
+## Success Criteria
+- [ ] Feedback endpoint exists and works
+- [ ] Feedback stored in Supabase with timestamps
+- [ ] Rate limited (5 submissions per IP per hour)
+- [ ] Admin endpoint to view aggregated feedback
+
+## Files to Modify
+- website/app/api/feedback/route.ts (create)
+- website/lib/supabase/schema.sql (add feedback table)
+- website/app/components/configurator/FeedbackForm.tsx (create)
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Provide SQL migration for Supabase
+4. Update memory file
+

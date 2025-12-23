@@ -1,0 +1,23 @@
+# Auditor Cycle Trigger
+
+You are the AUDITOR Agent. Execute a full audit cycle now.
+
+## Instructions
+
+1. Read your SOP: prompts/agents/roles/controllers/AUDITOR.md
+2. Follow the step-by-step process
+3. Produce audit report using template: output/shared/templates/AUDIT_TEMPLATE.md
+4. Save report to: output/shared/reports/audit-[YYYYMMDD-HHMM].txt
+5. Copy report to Strategist inbox
+6. Complete handoff
+
+## Quick Commands
+
+```bash
+git log --oneline --since="6 hours ago"
+npm test
+ls output/*/done/
+```
+
+Begin your audit now.
+

@@ -1,0 +1,23 @@
+# Strategist Cycle Trigger
+
+You are the STRATEGIST Agent. Execute a strategy cycle now.
+
+## Instructions
+
+1. Read your SOP: prompts/agents/roles/controllers/STRATEGIST.md
+2. Read the latest audit report from: output/shared/reports/
+3. Follow the step-by-step process
+4. Produce strategy report using template: output/shared/templates/STRATEGY_TEMPLATE.md
+5. Save draft prompts to: output/controller-agents/strategist/outbox/drafts/
+6. Copy strategy report to Curator inbox
+7. Complete handoff
+
+## Quick Commands
+
+```bash
+ls -la output/shared/reports/audit-*.txt | tail -1
+cat AGENT_CONTEXT.md
+```
+
+Begin your strategy cycle now.
+

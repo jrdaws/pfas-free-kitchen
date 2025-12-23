@@ -1,0 +1,343 @@
+# Strategy Report
+
+Cycle: 1 (Phase 2 Kickoff)
+Date: 2025-12-23 06:00
+Strategist: STRATEGIST Agent
+Responding to: PROJECT_STATUS.md (Phase 1 Complete), Recent Completion Reports
+
+---
+
+## Strategic Priorities
+
+Based on project status and recent completion reports, this cycle focuses on:
+
+1. **Production Deployment**: Deploy the fully-prepared website to Vercel. All prep work is complete (Website, Platform, Testing agents). This is a human-assisted task requiring credentials.
+
+2. **Code Truncation Fix**: Address the known issue of code generation truncating at 12,000 tokens for complex projects. Implement chunked generation strategy.
+
+3. **User Testing Infrastructure**: Create the feedback collection mechanisms to enable real user testing once deployed.
+
+---
+
+## Task Matrix
+
+| ID | Task | Agent | Priority | Effort | Depends On |
+|----|------|-------|----------|--------|------------|
+| T1 | Deploy to Production | Human + Website | P1 | Low | None |
+| T2 | Implement Chunked Code Generation | Platform | P1 | High | None |
+| T3 | User Feedback Collection API | Website | P2 | Med | T1 |
+| T4 | API Documentation Update | Documentation | P2 | Med | None |
+| T5 | Integration Test Expansion | Testing | P2 | Med | None |
+| T6 | Add Integrations to Flagship-SaaS | Template | P3 | Med | None |
+
+---
+
+## Resource Allocation
+
+### CLI Agent
+- No tasks this cycle (recent deploy audit complete)
+
+### Website Agent
+- T1: Coordinate with human for Vercel deployment
+- T3: User feedback collection API endpoint
+
+### Platform Agent
+- T2: Implement chunked code generation to fix truncation
+
+### Testing Agent
+- T5: Expand integration test coverage
+
+### Template Agent
+- T6: Add integrations to flagship-saas template
+
+### Documentation Agent
+- T4: Update API documentation for new endpoints
+
+### Integration Agent
+- No tasks this cycle (recent integration expansion complete)
+
+---
+
+## Dependencies Map
+
+```
+T1 (Deploy) ─────────────────────────▶ T3 (Feedback API)
+     │
+     └──────────────────────────────────────▶ User Testing Phase
+
+T2 (Chunked Gen) ─────────────────────────▶ Complex Projects Support
+
+T4 (API Docs) ────────────────────────────▶ T3 (requires docs)
+```
+
+---
+
+## Risk Assessment
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Vercel deployment environment issues | Medium | High | Follow deployment checklist, smoke tests ready |
+| Chunked generation quality degradation | Medium | Medium | Test with complex projects, maintain context between chunks |
+| Rate limiting too restrictive | Low | Low | Start conservative, adjust based on monitoring |
+| User feedback overwhelming | Low | Low | Limit to structured forms initially |
+
+---
+
+## Draft Task Prompts
+
+### T1: Production Deployment (Human-Assisted)
+
+```
+# Task: Deploy to Production
+
+Priority: P1
+Assigned To: Human + Website Agent coordination
+Depends On: None
+Estimated Effort: Low
+
+## Context
+All preparation is complete. Platform Agent created cost controls, rate limiting, 
+and monitoring. Website Agent created Vercel config and documentation. Testing 
+Agent created smoke tests. The system is ready to go live.
+
+## Objectives
+1. Deploy website to Vercel production environment
+2. Verify all environment variables are set
+3. Run smoke test suite against production URL
+4. Confirm monitoring is active
+
+## Success Criteria
+- [ ] Website accessible at production URL
+- [ ] /api/health returns healthy status
+- [ ] Smoke tests pass against production
+- [ ] Rate limiting active
+- [ ] Cost tracking active
+
+## Files to Reference
+- docs/deploy/VERCEL_DEPLOYMENT.md
+- docs/deployment/DEPLOYMENT_CHECKLIST.md
+- docs/deployment/PRODUCTION_DEPLOYMENT.md
+
+## Handoff
+1. Report production URL
+2. Share smoke test results
+3. Enable user testing phase
+```
+
+### T2: Chunked Code Generation
+
+```
+# Task: Implement Chunked Code Generation
+
+Priority: P1
+Assigned To: Platform Agent
+Depends On: None
+Estimated Effort: High
+
+## Context
+Current limitation: Code generation truncates at ~12,000 tokens for complex projects.
+This affects multi-file outputs for larger SaaS applications.
+Current workaround is to use 'quality' tier, but this increases costs.
+
+## Objectives
+1. Implement chunked generation strategy for large outputs
+2. Maintain context coherence between chunks
+3. Support file-by-file generation with cross-file awareness
+4. Stay within existing token budget (optimize, don't increase)
+
+## Success Criteria
+- [ ] Complex projects (10+ files) generate completely
+- [ ] No loss of context between file generations
+- [ ] Generation cost increase < 20%
+- [ ] Test coverage for chunked generation
+
+## Files to Modify
+- website/lib/ai/generate-code.ts (or similar)
+- website/app/api/generate/project/route.ts
+- website/lib/project-generator.ts
+
+## Handoff
+1. Move task to done/
+2. Write completion report with before/after metrics
+3. Update AI_GENERATION_ENGINE.md with chunked strategy
+4. Notify Testing Agent for validation
+```
+
+### T3: User Feedback Collection API
+
+```
+# Task: User Feedback Collection Endpoint
+
+Priority: P2
+Assigned To: Website Agent
+Depends On: T1 (Production Deployment)
+Estimated Effort: Medium
+
+## Context
+With Phase 1 complete and production deployment underway, we need to collect
+structured user feedback to guide Phase 2 development. This is essential for
+validating generation quality and UX decisions.
+
+## Objectives
+1. Create POST /api/feedback endpoint
+2. Store feedback in Supabase (simple schema)
+3. Include generation context (project config, tier used)
+4. Basic rate limiting (prevent spam)
+
+## Success Criteria
+- [ ] Feedback endpoint exists and works
+- [ ] Feedback stored in Supabase with timestamps
+- [ ] Rate limited (5 submissions per IP per hour)
+- [ ] Admin endpoint to view aggregated feedback
+
+## Files to Modify
+- website/app/api/feedback/route.ts (create)
+- website/lib/supabase/schema.sql (add feedback table)
+- website/app/components/configurator/FeedbackForm.tsx (create)
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Provide SQL migration for Supabase
+4. Update memory file
+```
+
+### T4: API Documentation Update
+
+```
+# Task: Update API Documentation
+
+Priority: P2
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Recent Platform Agent work added several new API endpoints:
+- /api/health (health check)
+- /api/admin/usage (admin monitoring)
+These need documentation following API_CONTRACTS.md standards.
+
+## Objectives
+1. Document /api/health endpoint
+2. Document /api/admin/usage endpoint  
+3. Update docs/api/ with new endpoint documentation
+4. Ensure examples follow API_CONTRACTS.md format
+
+## Success Criteria
+- [ ] Health endpoint documented with response schema
+- [ ] Admin usage endpoint documented with auth requirements
+- [ ] Examples are runnable (curl commands)
+- [ ] Linked from main API docs index
+
+## Files to Modify
+- docs/api/health.md (create)
+- docs/api/admin-usage.md (create)
+- docs/api/README.md (update index)
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Update memory file
+```
+
+### T5: Integration Test Expansion
+
+```
+# Task: Expand Integration Test Coverage
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Template Agent's quality audit showed only saas template has bundled integrations.
+We need test coverage for all integration combinations to catch regressions.
+
+## Objectives
+1. Add tests for auth + db + payments combination
+2. Add tests for email integrations
+3. Add tests for analytics integrations
+4. Verify integration merging doesn't break builds
+
+## Success Criteria
+- [ ] 90%+ integration combination coverage for saas template
+- [ ] Tests verify build succeeds after integration apply
+- [ ] Test time stays under 30s for full integration suite
+- [ ] CI workflow includes integration tests
+
+## Files to Modify
+- tests/integration/integration-combinations.test.mjs (create)
+- tests/integration/integration-build.test.mjs (create)
+
+## Handoff
+1. Move task to done/
+2. Write completion report with coverage metrics
+3. Update memory file
+```
+
+### T6: Add Integrations to Flagship-SaaS
+
+```
+# Task: Add Integrations to Flagship-SaaS Template
+
+Priority: P3
+Assigned To: Template Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Template quality audit noted flagship-saas has no bundled integrations,
+making it hard to differentiate from basic saas template. Per audit 
+recommendation, add integrations to make it a more complete starter.
+
+## Objectives
+1. Copy relevant integrations from saas template
+2. Add premium integrations: analytics, email, file-storage
+3. Update template.json with supported integrations
+4. Verify build succeeds with all integrations
+
+## Success Criteria
+- [ ] flagship-saas has auth, db, payments integrations
+- [ ] Added analytics and email integrations
+- [ ] template.json lists all supported integrations
+- [ ] npm run build passes
+- [ ] Documentation updated
+
+## Files to Modify
+- templates/flagship-saas/integrations/ (create structure)
+- templates/flagship-saas/template.json
+- templates/flagship-saas/README.md
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Update memory file
+```
+
+---
+
+## Deferred Items
+
+Tasks explicitly NOT included this cycle:
+
+- **Visual Code Editing**: Complex feature, defer until chunked generation stable
+- **Multiple Template Support**: Requires UX research, defer to Phase 2b
+- **SSO Integration**: Enterprise feature, defer to Phase 3
+- **Marketplace for templates**: Future roadmap item
+
+---
+
+## Handoff
+
+Report saved to: output/shared/reports/strategy-20251223-0600.txt
+Draft prompts saved to: output/controller-agents/strategist/outbox/drafts/
+Next agent: CURATOR
+Activation: Read and execute output/controller-agents/curator/inbox/START_CYCLE.txt
+
+---
+
+*Strategy Report - Cycle 1 (Phase 2 Kickoff)*
+*STRATEGIST Agent - Governance v2.2*
+

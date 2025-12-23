@@ -1,0 +1,35 @@
+# Task: Add Integrations to Flagship-SaaS Template
+
+Priority: P3
+Assigned To: Template Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Template quality audit noted flagship-saas has no bundled integrations,
+making it hard to differentiate from basic saas template. Per audit 
+recommendation, add integrations to make it a more complete starter.
+
+## Objectives
+1. Copy relevant integrations from saas template
+2. Add premium integrations: analytics, email, file-storage
+3. Update template.json with supported integrations
+4. Verify build succeeds with all integrations
+
+## Success Criteria
+- [ ] flagship-saas has auth, db, payments integrations
+- [ ] Added analytics and email integrations
+- [ ] template.json lists all supported integrations
+- [ ] npm run build passes
+- [ ] Documentation updated
+
+## Files to Modify
+- templates/flagship-saas/integrations/ (create structure)
+- templates/flagship-saas/template.json
+- templates/flagship-saas/README.md
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Update memory file
+

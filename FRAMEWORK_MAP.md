@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 2ee953a 2025-12-22 docs(development): add comprehensive agent inbox watcher guide
 - 0414454 2025-12-22 feat(scripts): add watcher setup script and complete template audit
 - 801691a 2025-12-22 feat(ci): add agent task monitoring system (A+C+D hybrid)
 - 3f15b77 2025-12-22 feat(ci): add agent task monitoring workflow
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 6e2e120 2025-12-22 docs(guides): create Quick Start Guide for new users
 - 5b9087b 2025-12-22 docs(agents): verify P2 parallel execution task already complete
 - 069de06 2025-12-22 perf(ai-agent): run code and context generation in parallel
-- aaeb3a5 2025-12-22 docs(agents): update Platform Memory with complete optimization summary
 
 ## Agent Governance Structure
 

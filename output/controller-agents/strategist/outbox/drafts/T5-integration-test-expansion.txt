@@ -1,0 +1,32 @@
+# Task: Expand Integration Test Coverage
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Template Agent's quality audit showed only saas template has bundled integrations.
+We need test coverage for all integration combinations to catch regressions.
+
+## Objectives
+1. Add tests for auth + db + payments combination
+2. Add tests for email integrations
+3. Add tests for analytics integrations
+4. Verify integration merging doesn't break builds
+
+## Success Criteria
+- [ ] 90%+ integration combination coverage for saas template
+- [ ] Tests verify build succeeds after integration apply
+- [ ] Test time stays under 30s for full integration suite
+- [ ] CI workflow includes integration tests
+
+## Files to Modify
+- tests/integration/integration-combinations.test.mjs (create)
+- tests/integration/integration-build.test.mjs (create)
+
+## Handoff
+1. Move task to done/
+2. Write completion report with coverage metrics
+3. Update memory file
+

@@ -1,0 +1,35 @@
+# Task: Update API Documentation
+
+Priority: P2
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Medium
+
+## Context
+Recent Platform Agent work added several new API endpoints:
+- /api/health (health check)
+- /api/admin/usage (admin monitoring)
+These need documentation following API_CONTRACTS.md standards.
+
+## Objectives
+1. Document /api/health endpoint
+2. Document /api/admin/usage endpoint  
+3. Update docs/api/ with new endpoint documentation
+4. Ensure examples follow API_CONTRACTS.md format
+
+## Success Criteria
+- [ ] Health endpoint documented with response schema
+- [ ] Admin usage endpoint documented with auth requirements
+- [ ] Examples are runnable (curl commands)
+- [ ] Linked from main API docs index
+
+## Files to Modify
+- docs/api/health.md (create)
+- docs/api/admin-usage.md (create)
+- docs/api/README.md (update index)
+
+## Handoff
+1. Move task to done/
+2. Write completion report
+3. Update memory file
+

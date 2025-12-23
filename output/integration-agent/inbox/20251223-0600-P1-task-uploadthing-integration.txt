@@ -1,0 +1,119 @@
+# Task: Implement UploadThing Storage Integration
+
+**Priority:** P1 (High)
+**Assigned To:** Integration Agent
+**Created:** 2025-12-23 06:00
+**Quality Score:** 8.6/10
+
+---
+
+## Context
+
+The Integration Agent's audit identified a critical gap: **zero storage integrations exist** in the framework. UploadThing is the recommended P1 priority as it's the modern, developer-friendly solution for file uploads in Next.js.
+
+## Vision Alignment
+
+- **Export-First**: Integration must work fully in exported projects
+- **Zero Lock-In**: No platform dependencies after export
+- **Transparency**: Clear file structure and configuration
+
+## Task Objectives
+
+### 1. Create UploadThing Integration Structure
+
+Location: `templates/saas/integrations/storage/uploadthing/`
+
+Files to create:
+- `integration.json` - Metadata with env vars and dependencies
+- `lib/uploadthing.ts` - Core client configuration
+- `app/api/uploadthing/core.ts` - File router definition
+- `app/api/uploadthing/route.ts` - API route handler
+- `components/storage/file-upload.tsx` - Reusable upload component
+
+### 2. integration.json Specification
+
+```json
+{
+  "name": "uploadthing",
+  "type": "storage",
+  "displayName": "UploadThing",
+  "description": "Modern file uploads for Next.js applications",
+  "version": "1.0.0",
+  "dependencies": {
+    "uploadthing": "^7.0.0",
+    "@uploadthing/react": "^7.0.0"
+  },
+  "envVars": [
+    {
+      "name": "UPLOADTHING_SECRET",
+      "description": "UploadThing API secret key",
+      "required": true
+    },
+    {
+      "name": "UPLOADTHING_APP_ID",
+      "description": "UploadThing application ID",
+      "required": true
+    }
+  ],
+  "files": [
+    "lib/uploadthing.ts",
+    "app/api/uploadthing/core.ts",
+    "app/api/uploadthing/route.ts",
+    "components/storage/file-upload.tsx"
+  ]
+}
+```
+
+### 3. Core Implementation Pattern
+
+**lib/uploadthing.ts:**
+- Initialize UploadThing client
+- Export upload helpers
+- Environment validation with graceful degradation
+
+**app/api/uploadthing/core.ts:**
+- Define FileRouter with upload endpoints
+- Support image, document, and general file uploads
+- Include auth middleware hooks (optional)
+
+**components/storage/file-upload.tsx:**
+- React component using @uploadthing/react
+- Progress indicator during upload
+- Success/error states
+- TypeScript types included
+
+### 4. Follow Example Template Pattern
+
+Use `templates/saas/integrations/_example/provider-template/` as reference for:
+- File structure
+- Env validation pattern
+- Component patterns
+
+## Success Criteria
+
+- [ ] integration.json is valid and complete
+- [ ] All files listed in integration.json exist
+- [ ] Export command includes UploadThing when selected
+- [ ] Component is TypeScript with proper types
+- [ ] ENV validation warns but doesn't crash
+- [ ] Documentation added to `docs/integrations/uploadthing.md`
+
+## Reference
+
+- UploadThing docs: https://uploadthing.com/docs
+- Example template: `templates/saas/integrations/_example/`
+- Integration guide: `docs/integrations/ADDING_INTEGRATIONS.md`
+
+## Handoff
+
+When complete:
+1. Move this file to `output/integration-agent/done/`
+2. Create completion report in `output/integration-agent/outbox/`
+3. Run `npm test` to verify no regressions
+4. Commit: `feat(integrations): add uploadthing storage integration`
+
+---
+
+*Read and execute this task. Follow governance in AGENT_CONTEXT.md.*
+
+

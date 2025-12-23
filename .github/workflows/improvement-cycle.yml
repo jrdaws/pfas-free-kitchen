@@ -1,0 +1,154 @@
+name: Continuous Improvement Cycle
+
+on:
+  schedule:
+    # Run every 6 hours: midnight, 6am, noon, 6pm UTC
+    - cron: '0 0,6,12,18 * * *'
+  workflow_dispatch:
+    inputs:
+      skip_notification:
+        description: 'Skip creating notification issue'
+        required: false
+        default: 'false'
+
+jobs:
+  trigger-cycle:
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Get cycle metadata
+        id: meta
+        run: |
+          echo "timestamp=$(date +'%Y-%m-%d %H:%M UTC')" >> $GITHUB_OUTPUT
+          echo "cycle_id=$(date +'%Y%m%d-%H%M')" >> $GITHUB_OUTPUT
+          
+          # Count pending tasks
+          PENDING=0
+          for inbox in output/*-agent/inbox; do
+            if [ -d "$inbox" ]; then
+              COUNT=$(find "$inbox" -name "*.txt" 2>/dev/null | wc -l | tr -d ' ')
+              PENDING=$((PENDING + COUNT))
+            fi
+          done
+          echo "pending_tasks=$PENDING" >> $GITHUB_OUTPUT
+          
+          # Count completed tasks (last 6 hours would need git, approximate with done/)
+          COMPLETED=0
+          for done_dir in output/*-agent/done; do
+            if [ -d "$done_dir" ]; then
+              COUNT=$(find "$done_dir" -name "*.txt" -mmin -360 2>/dev/null | wc -l | tr -d ' ')
+              COMPLETED=$((COMPLETED + COUNT))
+            fi
+          done
+          echo "completed_tasks=$COMPLETED" >> $GITHUB_OUTPUT
+
+      - name: Check recent commits
+        id: commits
+        run: |
+          COMMIT_COUNT=$(git log --oneline --since="6 hours ago" 2>/dev/null | wc -l | tr -d ' ')
+          echo "count=$COMMIT_COUNT" >> $GITHUB_OUTPUT
+          
+          RECENT=$(git log --oneline --since="6 hours ago" 2>/dev/null | head -5)
+          echo "recent<<EOF" >> $GITHUB_OUTPUT
+          echo "$RECENT" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Run tests
+        id: tests
+        run: |
+          npm ci --silent 2>/dev/null || true
+          TEST_OUTPUT=$(npm test 2>&1 || true)
+          
+          # Extract pass/fail counts
+          PASSING=$(echo "$TEST_OUTPUT" | grep -oE '[0-9]+ pass' | head -1 || echo "0 pass")
+          FAILING=$(echo "$TEST_OUTPUT" | grep -oE '[0-9]+ fail' | head -1 || echo "0 fail")
+          
+          echo "passing=$PASSING" >> $GITHUB_OUTPUT
+          echo "failing=$FAILING" >> $GITHUB_OUTPUT
+
+      - name: Create cycle notification issue
+        if: inputs.skip_notification != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const timestamp = '${{ steps.meta.outputs.timestamp }}';
+            const cycleId = '${{ steps.meta.outputs.cycle_id }}';
+            const pendingTasks = '${{ steps.meta.outputs.pending_tasks }}';
+            const completedTasks = '${{ steps.meta.outputs.completed_tasks }}';
+            const commitCount = '${{ steps.commits.outputs.count }}';
+            const recentCommits = `${{ steps.commits.outputs.recent }}`;
+            const testsPassing = '${{ steps.tests.outputs.passing }}';
+            const testsFailing = '${{ steps.tests.outputs.failing }}';
+            
+            const body = `## 🔄 Improvement Cycle Ready
+            
+            **Cycle ID**: ${cycleId}
+            **Triggered**: ${timestamp}
+            
+            ---
+            
+            ### 📊 Current State
+            
+            | Metric | Value |
+            |--------|-------|
+            | Pending Tasks | ${pendingTasks} |
+            | Completed (last 6h) | ${completedTasks} |
+            | Commits (last 6h) | ${commitCount} |
+            | Tests | ${testsPassing}, ${testsFailing} |
+            
+            ### 📝 Recent Commits
+            \`\`\`
+            ${recentCommits || 'No commits in last 6 hours'}
+            \`\`\`
+            
+            ---
+            
+            ### 🚀 Start the Cycle
+            
+            **Step 1: Launch Auditor**
+            \`\`\`
+            Read prompts/agents/roles/controllers/AUDITOR.md and execute a full audit cycle.
+            \`\`\`
+            
+            **Step 2: Launch Strategist** (after Auditor completes)
+            \`\`\`
+            Read prompts/agents/roles/controllers/STRATEGIST.md and execute a strategy cycle.
+            \`\`\`
+            
+            **Step 3: Launch Curator** (after Strategist completes)
+            \`\`\`
+            Read prompts/agents/roles/controllers/CURATOR.md and execute a curation cycle.
+            \`\`\`
+            
+            ---
+            
+            Close this issue when the cycle is complete.
+            `;
+            
+            await github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: `🔄 Improvement Cycle ${cycleId}`,
+              body: body,
+              labels: ['automation', 'improvement-cycle']
+            });
+
+      - name: Update job summary
+        run: |
+          echo "## 🔄 Improvement Cycle Triggered" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Cycle ID**: ${{ steps.meta.outputs.cycle_id }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Time**: ${{ steps.meta.outputs.timestamp }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Metric | Value |" >> $GITHUB_STEP_SUMMARY
+          echo "|--------|-------|" >> $GITHUB_STEP_SUMMARY
+          echo "| Pending Tasks | ${{ steps.meta.outputs.pending_tasks }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Completed (6h) | ${{ steps.meta.outputs.completed_tasks }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Commits (6h) | ${{ steps.commits.outputs.count }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Tests | ${{ steps.tests.outputs.passing }}, ${{ steps.tests.outputs.failing }} |" >> $GITHUB_STEP_SUMMARY
+
