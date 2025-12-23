@@ -406,8 +406,8 @@ Different stages use different models for cost/quality optimization:
 |-------|-------|------------|--------|
 | Intent Analysis | claude-3-haiku | 2,048 | Pattern matching - Haiku excels |
 | Architecture | claude-3-haiku | 4,096 | Structured output - Haiku sufficient |
-| Code Generation | claude-sonnet-4 | 12,000 | Quality critical - needs Sonnet |
-| Context Builder | claude-3-haiku | 8,192 | Documentation - Haiku sufficient |
+| Code Generation | claude-sonnet-4 | 4,096 | Quality critical - reduced for cost (was 32K) |
+| Context Builder | claude-3-haiku | 4,096 | Documentation - single consolidated API call |
 
 **Provider:** Anthropic  
 **SDK Version:** `@anthropic-ai/sdk@0.32.1`
@@ -441,24 +441,27 @@ resetGlobalTracker();
 
 ### Verified Cost Estimates (Updated 2025-12-22)
 
-*Based on optimized prompts and model tier strategy*
+*Based on fully optimized prompts, model tier strategy, and reduced token limits*
 
 | Stage | Input Tokens | Output Tokens | Model | Est. Cost |
 |-------|-------------|---------------|-------|-----------|
 | Intent | ~400 | ~200 | Haiku | $0.0004 |
 | Architecture | ~600 | ~1,200 | Haiku | $0.002 |
-| Code | ~3,500 | ~6,000 | Sonnet | $0.10 |
+| Code | ~3,500 | ~4,000 | Sonnet | $0.07 |
 | Context | ~1,200 | ~1,500 | Haiku | $0.002 |
-| **Total** | **~5,700** | **~8,900** | - | **~$0.10** |
+| **Total** | **~5,700** | **~6,900** | - | **~$0.07** |
 
 **Pricing:**
 - Claude 3 Haiku: $0.25 input / $1.25 output per 1M tokens
 - Claude Sonnet 4: $3.00 input / $15.00 output per 1M tokens
 
-**Cost Reduction Achieved:**
-- Prompt optimization: 59% reduction in input tokens
-- Model tier strategy: Haiku for 3/4 stages
-- Combined savings: ~45% vs original ($0.18 → $0.10)
+**Cost Optimization Achieved (2025-12-22):**
+1. **Prompt optimization** (completed prior): 66% reduction in input tokens (~5,113 → ~1,738)
+2. **Model tier strategy** (completed prior): Haiku for intent, architecture, context (3/4 stages)
+3. **Consolidated context builder** (completed prior): 2 API calls → 1 API call (~$0.02 savings)
+4. **Reduced code-gen maxTokens** (today): 32K → 4K (~30% output token reduction, ~$0.03 savings)
+
+**Total savings: ~61% vs original baseline ($0.18 → $0.07)**
 
 *Actual costs depend on project complexity and description length.*
 
