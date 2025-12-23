@@ -4,7 +4,9 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
-- 1762248 2025-12-22 perf(ai-agent): remove redundant meta-instructions from prompts
+- 5a1c4ce 2025-12-22 feat(ai-agent): add JSON repair utility and model tier selection
+- b930b1b 2025-12-22 perf(ai-agent): remove redundant meta-instructions from prompts
+- c2f00e8 2025-12-22 perf(ai-agent): remove redundant meta-instructions from prompts
 - 7942d7d 2025-12-22 docs(ai-agent): add verified cost estimates and token tracking documentation
 - 091d4ce 2025-12-22 perf(ai-agent): optimize whitespace in prompt files
 - 412a6fe 2025-12-22 docs(agents): update Platform Agent memory with session 5
@@ -27,8 +29,6 @@ Hash: dd6ce1c0d2
 - db47e37 2025-12-22 chore: update framework map hash
 - 6d8fb25 2025-12-22 chore: update framework map after test improvements
 - 9d5ea8f 2025-12-22 test(providers): improve billing.stripe test assertions
-- fb218db 2025-12-22 chore: cleanup and standardize post-session changes
-- 0a489c6 2025-12-22 feat(governance): add parallel agent coordination policies
 
 ## Agent Governance Structure
 

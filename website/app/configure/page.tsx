@@ -2,10 +2,40 @@
 
 import dynamic from "next/dynamic";
 import { useConfiguratorStore, Step } from "@/lib/configurator-state";
+<<<<<<< Updated upstream
+=======
+import { StepIndicator } from "@/app/components/configurator/StepIndicator";
+import { ModeToggle } from "@/app/components/configurator/ModeToggle";
+import { TemplateSelector } from "@/app/components/configurator/TemplateSelector";
+import { InspirationUpload } from "@/app/components/configurator/InspirationUpload";
+import { ProjectDetails } from "@/app/components/configurator/ProjectDetails";
+import { IntegrationSelector } from "@/app/components/configurator/IntegrationSelector";
+import { EnvironmentKeys } from "@/app/components/configurator/EnvironmentKeys";
+import { AIPreview } from "@/app/components/configurator/AIPreview";
+import { ContextFields } from "@/app/components/configurator/ContextFields";
+import { ExportView } from "@/app/components/configurator/ExportView";
+>>>>>>> Stashed changes
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TEMPLATES } from "@/lib/templates";
 import { useState } from "react";
+<<<<<<< Updated upstream
+=======
+
+// Project Generator placeholder - not yet implemented
+const ProjectGenerator = (props: any) => (
+  <div className="flex items-center justify-center h-full p-8">
+    <div className="text-center space-y-4">
+      <div className="text-2xl">🚧</div>
+      <h3 className="text-lg font-semibold">Full Project Generator Coming Soon</h3>
+      <p className="text-sm text-muted-foreground max-w-md">
+        The full project generator with multi-page apps is in development.
+        Use Visual Preview to customize individual pages, or use the Export tab to download your project configuration.
+      </p>
+    </div>
+  </div>
+);
+>>>>>>> Stashed changes
 
 // Dynamically import components to avoid SSR issues
 const StepIndicator = dynamic(() => import("@/app/components/configurator/StepIndicator").then(mod => ({ default: mod.StepIndicator })), { ssr: false });
