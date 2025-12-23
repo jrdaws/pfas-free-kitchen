@@ -154,19 +154,25 @@ test("CLI: capabilities command", () => {
 });
 
 test("CLI: doctor command shows help or runs", () => {
-  // Doctor runs checks on the project
-  // This test verifies the command is recognized and produces expected output
+  // Doctor runs .dd/health.sh which performs health checks on the project
+  // This test verifies the command is recognized and produces structured output
   const result = runFramework(["doctor", "."]);
   
-  // Doctor command produces output about checks (repo, git, node, tests)
+  // Doctor command produces structured output with == headers (repo, git, node, checks)
   const output = result.stdout + result.stderr;
-  const validOutput = 
-    result.status === 0 ||  // Success (all checks pass)
-    output.includes("==") ||  // Section headers in output (== repo ==, == git ==, etc.)
-    output.includes("checks") ||  // References checks section
-    output.includes("test");  // References test runner
+  const hasStructuredOutput = 
+    output.includes("== repo ==") ||
+    output.includes("== git ==") ||
+    output.includes("== node/npm ==") ||
+    output.includes("== checks ==") ||
+    output.includes("== install ==");
   
-  assert.ok(validOutput, `Doctor command should succeed or produce check output. Got: ${output.slice(0, 200)}`);
+  // Accept if doctor ran successfully OR produced any structured health check output
+  // Exit code may be non-zero if nested npm test has failures, but that's expected
+  assert.ok(
+    result.status === 0 || hasStructuredOutput,
+    `Doctor should produce structured health check output. Got: ${output.slice(0, 300)}`
+  );
 });
 
 test("CLI: pull command without token shows usage", () => {

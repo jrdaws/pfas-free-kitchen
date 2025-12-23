@@ -883,9 +883,15 @@ async function cmdScaffold(templateId, projectDir) {
 }
 
 async function ensureFrameworkMapFresh() {
+  // Skip during test runs to prevent false positives in git status checks
+  // NODE_TEST is set by Node.js test runner, CI is set in CI environments
+  if (process.env.NODE_TEST || process.env.CI || process.env.SKIP_MAP_REGEN) {
+    return
+  }
+
   try {
     // Best-effort; never blocks CLI
-    spawnSync("npm", ["run", "framework:map"], { stdio: "ignore" });
+    spawnSync("npm", ["run", "framework:map"], { stdio: "ignore" })
   } catch {
     // ignore
   }

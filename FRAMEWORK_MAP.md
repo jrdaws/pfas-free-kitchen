@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- 2c0d346 2025-12-22 feat(website): add model tier toggle to project generator
 - 3d585b3 2025-12-22 docs(governance): update Agent Identity Rule format to parentheses
 - 5a8244f 2025-12-22 docs(standards): add PROMPT_STANDARDS.md and update token counts
 - 68e325d 2025-12-22 feat(ai-agent): implement model tier selection with Haiku default
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 0e2b3ae 2025-12-22 docs: cherry-pick documentation and tests from stale branches
 - bdd877d 2025-12-22 feat(governance): add session management, validation, and token authentication
 - dba703d 2025-12-22 feat(governance): add mandatory agent workflow and acknowledgment requirements
-- 87ac335 2025-12-22 feat(governance): add enforcement mechanisms for agent coordination
 
 ## Agent Governance Structure
 
