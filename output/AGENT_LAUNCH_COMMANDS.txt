@@ -1,32 +1,56 @@
-================================================================================
-AGENT LAUNCH COMMANDS
-================================================================================
-Copy and paste ONE of these commands into a new Cursor AI chat.
-The agent will read the task file and begin work.
-================================================================================
+# Agent Launch Commands
+# Generated: 2025-12-23 03:00
+# Copy each line into a new Cursor chat to launch that agent
 
---- PRIORITY ORDER ---
+# ═══════════════════════════════════════════════════════════════════════════════
+# PRIORITY 1 (High) - Production Readiness
+# ═══════════════════════════════════════════════════════════════════════════════
 
-1. TESTING AGENT (P1 - HIGH PRIORITY)
-Read and execute the task in output/testing-agent/inbox/20251222-2000-P1-task-live-api-validation.txt
+# Platform Agent - Rate limiting and cost controls
+Read and execute the task in output/platform-agent/inbox/20251223-0300-P1-task-production-deployment-prep.txt
 
-2. PLATFORM AGENT (P2)
-Read and execute the task in output/platform-agent/inbox/20251222-2000-P2-task-parallel-stage-execution.txt
+# Website Agent - Vercel deployment configuration
+Read and execute the task in output/website-agent/inbox/20251223-0300-P1-task-production-deployment.txt
 
-3. CLI AGENT (P2)
-Read and execute the task in output/cli-agent/inbox/20251222-2000-P2-task-deploy-command-enhancement.txt
+# Testing Agent - Production smoke tests
+Read and execute the task in output/testing-agent/inbox/20251223-0300-P1-task-production-smoke-tests.txt
 
-4. WEBSITE AGENT (P2)
-Read and execute the task in output/website-agent/inbox/20251222-2000-P2-task-streaming-ui-integration.txt
+# ═══════════════════════════════════════════════════════════════════════════════
+# PRIORITY 2 (Medium) - Feature Expansion
+# ═══════════════════════════════════════════════════════════════════════════════
 
-5. TEMPLATE AGENT (P2)
+# CLI Agent - Add framework generate command
+Read and execute the task in output/cli-agent/inbox/20251223-0300-P2-task-generate-command.txt
+
+# Template Agent - Quality audit of all templates
+Read and execute the task in output/template-agent/inbox/20251223-0300-P2-task-template-quality-audit.txt
+
+# Documentation Agent - API documentation
+Read and execute the task in output/documentation-agent/inbox/20251223-0300-P2-task-api-documentation.txt
+
+# Integration Agent - Integration expansion planning
+Read and execute the task in output/integration-agent/inbox/20251223-0300-P2-task-integration-expansion.txt
+
+# ═══════════════════════════════════════════════════════════════════════════════
+# STILL PENDING (From previous session - in done/ folder)
+# ═══════════════════════════════════════════════════════════════════════════════
+
+# Template Agent - Original health check task (if not complete)
 Read and execute the task in output/template-agent/inbox/20251222-2000-P2-task-template-health-check.txt
 
-6. DOCUMENTATION AGENT (P2)
-Read and execute the task in output/documentation-agent/inbox/20251222-2000-P2-task-user-guide-creation.txt
-
-7. INTEGRATION AGENT (P3 - LOW PRIORITY)
-Read and execute the task in output/integration-agent/inbox/20251222-2000-P3-task-integration-inventory.txt
-
-================================================================================
-
+# ═══════════════════════════════════════════════════════════════════════════════
+# PARALLEL EXECUTION GUIDE
+# ═══════════════════════════════════════════════════════════════════════════════
+#
+# These agents can work in PARALLEL (no dependencies):
+#   - CLI Agent + Template Agent + Integration Agent + Documentation Agent
+#
+# These have dependencies:
+#   - Testing Agent (smoke tests) → after Website Agent (deployment)
+#   - Website Agent → can coordinate with Platform Agent (parallel possible)
+#
+# Recommended parallel groups:
+#   Group 1: Platform + Website + Testing (P1 - production focus)
+#   Group 2: CLI + Template + Integration + Documentation (P2 - expansion)
+#
+# ═══════════════════════════════════════════════════════════════════════════════

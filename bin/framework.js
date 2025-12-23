@@ -16,6 +16,7 @@ import { cmdAuth } from "../src/commands/auth.mjs";
 import { cmdPlugin } from "../src/commands/plugin.mjs";
 import { cmdTemplates } from "../src/commands/templates.mjs";
 import { cmdDeploy, cmdDeployAuth } from "../src/commands/deploy.mjs";
+import { cmdGenerate } from "../src/dd/generate.mjs";
 import { executeHooks } from "../src/dd/plugins.mjs";
 import * as logger from "../src/dd/logger.mjs";
 import { getCurrentVersion, checkForUpdates, getUpgradeCommand, getPackageName } from "../src/dd/version.mjs";
@@ -924,6 +925,7 @@ async function cmdHelp() {
   framework version
   framework upgrade
   framework start [projectDir]
+  framework generate [options]                          # AI-powered project generation
   framework capabilities [projectDir]
   framework phrases [projectDir]
   framework toggle <capId> on|off [projectDir]
@@ -952,6 +954,13 @@ Pull Options:
   --force              Overwrite existing directory
   --dev                Use localhost:3002 instead of production API
 
+Generate Options:
+  -d, --description    Project description (required)
+  -n, --name           Project name
+  -t, --template       Template to use (saas, flagship-saas, seo-directory)
+  --tier               Model tier: fast, balanced, quality (default: balanced)
+  -o, --output         Output directory (default: ./)
+
 Valid Templates:
   ${Object.keys(TEMPLATES).join(", ")}
 
@@ -969,6 +978,8 @@ Examples:
   framework pull fast-lion-1234                      # Pull project from web platform
   framework pull fast-lion-1234 --cursor --open      # Pull with Cursor AI files and open
   framework pull fast-lion-1234 ./my-app --dry-run   # Preview without making changes
+  framework generate -d "A fitness app" -n fittrack  # AI-generate a project
+  framework generate                                 # Interactive AI generation
 `);
 }
 
@@ -1643,6 +1654,11 @@ if (isEntrypoint) {
   if (a === "deploy") {
     const deployArgs = process.argv.slice(3); // Everything after "framework deploy"
     await cmdDeploy(deployArgs);
+    process.exit(0);
+  }
+  if (a === "generate") {
+    const generateArgs = process.argv.slice(3); // Everything after "framework generate"
+    await cmdGenerate(generateArgs);
     process.exit(0);
   }
   if (a === "deploy:auth") {

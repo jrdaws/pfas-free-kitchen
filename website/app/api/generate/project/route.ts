@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { generateProject, type StreamEvent } from "@dawson-framework/ai-agent";
 import { checkRateLimit, isRedisAvailable } from "@/lib/rate-limiter";
+import { checkCostLimit, recordUsage, TOKEN_ESTIMATES, isCostTrackingAvailable } from "@/lib/cost-tracker";
 import crypto from "crypto";
 
 type ModelTier = 'fast' | 'balanced' | 'quality';
@@ -166,6 +167,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Cost limit check (platform-wide daily/monthly caps)
+    // Only enforce for platform API key usage (not when user provides their own)
+    if (!userApiKey) {
+      const costCheck = await checkCostLimit(TOKEN_ESTIMATES.projectGeneration);
+      if (!costCheck.allowed) {
+        console.warn(`[Cost Limit] Blocked: ${costCheck.reason}`);
+        return NextResponse.json(
+          {
+            error: "Service temporarily limited",
+            message: "The service has reached its usage limit. Please try again later or provide your own Anthropic API key.",
+            costLimited: true,
+            resetAt: costCheck.stats.daily.resetAt,
+          },
+          { status: 503 }
+        );
+      }
+      if (costCheck.alertLevel === "warning" || costCheck.alertLevel === "critical") {
+        console.warn(`[Cost Alert] ${costCheck.alertLevel.toUpperCase()}: Daily ${costCheck.stats.daily.percentUsed}%, Monthly ${costCheck.stats.monthly.percentUsed}%`);
+      }
+    }
+
     // Check API key availability
     const apiKey = userApiKey || process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
@@ -248,10 +270,17 @@ export async function POST(request: NextRequest) {
               }
             }
 
+            // Record token usage for cost tracking (platform API key only)
+            if (!userApiKey) {
+              // Estimate tokens based on output size
+              const estimatedTokens = TOKEN_ESTIMATES.projectGeneration;
+              await recordUsage(estimatedTokens);
+            }
+
             // Log success metrics
             const duration = Date.now() - startTime;
             console.log(
-              `[Project Generated] ${projectName || "Untitled"} | ${duration}ms | Template: ${result.intent.suggestedTemplate} | Files: ${result.code.files.length} | Redis: ${isRedisAvailable()}`
+              `[Project Generated] ${projectName || "Untitled"} | ${duration}ms | Template: ${result.intent.suggestedTemplate} | Files: ${result.code.files.length} | Redis: ${isRedisAvailable()} | CostTracking: ${isCostTrackingAvailable()}`
             );
 
             // Send final complete event with full result
@@ -330,10 +359,16 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // Record token usage for cost tracking (platform API key only)
+    if (!userApiKey) {
+      const estimatedTokens = TOKEN_ESTIMATES.projectGeneration;
+      await recordUsage(estimatedTokens);
+    }
+
     // Log success metrics
     const duration = Date.now() - startTime;
     console.log(
-      `[Project Generated] ${projectName || "Untitled"} | ${duration}ms | Template: ${result.intent.suggestedTemplate} | Files: ${result.code.files.length} | Redis: ${isRedisAvailable()}`
+      `[Project Generated] ${projectName || "Untitled"} | ${duration}ms | Template: ${result.intent.suggestedTemplate} | Files: ${result.code.files.length} | Redis: ${isRedisAvailable()} | CostTracking: ${isCostTrackingAvailable()}`
     );
 
     return NextResponse.json({

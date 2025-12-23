@@ -1,0 +1,58 @@
+# Task: Production Deployment Preparation
+
+**Priority:** P1 (High)
+**Assigned To:** Platform Agent
+**Created:** 2025-12-23 03:00
+
+---
+
+## Context
+
+Phase 1 is complete. The AI generation engine is optimized (61% cost reduction) and all 668 tests are passing. The next step is preparing for production deployment.
+
+## Task Objectives
+
+1. **Environment Configuration**
+   - Review all environment variables needed for production
+   - Document required API keys and secrets
+   - Create deployment checklist
+
+2. **API Rate Limiting**
+   - Implement rate limiting on `/api/generate/project` endpoint
+   - Prevent abuse of expensive Anthropic API calls
+   - Consider per-IP or per-session limits
+
+3. **Error Monitoring Setup**
+   - Document error tracking requirements
+   - Recommend monitoring solution (Sentry, LogRocket, etc.)
+   - Define alerting thresholds
+
+4. **Cost Controls**
+   - Implement daily/monthly token usage caps
+   - Add admin dashboard for monitoring costs
+   - Consider user-level quotas
+
+## Success Criteria
+
+- [ ] Environment variable documentation complete
+- [ ] Rate limiting implemented on generation endpoint
+- [ ] Cost monitoring plan documented
+- [ ] Deployment checklist created
+
+## Files to Modify
+
+- `website/app/api/generate/project/route.ts` - Add rate limiting
+- `website/lib/` - Add rate limiter utility (new file)
+- `docs/deployment/` - Create deployment guide (new)
+
+## Handoff
+
+When complete:
+1. Move this file to `output/platform-agent/done/`
+2. Create completion report in `output/platform-agent/outbox/`
+3. Notify Website Agent for deployment execution
+
+---
+
+*Read and execute this task. Follow governance in AGENT_CONTEXT.md.*
+

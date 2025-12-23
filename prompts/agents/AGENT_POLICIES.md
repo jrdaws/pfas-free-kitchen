@@ -265,6 +265,25 @@ Agents must ALWAYS:
 - Follow the coding style for each language
 - **Follow PROMPT_STANDARDS.md when writing AI prompts**
 - Update their memory file at session end
+- **Provide terminal commands when referencing output files** (see below)
+
+### Output File Reference Rule (MANDATORY)
+
+When referencing ANY file in the `output/` folder, agents MUST include a terminal command to open the FOLDER containing the file.
+
+**Format:** Command on its own line, NO comments, opens the FOLDER (not the file):
+
+```
+File saved to: output/testing-agent/outbox/completion-report.txt
+
+open /Users/joseph.dawson/Documents/dawson-does-framework/output/testing-agent/outbox/
+```
+
+**Rules:**
+- Open the FOLDER, not the file itself
+- NO `#` comments in commands (causes terminal errors)
+- Use absolute paths
+- One command per line for easy copying
 
 ---
 

@@ -1,0 +1,23 @@
+{
+  "provider": "example-provider",
+  "type": "storage",
+  "version": "1.0.0",
+  "description": "Example integration template - copy and modify for new integrations",
+  "dependencies": {
+    "example-sdk": "^1.0.0"
+  },
+  "devDependencies": {},
+  "envVars": [
+    "EXAMPLE_API_KEY",
+    "EXAMPLE_SECRET"
+  ],
+  "files": {
+    "lib": ["lib/example.ts"],
+    "app": ["app/api/example/**"],
+    "components": ["components/example/**"]
+  },
+  "postInstallInstructions": "Get your API key from https://example.com/dashboard and add to .env.local",
+  "conflicts": [],
+  "requires": []
+}
+

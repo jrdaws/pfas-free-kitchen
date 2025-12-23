@@ -1,0 +1,61 @@
+# Task: Integration Expansion Planning
+
+**Priority:** P2 (Medium)
+**Assigned To:** Integration Agent
+**Created:** 2025-12-23 03:00
+
+---
+
+## Context
+
+The integration system is established with auth (Supabase, Clerk, NextAuth), billing (Stripe, Paddle, LemonSqueezy), and AI (OpenAI). We need to plan expansion for Phase 2.
+
+## Task Objectives
+
+1. **Current Integration Audit**
+   - Review all integrations in `src/dd/integrations/`
+   - Document which are fully implemented vs stubs
+   - Identify gaps in test coverage
+
+2. **Priority Integration Roadmap**
+   - Survey common user requests (hypothetical)
+   - Prioritize next integrations to add:
+     - Database: PlanetScale, Neon, Turso?
+     - Email: Resend, Postmark, SendGrid?
+     - Analytics: Plausible, Fathom, Posthog?
+     - Storage: Cloudinary, UploadThing?
+
+3. **Integration Architecture Review**
+   - Document the integration plugin pattern
+   - Identify any architectural improvements needed
+   - Consider integration composability
+
+4. **Implementation Guide**
+   - Create guide for adding new integrations
+   - Document the provider interface
+   - Add example integration template
+
+## Success Criteria
+
+- [ ] Current integration inventory complete
+- [ ] Priority roadmap created
+- [ ] Integration architecture documented
+- [ ] Implementation guide created
+
+## Files to Review
+
+- `src/dd/integrations/providers/`
+- `src/dd/integrations/integration-system.mjs`
+- `templates/*/template.json` - Integration configurations
+
+## Handoff
+
+When complete:
+1. Move this file to `output/integration-agent/done/`
+2. Create completion report in `output/integration-agent/outbox/`
+3. Create RFC for top priority integrations
+
+---
+
+*Read and execute this task. Follow governance in AGENT_CONTEXT.md.*
+

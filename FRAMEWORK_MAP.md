@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- a72d538 2025-12-22 docs(api): create comprehensive API documentation
 - f237029 2025-12-22 docs(agents): update website memory with production deployment session
 - 5529ea2 2025-12-22 feat(testing): add production smoke test suite
 - 849c3f4 2025-12-22 docs(deploy): add Vercel deployment guide and production optimizations
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 2c0d346 2025-12-22 feat(website): add model tier toggle to project generator
 - 3d585b3 2025-12-22 docs(governance): update Agent Identity Rule format to parentheses
 - 5a8244f 2025-12-22 docs(standards): add PROMPT_STANDARDS.md and update token counts
-- 68e325d 2025-12-22 feat(ai-agent): implement model tier selection with Haiku default
 
 ## Agent Governance Structure
 

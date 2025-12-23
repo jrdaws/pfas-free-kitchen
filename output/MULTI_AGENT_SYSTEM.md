@@ -67,7 +67,12 @@ output/
 - Contains task assignment files (`.txt` or `.md`)
 - Agent reads these at session start
 - Files named: `YYYYMMDD-HHMM-task-name.txt`
-- Once processed, move to `workspace/` or delete
+- Once processed, move to `done/` folder
+
+### done/
+- Completed task files moved here from inbox
+- Preserves history of completed work
+- Files retain original names
 
 ### outbox/
 - Agent writes completion reports here
@@ -116,6 +121,26 @@ Examples:
 - 20251222-1600-P0-blocker-api-rate-limit.txt
 - 20251222-1615-P1-handoff-needs-testing.txt
 ```
+
+---
+
+## Output Reference Rule (MANDATORY)
+
+**When referencing any file in the output folder, agents MUST provide a terminal command to open the FOLDER containing the file.**
+
+**Format:** Command on its own line, NO comments, opens the FOLDER (not the file):
+
+```
+File saved to: output/testing-agent/outbox/completion-report.txt
+
+open /Users/joseph.dawson/Documents/dawson-does-framework/output/testing-agent/outbox/
+```
+
+**Rules:**
+- Open the FOLDER, not the file itself
+- NO `#` comments in commands (causes terminal errors)
+- Use absolute paths
+- One command per line for easy copying
 
 ---
 

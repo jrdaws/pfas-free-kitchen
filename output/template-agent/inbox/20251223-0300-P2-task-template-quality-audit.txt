@@ -1,0 +1,68 @@
+# Task: Template Quality Audit
+
+**Priority:** P2 (Medium)
+**Assigned To:** Template Agent
+**Created:** 2025-12-23 03:00
+
+---
+
+## Context
+
+Templates are the core output of the framework. With AI generation now working, we need to ensure template quality is production-ready.
+
+## Task Objectives
+
+1. **Template Audit**
+   - Review all templates in `templates/` directory
+   - Verify each has complete README.md
+   - Ensure all integration placeholders work
+   - Check for outdated dependencies
+
+2. **Dependency Updates**
+   - Update package.json in each template
+   - Ensure Next.js 15 compatibility
+   - Update all @types packages
+
+3. **Missing Features Check**
+   - Verify `.cursorrules` generation works for each template
+   - Check START_PROMPT.md is appropriate
+   - Ensure all integration combinations work
+
+4. **Template Documentation**
+   - Document template-specific features
+   - Add screenshots/previews if possible
+   - Update template selection guide
+
+## Success Criteria
+
+- [ ] All templates build without errors
+- [ ] Dependencies are up to date
+- [ ] Integration matrix tested
+- [ ] Documentation complete
+
+## Templates to Audit
+
+| Template | Status | Notes |
+|----------|--------|-------|
+| saas | | |
+| flagship-saas | | |
+| seo-directory | | |
+
+## Files to Review
+
+- `templates/*/package.json`
+- `templates/*/README.md`
+- `templates/*/template.json`
+- `src/dd/integrations/` - Integration providers
+
+## Handoff
+
+When complete:
+1. Move this file to `output/template-agent/done/`
+2. Create completion report in `output/template-agent/outbox/`
+3. Update template documentation in docs/
+
+---
+
+*Read and execute this task. Follow governance in AGENT_CONTEXT.md.*
+

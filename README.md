@@ -127,6 +127,9 @@ framework export saas ./my-app  # Plugin runs automatically
 Built for AI-assisted development with Cursor, Claude, and other AI coding tools:
 
 ```bash
+# AI-powered project generation (NEW!)
+framework generate -d "A fitness tracking app with social features" -n fittrack
+
 # Generate .cursorrules and START_PROMPT.md for AI context
 framework pull <token> --cursor --open
 
@@ -141,6 +144,30 @@ framework drift  # See changes from template
 **The `--cursor` flag generates:**
 - `.cursorrules` - Project-specific AI guidelines with tech stack, context, and best practices
 - `START_PROMPT.md` - Ready-to-use prompt for onboarding AI assistants to your project
+
+#### AI Project Generation
+
+Generate complete projects using Claude AI - just describe what you want:
+
+```bash
+# Interactive mode - prompts for details
+framework generate
+
+# Quick generation with flags
+framework generate -d "Invoice management SaaS with client portal" -n invoicer
+
+# Choose model tier (fast/balanced/quality)
+framework generate -d "E-commerce dashboard" -n shopify-clone --tier quality
+```
+
+**Model Tiers:**
+| Tier | Speed | Cost | Quality |
+|------|-------|------|---------|
+| `fast` | ~30s | ~$0.01 | Good |
+| `balanced` | ~60s | ~$0.05 | Better (default) |
+| `quality` | ~120s | ~$0.20 | Best |
+
+Requires `ANTHROPIC_API_KEY` environment variable.
 
 [AI features →](docs/concepts/agent-safety.md)
 

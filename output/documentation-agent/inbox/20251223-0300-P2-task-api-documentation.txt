@@ -1,0 +1,65 @@
+# Task: API Documentation
+
+**Priority:** P2 (Medium)
+**Assigned To:** Documentation Agent
+**Created:** 2025-12-23 03:00
+
+---
+
+## Context
+
+The AI generation API is complete. We need comprehensive API documentation for developers who want to integrate with the platform.
+
+## Task Objectives
+
+1. **API Reference Documentation**
+   - Document `/api/generate/project` endpoint
+   - Document `/api/preview/generate` endpoint
+   - Document `/api/health` endpoint (once created)
+
+2. **Integration Guide**
+   - How to integrate AI generation into custom apps
+   - Authentication requirements
+   - Rate limiting expectations
+
+3. **Code Examples**
+   - Curl examples for each endpoint
+   - JavaScript/TypeScript examples
+   - Python examples (if appropriate)
+
+4. **Error Reference**
+   - Document all error codes
+   - Include recovery guidance
+   - Link to apiError/apiSuccess pattern
+
+## Success Criteria
+
+- [ ] API reference complete in `docs/api/`
+- [ ] All endpoints documented with request/response schemas
+- [ ] Code examples for common use cases
+- [ ] Error reference complete
+
+## Files to Create
+
+- `docs/api/README.md` - API overview
+- `docs/api/generate-project.md` - Project generation endpoint
+- `docs/api/preview.md` - Preview endpoints
+- `docs/api/errors.md` - Error reference
+
+## Reference
+
+- See `website/app/api/generate/project/route.ts` for endpoint implementation
+- See `docs/standards/API_CONTRACTS.md` for error patterns
+- See `packages/ai-agent/src/index.ts` for generation options
+
+## Handoff
+
+When complete:
+1. Move this file to `output/documentation-agent/done/`
+2. Create completion report in `output/documentation-agent/outbox/`
+3. Link API docs from main README.md
+
+---
+
+*Read and execute this task. Follow governance in AGENT_CONTEXT.md.*
+

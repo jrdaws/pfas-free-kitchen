@@ -1,0 +1,276 @@
+{
+  "intent": {
+    "category": "saas",
+    "confidence": 0.8,
+    "reasoning": "The description mentions key features of a SaaS application, including user authentication, task management (create/edit/delete), and the ability to mark tasks as complete. This aligns with the typical functionality of a SaaS-based todo list application.",
+    "suggestedTemplate": "saas",
+    "features": [
+      "auth",
+      "dashboard",
+      "task-management"
+    ],
+    "integrations": {
+      "auth": "supabase",
+      "db": "supabase"
+    },
+    "complexity": "simple",
+    "keyEntities": [
+      "User",
+      "Task"
+    ]
+  },
+  "architecture": {
+    "template": "saas",
+    "pages": [
+      {
+        "path": "/",
+        "name": "Landing Page",
+        "description": "The main entry point of the application, showcasing the product features and value proposition.",
+        "components": [
+          "Hero",
+          "Features",
+          "Pricing",
+          "CallToAction"
+        ],
+        "layout": "default"
+      },
+      {
+        "path": "/dashboard",
+        "name": "Dashboard",
+        "description": "The main user interface for managing tasks and viewing progress.",
+        "components": [
+          "Sidebar",
+          "TaskList",
+          "TaskDetails",
+          "TaskCreate",
+          "TaskEdit"
+        ],
+        "layout": "dashboard"
+      },
+      {
+        "path": "/settings",
+        "name": "Settings",
+        "description": "Page for users to manage their account settings and preferences.",
+        "components": [
+          "SettingsForm"
+        ],
+        "layout": "dashboard"
+      }
+    ],
+    "components": [
+      {
+        "name": "Hero",
+        "type": "ui",
+        "description": "The main hero section with a call-to-action button.",
+        "props": {
+          "title": "string",
+          "description": "string",
+          "cta": {
+            "label": "string",
+            "link": "string"
+          }
+        },
+        "template": "use-existing"
+      },
+      {
+        "name": "Features",
+        "type": "ui",
+        "description": "Section highlighting the key features of the application.",
+        "props": {
+          "features": [
+            {
+              "title": "string",
+              "description": "string",
+              "icon": "string"
+            }
+          ]
+        },
+        "template": "use-existing"
+      },
+      {
+        "name": "Pricing",
+        "type": "ui",
+        "description": "Section displaying the pricing plans for the application.",
+        "props": {
+          "plans": [
+            {
+              "name": "string",
+              "description": "string",
+              "price": "number",
+              "features": [
+                "string"
+              ]
+            }
+          ]
+        },
+        "template": "use-existing"
+      },
+      {
+        "name": "Sidebar",
+        "type": "layout",
+        "description": "The main sidebar navigation for the dashboard.",
+        "props": {
+          "links": [
+            {
+              "label": "string",
+              "path": "string"
+            }
+          ]
+        },
+        "template": "use-existing"
+      },
+      {
+        "name": "TaskList",
+        "type": "feature",
+        "description": "Component to display the list of tasks for the user.",
+        "props": {
+          "tasks": [
+            {
+              "id": "string",
+              "title": "string",
+              "description": "string",
+              "status": "string"
+            }
+          ]
+        },
+        "template": "create-new"
+      },
+      {
+        "name": "TaskDetails",
+        "type": "feature",
+        "description": "Component to display the details of a specific task.",
+        "props": {
+          "task": {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "status": "string",
+            "dueDate": "date"
+          }
+        },
+        "template": "create-new"
+      },
+      {
+        "name": "TaskCreate",
+        "type": "feature",
+        "description": "Component to create a new task.",
+        "props": {
+          "onSubmit": "function"
+        },
+        "template": "create-new"
+      },
+      {
+        "name": "TaskEdit",
+        "type": "feature",
+        "description": "Component to edit an existing task.",
+        "props": {
+          "task": {
+            "id": "string",
+            "title": "string",
+            "description": "string",
+            "status": "string",
+            "dueDate": "date"
+          },
+          "onSubmit": "function"
+        },
+        "template": "create-new"
+      },
+      {
+        "name": "SettingsForm",
+        "type": "feature",
+        "description": "Component to manage user account settings.",
+        "props": {
+          "user": {
+            "id": "string",
+            "name": "string",
+            "email": "string"
+          },
+          "onSubmit": "function"
+        },
+        "template": "create-new"
+      }
+    ],
+    "routes": [
+      {
+        "path": "/api/auth",
+        "type": "api",
+        "method": "POST",
+        "description": "Handles user authentication (login, signup, logout)"
+      },
+      {
+        "path": "/api/tasks",
+        "type": "api",
+        "method": "GET",
+        "description": "Retrieves the user's tasks"
+      },
+      {
+        "path": "/api/tasks",
+        "type": "api",
+        "method": "POST",
+        "description": "Creates a new task for the user"
+      },
+      {
+        "path": "/api/tasks/:id",
+        "type": "api",
+        "method": "PUT",
+        "description": "Updates an existing task"
+      },
+      {
+        "path": "/api/tasks/:id",
+        "type": "api",
+        "method": "DELETE",
+        "description": "Deletes a task"
+      },
+      {
+        "path": "/api/settings",
+        "type": "api",
+        "method": "GET",
+        "description": "Retrieves the user's account settings"
+      },
+      {
+        "path": "/api/settings",
+        "type": "api",
+        "method": "PUT",
+        "description": "Updates the user's account settings"
+      }
+    ],
+    "integrations": {
+      "auth": "supabase",
+      "db": "supabase"
+    }
+  },
+  "code": {
+    "files": [
+      {
+        "path": "app/page.tsx",
+        "content": "import { Hero } from '@/components/Hero';\nimport { Features } from '@/components/Features';\nimport { Pricing } from '@/components/Pricing';\nimport { CallToAction } from '@/components/CallToAction';\n\nexport default function HomePage() {\n  return (\n    <main className=\"min-h-screen\">\n      <Hero \n        title=\"Manage Your Tasks Effortlessly\"\n        description=\"The ultimate task management solution for teams and individuals\"\n        cta={{ label: \"Get Started Free\", link: \"/dashboard\" }}\n      />\n      <Features \n        features={[\n          { title: \"Smart Organization\", description: \"Organize tasks with intelligent categorization\", icon: \"📋\" },\n          { title: \"Team Collaboration\", description: \"Work together seamlessly with your team\", icon: \"👥\" },\n          { title: \"Progress Tracking\", description: \"Monitor your productivity and achievements\", icon: \"📊\" }\n        ]}\n      />\n      <Pricing \n        plans={[\n          { name: \"Free\", description: \"Perfect for individuals\", price: 0, features: [\"Up to 10 tasks\", \"Basic organization\", \"Mobile app\"] },\n          { name: \"Pro\", description: \"For growing teams\", price: 19, features: [\"Unlimited tasks\", \"Team collaboration\", \"Advanced analytics\", \"Priority support\"] }\n        ]}\n      />\n      <CallToAction />\n    </main>\n  );\n}",
+        "overwrite": false
+      },
+      {
+        "path": "app/dashboard/page.tsx",
+        "content": "import { Sidebar } from '@/components/Sidebar';\nimport { TaskList } from '@/components/TaskList';\nimport { TaskDetails } from '@/components/TaskDetails';\n\nexport default function DashboardPage() {\n  return (\n    <div className=\"flex min-h-screen bg-gray-50\">\n      <Sidebar \n        links={[\n          { label: \"Dashboard\", path: \"/dashboard\" },\n          { label: \"Tasks\", path: \"/dashboard/tasks\" },\n          { label: \"Settings\", path: \"/settings\" }\n        ]}\n      />\n      <main className=\"flex-1 p-6\">\n        <div className=\"max-w-7xl mx-auto\">\n          <h1 className=\"text-3xl font-bold text-gray-900 mb-8\">Dashboard</h1>\n          <div className=\"grid grid-cols-1 lg:grid-cols-3 gap-6\">\n            <div className=\"lg:col-span-2\">\n              <TaskList \n                tasks={[\n                  { id: \"1\", title: \"Complete project proposal\", description: \"Draft and review the Q4 project proposal\", status: \"in-progress\" },\n                  { id: \"2\", title: \"Team meeting\", description: \"Weekly sync with the development team\", status: \"pending\" }\n                ]}\n              />\n            </div>\n            <div>\n              <TaskDetails \n                task={{\n                  id: \"1\",\n                  title: \"Complete project proposal\",\n                  description: \"Draft and review the Q4 project proposal with stakeholders\",\n                  status: \"in-progress\",\n                  dueDate: new Date('2024-12-31')\n                }}\n              />\n            </div>\n          </div>\n        </div>\n      </main>\n    </div>\n  );\n}",
+        "overwrite": false
+      },
+      {
+        "path": "components/TaskList.tsx",
+        "content": "\"use client\";\n\ninterface Task {\n  id: string;\n  title: string;\n  description: string;\n  status: string;\n}\n\ninterface TaskListProps {\n  tasks: Task[];\n}\n\nexport function TaskList({ tasks }: TaskListProps) {\n  return (\n    <div className=\"bg-white rounded-lg shadow p-6\">\n      <div className=\"flex justify-between items-center mb-6\">\n        <h2 className=\"text-xl font-semibold text-gray-900\">Your Tasks</h2>\n        <button className=\"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700\">\n          Add Task\n        </button>\n      </div>\n      <div className=\"space-y-4\">\n        {tasks.map((task) => (\n          <div key={task.id} className=\"border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow\">\n            <div className=\"flex justify-between items-start\">\n              <div>\n                <h3 className=\"font-medium text-gray-900\">{task.title}</h3>\n                <p className=\"text-sm text-gray-600 mt-1\">{task.description}</p>\n                <span className={`inline-block px-2 py-1 text-xs rounded-full mt-2 ${\n                  task.status === 'completed' ? 'bg-green-100 text-green-800' :\n                  task.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :\n                  'bg-gray-100 text-gray-800'\n                }`}>\n                  {task.status}\n                </span>\n              </div>\n              <button className=\"text-gray-400 hover:text-gray-600\">\n                •••\n              </button>\n            </div>\n          </div>\n        ))}\n      </div>\n      {/* TODO: Implement task creation, editing, and status updates */}\n    </div>\n  );\n}",
+        "overwrite": false
+      },
+      {
+        "path": "components/TaskDetails.tsx",
+        "content": "\"use client\";\n\ninterface Task {\n  id: string;\n  title: string;\n  description: string;\n  status: string;\n  dueDate: Date;\n}\n\ninterface TaskDetailsProps {\n  task: Task;\n}\n\nexport function TaskDetails({ task }: TaskDetailsProps) {\n  return (\n    <div className=\"bg-white rounded-lg shadow p-6\">\n      <h2 className=\"text-xl font-semibold text-gray-900 mb-4\">Task Details</h2>\n      <div className=\"space-y-4\">\n        <div>\n          <label className=\"block text-sm font-medium text-gray-700 mb-1\">Title</label>\n          <p className=\"text-gray-900\">{task.title}</p>\n        </div>\n        <div>\n          <label className=\"block text-sm font-medium text-gray-700 mb-1\">Description</label>\n          <p className=\"text-gray-600\">{task.description}</p>\n        </div>\n        <div>\n          <label className=\"block text-sm font-medium text-gray-700 mb-1\">Status</label>\n          <span className={`inline-block px-2 py-1 text-xs rounded-full ${\n            task.status === 'completed' ? 'bg-green-100 text-green-800' :\n            task.status === 'in-progress' ? 'bg-blue-100 text-blue-800' :\n            'bg-gray-100 text-gray-800'\n          }`}>\n            {task.status}\n          </span>\n        </div>\n        <div>\n          <label className=\"block text-sm font-medium text-gray-700 mb-1\">Due Date</label>\n          <p className=\"text-gray-600\">{task.dueDate.toLocaleDateString()}</p>\n        </div>\n        <div className=\"flex gap-2 pt-4\">\n          <button className=\"bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm\">\n            Edit Task\n          </button>\n          <button className=\"bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-700 text-sm\">\n            Delete\n          </button>\n        </div>\n      </div>\n      {/* TODO: Implement edit and delete functionality */}\n    </div>\n  );\n}",
+        "overwrite": false
+      },
+      {
+        "path": "app/api/tasks/route.ts",
+        "content": "import { NextRequest, NextResponse } from 'next/server';\n\nexport async function GET(req: NextRequest) {\n  try {\n    // TODO: Implement authentication check\n    // TODO: Fetch tasks from Supabase database\n    \n    const mockTasks = [\n      {\n        id: '1',\n        title: 'Complete project proposal',\n        description: 'Draft and review the Q4 project proposal',\n        status: 'in-progress',\n        dueDate: '2024-12-31',\n        userId: 'user-1'\n      },\n      {\n        id: '2',\n        title: 'Team meeting',\n        description: 'Weekly sync with the development team',\n        status: 'pending',\n        dueDate: '2024-12-15',\n        userId: 'user-1'\n      }\n    ];\n    \n    return NextResponse.json({ tasks: mockTasks });\n  } catch (error) {\n    return NextResponse.json({ error: 'Failed to fetch tasks' }, { status: 500 });\n  }\n}\n\nexport async function POST(req: NextRequest) {\n  try {\n    const body = await req.json();\n    // TODO: Validate request body\n    // TODO: Implement authentication check\n    // TODO: Save task to Supabase database\n    \n    const newTask = {\n      id: Date.now().toString(),\n      ...body,\n      userId: 'user-1', // TODO: Get from auth\n      createdAt: new Date().toISOString()\n    };\n    \n    return NextResponse.json({ task: newTask }, { status: 201 });\n  } catch (error) {\n    return NextResponse.json({ error: 'Failed to create task' }, { status: 500 });\n  }\n}",
+        "overwrite": false
+      }
+    ],
+    "integrationCode": []
+  },
+  "context": {
+    "cursorrules": "# TodoApp\nTemplate: saas | Generated: 2025-12-23T05:10:05.392Z\n\n## Overview\nA simple todo list application where users can create, edit, and delete tasks. Include user authentication and the ability to mark tasks as complete.\n\n## Architecture\nPages: /|/dashboard|/settings\nComponents: TaskList|TaskDetails|TaskCreate|TaskEdit|SettingsForm\nAPI: POST /api/auth|GET /api/tasks|POST /api/tasks|PUT /api/tasks/:id|DELETE /api/tasks/:id|GET /api/settings|PUT /api/settings\n\n## Stack\nNext.js 15 App Router|TypeScript strict|Tailwind|React 19 Server Components\nIntegrations: - **auth**: supabase\n- **db**: supabase\n\n## Code Style\nTS: strict, interfaces, avoid any→unknown\nReact: server default|\"use client\" for onClick/forms/useState/useEffect/browser-APIs|async server-side\nFiles: pages→app/[route]/page.tsx|components→components/[name].tsx|API→app/api/[route]/route.ts|types→types/|utils→lib/\nStyle: Tailwind utilities, mobile-first\nData: server=async/await|client=hooks/SWR|errors=try/catch|loading=Suspense\n\n## Patterns\n{integration-specific patterns}\n\n## Tasks\nPage→app/[route]/page.tsx→server component→layouts→nav\nComponent→components/Name.tsx→props→implement→export\nAPI→app/api/route.ts→GET|POST→validation→NextResponse.json\n\n## Env\nRequired: {env vars from integrations}\n\n## Next\n{suggested next steps}\n\nAI: Follow style|maintain consistency|clarify ambiguity|prioritize types+errors|simple components|test critical paths",
+    "startPrompt": "# TodoApp\nA simple todo list application where users can create, edit, and delete tasks. Include user authentication and the ability to mark tasks as complete.\n\n## Generated\nScaffolded via **Dawson Framework** (saas) + AI architecture.\n\n### Structure\nPages: /|/dashboard|/settings | Components: TaskList|TaskDetails|TaskCreate|TaskEdit|SettingsForm | API: POST /api/auth|GET /api/tasks|POST /api/tasks|PUT /api/tasks/:id|DELETE /api/tasks/:id|GET /api/settings|PUT /api/settings\n\n### Integrations\n- **auth**: supabase\n- **db**: supabase\n\n## Setup\n```bash\ncp .env.example .env.local  # Add: {env vars}\nnpm install && npm run dev\n```\n\n## Implementation Priority\n1. **Core Logic**: {main pages/components} functionality + API endpoints\n2. **Data Layer**: schema for {key entities} → migrations → data access\n3. **Integrations**: {integration setup steps}\n4. **Polish**: brand customization + loading/error states + responsive\n\n### File Structure\napp/(pages+api)|components/(custom+ui)|lib/(utils)|types/|public/\n\n### Docs\n{integration docs links}\n\n## Workflow\nData models→API routes→UI components→Integrations→Testing→Deploy\n\n## Commands\n`npm run dev`|`npm run build`|`npm run lint`|`npm test`\n\n## Resources\n[Dawson Docs](https://docs.dawson.dev)|[Next.js 15](https://nextjs.org/docs)|templates/saas/README.md\n\n## Next Prompt\n\"Implement {primary feature}: data models for {key entities}→API endpoints→UI. Include error handling + TypeScript types.\""
+  }
+}

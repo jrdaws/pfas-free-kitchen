@@ -1,0 +1,38 @@
+AGENT ACTIVATION COMMANDS
+Copy the line under each agent name into a new Cursor chat
+
+================================================================================
+PRIORITY 1 - Production Readiness
+================================================================================
+
+PLATFORM AGENT
+Read and execute the task in output/platform-agent/inbox/20251223-0300-P1-task-production-deployment-prep.txt
+
+WEBSITE AGENT
+Read and execute the task in output/website-agent/inbox/20251223-0300-P1-task-production-deployment.txt
+
+TESTING AGENT
+Read and execute the task in output/testing-agent/inbox/20251223-0300-P1-task-production-smoke-tests.txt
+
+================================================================================
+PRIORITY 2 - Feature Expansion
+================================================================================
+
+CLI AGENT
+Read and execute the task in output/cli-agent/inbox/20251223-0300-P2-task-generate-command.txt
+
+TEMPLATE AGENT
+Read and execute the task in output/template-agent/inbox/20251223-0300-P2-task-template-quality-audit.txt
+
+DOCUMENTATION AGENT
+Read and execute the task in output/documentation-agent/inbox/20251223-0300-P2-task-api-documentation.txt
+
+INTEGRATION AGENT
+Read and execute the task in output/integration-agent/inbox/20251223-0300-P2-task-integration-expansion.txt
+
+================================================================================
+LEGACY TASK
+================================================================================
+
+TEMPLATE AGENT
+Read and execute the task in output/template-agent/inbox/20251222-2000-P2-task-template-health-check.txt
