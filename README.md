@@ -231,10 +231,12 @@ npx @jrdaws/framework export saas ./my-app
 - [`framework plugin`](docs/cli/plugin.md) - Manage plugins
 
 ### Platform API
-- [API Contracts](docs/API_CONTRACTS.md) - Complete API reference
-- [Projects API](docs/API_CONTRACTS.md#projects-api) - Save and retrieve configurations
-- [Error Handling](docs/API_CONTRACTS.md#error-handling) - Standard error responses
-- [Rate Limiting](docs/API_CONTRACTS.md#rate-limiting) - API limits and quotas
+- **[API Reference](docs/api/README.md)** - Complete API documentation
+- [Generate Project](docs/api/generate-project.md) - AI project generation endpoint
+- [Preview Generation](docs/api/preview.md) - HTML preview endpoint
+- [Projects API](docs/api/projects.md) - Save and retrieve configurations
+- [Error Reference](docs/api/errors.md) - All error codes and recovery
+- [Health Check](docs/api/health.md) - Service status monitoring
 
 ### Guides
 - [Templates](docs/templates/README.md) - Explore all templates
