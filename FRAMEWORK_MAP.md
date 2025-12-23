@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: dd6ce1c0d2
 
 ## Recent changes
+- c505fb3 2025-12-22 fix(ai-agent): fix live API validation - all tests passing
 - 4d6a150 2025-12-22 feat(website): add streaming UI for project generation progress
 - 9bf32fe 2025-12-22 fix(cli): improve deploy command help and error handling
 - 6e2e120 2025-12-22 docs(guides): create Quick Start Guide for new users
@@ -28,7 +29,6 @@ Hash: dd6ce1c0d2
 - 2e9c3a8 2025-12-22 chore(ai-agent): sync dist files and additional prompt optimizations
 - c8be40a 2025-12-22 fix(ai-agent): adjust token limits and add PATCH method support
 - b9e0f53 2025-12-22 perf(ai-agent): optimize prompts with 32% token reduction
-- 32bd821 2025-12-22 docs(agents): update Platform Agent memory with cost optimization session
 
 ## Agent Governance Structure
 

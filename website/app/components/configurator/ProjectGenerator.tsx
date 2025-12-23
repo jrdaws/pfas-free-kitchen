@@ -18,19 +18,27 @@ interface ProjectGeneratorProps {
   modelTier?: ModelTier;
 }
 
-// Stage labels and order for progress display
-const STAGE_CONFIG: Record<string, { label: string; percent: number }> = {
-  intent: { label: 'Analyzing Intent', percent: 0 },
-  architecture: { label: 'Designing Architecture', percent: 25 },
-  code: { label: 'Generating Code', percent: 50 },
-  context: { label: 'Building Context', percent: 50 }, // Runs parallel with code
+// Stage labels, order, and estimated durations for progress display
+const STAGE_CONFIG: Record<string, { label: string; percent: number; estimatedMs: number }> = {
+  intent: { label: 'Analyzing Intent', percent: 0, estimatedMs: 8000 },
+  architecture: { label: 'Designing Architecture', percent: 25, estimatedMs: 15000 },
+  code: { label: 'Generating Code', percent: 50, estimatedMs: 25000 },
+  context: { label: 'Building Context', percent: 50, estimatedMs: 10000 }, // Runs parallel with code
 };
+
+// Total estimated time for all stages (sequential estimate)
+const TOTAL_ESTIMATED_MS = 
+  STAGE_CONFIG.intent.estimatedMs + 
+  STAGE_CONFIG.architecture.estimatedMs + 
+  Math.max(STAGE_CONFIG.code.estimatedMs, STAGE_CONFIG.context.estimatedMs);
 
 interface ProgressState {
   stage: string;
   message: string;
   percent: number;
   isActive: boolean;
+  estimatedTimeLeft: number | null; // milliseconds
+  retryCount: number;
 }
 
 function getUserId(): string {
@@ -41,6 +49,22 @@ function getUserId(): string {
     localStorage.setItem("dawson-collab-user-id", userId);
   }
   return userId;
+}
+
+/**
+ * Format milliseconds into a human-readable time remaining string
+ */
+function formatTimeRemaining(ms: number): string {
+  const seconds = Math.ceil(ms / 1000);
+  if (seconds < 60) {
+    return `${seconds}s`;
+  }
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  if (remainingSeconds === 0) {
+    return `${minutes}m`;
+  }
+  return `${minutes}m ${remainingSeconds}s`;
 }
 
 export function ProjectGenerator({
@@ -63,48 +87,101 @@ export function ProjectGenerator({
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<ProjectGenerationResult | null>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const [startTime, setStartTime] = useState<number | null>(null);
   const [progress, setProgress] = useState<ProgressState>({
     stage: '',
     message: '',
     percent: 0,
     isActive: false,
+    estimatedTimeLeft: null,
+    retryCount: 0,
   });
 
   // Track completed stages for progress calculation
   const [completedStages, setCompletedStages] = useState<Set<string>>(new Set());
 
+  // Calculate estimated time remaining based on current stage and elapsed time
+  const calculateEstimatedTimeLeft = useCallback((
+    completedStages: Set<string>,
+    currentStage: string,
+    elapsedMs: number
+  ): number | null => {
+    // Calculate remaining stages and their estimated durations
+    let remainingMs = 0;
+    const stages = ['intent', 'architecture', 'code', 'context'];
+    
+    for (const stage of stages) {
+      if (!completedStages.has(stage)) {
+        const config = STAGE_CONFIG[stage];
+        if (config) {
+          // If this is the current stage, estimate partial completion
+          if (stage === currentStage) {
+            remainingMs += config.estimatedMs * 0.5; // Assume halfway through
+          } else if (stage === 'context' && !completedStages.has('code')) {
+            // Context runs parallel with code, so don't add it separately
+            continue;
+          } else {
+            remainingMs += config.estimatedMs;
+          }
+        }
+      }
+    }
+
+    // Adjust estimate based on actual elapsed time vs expected
+    const expectedElapsed = Array.from(completedStages).reduce((sum, stage) => {
+      return sum + (STAGE_CONFIG[stage]?.estimatedMs || 0);
+    }, 0);
+    
+    if (expectedElapsed > 0 && elapsedMs > 0) {
+      const ratio = elapsedMs / expectedElapsed;
+      remainingMs = remainingMs * ratio;
+    }
+
+    return remainingMs > 0 ? remainingMs : null;
+  }, []);
+
   // Progress callback for streaming
   const handleProgress = useCallback((event: StreamProgressEvent) => {
-    const stageConfig = STAGE_CONFIG[event.stage] || { label: event.stage, percent: 0 };
+    const stageConfig = STAGE_CONFIG[event.stage] || { label: event.stage, percent: 0, estimatedMs: 10000 };
+    const elapsed = startTime ? Date.now() - startTime : 0;
     
     if (event.eventType === 'start') {
-      setProgress({
+      setProgress(prev => ({
+        ...prev,
         stage: event.stage,
         message: event.message || stageConfig.label + '...',
         percent: stageConfig.percent,
         isActive: true,
-      });
+        estimatedTimeLeft: calculateEstimatedTimeLeft(completedStages, event.stage, elapsed),
+      }));
     } else if (event.eventType === 'complete') {
-      setCompletedStages(prev => new Set([...prev, event.stage]));
-      
       // Calculate percent based on completed stages
       // intent=25%, architecture=25%, code+context=50% (run parallel)
       let percent = 0;
-      setCompletedStages(prev => {
-        const updated = new Set([...prev, event.stage]);
-        if (updated.has('intent')) percent += 25;
-        if (updated.has('architecture')) percent += 25;
-        if (updated.has('code') || updated.has('context')) percent += 25;
-        if (updated.has('code') && updated.has('context')) percent += 25;
-        return updated;
-      });
+      const updatedStages = new Set([...completedStages, event.stage]);
       
+      if (updatedStages.has('intent')) percent += 25;
+      if (updatedStages.has('architecture')) percent += 25;
+      if (updatedStages.has('code') || updatedStages.has('context')) percent += 25;
+      if (updatedStages.has('code') && updatedStages.has('context')) percent += 25;
+      
+      setCompletedStages(updatedStages);
       setProgress(prev => ({
         ...prev,
         message: event.message || stageConfig.label + ' complete',
         percent: Math.min(percent, 95), // Cap at 95 until fully done
+        estimatedTimeLeft: calculateEstimatedTimeLeft(updatedStages, '', elapsed),
       }));
     }
+  }, [completedStages, startTime, calculateEstimatedTimeLeft]);
+  
+  // Handle retry events from streaming
+  const handleRetry = useCallback((attempt: number, error: Error) => {
+    setProgress(prev => ({
+      ...prev,
+      message: `Retrying... (attempt ${attempt})`,
+      retryCount: attempt,
+    }));
   }, []);
 
   const handleGenerate = async () => {
@@ -112,11 +189,14 @@ export function ProjectGenerator({
     setError(null);
     setResult(null);
     setCompletedStages(new Set());
+    setStartTime(Date.now());
     setProgress({
       stage: '',
       message: 'Starting generation...',
       percent: 0,
       isActive: true,
+      estimatedTimeLeft: TOTAL_ESTIMATED_MS,
+      retryCount: 0,
     });
 
     try {
@@ -133,7 +213,12 @@ export function ProjectGenerator({
           seed: undefined, // Allow variation
           modelTier,
         },
-        handleProgress // Enable streaming with progress callback
+        handleProgress, // Enable streaming with progress callback
+        {
+          maxRetries: 2,
+          retryDelayMs: 1500,
+          onRetry: handleRetry,
+        }
       );
 
       if (!generationResult.success) {
@@ -295,9 +380,14 @@ Generated on ${new Date(result.generatedAt).toLocaleString()}
             <span className="font-medium text-muted-foreground">
               {progress.message}
             </span>
-            <span className="text-muted-foreground">
-              {progress.percent}%
-            </span>
+            <div className="flex items-center gap-3 text-muted-foreground">
+              {progress.estimatedTimeLeft && progress.estimatedTimeLeft > 0 && (
+                <span className="text-xs">
+                  ~{formatTimeRemaining(progress.estimatedTimeLeft)} left
+                </span>
+              )}
+              <span>{progress.percent}%</span>
+            </div>
           </div>
           
           {/* Progress Bar */}
@@ -323,6 +413,14 @@ Generated on ${new Date(result.generatedAt).toLocaleString()}
               Context
             </span>
           </div>
+
+          {/* Retry indicator */}
+          {progress.retryCount > 0 && (
+            <p className="text-xs text-amber-500 flex items-center gap-1">
+              <AlertCircle className="h-3 w-3" />
+              Connection interrupted - retrying (attempt {progress.retryCount})
+            </p>
+          )}
         </div>
       )}
 

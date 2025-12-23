@@ -8,7 +8,7 @@
 
 ## Current Priorities
 
-1. Test model tier toggle with live API
+1. Live testing of streaming UI with Anthropic API
 2. Improve configurator UX
 3. Enhance visual editor capabilities
 
@@ -21,6 +21,52 @@
 ---
 
 ## Session History
+
+### Session: 2025-12-22 21:30 - Streaming UI Enhancements (P2)
+
+**Work Completed**
+- Enhanced `lib/project-generator.ts` with auto-retry logic for dropped SSE connections
+  - Added `StreamOptions` interface with `maxRetries`, `retryDelayMs`, `onRetry` callback
+  - Added `processStreamingResponse` function with timeout detection (2 min)
+  - Retry logic for network errors and stream interruptions
+  - Non-retryable errors (rate limits, auth failures) handled separately
+- Enhanced `ProjectGenerator.tsx` with estimated time remaining display
+  - Added `estimatedMs` to `STAGE_CONFIG` for each generation stage
+  - Added `calculateEstimatedTimeLeft` function with adaptive estimation
+  - Progress UI now shows "~Xm Ys left" during generation
+  - Added retry indicator for interrupted connections
+  - Added `formatTimeRemaining` helper function
+
+**Files Modified**
+- `website/lib/project-generator.ts` - Added retry logic and stream timeout handling
+- `website/app/components/configurator/ProjectGenerator.tsx` - Added time estimates and retry UI
+
+**Technical Details**
+- Default retry config: 2 max retries, 1.5s delay
+- Stream timeout: 2 minutes without data triggers retry
+- Estimated durations: intent=8s, architecture=15s, code=25s, context=10s
+- Adaptive estimation adjusts based on actual elapsed vs expected time
+- Retry indicator shows amber warning with attempt count
+
+**Blockers Encountered**
+- None
+
+**Test Results**
+- ✅ 668/668 tests passing
+- ✅ Website builds successfully
+- ✅ No linter errors
+
+**Next Priorities**
+1. Live testing with streaming enabled
+2. Consider adding cancel generation button
+3. Monitor actual vs estimated times in production
+
+**Handoff Notes**
+- Streaming UI fully enhanced with retry logic and time estimates
+- Ready for production testing
+- Time estimates may need calibration after real-world usage
+
+---
 
 ### Session: 2025-12-22 20:00 - Streaming UI Integration
 
