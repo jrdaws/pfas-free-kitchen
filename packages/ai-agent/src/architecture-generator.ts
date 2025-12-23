@@ -37,11 +37,11 @@ export async function generateArchitecture(
         supportedIntegrations: JSON.stringify(template.supportedIntegrations, null, 2),
       });
 
-      // Call Claude Haiku for cost-efficient architecture design
-      // Haiku is sufficient for structured architecture tasks (33% cost reduction)
+      // Call Claude Sonnet for reliable architecture design
+      // Haiku failed to follow schema constraints reliably (validation errors)
       const response = await client.complete(
         {
-          model: "claude-3-haiku-20240307",
+          model: "claude-sonnet-4-20250514",
           temperature: 0, // Deterministic
           maxTokens: 4096,
           messages: [

@@ -4,11 +4,7 @@ export declare const PageDefinitionSchema: z.ZodObject<{
     name: z.ZodString;
     description: z.ZodString;
     components: z.ZodArray<z.ZodString>;
-    layout: z.ZodOptional<z.ZodEnum<{
-        dashboard: "dashboard";
-        default: "default";
-        auth: "auth";
-    }>>;
+    layout: z.ZodOptional<z.ZodString>;
 }, z.core.$strip>;
 export declare const ComponentDefinitionSchema: z.ZodObject<{
     name: z.ZodString;
@@ -18,7 +14,7 @@ export declare const ComponentDefinitionSchema: z.ZodObject<{
         layout: "layout";
     }>;
     description: z.ZodString;
-    props: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    props: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
     template: z.ZodEnum<{
         "create-new": "create-new";
         "use-existing": "use-existing";
@@ -46,11 +42,7 @@ export declare const ArchitectureSchema: z.ZodObject<{
         name: z.ZodString;
         description: z.ZodString;
         components: z.ZodArray<z.ZodString>;
-        layout: z.ZodOptional<z.ZodEnum<{
-            dashboard: "dashboard";
-            default: "default";
-            auth: "auth";
-        }>>;
+        layout: z.ZodOptional<z.ZodString>;
     }, z.core.$strip>>;
     components: z.ZodArray<z.ZodObject<{
         name: z.ZodString;
@@ -60,7 +52,7 @@ export declare const ArchitectureSchema: z.ZodObject<{
             layout: "layout";
         }>;
         description: z.ZodString;
-        props: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        props: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodAny>>;
         template: z.ZodEnum<{
             "create-new": "create-new";
             "use-existing": "use-existing";

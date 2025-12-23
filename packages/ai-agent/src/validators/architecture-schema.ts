@@ -5,14 +5,16 @@ export const PageDefinitionSchema = z.object({
   name: z.string(),
   description: z.string(),
   components: z.array(z.string()),
-  layout: z.enum(["default", "auth", "dashboard"]).optional(),
+  // Allow any layout string - AI may return various layout types
+  layout: z.string().optional(),
 });
 
 export const ComponentDefinitionSchema = z.object({
   name: z.string(),
   type: z.enum(["ui", "feature", "layout"]),
   description: z.string(),
-  props: z.record(z.string(), z.string()).optional(),
+  // Props can be complex objects/arrays, not just string-to-string
+  props: z.record(z.string(), z.any()).optional(),
   template: z.enum(["create-new", "use-existing"]),
 });
 
