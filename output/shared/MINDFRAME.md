@@ -329,7 +329,7 @@ Agent Onboarding → 🔴 (can't train new agents)
 | Website | 2025-12-23 19:50 | UI Redesign, Phase Grouping |
 | Documentation | 2025-12-23 15:00 | Governance, Documentation |
 | Testing | 2025-12-23 | Code Quality |
-| Auditor | 2025-12-23 | Overall Health |
+| Auditor | 2025-12-24 | Agent Folder Structure SOP (98/100) |
 | Platform | 2025-12-24 06:00 | Vercel monorepo fixes, SOP proposal |
 | Template | 2025-12-22 | Templates |
 | Integration | 2025-12-22 | Integrations |

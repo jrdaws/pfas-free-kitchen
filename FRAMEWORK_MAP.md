@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 0bfe75f 2025-12-24 docs(sop): create Agent Folder Structure SOP and standardize folders
 - cc52f41 2025-12-24 feat(website): add feedback API with rate limiting
 - a3ed807 2025-12-24 feat(website): add feedback API with rate limiting
 - 924368c 2025-12-24 chore(cli): add testing agent task for export build verification
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - a4137bb 2025-12-24 chore: add website agent inbox tasks for export alignment
 - 18fe75f 2025-12-24 test(media-pipeline): complete E2E verification - 47/47 checks pass
 - 0afd7f5 2025-12-24 test(sop): verify checkpoint protocol is actionable
-- 88350b7 2025-12-24 docs(governance): enhance Permission Probing Protocol (v2.9)
 
 ## Agent Governance Structure
 
