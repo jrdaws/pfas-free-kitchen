@@ -1,0 +1,81 @@
+{
+  "$schema": "../schemas/design-tokens.schema.json",
+  "name": "Dawson-Does Color Tokens",
+  "version": "1.0.0",
+  "lastUpdated": "2025-12-24",
+  "source": "COLOR_PHILOSOPHY.md",
+
+  "brand": {
+    "primary": {
+      "value": "#6366F1",
+      "name": "Indigo",
+      "usage": "CTAs, links, icons, active states"
+    },
+    "secondary": {
+      "value": "#8B5CF6",
+      "name": "Violet", 
+      "usage": "Gradients, hover states"
+    }
+  },
+
+  "semantic": {
+    "success": {
+      "value": "#10B981",
+      "name": "Emerald",
+      "usage": "Success states, checkmarks, completion"
+    },
+    "warning": {
+      "value": "#F59E0B",
+      "name": "Amber",
+      "usage": "Warnings, attention needed"
+    },
+    "error": {
+      "value": "#EF4444",
+      "name": "Red",
+      "usage": "Errors, destructive actions"
+    },
+    "info": {
+      "value": "#3B82F6",
+      "name": "Blue",
+      "usage": "Information, tips"
+    }
+  },
+
+  "neutral": {
+    "white": "#FFFFFF",
+    "nearBlack": "#0A0A0A",
+    "muted": "#71717A",
+    "lightSurface": "#F5F5F5",
+    "darkSurface": "#1A1A1A",
+    "borderLight": "#E5E5E5",
+    "borderDark": "#333333"
+  },
+
+  "gradients": {
+    "primary": {
+      "value": "linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%)",
+      "usage": "Hero sections, feature highlights"
+    },
+    "dark": {
+      "value": "linear-gradient(180deg, #0A0A0A 0%, #1A1A1A 100%)",
+      "usage": "Dark mode backgrounds"
+    }
+  },
+
+  "shadows": {
+    "sm": "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+    "md": "0 4px 6px -1px rgba(0, 0, 0, 0.1)",
+    "lg": "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
+    "primaryGlow": "0 0 20px rgba(99, 102, 241, 0.3)"
+  },
+
+  "usage": {
+    "rule": "60-30-10",
+    "breakdown": {
+      "neutral": "60% - Background, negative space, text",
+      "primary": "30% - Icons, buttons, active elements",
+      "accent": "10% - Highlights, success states, gradients"
+    }
+  }
+}
+

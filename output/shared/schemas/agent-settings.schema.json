@@ -1,0 +1,92 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://dawson-does.com/schemas/agent-settings.schema.json",
+  "title": "Agent Settings Schema",
+  "description": "Validates agent settings.json files in output/agents/*/config/",
+  "type": "object",
+  "required": ["version", "agent", "lastUpdated", "updatedBy", "behavior"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Semantic version of the settings file"
+    },
+    "agent": {
+      "type": "string",
+      "enum": [
+        "auditor",
+        "cli",
+        "curator",
+        "documentation",
+        "integration",
+        "media",
+        "platform",
+        "quality",
+        "research",
+        "strategist",
+        "template",
+        "testing",
+        "website"
+      ],
+      "description": "Agent identifier (lowercase)"
+    },
+    "lastUpdated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "updatedBy": {
+      "type": "string",
+      "description": "Who or what made the last update"
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["autoConfirm", "verboseOutput"],
+      "properties": {
+        "autoConfirm": {
+          "type": "boolean",
+          "default": false,
+          "description": "Skip confirmation prompts"
+        },
+        "verboseOutput": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show detailed output"
+        },
+        "defaultTimeout": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 300000,
+          "default": 30000,
+          "description": "Default timeout in milliseconds"
+        },
+        "maxRetries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "default": 3,
+          "description": "Maximum retry attempts on failure"
+        }
+      },
+      "additionalProperties": true
+    },
+    "defaults": {
+      "type": "object",
+      "description": "Agent-specific default values",
+      "additionalProperties": true
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "experimentalFeatures": {
+          "type": "boolean",
+          "default": false,
+          "description": "Enable experimental features"
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
+

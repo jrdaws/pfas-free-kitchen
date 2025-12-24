@@ -1,0 +1,101 @@
+TASK: Final Path Cleanup - Update All Remaining Old References
+===============================================================
+AGENT: Documentation Agent
+PRIORITY: P1 - HIGH
+DATE: 2025-12-24
+FROM: Auditor Agent
+
+CONTEXT:
+--------
+The agent folder restructuring is complete. This is the final cleanup task to
+update any remaining references to old paths across all governance files.
+
+MIGRATION SUMMARY:
+------------------
+| Old Path | New Path |
+|----------|----------|
+| `output/cli-agent/` | `output/agents/cli/` |
+| `output/website-agent/` | `output/agents/website/` |
+| `output/documentation-agent/` | `output/agents/documentation/` |
+| `output/testing-agent/` | `output/agents/testing/` |
+| `output/platform-agent/` | `output/agents/platform/` |
+| `output/template-agent/` | `output/agents/template/` |
+| `output/integration-agent/` | `output/agents/integration/` |
+| `output/controller-agents/auditor/` | `output/agents/auditor/` |
+| `output/controller-agents/strategist/` | `output/agents/strategist/` |
+| `output/controller-agents/curator/` | `output/agents/curator/` |
+| `output/media-pipeline/research-agent/` | `output/agents/research/` |
+| `output/media-pipeline/media-agent/` | `output/agents/media/` |
+| `output/media-pipeline/quality-agent/` | `output/agents/quality/` |
+| `output/media-pipeline/shared/` | `output/shared/media/` |
+| `output/media-pipeline/MEDIA_PIPELINE.md` | `output/shared/media/MEDIA_PIPELINE.md` |
+
+FIND REMAINING OLD PATHS:
+-------------------------
+
+```bash
+# Find all files with old agent folder paths
+grep -r "output/cli-agent\|output/website-agent\|output/documentation-agent\|output/testing-agent\|output/platform-agent\|output/template-agent\|output/integration-agent\|output/controller-agents\|output/media-pipeline" \
+  --include="*.md" \
+  CLAUDE.md .cursorrules AGENT_CONTEXT.md prompts/ docs/ 2>/dev/null \
+  | grep -v "DEPRECATED\|_archive\|FOLDER_DEPRECATION"
+```
+
+KNOWN FILES TO UPDATE:
+----------------------
+1. AGENT_CONTEXT.md
+2. prompts/agents/AGENT_POLICIES.md
+3. docs/sops/MEDIA_NAMING_SOP.md
+4. docs/sops/SHADCN_IMPLEMENTATION_SOP.md
+5. Any other files found by grep
+
+REPLACEMENT APPROACH:
+---------------------
+For each file found:
+1. Open file
+2. Search and replace old paths with new paths
+3. Verify links still work
+4. Save
+
+DO NOT UPDATE:
+--------------
+- DEPRECATED.md files (they document old paths intentionally)
+- FOLDER_DEPRECATION_SOP.md (documents the migration)
+- Files in `_archive/` folders
+
+VERIFICATION:
+-------------
+After updates, this command should return 0 results (excluding deprecation docs):
+
+```bash
+grep -r "output/cli-agent\|output/website-agent\|output/controller-agents\|output/media-pipeline" \
+  --include="*.md" \
+  CLAUDE.md .cursorrules AGENT_CONTEXT.md prompts/ docs/ 2>/dev/null \
+  | grep -v "DEPRECATED\|_archive\|FOLDER_DEPRECATION"
+```
+
+SUCCESS CRITERIA:
+-----------------
+□ All governance files use new paths
+□ All SOPs use new paths
+□ Verification grep returns 0 results
+□ No broken markdown links
+
+HANDOFF:
+--------
+When complete:
+1. Move this file to output/agents/documentation/done/
+2. Commit: `docs: complete migration to flat agent folder structure`
+3. Create handoff to Auditor for final verification
+
+## Quick Actions (reply with number):
+
+1. **Documentation Agent**: Execute this task now ← DEFAULT
+2. **Run find command**: Show all files needing updates
+3. **Auditor Agent**: Verify after completion
+4. No further action needed
+
+**⏱️ Auto-continue**: If no response in 35 minutes, proceed with Option 1
+
+(AUDITOR AGENT)
+
