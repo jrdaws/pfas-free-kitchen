@@ -1,6 +1,6 @@
 # Agent Context - Read This First
 
-> **Governance Version: 2.2** | Last Updated: 2025-12-22
+> **Governance Version: 2.3** | Last Updated: 2025-12-23
 > 
 > This file provides essential context for AI agents working on the dawson-does-framework.
 > **Every agent must read this file before starting work.**
@@ -278,6 +278,7 @@ This rule is non-negotiable and applies to ALL responses.
 
 | Document | Purpose |
 |----------|---------|
+| `output/shared/MINDFRAME.md` | **Read First** - Shared agent state and certifications |
 | `docs/standards/PROMPT_STANDARDS.md` | **Required** - Token-optimized AI prompt writing |
 | `docs/standards/API_CONTRACTS.md` | **Required** - Standard API response formats and error handling |
 | `docs/standards/CODING_STANDARDS.md` | Code style and conventions |
@@ -313,5 +314,5 @@ This rule is non-negotiable and applies to ALL responses.
 | `./scripts/install-hooks.sh` | Install git hooks (run once after clone) |
 
 ---
-*Governance Version 2.0 | This context applies to all agents working on dawson-does-framework.*
+*Governance Version 2.3 | This context applies to all agents working on dawson-does-framework.*
 
