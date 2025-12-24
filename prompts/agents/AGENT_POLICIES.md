@@ -532,7 +532,10 @@ If you hit a permission error mid-session, you failed to predict your needs. Not
    
    ⛔ **AGENTS MUST CHECKPOINT EVERY 15-20 MINUTES OR AFTER SIGNIFICANT WORK**
    
+   **User Shorthand:** `checkpoint` or `cp` = run checkpoint immediately
+   
    **Triggers:**
+   - User says `checkpoint` or `cp`
    - After completing a significant task
    - After creating 3+ files
    - Every 15-20 minutes of active work

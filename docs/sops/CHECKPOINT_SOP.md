@@ -19,7 +19,9 @@ A "checkpoint" is a mid-session or end-session save point. It ensures:
 
 ## Checkpoint Trigger
 
-When user says: `checkpoint`, `save`, `commit`, or `end session`
+When user says: `checkpoint`, `cp`, `save`, `commit`, or `end session`
+
+**Shorthand:** `cp` = run checkpoint immediately
 
 ---
 
