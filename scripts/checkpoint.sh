@@ -1,10 +1,18 @@
 #!/bin/bash
-# Checkpoint script - ensures memory update before commit
+# Checkpoint script - ensures memory update with 5 distillation categories
 # Usage: ./scripts/checkpoint.sh [AGENT_CODE]
+# 
+# The 5 Distillation Categories:
+# 1. OPERATIONAL - Tasks, decisions, files (REQUIRED)
+# 2. METRICS - Duration, task count, errors (REQUIRED)
+# 3. PATTERNS - Recurring issues/questions (if applicable)
+# 4. INSIGHTS - Commands, gotchas, workarounds (if applicable)
+# 5. RELATIONSHIPS - Handoffs, dependencies (if applicable)
 
 set -e
 
 AGENT_CODE="${1:-UNKNOWN}"
+MEMORY_FILE="prompts/agents/memory/${AGENT_CODE}_MEMORY.md"
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
@@ -22,35 +30,112 @@ else
   exit 1
 fi
 
-# 2. Check memory file
-MEMORY_FILE="prompts/agents/memory/${AGENT_CODE}_MEMORY.md"
-if [ -f "$MEMORY_FILE" ]; then
-  MEMORY_MTIME=$(stat -f %m "$MEMORY_FILE" 2>/dev/null || stat -c %Y "$MEMORY_FILE" 2>/dev/null)
-  NOW=$(date +%s)
-  AGE=$((NOW - MEMORY_MTIME))
-  
-  if [ $AGE -gt 1800 ]; then  # 30 minutes
-    echo ""
-    echo "⚠️  Step 2: Memory file not updated recently!"
-    echo "   File: $MEMORY_FILE"
-    echo "   Last modified: $((AGE / 60)) minutes ago"
-    echo ""
-    echo "   Before continuing, update your memory with:"
-    echo "   - Work Completed"
-    echo "   - Key Decisions"
-    echo "   - Time Spent"
-    echo "   - Files Changed"
-    echo ""
-    read -p "   Have you updated your memory file? (y/N): " CONFIRM
-    if [ "$CONFIRM" != "y" ] && [ "$CONFIRM" != "Y" ]; then
-      echo "   ❌ Please update memory file first"
-      exit 1
-    fi
-  else
-    echo "   ✅ Memory file recently updated"
-  fi
+# 2. Memory distillation prompts
+echo ""
+echo "╔══════════════════════════════════════════════════════════════╗"
+echo "║           📝 MEMORY DISTILLATION (5 Categories)               "
+echo "╚══════════════════════════════════════════════════════════════╝"
+echo ""
+
+echo "Answer these prompts to distill your session into memory."
+echo "Press ENTER to skip optional categories."
+echo ""
+
+# Category 1: OPERATIONAL (Required)
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📋 CATEGORY 1: OPERATIONAL (Required)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "   Main tasks completed (comma-separated): " TASKS
+if [ -z "$TASKS" ]; then
+  echo "   ❌ At least one task required"
+  exit 1
+fi
+
+read -p "   Key decision made (or 'none'): " DECISION
+read -p "   Key files changed (comma-separated): " FILES
+
+# Category 2: METRICS (Required)
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📊 CATEGORY 2: METRICS (Required)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "   Approximate duration (minutes): " DURATION
+read -p "   Number of errors encountered: " ERRORS
+
+# Category 3: PATTERNS (Optional)
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🔄 CATEGORY 3: PATTERNS (Optional - if you saw repeats)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "   Recurring issue seen? (or ENTER to skip): " PATTERN
+
+# Category 4: INSIGHTS (Optional)
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "💡 CATEGORY 4: INSIGHTS (Optional - useful discoveries)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "   Useful command/gotcha discovered? (or ENTER to skip): " INSIGHT
+
+# Category 5: RELATIONSHIPS (Optional)
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "🤝 CATEGORY 5: RELATIONSHIPS (Optional - handoffs/deps)"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+read -p "   Agent handoff or dependency found? (or ENTER to skip): " RELATIONSHIP
+
+# Generate memory entry
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "📄 Generated Memory Entry"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+DATE=$(date +"%Y-%m-%d %H:%M")
+MEMORY_ENTRY="### Session: $DATE (Checkpoint)
+
+#### 📋 OPERATIONAL
+- **Tasks**: $TASKS
+- **Decision**: ${DECISION:-None}
+- **Files**: ${FILES:-None specified}
+
+#### 📊 METRICS
+- **Duration**: ${DURATION:-Unknown} minutes
+- **Errors**: ${ERRORS:-0}"
+
+if [ -n "$PATTERN" ]; then
+  MEMORY_ENTRY="$MEMORY_ENTRY
+
+#### 🔄 PATTERNS
+- $PATTERN"
+fi
+
+if [ -n "$INSIGHT" ]; then
+  MEMORY_ENTRY="$MEMORY_ENTRY
+
+#### 💡 INSIGHTS
+- $INSIGHT"
+fi
+
+if [ -n "$RELATIONSHIP" ]; then
+  MEMORY_ENTRY="$MEMORY_ENTRY
+
+#### 🤝 RELATIONSHIPS
+- $RELATIONSHIP"
+fi
+
+echo ""
+echo "$MEMORY_ENTRY"
+echo ""
+
+# Confirm and append to memory
+read -p "Append this to $MEMORY_FILE? (Y/n): " CONFIRM
+if [ "$CONFIRM" != "n" ] && [ "$CONFIRM" != "N" ]; then
+  # Find the Session History section and prepend
+  echo "" >> "$MEMORY_FILE"
+  echo "$MEMORY_ENTRY" >> "$MEMORY_FILE"
+  echo ""
+  echo "   ✅ Memory updated: $MEMORY_FILE"
 else
-  echo "   ⚠️ Memory file not found: $MEMORY_FILE"
+  echo "   ⏭️ Skipped memory update (manual update expected)"
 fi
 
 # 3. Stage all changes
@@ -63,7 +148,6 @@ if git diff --cached --quiet; then
   echo "   ℹ️ No changes to commit"
   COMMITTED="false"
 else
-  # Count changed files
   CHANGED=$(git diff --cached --name-only | wc -l | tr -d ' ')
   echo "   📁 $CHANGED files staged"
   
@@ -99,13 +183,16 @@ echo "╔═══════════════════════�
 echo "║           ✅ CHECKPOINT COMPLETE                              "
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
-echo "   Tests:    ✅ $TESTS passing"
-echo "   Memory:   ✅ Updated"
+echo "   Tests:      ✅ $TESTS passing"
+echo "   Memory:     ✅ 5 categories captured"
+echo "   Categories: ✅ Operational, Metrics"
+[ -n "$PATTERN" ] && echo "               ✅ Patterns"
+[ -n "$INSIGHT" ] && echo "               ✅ Insights"
+[ -n "$RELATIONSHIP" ] && echo "               ✅ Relationships"
 if [ "$COMMITTED" = "true" ]; then
-  echo "   Commit:   ✅ $COMMIT_HASH"
-  echo "   Push:     ✅ origin/main"
+  echo "   Commit:     ✅ $COMMIT_HASH"
+  echo "   Push:       ✅ origin/main"
 else
-  echo "   Commit:   ⏭️ No changes"
+  echo "   Commit:     ⏭️ No changes"
 fi
 echo ""
-

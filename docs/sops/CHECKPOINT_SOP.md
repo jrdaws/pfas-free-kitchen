@@ -56,45 +56,75 @@ When user says: `checkpoint`, `save`, `commit`, or `end session`
 
 ## Memory Update Requirements
 
-### Mandatory Fields (Every Checkpoint)
+### The 5 Distillation Categories
+
+Every checkpoint MUST capture insights from these 5 categories:
+
+| # | Category | What to Save | When | Required? |
+|---|----------|--------------|------|-----------|
+| 1 | **Operational** | Tasks, decisions, files changed | Every session | ✅ ALWAYS |
+| 2 | **Patterns** | Recurring errors, common questions | When count ≥2 | 🟡 If applicable |
+| 3 | **Insights** | Commands, gotchas, workarounds | When novel | 🟡 If applicable |
+| 4 | **Metrics** | Duration, task count, errors | Every session | ✅ ALWAYS |
+| 5 | **Relationships** | Handoffs, agent coordination | When new | 🟡 If applicable |
+
+### Mandatory Session Entry Template
 
 ```markdown
 ### Session: [DATE] [TIME] ([Brief Label])
 
+## 📋 OPERATIONAL (Required)
 #### Work Completed
-- [Bullet list of completed tasks]
+- [Task 1]
+- [Task 2]
 
 #### Key Decisions
 - [Decision]: [Reasoning]
 
-#### Blockers/Issues
-- [Any problems encountered]
-
-#### Time Spent
-- [Estimated duration]
-
 #### Files Changed
-- [List of key files modified]
+- [file1.ts] - [what changed]
+- [file2.md] - [what changed]
+
+#### Blockers/Issues
+- [Issue or "None"]
+
+## 📊 METRICS (Required)
+- **Duration**: [X] minutes
+- **Tasks Completed**: [N]
+- **Errors Encountered**: [N]
+
+## 🔄 PATTERNS (If applicable - when count ≥2)
+#### Recurring Issues
+- [Issue seen multiple times]: [Count]
+
+#### Common Questions
+- [Question asked repeatedly]
+
+## 💡 INSIGHTS (If applicable - when novel)
+#### Useful Commands Discovered
+- `[command]`: [what it does]
+
+#### Gotchas/Workarounds
+- [Problem]: [Solution]
+
+## 🤝 RELATIONSHIPS (If applicable - when new)
+#### Agent Handoffs
+- From [Agent] → To [Agent]: [Topic]
+
+#### Dependencies Discovered
+- [File/Component] depends on [Other]
 ```
 
-### Optional Fields (When Applicable)
+### Quick Capture Checklist
 
-```markdown
-#### Errors Encountered
-- [Error]: [How resolved]
+Before completing checkpoint, mentally run through:
 
-#### User Questions Answered
-- Q: [Question]
-- A: [Brief answer]
-
-#### Patterns Observed
-- [Pattern that might need SOP]
-
-#### Performance Notes
-- [Slow operations, optimizations made]
-
-#### Alternative Approaches Considered
-- [Approach]: [Why rejected]
+```
+□ OPERATIONAL: What did I do? What did I decide? What files?
+□ METRICS: How long? How many tasks? Any errors?
+□ PATTERNS: Did I see this issue before? Is this a repeat question?
+□ INSIGHTS: Did I learn something useful? Any gotchas?
+□ RELATIONSHIPS: Did I hand off to another agent? New dependencies?
 ```
 
 ---
