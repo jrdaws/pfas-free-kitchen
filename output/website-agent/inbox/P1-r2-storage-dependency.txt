@@ -1,0 +1,95 @@
+# P1: R2 Storage Dependency Missing from package.json
+
+**Priority**: P1 - HIGH
+**Date**: 2025-12-24
+**From**: Quality Agent
+
+---
+
+## Problem Statement
+
+When user selects "Cloudflare R2" for storage integration, the appropriate SDK 
+dependency is NOT added to package.json.
+
+---
+
+## Evidence
+
+### User Selection (from Screenshots)
+Storage: Cloudflare R2 ✓ (selected with checkmark)
+
+### package.json in Downloaded Project
+```json
+{
+  "dependencies": {
+    "next": "^15.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "@supabase/supabase-js": "^2.47.10",
+    "@supabase/ssr": "^0.1.0",
+    "stripe": "^14.21.0",
+    "resend": "^3.2.0",
+    "react-email": "^2.1.0",
+    "@react-email/components": "^0.0.15",
+    "posthog-js": "^1.100.0"
+  }
+}
+```
+
+**Missing**: No R2/S3 SDK dependency
+
+### README.md Lists It
+```markdown
+## Integrations
+- **storage**: r2
+```
+
+### .env.local.example References It
+```
+R2_ACCESS_KEY_ID=your_value_here
+R2_SECRET_ACCESS_KEY=your_value_here
+R2_BUCKET_NAME=your_value_here
+```
+
+---
+
+## Required Fix
+
+Add the AWS S3 SDK to package.json when R2 is selected (R2 is S3-compatible):
+
+```json
+{
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.500.0",
+    "@aws-sdk/s3-request-presigner": "^3.500.0"
+  }
+}
+```
+
+Or if using a lighter alternative:
+```json
+{
+  "dependencies": {
+    "aws4fetch": "^1.0.17"
+  }
+}
+```
+
+---
+
+## Additional Context
+
+This is part of the larger issue where integrations are listed but not implemented.
+However, the missing dependency is a separate bug - even the declaration is missing.
+
+---
+
+## Acceptance Criteria
+
+- [ ] R2 storage selection adds appropriate S3-compatible SDK to package.json
+- [ ] Alternatively, add R2-specific client library if one exists
+
+---
+
+*P1 Bug | Quality Agent → Website Agent | 2025-12-24*
+

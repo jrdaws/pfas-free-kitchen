@@ -1,0 +1,169 @@
+# P2: Clarify ZIP vs CLI Export Differences
+
+**Priority**: P2 - MEDIUM
+**Date**: 2025-12-24
+**From**: Quality Agent
+
+---
+
+## Problem Statement
+
+The Export step presents 4 options (CLI Command, Download ZIP, Pull from Platform, 
+Install Wizard) but doesn't clearly explain what each provides. The downloaded 
+README.md adds to the confusion:
+
+> "For full templates with pre-built components, use the CLI command"
+
+This implies the ZIP is NOT a full template, but users expect it to be since they:
+1. Selected a template (E-commerce)
+2. Saw a full preview with components
+3. Went through 8 configuration steps
+
+---
+
+## Current UI (from Screenshot)
+
+```
+┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐
+│ Option A │ │ Option B │ │ Option C │ │ Option D │
+│          │ │          │ │          │ │          │
+│ CLI      │ │ Download │ │ Pull from│ │ Install  │
+│ Command  │ │ ZIP      │ │ Platform │ │ Wizard   │
+│          │ │          │ │          │ │          │
+│ Copy and │ │ Get      │ │ Save and │ │ Guided   │
+│ run in   │ │ complete │ │ pull     │ │ setup    │
+│ terminal │ │ project  │ │ later    │ │ with     │
+│          │ │ as ZIP   │ │ with a   │ │ system   │
+│ Fastest  │ │ file     │ │ token    │ │ detection│
+│ method   │ │          │ │          │ │          │
+│          │ │ Includes │ │ Cloud    │ │ Coming   │
+│          │ │ .dd/     │ │ sync     │ │ soon     │
+│          │ │ files    │ │          │ │          │
+└──────────┘ └──────────┘ └──────────┘ └──────────┘
+```
+
+Issues:
+1. "Get complete project as ZIP file" - but it's NOT complete
+2. "Fastest method" on CLI - but what does it produce?
+3. No comparison of what's included in each
+
+---
+
+## Required Documentation Updates
+
+### Update 1: Export Step UI Copy
+
+Replace current descriptions with clear comparison:
+
+| Option | What You Get | Best For |
+|--------|--------------|----------|
+| **CLI Command** | Full template with all components, pages, and integrations pre-configured | Developers who want production-ready code |
+| **Download ZIP** | Starter structure with dependencies listed, .dd/ context files | Developers who want to build from scratch with guidance |
+| **Pull from Platform** | Same as CLI, synced to cloud for team sharing | Teams and collaboration |
+| **Install Wizard** | Guided setup with system detection | Beginners (coming soon) |
+
+### Update 2: Add Comparison Modal
+
+When user hovers or clicks "Compare options":
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ What's Included?                                             │
+├─────────────────────────────────────────────────────────────┤
+│                          │ CLI    │ ZIP    │ Platform │
+│ ─────────────────────────┼────────┼────────┼──────────│
+│ Template components      │ ✅     │ ❌     │ ✅       │
+│ Integration code         │ ✅     │ ❌     │ ✅       │
+│ Page routes              │ ✅     │ ❌     │ ✅       │
+│ Dependencies listed      │ ✅     │ ✅     │ ✅       │
+│ .dd/ context files       │ ✅     │ ✅     │ ✅       │
+│ .env.local.example       │ ✅     │ ✅     │ ✅       │
+│ Production-ready         │ ✅     │ ❌     │ ✅       │
+│ Cloud sync               │ ❌     │ ❌     │ ✅       │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Update 3: README.md Template
+
+Update the generated README to be clearer:
+
+```markdown
+# mytestproject06
+
+## What You Downloaded
+
+This is a **starter structure** with:
+- ✅ Next.js 15 + React 19 setup
+- ✅ Dependencies for your selected integrations (listed, not implemented)
+- ✅ Environment variable template
+- ✅ Project context in .dd/ folder
+
+This does NOT include:
+- ❌ Pre-built template components
+- ❌ Page routes and layouts
+- ❌ Integration boilerplate code
+
+## Want the Full Template?
+
+Run this command to get everything:
+
+\`\`\`bash
+npx @jrdaws/framework export ecommerce ./mytestproject06
+\`\`\`
+
+This will add:
+- Complete E-commerce template with product pages
+- Authentication flows
+- Cart and checkout
+- All integration code pre-configured
+```
+
+### Update 4: Post-Download Modal
+
+Show a modal after ZIP download:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ✅ Download Complete!                                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│ You downloaded the STARTER STRUCTURE.                        │
+│                                                              │
+│ To get the FULL TEMPLATE with all components, run:          │
+│                                                              │
+│ ┌─────────────────────────────────────────────────────────┐ │
+│ │ npx @jrdaws/framework export ecommerce ./mytestproject06│ │
+│ └─────────────────────────────────────────────────────────┘ │
+│                                     [Copy Command]          │
+│                                                              │
+│ Or start fresh with just the starter:                       │
+│ 1. Extract the ZIP                                          │
+│ 2. Run npm install                                          │
+│ 3. Build your own components                                │
+│                                                              │
+│                                    [Got it]                  │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## Files to Update
+
+1. `website/app/configure/steps/ExportStep.tsx` - UI copy
+2. `website/lib/export/readme-template.md` - README template
+3. Docs: Add "Export Options Explained" page
+
+---
+
+## Acceptance Criteria
+
+- [ ] Export step clearly shows what each option includes
+- [ ] ZIP option explicitly states it's a "Starter Structure"
+- [ ] README.md in ZIP clearly explains what's included vs not
+- [ ] Post-download modal guides user to CLI for full template
+- [ ] Documentation page explains all export options in detail
+
+---
+
+*P2 Documentation | Quality Agent → Documentation Agent | 2025-12-24*
+

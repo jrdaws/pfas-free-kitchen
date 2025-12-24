@@ -1,0 +1,276 @@
+# P1: E2E Tests for Configurator Export Flow
+
+**Priority**: P1 - HIGH
+**Date**: 2025-12-24
+**From**: Quality Agent
+
+---
+
+## Problem Statement
+
+The Project Configurator has no E2E tests verifying that user inputs are correctly 
+reflected in the exported project. This led to critical gaps:
+- AI Preview showing components that don't exist in download
+- Context fields not being saved
+- Integration dependencies missing
+
+---
+
+## Required Test Suites
+
+### Suite 1: Template Selection → Export Verification
+
+```typescript
+describe('Template Export', () => {
+  const templates = ['saas', 'ecommerce', 'blog', 'landing', 'dashboard', 'directory', 'backend'];
+  
+  templates.forEach(template => {
+    it(`${template} template exports with correct structure`, async () => {
+      // 1. Select template
+      await page.click(`[data-template="${template}"]`);
+      await page.click('[data-testid="next-button"]');
+      
+      // 2. Skip to export
+      await skipToExport();
+      
+      // 3. Download ZIP
+      const download = await downloadZip();
+      
+      // 4. Verify template-specific files exist
+      const files = await extractZip(download);
+      
+      expect(files).toContain(`app/page.tsx`);
+      expect(files).toContain(`.dd/template-manifest.json`);
+      
+      const manifest = await readFile(files, '.dd/template-manifest.json');
+      expect(manifest.template).toBe(template);
+    });
+  });
+});
+```
+
+### Suite 2: Integration Selection → package.json
+
+```typescript
+describe('Integration Dependencies', () => {
+  const integrations = {
+    'supabase': ['@supabase/supabase-js', '@supabase/ssr'],
+    'clerk': ['@clerk/nextjs'],
+    'stripe': ['stripe'],
+    'paddle': ['@paddle/paddle-js'],
+    'resend': ['resend', 'react-email'],
+    'sendgrid': ['@sendgrid/mail'],
+    'planetscale': ['@planetscale/database'],
+    'posthog': ['posthog-js'],
+    'plausible': ['plausible-tracker'],
+    'r2': ['@aws-sdk/client-s3'],
+    'aws-s3': ['@aws-sdk/client-s3'],
+    'supabase-storage': ['@supabase/supabase-js']
+  };
+  
+  Object.entries(integrations).forEach(([integration, deps]) => {
+    it(`${integration} selection adds correct dependencies`, async () => {
+      // 1. Navigate to integrations step
+      await navigateToStep('integrations');
+      
+      // 2. Select integration
+      await page.click(`[data-integration="${integration}"]`);
+      
+      // 3. Export
+      const download = await downloadZip();
+      const packageJson = await readPackageJson(download);
+      
+      // 4. Verify dependencies
+      deps.forEach(dep => {
+        expect(packageJson.dependencies).toHaveProperty(dep);
+      });
+    });
+  });
+});
+```
+
+### Suite 3: Context Fields → .dd/ Files
+
+```typescript
+describe('Context Fields Export', () => {
+  const testData = {
+    vision: 'To become the leading platform for X',
+    mission: 'We help Y do Z without the hassle',
+    success: 'Measure by daily active users and revenue'
+  };
+  
+  it('saves all context fields to .dd/', async () => {
+    // 1. Navigate to context step
+    await navigateToStep('context');
+    
+    // 2. Fill in fields
+    await page.fill('[data-field="vision"]', testData.vision);
+    await page.fill('[data-field="mission"]', testData.mission);
+    await page.fill('[data-field="success"]', testData.success);
+    
+    // 3. Export
+    const download = await downloadZip();
+    const files = await extractZip(download);
+    
+    // 4. Verify .dd/ files
+    expect(files).toContain('.dd/vision.md');
+    expect(files).toContain('.dd/mission.md');  // Currently failing!
+    expect(files).toContain('.dd/goals.md');
+    
+    const vision = await readFile(files, '.dd/vision.md');
+    expect(vision).toContain(testData.vision);
+    
+    const mission = await readFile(files, '.dd/mission.md');
+    expect(mission).toContain(testData.mission);
+    
+    const goals = await readFile(files, '.dd/goals.md');
+    expect(goals).toContain(testData.success);
+  });
+});
+```
+
+### Suite 4: Inspiration → .dd/inspiration
+
+```typescript
+describe('Inspiration Export', () => {
+  it('saves inspiration text and URLs', async () => {
+    // 1. Navigate to inspiration step
+    await navigateToStep('inspiration');
+    
+    // 2. Fill in description
+    await page.fill('[data-field="description"]', 'A marketplace for handmade goods');
+    
+    // 3. Add URL
+    await page.fill('[data-field="url-input"]', 'https://etsy.com');
+    await page.click('[data-action="add-url"]');
+    
+    // 4. Export
+    const download = await downloadZip();
+    const files = await extractZip(download);
+    
+    // 5. Verify
+    expect(files).toContain('.dd/inspiration.md');
+    
+    const inspiration = await readFile(files, '.dd/inspiration.md');
+    expect(inspiration).toContain('A marketplace for handmade goods');
+    expect(inspiration).toContain('https://etsy.com');
+  });
+  
+  it('saves uploaded inspiration images', async () => {
+    await navigateToStep('inspiration');
+    
+    // Upload image
+    await page.setInputFiles('[data-field="image-upload"]', 'test-fixtures/inspiration.png');
+    
+    const download = await downloadZip();
+    const files = await extractZip(download);
+    
+    expect(files).toContain('.dd/inspiration-images/');
+  });
+});
+```
+
+### Suite 5: Environment Variables
+
+```typescript
+describe('Environment Variables Export', () => {
+  it('transfers entered values to .env.local.example', async () => {
+    // 1. Select Supabase + Stripe
+    await navigateToStep('integrations');
+    await page.click('[data-integration="supabase"]');
+    await page.click('[data-integration="stripe"]');
+    
+    // 2. Navigate to env keys
+    await navigateToStep('environment');
+    
+    // 3. Enter values
+    await page.fill('[data-env="NEXT_PUBLIC_SUPABASE_URL"]', 'https://test.supabase.co');
+    await page.fill('[data-env="STRIPE_SECRET_KEY"]', 'sk_test_123');
+    
+    // 4. Export
+    const download = await downloadZip();
+    const envExample = await readEnvExample(download);
+    
+    // 5. Verify values transferred
+    expect(envExample).toContain('NEXT_PUBLIC_SUPABASE_URL=https://test.supabase.co');
+    expect(envExample).toContain('STRIPE_SECRET_KEY=sk_test_123');
+  });
+});
+```
+
+### Suite 6: AI Preview vs Export Consistency
+
+```typescript
+describe('AI Preview Consistency', () => {
+  it('AI Preview components exist in CLI export', async () => {
+    // 1. Configure project
+    await selectTemplate('ecommerce');
+    await selectIntegrations(['supabase', 'stripe']);
+    
+    // 2. Generate AI preview
+    await navigateToStep('preview');
+    await page.click('[data-action="generate-preview"]');
+    await page.waitForSelector('[data-testid="preview-frame"]');
+    
+    // 3. Get components shown in preview
+    const previewComponents = await page.$$eval(
+      '[data-preview-component]', 
+      els => els.map(e => e.dataset.previewComponent)
+    );
+    
+    // 4. Export via CLI
+    const cliOutput = await runCLI('export ecommerce ./test-project');
+    const files = await listFiles('./test-project');
+    
+    // 5. Verify each preview component exists
+    previewComponents.forEach(component => {
+      const componentPath = `components/${component}.tsx`;
+      expect(files).toContain(componentPath);
+    });
+  });
+});
+```
+
+---
+
+## Test Infrastructure Needed
+
+1. **ZIP extraction utility** - Extract and read ZIP contents in tests
+2. **Fixtures directory** - Test images, sample data
+3. **Helper functions**:
+   - `navigateToStep(step: string)`
+   - `downloadZip(): Promise<Buffer>`
+   - `extractZip(buffer: Buffer): Promise<string[]>`
+   - `readFile(files: string[], path: string): Promise<string>`
+   - `runCLI(command: string): Promise<string>`
+
+---
+
+## Test Location
+
+Create tests in:
+```
+website/tests/e2e/
+├── export-flow.spec.ts
+├── template-export.spec.ts
+├── integration-export.spec.ts
+├── context-export.spec.ts
+├── inspiration-export.spec.ts
+├── env-export.spec.ts
+└── preview-consistency.spec.ts
+```
+
+---
+
+## Acceptance Criteria
+
+- [ ] All test suites created and passing
+- [ ] CI pipeline runs export E2E tests
+- [ ] Current bugs (missing mission, missing R2) caught by tests
+- [ ] Tests verify AI Preview matches export (when applicable)
+- [ ] Test coverage report shows export flow covered
+
+---
+
+*P1 Testing | Quality Agent → Testing Agent | 2025-12-24*
+
