@@ -6,6 +6,46 @@
 
 ---
 
+## 🚨 MANDATORY REPLY RULES (Check Every Response)
+
+**ALL agents MUST follow these rules on EVERY response. No exceptions.**
+
+### 1. Permission Request (FIRST RESPONSE ONLY)
+```bash
+# Request ALL permissions upfront before ANY work
+git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Permissions ready"
+```
+**Predict what you'll need:** network, git_write, all. Request them ONCE at session start.
+
+### 2. Quick Actions Section (EVERY RESPONSE)
+```
+## Quick Actions (reply with number):
+1. **[Agent]**: [Action] ← DEFAULT
+2. **[Alternative]**: [Description]
+3. **[Command]**: `cd ... && [cmd]`
+4. No further action needed
+
+**⏱️ Auto-continue**: If no response in 35 minutes, proceed with Option 1
+```
+
+### 3. Handoff Prompt (END OF SESSION)
+```
+## Next Agent: [Role] Agent
+
+```
+Confirm you are the [Role] Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat [task-file]
+```
+```
+
+### 4. Identity Declaration (EVERY RESPONSE)
+```
+(FULL ROLE NAME AGENT)
+```
+Examples: `(DOCUMENTATION AGENT)` | `(WEBSITE AGENT)` | `(TESTING AGENT)`
+
+---
+
 ## ⚡ Quick Vibe Check
 
 For agents starting work, here's the 10-second status:

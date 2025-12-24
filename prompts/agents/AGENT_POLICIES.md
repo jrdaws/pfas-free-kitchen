@@ -1,8 +1,8 @@
 # Agent Policies
 
-> **Version**: 2.6
+> **Version**: 2.7
 > **Effective Date**: 2025-12-22
-> **Latest Update**: Made Quick Actions section a BLOCKING requirement for EVERY response
+> **Latest Update**: Made Permission Request BLOCKING + Added Reply Rules to MINDFRAME
 > **Purpose**: Define operational policies and protocols for AI agents working on dawson-does-framework
 
 ---
@@ -445,33 +445,38 @@ Each role has typical permission requirements. Agents should inform users upfron
 | Media | ✅ | ❌ | ❌ | API calls to image services |
 | Quality | ❌ | ✅ | ❌ | File approval/movement |
 
-**Agents should state at session start:**
-```
-This role typically requires: [network/git_write/all] permissions.
-You may be prompted to approve these during the session.
-```
+### Permission Request Protocol (BLOCKING REQUIREMENT)
 
-### Pre-Approved Permissions Protocol
+⛔ **AGENTS MUST REQUEST ALL NEEDED PERMISSIONS IN THEIR FIRST RESPONSE**
 
-To avoid repeated permission prompts, agents with elevated permission needs should:
+This is not optional. Agents must PREDICT what permissions they'll need for their entire session and request them upfront.
 
-1. **At session start**, run a simple command that requires all needed permissions:
+**Step 1: Identify Required Permissions**
+
+Based on your role and task, determine what you need:
+- `network`: API calls, package installs, deployments
+- `git_write`: Commits, branch operations
+- `all`: Full filesystem access, deployment, external tools
+
+**Step 2: Request in First Response**
+
+Run a test command that requires ALL your needed permissions:
 
 ```bash
-# For roles needing network + git_write:
-echo "Testing permissions..." && git status && curl -s https://example.com > /dev/null && echo "✅ Permissions confirmed"
+# Standard (network + git_write):
+git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Permissions ready"
+
+# Full access (Platform Agent, deployment):
+git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && ls -la && echo "✅ Full permissions ready"
 ```
 
-2. **User approves ONCE** at the start
-3. **Session continues** without further prompts
+**Step 3: User Approves Once**
 
-**Agents needing full access (Platform Agent, deployment tasks):**
-```bash
-# Request 'all' permissions upfront with a harmless command
-ls -la && git status && echo "Full access confirmed"
-```
+After approval, the session continues WITHOUT further permission prompts.
 
-This way, user approves at the START and is not interrupted during work.
+**Failure to Request Upfront = Governance Violation**
+
+If you hit a permission error mid-session, you failed to predict your needs. Note this in your session end and improve next time.
 
 ### During Work
 
@@ -1010,6 +1015,12 @@ test(integration): add E2E tests for configurator flow
 ---
 
 ## Version History
+
+### Version 2.7 (2025-12-23)
+- Made **Permission Request BLOCKING** - must request upfront in first response
+- Added **Reply Rules section to MINDFRAME.md** for quick reference
+- Identity declaration now uses FULL ROLE NAME in ALL CAPS
+- Auto-continue timer set to 35 minutes
 
 ### Version 2.6 (2025-12-23)
 - Made **Quick Actions section a BLOCKING requirement** for EVERY response
