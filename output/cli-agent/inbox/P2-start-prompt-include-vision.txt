@@ -1,0 +1,124 @@
+TASK: Include Project Context in START_PROMPT.md
+================================================
+
+AGENT: CLI Agent
+PRIORITY: P2 - MEDIUM
+DATE: 2025-12-24
+FROM: Auditor Agent (User Feedback)
+
+---
+
+## USER FEEDBACK
+
+"START_PROMPT.md is generic - Should include user's vision/mission from Context Fields step as optional toggle to activate option."
+
+## CURRENT STATE
+
+START_PROMPT.md is a static template:
+```markdown
+FRAMEWORK START PROMPT
+
+Answer before proceeding:
+
+PROJECT NAME:
+PROJECT GOAL:
+TARGET USER:
+...
+```
+
+## EXPECTED STATE
+
+If user filled in Project Context fields (Vision, Mission, Success Criteria):
+
+```markdown
+# mytestproject07 - Start Prompt
+
+## Pre-filled Context (from configurator)
+
+**Vision**: to make this the largest business analytics tool on the internet for growing businesses.
+
+**Mission**: (user's mission if filled)
+
+**Success Criteria**: signing up businesses and users for accounts.
+
+---
+
+## Additional Context Needed
+
+Answer these before proceeding:
+
+- TARGET USER: (more specific than above)
+- MVP SCOPE:
+- TIMELINE:
+
+---
+
+*Context from dawson-does-framework configurator*
+```
+
+## IMPLEMENTATION
+
+### 1. Pass Context to Export
+
+When exporting, include context from configurator:
+
+```javascript
+// In export command or pull command
+const projectContext = {
+  name: config.projectName,
+  vision: config.context?.vision || null,
+  mission: config.context?.mission || null,
+  successCriteria: config.context?.successCriteria || null,
+  description: config.inspiration?.description || null,
+};
+```
+
+### 2. Generate Dynamic START_PROMPT
+
+```javascript
+function generateStartPrompt(context) {
+  let prompt = `# ${context.name} - Start Prompt\n\n`;
+  
+  if (context.vision || context.mission || context.successCriteria) {
+    prompt += `## Pre-filled Context\n\n`;
+    if (context.vision) prompt += `**Vision**: ${context.vision}\n\n`;
+    if (context.mission) prompt += `**Mission**: ${context.mission}\n\n`;
+    if (context.successCriteria) prompt += `**Success Criteria**: ${context.successCriteria}\n\n`;
+    prompt += `---\n\n`;
+  }
+  
+  prompt += `## Additional Context Needed\n\n`;
+  prompt += `Answer these before proceeding:\n\n`;
+  prompt += `- TARGET USER:\n`;
+  prompt += `- MVP SCOPE:\n`;
+  prompt += `- TIMELINE:\n`;
+  
+  return prompt;
+}
+```
+
+### 3. Add Toggle in Configurator (Optional)
+
+In Context Fields step, add checkbox:
+```tsx
+<Checkbox 
+  id="includeInStartPrompt"
+  checked={includeContext}
+  onCheckedChange={setIncludeContext}
+/>
+<Label htmlFor="includeInStartPrompt">
+  Include this context in exported START_PROMPT.md
+</Label>
+```
+
+## VERIFICATION
+
+1. Fill in Vision/Mission in Context Fields step
+2. Export project
+3. Open START_PROMPT.md
+4. Verify it contains the context you entered
+
+---
+
+(AUD Agent)
+

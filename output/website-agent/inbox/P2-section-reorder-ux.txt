@@ -1,0 +1,74 @@
+TASK: Improve Section Reorder UX
+================================
+
+AGENT: Website Agent
+PRIORITY: P2 - MEDIUM
+DATE: 2025-12-24
+FROM: Auditor Agent (User Feedback)
+
+---
+
+## USER FEEDBACK
+
+"I don't think this worked, or at least it didn't work intuitively."
+
+Screenshot shows Section Reorder panel with:
+- Active Sections list (Nav, FAQ, PricingTable, Hero, etc.)
+- Up/down arrows
+- Remove (x) buttons
+
+## CURRENT ISSUES
+
+1. **Not clear it's drag-to-reorder** - User didn't realize they could drag
+2. **Order looks wrong** - FAQ above Hero doesn't make sense as default
+3. **No visual feedback** - Hard to see what's being moved
+4. **No preview update** - Changes may not reflect in preview immediately
+
+## SUGGESTED IMPROVEMENTS
+
+### 1. Add Drag Handles
+```tsx
+// Add visible drag handle icon
+<div className="flex items-center gap-2">
+  <GripVertical className="text-muted-foreground cursor-grab" />
+  <span>{section.name}</span>
+</div>
+```
+
+### 2. Add Drag Visual Feedback
+- Highlight item being dragged
+- Show drop zone indicator
+- Animate reorder transition
+
+### 3. Fix Default Order
+Logical order should be:
+1. Nav (required, always top)
+2. Hero (required)
+3. FeatureCards (required)
+4. PricingTable
+5. Testimonials
+6. FAQ
+7. CTA (required)
+8. Footer (required, always bottom)
+
+### 4. Add Instructions
+```tsx
+<p className="text-sm text-muted-foreground mb-4">
+  Drag sections to reorder. Required sections cannot be removed.
+</p>
+```
+
+### 5. Live Preview Update
+When sections reorder, the preview should update immediately.
+
+## VERIFICATION
+
+1. User can clearly see how to reorder
+2. Dragging works smoothly
+3. Preview updates in real-time
+4. Default order makes logical sense
+
+---
+
+(AUD Agent)
+

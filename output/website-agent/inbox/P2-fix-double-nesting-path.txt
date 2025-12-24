@@ -1,0 +1,93 @@
+TASK: Fix Double Nesting in Project Path Preview
+================================================
+
+AGENT: Website Agent
+PRIORITY: P2 - MEDIUM
+DATE: 2025-12-24
+FROM: Auditor Agent (User Feedback)
+
+---
+
+## USER FEEDBACK
+
+"Project name shows mytestproject07/mytestproject07 - Double nesting in preview path"
+
+## CURRENT STATE
+
+In Project Details step, the Preview shows:
+```
+Project will be created at:
+./mytestproject07/mytestproject07
+```
+
+This is confusing and creates unnecessary nesting.
+
+## EXPECTED STATE
+
+```
+Project will be created at:
+./mytestproject07
+```
+
+## ROOT CAUSE
+
+Likely the output directory and project name are being concatenated:
+- Output Directory: `./mytestproject07`
+- Project Name: `mytestproject07`
+- Result: `./mytestproject07/mytestproject07`
+
+## FIX
+
+### Option A: Don't Append Project Name to Output Dir
+
+If user specifies output directory, use it directly:
+```javascript
+// Current (wrong)
+const fullPath = `${outputDir}/${projectName}`;
+
+// Fixed
+const fullPath = outputDir; // Use as-is if specified
+```
+
+### Option B: Smart Path Detection
+
+If output dir already ends with project name, don't duplicate:
+```javascript
+const outputDir = './mytestproject07';
+const projectName = 'mytestproject07';
+
+const fullPath = outputDir.endsWith(projectName) 
+  ? outputDir 
+  : `${outputDir}/${projectName}`;
+```
+
+### Option C: Clarify the UI
+
+Make it clear:
+```tsx
+<div>
+  <Label>Output Directory</Label>
+  <Input value={outputDir} placeholder="./my-project" />
+  <p className="text-sm text-muted-foreground">
+    Your project folder will be created here
+  </p>
+</div>
+```
+
+## LOCATION
+
+Check:
+- `website/app/components/configurator/ProjectDetails.tsx` (or similar)
+- Look for path preview logic
+
+## VERIFICATION
+
+1. Go to Project Details step
+2. Enter project name: "myproject"
+3. Enter output directory: "./myproject"
+4. Preview should show: `./myproject` NOT `./myproject/myproject`
+
+---
+
+(AUD Agent)
+
