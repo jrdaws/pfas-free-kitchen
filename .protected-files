@@ -138,3 +138,7 @@ docs/CONSOLIDATION_CHECKLIST.md
 # ============================================================================
 
 docs/sops/AI_MODEL_SELECTION_SOP.md
+docs/sops/HAIKU_JSON_COMPLIANCE_SOP.md
+docs/sops/MEDIA_NAMING_SOP.md
+docs/sops/SSR_COMPATIBILITY_SOP.md
+docs/sops/TEMPLATE_HYGIENE_SOP.md

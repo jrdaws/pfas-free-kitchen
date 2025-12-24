@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 85a82d0 2025-12-23 docs(sops): add 4 new SOPs for remaining opportunities
 - 44ff209 2025-12-23 fix(website): enable Vercel monorepo deployment
 - 8d12657 2025-12-23 docs(memory): update Documentation Agent memory with SOP session
 - f466e2e 2025-12-23 docs(sops): add AI Model Selection SOP and SOP Proposal Process
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 2b24f8d 2025-12-23 chore(curator): complete cycle 3 - curate Strategist drafts
 - dd95924 2025-12-23 feat(integrations): add UploadThing storage integration
 - 579cbe6 2025-12-22 chore(curator): complete cycle 2 - distribute Phase 2 tasks
-- 8b43d96 2025-12-22 docs(strategy): create Phase 2 kickoff strategy and task prompts
 
 ## Agent Governance Structure
 

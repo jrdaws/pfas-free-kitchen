@@ -14,7 +14,7 @@ For agents starting work, here's the 10-second status:
 |------|--------|------|
 | **Framework** | Healthy | 🟢 |
 | **Tests** | 693 passing | 🟢 |
-| **Docs** | Current, 6 SOPs + Freshness System | 🟢 |
+| **Docs** | Current, 10 SOPs + Freshness System | 🟢 |
 | **Website** | Production Ready | 🟢 |
 | **Deploy** | Config complete, human deploy pending | 🟡 |
 | **Governance** | v2.3 + Context Freshness | 🟢 |
