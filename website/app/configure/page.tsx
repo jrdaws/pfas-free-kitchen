@@ -8,7 +8,7 @@ import { TEMPLATES } from "@/lib/templates";
 import { useState } from "react";
 
 // Dynamically import components to avoid SSR issues
-const StepIndicator = dynamic(() => import("@/app/components/configurator/StepIndicator").then(mod => ({ default: mod.StepIndicator })), { ssr: false });
+const PhaseIndicator = dynamic(() => import("@/app/components/configurator/PhaseIndicator").then(mod => ({ default: mod.PhaseIndicator })), { ssr: false });
 const ModeToggle = dynamic(() => import("@/app/components/configurator/ModeToggle").then(mod => ({ default: mod.ModeToggle })), { ssr: false });
 const TemplateSelector = dynamic(() => import("@/app/components/configurator/TemplateSelector").then(mod => ({ default: mod.TemplateSelector })), { ssr: false });
 const InspirationUpload = dynamic(() => import("@/app/components/configurator/InspirationUpload").then(mod => ({ default: mod.InspirationUpload })), { ssr: false });
@@ -136,10 +136,14 @@ export default function ConfigurePage() {
           <ModeToggle mode={mode} onChange={setMode} />
         </div>
 
-        {/* Step Indicator */}
-        <StepIndicator
+        {/* Phase Indicator */}
+        <PhaseIndicator
           currentStep={currentStep}
           completedSteps={completedSteps}
+          onPhaseClick={(step) => {
+            // Navigate to first step of clicked phase
+            setStep(step);
+          }}
           onStepClick={(step) => {
             // Only allow clicking on completed steps or current step
             if (completedSteps.has(step) || step === currentStep) {

@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 268ad8f 2025-12-23 docs(governance): update MINDFRAME and AGENT_CONTEXT for v2.3
 - c8d4859 2025-12-23 docs(agents): update Quality Agent memory, add media pipeline role codes
 - 9f7bbed 2025-12-23 feat(website): implement phase grouping in StepIndicator component
 - c617fcc 2025-12-23 test(sops): verify priority SOPs are complete and actionable
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 3f15b77 2025-12-22 feat(ci): add agent task monitoring workflow
 - 700a1e5 2025-12-22 docs(cli): complete P2 generate command task
 - 78c9f27 2025-12-22 feat(integrations): complete integration expansion planning
-- a72d538 2025-12-22 docs(api): create comprehensive API documentation
 
 ## Agent Governance Structure
 

@@ -1,0 +1,37 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Step Success Animation: Expanding checkmark with ring -->
+  <!-- Colors: Emerald #10B981 for success -->
+  <!-- Use CSS animations to control ring expansion and checkmark draw -->
+  
+  <defs>
+    <!-- For CSS animation: ring expands and fades -->
+    <style>
+      .success-ring {
+        animation: ringPulse 0.6s ease-out forwards;
+        transform-origin: center;
+      }
+      .success-check {
+        stroke-dasharray: 30;
+        stroke-dashoffset: 30;
+        animation: drawCheck 0.4s 0.2s ease-out forwards;
+      }
+      @keyframes ringPulse {
+        0% { transform: scale(0.5); opacity: 1; }
+        100% { transform: scale(1.2); opacity: 0; }
+      }
+      @keyframes drawCheck {
+        100% { stroke-dashoffset: 0; }
+      }
+    </style>
+  </defs>
+  
+  <!-- Expanding ring (starts visible, fades out) -->
+  <circle cx="24" cy="24" r="18" stroke="#10B981" stroke-width="3" fill="none" class="success-ring" opacity="0.5"/>
+  
+  <!-- Solid background circle -->
+  <circle cx="24" cy="24" r="16" fill="#10B981"/>
+  
+  <!-- Animated checkmark -->
+  <polyline points="14,24 21,31 34,18" stroke="#FFFFFF" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" class="success-check"/>
+</svg>
+

@@ -7,6 +7,59 @@ export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 
 export type ModelTier = 'fast' | 'balanced' | 'quality';
 
+export type PhaseId = 'setup' | 'configure' | 'launch';
+
+// Phase definitions
+export interface Phase {
+  id: PhaseId;
+  label: string;
+  description: string;
+  icon: string;
+  steps: readonly number[];
+}
+
+export const PHASES: readonly Phase[] = [
+  {
+    id: 'setup',
+    label: 'Setup',
+    description: 'Choose your foundation',
+    icon: '/images/configurator/phases/phase-setup-icon.svg',
+    steps: [1, 2, 3], // Template, Inspiration, Project
+  },
+  {
+    id: 'configure',
+    label: 'Configure',
+    description: 'Set up integrations',
+    icon: '/images/configurator/phases/phase-configure-icon.svg',
+    steps: [4, 5], // Integrations, Environment
+  },
+  {
+    id: 'launch',
+    label: 'Launch',
+    description: 'Preview and ship',
+    icon: '/images/configurator/phases/phase-launch-icon.svg',
+    steps: [6, 7, 8], // Preview, Context, Export
+  },
+] as const;
+
+// Step definitions with phase association
+export interface StepDef {
+  number: number;
+  label: string;
+  phase: PhaseId;
+}
+
+export const STEPS: readonly StepDef[] = [
+  { number: 1, label: 'Template', phase: 'setup' },
+  { number: 2, label: 'Inspiration', phase: 'setup' },
+  { number: 3, label: 'Project', phase: 'setup' },
+  { number: 4, label: 'Integrations', phase: 'configure' },
+  { number: 5, label: 'Environment', phase: 'configure' },
+  { number: 6, label: 'Preview', phase: 'launch' },
+  { number: 7, label: 'Context', phase: 'launch' },
+  { number: 8, label: 'Export', phase: 'launch' },
+] as const;
+
 export interface Inspiration {
   id: string;
   type: 'image' | 'url' | 'figma';
