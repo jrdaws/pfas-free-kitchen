@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- c826163 2025-12-23 feat(media-pipeline): add E2E media production system with asset integration
 - a236262 2025-12-23 docs(media-pipeline): add SOP enforcement checkpoints and rejection criteria
 - 5e996d3 2025-12-23 feat(curator): complete cycle 8 curation - 5 drafts approved, execution focus
 - 1091a9f 2025-12-23 feat(strategist): complete cycle 7 strategy - execution focus
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 247c696 2025-12-22 docs(templates): complete P2 template health check
 - 88b4cad 2025-12-22 docs(agents): verify quick start guide task completion
 - c48b2d7 2025-12-22 docs(platform): update memory with cost optimization session
-- 85832b3 2025-12-22 feat(ai-agent): reduce code generation token limit for cost optimization
 
 ## Agent Governance Structure
 
