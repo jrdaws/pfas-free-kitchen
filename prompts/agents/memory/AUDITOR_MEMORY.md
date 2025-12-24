@@ -58,10 +58,12 @@ Report handed off to Strategist Agent for task planning.
 
 | Metric | Value | Trend |
 |--------|-------|-------|
-| Audit cycles completed | 3 | ↑ |
+| Audit cycles completed | 4 | ↑ |
 | Average audit duration | 15 min | - |
-| SOPs signed off | 10/10 | ✅ |
-| Tests passing | 693/693 | ✅ |
+| SOPs signed off | 14/14 | ✅ |
+| Tests passing | 694/694 | ✅ |
+| Reviews approved (today) | 3 | ✅ |
+| Agent migrations | 13/13 | ✅ |
 
 ---
 
@@ -274,4 +276,61 @@ A: They're not. Only key insights go to memory files. Full chat would bloat repo
 
 ### Q: How do I know what the last agent did?
 A: Check their memory file and MINDFRAME.md certifications.
+
+---
+
+## Session: 2025-12-24 12:00-13:30 (Agent Folder Restructuring)
+
+### Work Completed
+- **MAJOR**: Completed flat agent folder structure migration
+- Created `output/agents/` with all 13 agents
+- Added 6 folders per agent: inbox, outbox, done, workspace, config, logs
+- Created default `settings.json` for all 13 agents
+- Migrated media pipeline to `output/shared/media/`
+- Created `output/shared/schemas/` and `output/shared/design/`
+- Created `colors.tokens.json` from COLOR_PHILOSOPHY.md
+- Created `agent-settings.schema.json` for validation
+- Marked all old folders as DEPRECATED with timeline
+- Reviewed and approved 3 Documentation Agent path update batches
+
+### SOPs Created (This Session)
+| SOP | Purpose |
+|-----|---------|
+| AGENT_FOLDER_STRUCTURE_SOP.md v2.0.0 | Flat structure, 6 folders |
+| AGENT_PERSISTENT_SETTINGS_SOP.md | Config/logs for agents |
+| AGENT_CREATION_SOP.md | Automation script for new agents |
+| FOLDER_DEPRECATION_SOP.md | Safe removal process |
+
+### Key Decisions
+- **Flat over nested**: All agents in `output/agents/[name]/` instead of grouped
+- **6 folders**: inbox, outbox, done, workspace, config, logs
+- **Staged deprecation**: 60-day timeline before old folder removal
+- **Settings.json**: Persistent config per agent
+
+### Files Created
+- `scripts/create-agent.sh` - One-command agent creation
+- `output/shared/design/colors.tokens.json` - Design tokens
+- `output/shared/schemas/agent-settings.schema.json` - Validation schema
+- 13 DEPRECATED.md files in old folders
+- 13 settings.json files for agents
+
+### Metrics
+| Metric | Value |
+|--------|-------|
+| Agents migrated | 13/13 |
+| Old path references remaining | 0 |
+| Reviews approved | 3 |
+| SOPs created | 4 |
+| Duration | ~90 minutes |
+
+### Deprecation Timeline
+- **2025-12-24**: Phase 1 (Parallel - CURRENT)
+- **2026-01-07**: Phase 2 (Soft Deprecation)
+- **2026-01-14**: Phase 3 (Archive)
+- **2026-02-14**: Phase 4 (Removal)
+
+### Next Priorities
+1. Monitor deprecation timeline
+2. Verify no new files added to old locations
+3. Continue 6-hour audit cycles
 
