@@ -14,6 +14,28 @@
 - [ ] No TypeScript errors
 - [ ] No console.log debugging statements
 
+### Monorepo Verification (CRITICAL)
+
+Run from repo root:
+
+```bash
+# 1. Clean build from website directory
+cd website && rm -rf .next && npm run build
+
+# 2. Verify workspace package stubs exist
+grep -r "from.*@dawson-framework" website/app --include="*.tsx" --include="*.ts" | head -5
+
+# 3. Verify stubs are aliased in webpack
+grep "@dawson-framework" website/next.config.js
+
+# 4. Verify husky is CI-safe
+grep '"prepare"' package.json | grep "|| true"
+```
+
+- [ ] Clean build succeeds
+- [ ] All `@dawson-framework/*` imports have stub aliases
+- [ ] Husky prepare script includes `|| true`
+
 ### Environment Variables
 
 Required:

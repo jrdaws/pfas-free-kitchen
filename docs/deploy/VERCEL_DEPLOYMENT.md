@@ -244,7 +244,132 @@ git push origin main
 
 ---
 
+## Monorepo Deployment Patterns
+
+> These patterns are **mandatory** when deploying the website from this monorepo.
+
+### 1. Workspace Package Stubs (Already Implemented)
+
+The website depends on workspace packages (`packages/*`) that aren't available during Vercel build. Stubs provide fallback exports:
+
+```typescript
+// website/lib/collaboration-stub.ts - Example stub
+export interface CollaborationConfig { /* minimal interface */ }
+export function createCollaborationClient() { return null; }
+```
+
+Webpack aliases in `next.config.js` redirect imports:
+
+```javascript
+// next.config.js - Already configured
+config.resolve.alias = {
+  '@dawson-framework/collaboration': path.resolve(__dirname, 'lib/collaboration-stub.ts'),
+  '@dawson-framework/ai-agent': path.resolve(__dirname, 'lib/ai-agent-stub.ts'),
+};
+```
+
+**When adding new workspace packages:**
+1. Create stub file: `website/lib/[package-name]-stub.ts`
+2. Add alias to `next.config.js` webpack config
+3. Verify build: `cd website && npm run build`
+
+### 2. CI-Safe Prepare Scripts (Already Implemented)
+
+Husky prepare scripts fail in CI. The root `package.json` handles this:
+
+```json
+"prepare": "husky || true"
+```
+
+**Never change this pattern** - it prevents CI failures.
+
+### 3. Lazy Database Client Initialization
+
+Database clients must not throw at import time (breaks static generation):
+
+```typescript
+// ❌ BAD - throws at import time
+if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL");
+export const db = createClient(process.env.DATABASE_URL);
+
+// ✅ GOOD - lazy initialization
+let _client: SupabaseClient | null = null;
+export function getSupabaseClient(): SupabaseClient {
+  if (!_client) {
+    if (!process.env.SUPABASE_URL) {
+      throw new Error("Missing SUPABASE_URL - configure in environment");
+    }
+    _client = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY!);
+  }
+  return _client;
+}
+```
+
+### 4. React Type Compatibility
+
+When using Radix UI Slot or polymorphic components with React 19:
+
+```typescript
+// Add type assertions for ref and props
+<Comp
+  ref={ref as React.Ref<HTMLButtonElement>}
+  {...(props as React.ComponentPropsWithoutRef<"button">)}
+/>
+```
+
+### 5. Vercel Project Settings Checklist
+
+Verify these settings in Vercel Dashboard → Project Settings → General:
+
+| Setting | Required Value |
+|---------|----------------|
+| Root Directory | `website` |
+| Framework Preset | `Next.js` |
+| Build Command | Leave default or `npm run build` |
+| Install Command | Leave default (do NOT use `cd ..` commands) |
+| Node.js Version | 20.x |
+
+**Common Mistake**: Setting Install Command to `cd .. && npm install` - this breaks workspace resolution.
+
+### 6. Pre-Deployment Verification Script
+
+Run these checks before pushing deployment code:
+
+```bash
+# 1. Clean build test (from repo root)
+cd website && rm -rf .next && npm run build
+
+# 2. Verify workspace stubs exist for all imports
+grep -r "from.*@dawson-framework" website/app --include="*.tsx" --include="*.ts" | head -10
+
+# 3. Check each package has a stub alias in next.config.js
+grep "@dawson-framework" website/next.config.js
+
+# 4. Verify husky script is CI-safe
+grep '"prepare"' package.json | grep "|| true"
+```
+
+---
+
 ## Troubleshooting
+
+### Monorepo-Specific Issues
+
+**"Cannot find module '@dawson-framework/xxx'"**
+- Missing stub file or webpack alias
+- Fix: Create `website/lib/xxx-stub.ts` and add alias to `next.config.js`
+
+**"husky - .git/hooks/pre-commit: No such file"**
+- Husky trying to install in CI
+- Fix: Ensure `"prepare": "husky || true"` in root `package.json`
+
+**"SUPABASE_URL is not defined" during build**
+- Client throwing at import time during static generation
+- Fix: Use lazy initialization pattern (see section 3 above)
+
+**TypeScript error: "Type 'RefObject<X>' is not assignable"**
+- React 19 type incompatibility with Radix
+- Fix: Add type assertion (see section 4 above)
 
 ### Common Issues
 
