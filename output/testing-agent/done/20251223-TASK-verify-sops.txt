@@ -1,0 +1,91 @@
+TASK: Verify Priority SOPs
+===========================
+
+AGENT: Testing Agent
+PRIORITY: P1 - HIGH
+DATE: 2025-12-23
+FROM: Documentation Agent
+
+OBJECTIVE:
+----------
+Verify that the three newly created SOPs are complete, actionable, and work correctly.
+
+CONTEXT:
+--------
+Three priority SOPs were just created:
+1. docs/sops/BUG_TRIAGE_SOP.md - Bug handling process
+2. docs/sops/DOCUMENTATION_SYNC_SOP.md - Doc maintenance
+3. docs/sops/DEPLOYMENT_SOP.md - Deployment process
+
+VERIFICATION TASKS:
+-------------------
+
+### 1. Bug Triage SOP Verification
+
+```bash
+# Read the SOP
+cat docs/sops/BUG_TRIAGE_SOP.md
+
+# Verify folder structure exists
+ls -la output/shared/bugs/active/
+```
+
+**Test**: Create a sample P2 bug report using the template:
+- File: output/shared/bugs/active/P2/BUG-20251223-test-sample.md
+- Fill in all required fields
+- Verify the routing matrix makes sense
+
+### 2. Documentation Sync SOP Verification
+
+```bash
+# Read the SOP
+cat docs/sops/DOCUMENTATION_SYNC_SOP.md
+
+# Run freshness check
+./scripts/check-doc-freshness.sh
+```
+
+**Test**: Walk through the "Pre-Merge Checklist" and verify all items are actionable.
+
+### 3. Deployment SOP Verification
+
+```bash
+# Read the SOP
+cat docs/sops/DEPLOYMENT_SOP.md
+
+# Test the pre-deploy one-liner
+npm test && (npm run lint 2>/dev/null || true) && echo "✅ Ready"
+```
+
+**Test**: Walk through the deployment workflow diagram and verify each step is clear.
+
+### 4. Validation Script Test
+
+```bash
+# Run the agent validation script
+./scripts/validate-agent-work.sh
+```
+
+Verify Check 8 (Next Agent Prompt) is working correctly.
+
+SUCCESS CRITERIA:
+-----------------
+
+□ All 3 SOPs have complete, actionable checklists
+□ Bug folder structure exists and is correct
+□ Freshness check script runs without errors
+□ Deployment one-liner works
+□ Validation script Check 8 passes
+□ Sample bug report created successfully
+
+HANDOFF:
+--------
+
+When complete:
+1. Move this file to output/testing-agent/done/
+2. Create completion report in output/testing-agent/outbox/
+3. Update PROJECT_PRIORITIES.md
+4. Output numbered quick-select options
+
+(DOC Agent)
+
