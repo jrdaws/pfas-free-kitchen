@@ -183,26 +183,26 @@ export function ExportView({
             </CardContent>
           </Card>
 
-          {/* Option B: Download ZIP - STARTER ONLY */}
+          {/* Option B: Download ZIP - FULL TEMPLATE */}
           <Card 
             className={`cursor-pointer transition-all hover:scale-105 ${
-              selectedOption === "zip" ? "border-amber-500 shadow-lg shadow-amber-500/20" : ""
+              selectedOption === "zip" ? "border-primary shadow-lg shadow-primary/20" : ""
             }`}
             onClick={() => setSelectedOption(selectedOption === "zip" ? null : "zip")}
           >
             <CardHeader className="pb-2">
-              <Badge variant="warning" className="w-fit">Starter Only</Badge>
+              <Badge className="w-fit">Quick Start</Badge>
             </CardHeader>
             <CardContent className="text-center py-4">
-              <Download className="h-12 w-12 mx-auto mb-3 text-amber-500" />
+              <Download className="h-12 w-12 mx-auto mb-3 text-primary" />
               <h3 className="font-display font-bold text-foreground mb-2">
-                Starter Structure
+                Download ZIP
               </h3>
               <p className="text-xs text-muted-foreground">
-                Basic setup + dependencies listed
+                Template + integrations bundled
               </p>
-              <p className="text-xs text-amber-500 mt-2 font-mono">
-                ⚠ Build from scratch
+              <p className="text-xs text-primary mt-2 font-mono">
+                ✓ Ready to customize
               </p>
             </CardContent>
           </Card>
@@ -327,59 +327,47 @@ export function ExportView({
           </Card>
         )}
 
-        {/* ZIP Download Details - STARTER STRUCTURE WARNING */}
+        {/* ZIP Download Details */}
         {selectedOption === "zip" && (
-          <Card className="border-amber-500">
+          <Card className="border-primary">
             <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2 text-amber-500">
+              <CardTitle className="text-sm flex items-center gap-2 text-primary">
                 <Download className="h-4 w-4" />
-                Starter Structure (Not Full Template)
+                Download Project ZIP
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {/* Clear comparison table */}
-              <div className="bg-amber-500/10 rounded border border-amber-500/30 p-4">
-                <p className="text-sm text-amber-500 font-bold mb-3">
-                  ⚠️ This is a STARTER STRUCTURE, not the full template
+              {/* What's included */}
+              <div className="bg-primary/10 rounded border border-primary/30 p-4">
+                <p className="text-sm text-primary font-bold mb-3">
+                  ✓ Full template with your configuration
                 </p>
                 <div className="grid grid-cols-2 gap-4 text-xs">
                   <div>
-                    <p className="text-primary font-bold mb-2">✓ Included:</p>
+                    <p className="text-foreground font-bold mb-2">Template Files:</p>
                     <ul className="space-y-1 text-muted-foreground">
-                      <li>• Next.js 15 + React 19 setup</li>
-                      <li>• Dependencies listed (not implemented)</li>
-                      <li>• .env.local.example template</li>
+                      <li>• All page routes & layouts</li>
+                      <li>• Pre-built UI components</li>
+                      <li>• Styling & configuration</li>
                       <li>• .dd/ context files</li>
-                      <li>• Basic project scaffold</li>
                     </ul>
                   </div>
                   <div>
-                    <p className="text-destructive font-bold mb-2">✗ NOT Included:</p>
+                    <p className="text-foreground font-bold mb-2">Integrations:</p>
                     <ul className="space-y-1 text-muted-foreground">
-                      <li>• Pre-built template components</li>
-                      <li>• Page routes and layouts</li>
-                      <li>• Integration boilerplate</li>
-                      <li>• Authentication flows</li>
-                      <li>• Production-ready code</li>
+                      <li>• Selected integration code</li>
+                      <li>• API routes & handlers</li>
+                      <li>• .env.local.example</li>
+                      <li>• Dependencies configured</li>
                     </ul>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-primary/10 border border-primary/30 rounded p-4">
-                <p className="text-xs text-foreground mb-2">
-                  <strong>💡 Want the full template?</strong> Use the CLI command instead:
-                </p>
-                <pre className="text-xs text-primary bg-muted p-2 rounded font-mono overflow-x-auto">
-                  npx @jrdaws/framework export {template} ./{projectName}
-                </pre>
-              </div>
-
               <Button
                 onClick={handleDownloadZip}
                 disabled={isDownloading}
-                variant="secondary"
-                className="w-full font-mono bg-amber-500 hover:bg-amber-600 text-white"
+                className="w-full font-mono"
               >
                 {isDownloading ? (
                   <>
@@ -389,7 +377,7 @@ export function ExportView({
                 ) : (
                   <>
                     <Download className="mr-2 h-4 w-4" />
-                    Download Starter ZIP
+                    Download Project ZIP
                   </>
                 )}
               </Button>
@@ -398,20 +386,20 @@ export function ExportView({
                 <p className="text-sm text-muted-foreground mb-2">After downloading:</p>
                 <ol className="space-y-2 text-sm text-muted-foreground">
                   <li className="flex gap-3">
-                    <span className="text-amber-500 font-mono font-bold flex-shrink-0">1.</span>
+                    <span className="text-primary font-mono font-bold flex-shrink-0">1.</span>
                     <span>Extract the ZIP file</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-amber-500 font-mono font-bold flex-shrink-0">2.</span>
+                    <span className="text-primary font-mono font-bold flex-shrink-0">2.</span>
                     <span>Run <code className="text-primary">npm install</code></span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-amber-500 font-mono font-bold flex-shrink-0">3.</span>
-                    <span>Copy .env.local.example to .env.local</span>
+                    <span className="text-primary font-mono font-bold flex-shrink-0">3.</span>
+                    <span>Copy .env.local.example to .env.local and add your API keys</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="text-amber-500 font-mono font-bold flex-shrink-0">4.</span>
-                    <span><strong>Build your own components</strong> using the scaffold</span>
+                    <span className="text-primary font-mono font-bold flex-shrink-0">4.</span>
+                    <span>Run <code className="text-primary">npm run dev</code> to start</span>
                   </li>
                 </ol>
               </div>
@@ -591,66 +579,31 @@ export function ExportView({
               <div className="text-center py-2">
                 <Check className="h-12 w-12 mx-auto mb-3 text-primary" />
                 <h3 className="text-lg font-display font-bold text-foreground mb-2">
-                  Starter Structure Downloaded!
+                  Project Downloaded!
                 </h3>
-              </div>
-
-              <div className="bg-amber-500/10 border border-amber-500/30 rounded p-4">
-                <p className="text-sm text-foreground mb-3">
-                  <strong>Remember:</strong> You downloaded the <span className="text-amber-500">starter structure</span>, 
-                  not the full {selectedTemplate?.name} template.
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  The starter includes dependencies and configuration, but you&apos;ll need to build the components yourself.
+                <p className="text-muted-foreground text-sm">
+                  Your {selectedTemplate?.name} template is ready
                 </p>
               </div>
 
               <div className="bg-primary/10 border border-primary/30 rounded p-4">
                 <p className="text-sm text-foreground mb-3">
-                  <strong>Want the full template with all components?</strong>
+                  <strong>Next steps:</strong>
                 </p>
-                <div className="relative">
-                  <pre className="text-xs text-primary bg-muted p-3 rounded font-mono overflow-x-auto">
-                    npx @jrdaws/framework export {template} ./{projectName}
-                  </pre>
-                </div>
-                <Button
-                  onClick={handleCopyFullTemplateCommand}
-                  className="w-full mt-3 font-mono"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="mr-2 h-4 w-4" />
-                      Copied!
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="mr-2 h-4 w-4" />
-                      Copy Full Template Command
-                    </>
-                  )}
-                </Button>
+                <ol className="text-sm text-muted-foreground space-y-2">
+                  <li>1. Extract the ZIP and open in your IDE</li>
+                  <li>2. Run <code className="text-primary">npm install</code></li>
+                  <li>3. Copy <code className="text-primary">.env.local.example</code> to <code className="text-primary">.env.local</code></li>
+                  <li>4. Run <code className="text-primary">npm run dev</code></li>
+                </ol>
               </div>
 
-              <div className="flex gap-3">
-                <Button
-                  onClick={() => setShowPostDownloadModal(false)}
-                  variant="outline"
-                  className="flex-1"
-                >
-                  Continue with Starter
-                </Button>
-                <Button
-                  onClick={() => {
-                    handleCopyFullTemplateCommand();
-                    setSelectedOption("cli");
-                    setShowPostDownloadModal(false);
-                  }}
-                  className="flex-1 font-mono"
-                >
-                  Get Full Template
-                </Button>
-              </div>
+              <Button
+                onClick={() => setShowPostDownloadModal(false)}
+                className="w-full"
+              >
+                Got it!
+              </Button>
             </CardContent>
           </Card>
         </div>

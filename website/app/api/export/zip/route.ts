@@ -13,19 +13,28 @@ const TEMPLATE_COMPONENTS: Record<string, {
   config: string[];
 }> = {
   saas: {
-    pages: ["app/page.tsx", "app/layout.tsx"],
+    pages: [
+      "app/page.tsx",
+      "app/layout.tsx",
+      "app/dashboard/page.tsx",
+      "app/dashboard/settings/page.tsx",
+      "app/pricing/page.tsx",
+    ],
     components: [
-      "app/components/AuditLogCard.tsx",
-      "app/components/EntitlementsCard.tsx",
-      "app/components/ProviderHealthCard.tsx",
-      "app/components/UsageCard.tsx",
+      "components/Hero.tsx",
+      "components/Nav.tsx",
+      "components/CTA.tsx",
+      "components/DashboardPreview.tsx",
+      "components/FAQ.tsx",
+      "components/FeatureCards.tsx",
+      "components/Footer.tsx",
+      "components/PricingTable.tsx",
+      "components/Testimonials.tsx",
+      "components/index.ts",
       "components/ui/empty-state.tsx",
     ],
     lib: [
-      "lib/audit-log.ts",
-      "lib/entitlements.ts",
-      "lib/provider-health.ts",
-      "lib/usage-tracker.ts",
+      "lib/utils.ts",
     ],
     styles: ["app/globals.css"],
     config: ["package.json", "tailwind.config.ts", "tsconfig.json", "next.config.js", "postcss.config.js"],
