@@ -81,7 +81,7 @@ Each agent has a specific domain of responsibility. Agents must:
 | **Media Agent** | Image/graphic generation | `output/agents/media/` |
 | **Quality Agent** | Asset review, approval, **SOP guardian** | `output/agents/quality/` |
 
-See `output/media-pipeline/MEDIA_PIPELINE.md` for full pipeline documentation.
+See `output/shared/media/MEDIA_PIPELINE.md` for full pipeline documentation.
 
 ### SOP Guardian Roles (MANDATORY)
 
@@ -271,10 +271,10 @@ distorted features, extra limbs, malformed hands, text, watermark, signature
 
 ### Documentation References
 
-- `output/media-pipeline/shared/PHOTOREALISTIC_PROMPT_GUIDE.md` - Full prompt engineering guide
-- `output/media-pipeline/shared/ENFORCEMENT_CHECKLIST.md` - Pre-handoff checklists
-- `output/media-pipeline/shared/REJECTION_CRITERIA.md` - What to reject and why
-- `output/media-pipeline/shared/QUICK_REFERENCE_CARDS.md` - One-page agent summaries
+- `output/shared/media/PHOTOREALISTIC_PROMPT_GUIDE.md` - Full prompt engineering guide
+- `output/shared/media/ENFORCEMENT_CHECKLIST.md` - Pre-handoff checklists
+- `output/shared/media/REJECTION_CRITERIA.md` - What to reject and why
+- `output/shared/media/QUICK_REFERENCE_CARDS.md` - One-page agent summaries
 
 ---
 
@@ -736,7 +736,7 @@ Before ending a session, you must:
    
    Next Agent: Website Agent
    ```
-   Implement the 24 approved sidebar icons from output/media-pipeline/shared/approved/configurator-sidebar/ into the configurator. Reference output/agents/website/inbox/media-configurator-sidebar/IMPLEMENT.txt for integration details.
+   Implement the 24 approved sidebar icons from output/shared/media/approved/configurator-sidebar/ into the configurator. Reference output/agents/website/inbox/media-configurator-sidebar/IMPLEMENT.txt for integration details.
    ```
    
    ---
@@ -919,7 +919,7 @@ Read output/[agent]/inbox/[task-file].txt and execute the task.
 **Example workflow:**
 ```
 1. Create prompt file → output/media-agent/inbox/PROJECT-xyz.txt
-2. Create activation file → output/media-pipeline/ACTIVATE_XYZ.txt
+2. Create activation file → output/shared/media/ACTIVATE_XYZ.txt
 3. Tell user: "Copy this to activate: Read output/media-agent/inbox/PROJECT-xyz.txt and execute the task."
 ```
 

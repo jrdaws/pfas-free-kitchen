@@ -98,7 +98,7 @@ public/
 ### Media Pipeline Output
 
 ```
-output/media-pipeline/
+output/shared/media/
 ├── media-agent/outbox/
 │   └── approved/
 │       ├── PROJECT-myapp/
@@ -227,8 +227,8 @@ done
 
 ## Related Documents
 
-- [Media Pipeline](../../output/media-pipeline/MEDIA_PIPELINE.md)
-- [Photorealistic Prompt Guide](../../output/media-pipeline/shared/PHOTOREALISTIC_PROMPT_GUIDE.md)
+- [Media Pipeline](../../output/shared/media/MEDIA_PIPELINE.md)
+- [Photorealistic Prompt Guide](../../output/shared/media/shared/PHOTOREALISTIC_PROMPT_GUIDE.md)
 - [Quality Agent Role](../../prompts/agents/roles/media-pipeline/QUALITY_AGENT.md)
 
 ---

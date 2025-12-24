@@ -643,7 +643,7 @@ Before merging UI changes:
 - [shadcn/ui Documentation](https://ui.shadcn.com)
 - [Radix UI Primitives](https://www.radix-ui.com/primitives)
 - [Tailwind CSS](https://tailwindcss.com/docs)
-- [Our Color Philosophy](../output/media-pipeline/shared/COLOR_PHILOSOPHY.md)
+- [Our Color Philosophy](../output/shared/media/COLOR_PHILOSOPHY.md)
 
 ---
 

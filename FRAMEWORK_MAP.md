@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- c17a576 2025-12-24 feat: migrate media pipeline shared resources to output/shared/media/ + create P1 task
 - 70c1271 2025-12-24 feat(sops): add Folder Deprecation SOP + mark old agent folders as DEPRECATED
 - 8a1fd77 2025-12-24 feat(sops): add Agent Creation SOP with automation script
 - f15b215 2025-12-24 feat(agents): add default settings.json for all 13 agents + P1 task for path updates
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 623a1b2 2025-12-24 fix(website): P0 hydration error + P2 UX improvements
 - d63568e 2025-12-24 docs(audit): add 4 more tasks from user feedback
 - 75f9a55 2025-12-24 docs(audit): add P0/P1 tasks from configurator review
-- 1a9a64d 2025-12-24 feat(governance): add cumulative memory sections to checkpoint
 
 ## Agent Governance Structure
 
