@@ -18,7 +18,7 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
-| P1 | Test media pipeline E2E | Testing | Integration check | DOC |
+| P1 | - | - | - | - |
 
 ---
 
@@ -65,6 +65,7 @@ Current recommended order based on dependencies:
 
 | Task | Agent | Date | Notes |
 |------|-------|------|-------|
+| Media Pipeline E2E tests | TST | 2025-12-24 | 47/47 checks pass, Part 4 needs API keys |
 | Vercel deployment prep | PLT | 2025-12-23 | Build verified, scripts created, awaiting auth |
 | Verify Priority SOPs | TST | 2025-12-23 | All 3 SOPs verified actionable |
 | Create Shared Mindframe | DOC | 2025-12-23 | MINDFRAME.md + certify.sh |

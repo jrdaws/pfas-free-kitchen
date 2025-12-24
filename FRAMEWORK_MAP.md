@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 0afd7f5 2025-12-24 test(sop): verify checkpoint protocol is actionable
 - 88350b7 2025-12-24 docs(governance): enhance Permission Probing Protocol (v2.9)
 - 7cb5739 2025-12-24 docs(sops): add Session Checkpoint SOP for progress offloading
 - fce67c3 2025-12-24 feat(templates): integrate E2E test project media assets
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 74c555b 2025-12-23 docs: add SOP proposal for Vercel monorepo deployment best practices
 - 8cc4df8 2025-12-23 fix(website): add stubs for workspace packages to enable Vercel build
 - def604d 2025-12-23 fix: make husky prepare script fail gracefully for CI
-- 41f6c20 2025-12-23 fix(website): fix Button component React types compatibility
 
 ## Agent Governance Structure
 
