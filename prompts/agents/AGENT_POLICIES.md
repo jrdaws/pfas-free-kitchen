@@ -1054,6 +1054,7 @@ The following SOPs define mandatory processes that ALL agents must follow:
 | **Documentation Sync** | `docs/sops/DOCUMENTATION_SYNC_SOP.md` | Keep docs current with code |
 | **Deployment** | `docs/sops/DEPLOYMENT_SOP.md` | Pre-deploy checklists, rollback procedures |
 | **SOP Proposal Process** | `docs/sops/SOP_PROPOSAL_PROCESS.md` | How to propose and adopt new SOPs |
+| **AI Model Selection** | `docs/sops/AI_MODEL_SELECTION_SOP.md` | Token limits, model tiers, truncation handling |
 
 ### SOP Compliance
 

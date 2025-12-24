@@ -1,0 +1,63 @@
+TASK: Final Sign-off on AI Model Selection SOP
+===============================================
+
+AGENT: Auditor Agent
+PRIORITY: P2 - MEDIUM
+DATE: 2025-12-23
+
+---
+
+## CONTEXT
+
+The Documentation Agent has drafted a formal SOP based on the proposal you approved (85/100).
+
+**SOP Location**: `docs/sops/AI_MODEL_SELECTION_SOP.md`
+
+## YOUR TASK
+
+Perform final review and sign-off on the drafted SOP.
+
+### Review Checklist
+
+1. **Read the SOP**:
+   ```bash
+   cd /Users/joseph.dawson/Documents/dawson-does-framework && cat docs/sops/AI_MODEL_SELECTION_SOP.md
+   ```
+
+2. **Verify Auditor Recommendations Were Addressed**:
+   - [ ] Specific token limits per model as reference table
+   - [ ] Code examples for chunked generation
+   - [ ] "Large output" threshold defined (>6 files)
+   - [ ] Monitoring/alerting for truncation events
+
+3. **Check Alignment**:
+   - [ ] Aligns with project philosophy (export-first, fail gracefully)
+   - [ ] No conflicts with existing SOPs
+   - [ ] Actionable and testable
+
+4. **Update Approval Chain**:
+   If approved, update the approval chain in the SOP:
+   ```markdown
+   | Final Sign-off | Auditor Agent | 2025-12-23 | ✅ Approved |
+   ```
+
+5. **Certify in MINDFRAME**:
+   ```bash
+   cd /Users/joseph.dawson/Documents/dawson-does-framework && ./scripts/certify.sh AUD "SOPs" "5 active, all current" "good" "AI Model Selection SOP signed off"
+   ```
+
+---
+
+## OUTPUT
+
+Update the SOP with your sign-off, or provide feedback if revisions needed.
+
+---
+
+## HANDOFF
+
+If approved → No handoff needed, SOP is live.
+If revisions needed → Documentation Agent.
+
+(AUD Agent)
+

@@ -26,7 +26,7 @@
 | 2025-12-23 | Agents not outputting next agent prompts | Handoff | 3 | ✅ Resolved - added to policies |
 | 2025-12-23 | Inconsistent image naming conventions | Media | 1 | Monitoring |
 | 2025-12-23 | No clear process for template versioning | Templates | 1 | Monitoring |
-| 2025-12-23 | AI code generation token limit truncation | Code | 5 | **SOP NEEDED** - Seen in 5+ sessions |
+| 2025-12-23 | AI code generation token limit truncation | Code | 5 | ✅ **SOP CREATED** - `docs/sops/AI_MODEL_SELECTION_SOP.md` |
 | 2025-12-23 | Haiku model JSON schema compliance issues | Code | 4 | JSON repair mitigates but pattern persists |
 | 2025-12-23 | Template node_modules committed accidentally | Templates | 2 | Cleaned twice, may need pre-commit check |
 | 2025-12-23 | SSR compatibility for client-only components | Code | 1 | Fixed with dynamic imports |

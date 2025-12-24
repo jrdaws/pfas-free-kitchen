@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 2b426da 2025-12-23 feat(platform): add Vercel deployment script and status report
 - 980c076 2025-12-23 chore(agents): mark context freshness task complete, update MINDFRAME
 - 1677a3b 2025-12-23 feat(website): implement PhaseIndicator with 3-phase grouped UX
 - 268ad8f 2025-12-23 docs(governance): update MINDFRAME and AGENT_CONTEXT for v2.3
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 2ee953a 2025-12-22 docs(development): add comprehensive agent inbox watcher guide
 - 0414454 2025-12-22 feat(scripts): add watcher setup script and complete template audit
 - 801691a 2025-12-22 feat(ci): add agent task monitoring system (A+C+D hybrid)
-- 3f15b77 2025-12-22 feat(ci): add agent task monitoring workflow
 
 ## Agent Governance Structure
 

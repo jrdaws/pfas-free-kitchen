@@ -104,7 +104,7 @@ UI redesign complete! Homepage and configurator now use modern Indigo/Violet bra
 | Lint Errors | 0 | ✅ Clean | Testing | 2025-12-23 |
 | Open Bugs | 0 P0, 0 P1 | ✅ Clear | Auditor | 2025-12-23 |
 | Doc Freshness | 95% | ↑ Improving | Documentation | 2025-12-23 |
-| SOPs Active | 3 | ↑ New | Documentation | 2025-12-23 |
+| SOPs Active | 5 | ↑ Growing | Documentation | 2025-12-23 |
 | Agent Policies | v2.0 | ↑ Updated | Documentation | 2025-12-23 |
 
 ---
