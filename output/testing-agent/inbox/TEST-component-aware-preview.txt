@@ -1,0 +1,259 @@
+# TEST TASK: Component-Aware Preview System
+
+**Priority:** P1
+**Created:** 2024-12-24
+**Created By:** Website Agent
+**Estimated Time:** 45-60 minutes
+
+---
+
+## Overview
+
+Test the newly implemented Component-Aware Preview system in the configurator. This feature replaces raw AI-generated HTML with polished React components that match the export output.
+
+---
+
+## Files to Test
+
+### Core Files
+- `website/app/components/configurator/ComponentAwarePreview.tsx` - Main preview component
+- `website/app/api/preview/enhance/route.ts` - AI enhancement endpoint
+- `website/lib/preview/component-registry.ts` - Component definitions
+- `website/lib/preview/template-compositions.ts` - Template section configs
+- `website/lib/ai/preview-generator.ts` - Fallback props generator
+- `website/components/preview/PreviewRenderer.tsx` - Component renderer
+
+### Preview Components (11 total)
+- `website/components/preview/Nav.tsx`
+- `website/components/preview/Hero.tsx`
+- `website/components/preview/ProductGrid.tsx`
+- `website/components/preview/FeatureCards.tsx`
+- `website/components/preview/PricingTable.tsx`
+- `website/components/preview/Testimonials.tsx`
+- `website/components/preview/CTA.tsx`
+- `website/components/preview/Footer.tsx`
+- `website/components/preview/FAQ.tsx`
+- `website/components/preview/BlogPostList.tsx`
+- `website/components/preview/DashboardPreview.tsx`
+
+---
+
+## Test Scenarios
+
+### 1. UI Rendering Tests
+
+**Test 1.1: Tab Navigation**
+- [ ] Navigate to `/configure` and complete steps 1-5 (or skip to step 6)
+- [ ] Verify three tabs appear: "Component Preview ✨", "AI HTML Preview", "Full Project Generator"
+- [ ] Verify "Component Preview ✨" is the default selected tab
+- [ ] Click between tabs - verify content switches correctly
+
+**Test 1.2: Viewport Switching**
+- [ ] Click Desktop icon - verify full-width preview
+- [ ] Click Tablet icon - verify 768px max-width preview
+- [ ] Click Mobile icon - verify mobile phone frame with 375px width
+- [ ] Verify smooth transitions between viewports
+
+**Test 1.3: Section Reorder UI**
+- [ ] Click "Reorder Sections" button
+- [ ] Verify section editor panel appears
+- [ ] Verify all active sections show with up/down arrows
+- [ ] Verify required sections show "required" badge
+- [ ] Verify optional sections have remove (×) button
+- [ ] Click button again to hide editor
+
+### 2. Section Ordering Tests
+
+**Test 2.1: Move Section Up**
+- [ ] Open section editor
+- [ ] Click ↑ on any section (not first)
+- [ ] Verify section moves up in list
+- [ ] Verify preview re-renders with new order
+
+**Test 2.2: Move Section Down**
+- [ ] Click ↓ on any section (not last)
+- [ ] Verify section moves down in list
+- [ ] Verify preview re-renders with new order
+
+**Test 2.3: Toggle Optional Section**
+- [ ] Find an optional section (e.g., Testimonials)
+- [ ] Click × to remove it
+- [ ] Verify it appears in "Available Sections" column
+- [ ] Click the section in Available to re-add
+- [ ] Verify it returns to Active Sections
+
+**Test 2.4: Required Sections Protected**
+- [ ] Verify Nav and Footer have "required" badge
+- [ ] Verify they do NOT have × button
+- [ ] Verify they cannot be removed
+
+**Test 2.5: Reset Button**
+- [ ] Make several ordering changes
+- [ ] Click "Reset" button
+- [ ] Verify sections return to template default order
+
+### 3. Template-Specific Tests
+
+**Test 3.1: E-commerce Template**
+- [ ] Select "ecommerce" template in step 1
+- [ ] Navigate to step 6, Component Preview tab
+- [ ] Verify ProductGrid component renders with products
+- [ ] Verify products show names, prices, Add to Cart buttons
+- [ ] Verify Nav shows cart-related links
+
+**Test 3.2: SaaS Template**
+- [ ] Select "saas" template
+- [ ] Verify PricingTable renders with plans
+- [ ] Verify pricing toggle (monthly/yearly) if present
+- [ ] Verify FeatureCards render with icons
+
+**Test 3.3: Blog Template**
+- [ ] Select "blog" template
+- [ ] Verify BlogPostList renders with posts
+- [ ] Verify posts show title, excerpt, author, date
+
+**Test 3.4: Landing Page Template**
+- [ ] Select "landing-page" template
+- [ ] Verify Hero, FeatureCards, Testimonials, FAQ render
+- [ ] Verify CTA section appears
+
+**Test 3.5: Dashboard Template**
+- [ ] Select "dashboard" template
+- [ ] Verify DashboardPreview renders with stats
+- [ ] Verify chart area displays
+
+### 4. Fallback Props Tests
+
+**Test 4.1: Default Props Generation**
+- [ ] Without clicking "AI Enhance", verify preview renders
+- [ ] Verify project name appears in Nav and Footer
+- [ ] Verify content makes sense for template type
+- [ ] Verify no empty sections or broken layouts
+
+**Test 4.2: Props Update on Config Change**
+- [ ] Enter project name in step 3
+- [ ] Navigate to preview
+- [ ] Verify project name appears in Nav/Footer
+- [ ] Go back, change project name
+- [ ] Return to preview - verify name updated
+
+### 5. AI Enhancement Tests (If API Key Available)
+
+**Test 5.1: AI Enhance Button**
+- [ ] Click "AI Enhance Content" button
+- [ ] Verify loading state shows "Enhancing..."
+- [ ] Verify button disabled during enhancement
+- [ ] After completion, verify content updated
+
+**Test 5.2: AI Without Key (Fallback)**
+- [ ] If no ANTHROPIC_API_KEY set
+- [ ] Click AI Enhance
+- [ ] Verify fallback props used (no error)
+- [ ] Verify preview still renders correctly
+
+### 6. API Endpoint Tests
+
+**Test 6.1: POST /api/preview/enhance**
+```bash
+curl -X POST http://localhost:3008/api/preview/enhance \
+  -H "Content-Type: application/json" \
+  -d '{
+    "template": "saas",
+    "projectName": "TestApp",
+    "vision": "A project management tool for teams",
+    "description": "Help teams collaborate better"
+  }'
+```
+- [ ] Verify response has `componentProps` object
+- [ ] Verify response has `sectionOrder` array
+- [ ] Verify response has `source` field ("ai" or "fallback")
+
+**Test 6.2: Error Handling**
+- [ ] Send request with missing template
+- [ ] Verify graceful fallback (no 500 error)
+
+### 7. Component Quality Tests
+
+**Test 7.1: Visual Inspection**
+- [ ] Verify no broken layouts or overlapping elements
+- [ ] Verify text is readable (proper contrast)
+- [ ] Verify buttons are clickable-looking
+- [ ] Verify images/placeholders display correctly
+- [ ] Verify mobile view is responsive (no horizontal scroll)
+
+**Test 7.2: Component Props Validation**
+- [ ] Each component receives expected props
+- [ ] Missing optional props don't cause errors
+- [ ] Invalid prop values handled gracefully
+
+### 8. Integration Tests
+
+**Test 8.1: State Persistence**
+- [ ] Make changes to section order
+- [ ] Navigate away (to step 7)
+- [ ] Return to step 6
+- [ ] Verify custom order persists (or resets appropriately)
+
+**Test 8.2: Multiple Templates**
+- [ ] Switch between different templates
+- [ ] Verify each shows correct components
+- [ ] Verify no component bleed between templates
+
+---
+
+## Expected Behavior Summary
+
+| Feature | Expected |
+|---------|----------|
+| Default tab | "Component Preview ✨" selected |
+| Viewports | Desktop (100%), Tablet (768px), Mobile (375px) |
+| Section reorder | Up/down arrows work, preview updates |
+| Required sections | Cannot be removed (Nav, Footer, etc.) |
+| Optional sections | Can be toggled on/off |
+| Reset | Returns to template default order |
+| AI Enhance | Updates content (or uses fallback gracefully) |
+| Fallback | Works without API key |
+
+---
+
+## Bug Report Template
+
+If issues found, document:
+
+```
+## Bug: [Title]
+
+**Template:** [which template]
+**Step:** [which test step]
+**Expected:** [what should happen]
+**Actual:** [what happened]
+**Console Errors:** [any JS errors]
+**Screenshot:** [if applicable]
+```
+
+---
+
+## Success Criteria
+
+- [ ] All UI elements render correctly
+- [ ] Section ordering works bidirectionally
+- [ ] All 5 main templates render their components
+- [ ] Fallback props work without API key
+- [ ] No console errors in normal operation
+- [ ] Mobile view is usable
+- [ ] Component Preview matches export structure
+
+---
+
+## Notes for Testing Agent
+
+1. Start the dev server: `cd website && npm run dev`
+2. Server runs on http://localhost:3000 (or next available port)
+3. TypeScript should compile without errors
+4. Focus on functional testing over unit tests for this task
+5. Document any visual polish issues separately from functional bugs
+
+---
+
+**After Testing:** Update this file with results and create a summary in `output/testing-agent/outbox/COMPONENT_PREVIEW_TEST_RESULTS.md`
+

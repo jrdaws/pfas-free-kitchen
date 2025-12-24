@@ -1,0 +1,6 @@
+timestamp,agent,task_id,step,total_steps,status
+
+2025-12-24T10:13:46Z,TEST,test-task,1,1,triggered
+2025-12-24T10:13:52Z,TEST,test-task,1,1,cancelled
+2025-12-24T10:14:15Z,TEST,test-task,1,1,triggered
+2025-12-24T10:14:22Z,TEST,test-task,1,1,cancelled

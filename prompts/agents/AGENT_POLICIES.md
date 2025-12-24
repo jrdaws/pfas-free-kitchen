@@ -1,8 +1,8 @@
 # Agent Policies
 
-> **Version**: 2.9
+> **Version**: 3.0
 > **Effective Date**: 2025-12-22
-> **Latest Update**: Enhanced Permission Probing Protocol - probe specific paths upfront
+> **Latest Update**: Added Auto-Continuation Protocol for multi-step tasks
 > **Purpose**: Define operational policies and protocols for AI agents working on dawson-does-framework
 
 ---
@@ -1066,7 +1066,62 @@ test(integration): add E2E tests for configurator flow
 
 ---
 
+## Auto-Continuation Protocol
+
+For multi-step tasks that require agent continuation without human intervention.
+
+### When to Use
+
+- Task requires 3+ distinct steps
+- Each step needs separate agent interaction
+- Overnight/unattended operation needed
+- Steps can run independently
+
+### How to Trigger
+
+At end of a step, include this marker and run the trigger script:
+
+```markdown
+## 🔄 Auto-Continue: Step X of Y
+
+**Next step in: 30 seconds**
+
+To continue manually: [copy next prompt here]
+To cancel: `./scripts/auto-continue/cancel-continue.sh`
+```
+
+```bash
+./scripts/auto-continue/trigger-continue.sh "AGENT_NAME" "Next prompt text" 30 STEP TOTAL "task-id"
+```
+
+### Safety Rules
+
+| Rule | Value | Purpose |
+|------|-------|---------|
+| Max auto-continues | 5 per task | Prevent infinite loops |
+| Timeout | 10 minutes | Detect stale triggers |
+| Logging | All triggers | Audit trail |
+| Final step | Auditor verification | Quality assurance |
+
+### Scripts
+
+| Script | Purpose |
+|--------|---------|
+| `scripts/auto-continue/trigger-continue.sh` | Trigger continuation |
+| `scripts/auto-continue/cancel-continue.sh` | Cancel pending |
+| `scripts/auto-continue/check-continue.sh` | Check status |
+
+**Full documentation**: `docs/automation/AUTO_CONTINUE.md`
+
+---
+
 ## Version History
+
+### Version 3.0 (2025-12-24)
+- Added **Auto-Continuation Protocol** for multi-step unattended tasks
+- Created `scripts/auto-continue/` with trigger, cancel, check scripts
+- Keyboard Maestro integration for automatic prompt pasting
+- Safety features: max 5 continues, timeout, logging, auditor verification
 
 ### Version 2.9 (2025-12-24)
 - Enhanced **Permission Probing Protocol** - agents probe specific paths upfront

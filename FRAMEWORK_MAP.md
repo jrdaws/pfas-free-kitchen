@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 3e9ab4f 2025-12-24 refactor(website): remove terminal window chrome from configurator components
 - bc92c82 2025-12-24 feat(governance): add CHECKPOINT_SOP with mandatory memory updates
 - 7ef4d09 2025-12-24 test(e2e): comprehensive export flow tests - catches known bugs
 - cbca859 2025-12-24 docs(export): clarify ZIP vs CLI export differences
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 883fc22 2025-12-23 docs(policies): change auto-continue timer to 35 minutes
 - 7b36890 2025-12-23 docs(memory): update DOCS_MEMORY.md with Vercel SOP review session
 - 6da3e01 2025-12-23 docs(policies): make Quick Actions section BLOCKING requirement
-- c7b4d7a 2025-12-23 docs(deploy): integrate Vercel monorepo deployment SOP into existing docs
 
 ## Agent Governance Structure
 
