@@ -1,0 +1,28 @@
+{
+  "iteration": 3,
+  "generatedAt": "2025-12-24T07:55:59.188Z",
+  "results": [
+    {
+      "id": "hero-workspace-mobile-v3",
+      "status": "failed",
+      "error": "Cannot find package 'execa' imported from /Users/joseph.dawson/Documents/dawson-does-framework/output/media-pipeline/media-agent/workspace/final-regeneration/generate-final-assets.mjs"
+    },
+    {
+      "id": "terminal-mockup-clean-v3",
+      "status": "failed",
+      "error": "Cannot find package 'execa' imported from /Users/joseph.dawson/Documents/dawson-does-framework/output/media-pipeline/media-agent/workspace/final-regeneration/generate-final-assets.mjs"
+    }
+  ],
+  "prompts": {
+    "heroWorkspaceMobile": {
+      "prompt": "Close-up overhead view of brand new pristine silver MacBook Pro laptop computer with perfect immaculate keyboard and flawless black keys arranged in neat rows, every key perfectly formed and undamaged, on minimal white marble desk surface, laptop lid open at 45 degree angle showing soft glowing screen with indigo gradient, morning natural window light from side creating soft shadows, shot on Canon EOS R5 with 50mm f/1.4 lens, shallow depth of field, clean minimal aesthetic, Apple advertising quality, premium tech lifestyle photography, factory fresh condition",
+      "negative": "damaged keyboard, broken keys, melted keys, burnt keyboard, warped keys, deformed keys, missing keys, fire damage, heat damage, destroyed laptop, broken laptop, scratched, worn, old, dirty, dusty, cracked, charred, holes, defects, artifacts, distorted, malformed",
+      "cfgScale": 6.5
+    },
+    "terminalMockup": {
+      "prompt": "Flat design UI mockup of a macOS Terminal dot app window, dark gray window background color 1E1E1E hex, top left corner shows three small circular dots in red yellow green as traffic light buttons, white title bar at top with word Terminal, inside the window shows green monospace text on pure black background displaying command line interface text, shows typed commands npm install and npx framework export with cursor blinking, window has subtle rounded corners, floating on soft indigo to violet gradient background, Figma style UI design mockup, Dribbble trending design, clean vector aesthetic, 2D flat interface design, no perspective, no 3D effects",
+      "negative": "photograph, camera, hardware, physical device, laptop, computer, desk, monitor, screen, Kanban board, cards, dashboard, project management, colorful buttons, rainbow colors, LED lights, industrial, real world, physical, tangible, depth, shadows, 3D render, perspective view",
+      "cfgScale": 5.5
+    }
+  }
+}

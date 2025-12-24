@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 573afea 2025-12-23 docs(governance): make permission request BLOCKING + add Reply Rules to MINDFRAME
 - d48758e 2025-12-23 feat(website): complete shadcn P0 component migration
 - c151a93 2025-12-23 feat(website): add P0 configurator sidebar icons and integrate category icons
 - b8e6333 2025-12-23 docs(governance): use full role names in ALL CAPS for agent identity
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 268ad8f 2025-12-23 docs(governance): update MINDFRAME and AGENT_CONTEXT for v2.3
 - c8d4859 2025-12-23 docs(agents): update Quality Agent memory, add media pipeline role codes
 - 9f7bbed 2025-12-23 feat(website): implement phase grouping in StepIndicator component
-- c617fcc 2025-12-23 test(sops): verify priority SOPs are complete and actionable
 
 ## Agent Governance Structure
 
