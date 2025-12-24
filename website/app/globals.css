@@ -1,77 +1,107 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --terminal-bg: #0a0e14;
-  --terminal-text: #00ff41;
-  --terminal-dim: #008f11;
-  --terminal-accent: #00d9ff;
-  --terminal-error: #ff0040;
-  --terminal-warning: #ffaa00;
+  /* Brand colors */
+  --brand-primary: #6366F1;
+  --brand-secondary: #8B5CF6;
+  --brand-success: #10B981;
+  --brand-bg-light: #FFFFFF;
+  --brand-bg-dark: #0A0A0A;
+  --brand-muted: #71717A;
 
-  /* shadcn/ui variables mapped to terminal theme */
-  --background: 160 20% 5%;
-  --foreground: 120 100% 50%;
-  --card: 160 20% 7%;
-  --card-foreground: 120 100% 50%;
-  --popover: 160 20% 7%;
-  --popover-foreground: 120 100% 50%;
-  --primary: 120 100% 50%;
-  --primary-foreground: 160 20% 5%;
-  --secondary: 180 100% 50%;
-  --secondary-foreground: 160 20% 5%;
-  --muted: 160 20% 15%;
-  --muted-foreground: 120 100% 40%;
-  --accent: 180 100% 50%;
-  --accent-foreground: 160 20% 5%;
+  /* Terminal colors - updated for new aesthetic */
+  --terminal-bg: #0F0F14;
+  --terminal-text: #E4E4E7;
+  --terminal-dim: #71717A;
+  --terminal-accent: #6366F1;
+  --terminal-error: #EF4444;
+  --terminal-warning: #F59E0B;
+
+  /* shadcn/ui variables mapped to new theme */
+  --background: 0 0% 4%;
+  --foreground: 240 5% 96%;
+  --card: 0 0% 6%;
+  --card-foreground: 240 5% 96%;
+  --popover: 0 0% 6%;
+  --popover-foreground: 240 5% 96%;
+  --primary: 239 84% 67%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 258 90% 66%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 240 4% 16%;
+  --muted-foreground: 240 5% 65%;
+  --accent: 258 90% 66%;
+  --accent-foreground: 0 0% 100%;
   --destructive: 0 84% 60%;
   --destructive-foreground: 0 0% 98%;
-  --border: 120 100% 50% / 0.3;
-  --input: 120 100% 50% / 0.3;
-  --ring: 120 100% 50%;
-  --radius: 0.5rem;
+  --border: 240 4% 16%;
+  --input: 240 4% 16%;
+  --ring: 239 84% 67%;
+  --radius: 0.75rem;
 }
 
 @layer base {
   * {
-    @apply border-terminal-dim;
+    @apply border-zinc-800;
   }
 
   body {
-    @apply bg-terminal-bg text-terminal-text font-mono antialiased;
+    @apply bg-brand-dark text-zinc-100 font-sans antialiased;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-display;
+    @apply font-display font-bold tracking-tight;
   }
 }
 
 @layer components {
-  .terminal-window {
-    @apply relative border-2 border-terminal-text/30 rounded-lg overflow-hidden;
-    background: linear-gradient(180deg, rgba(0,255,65,0.05) 0%, transparent 100%);
-    box-shadow:
-      0 0 20px rgba(0,255,65,0.2),
-      inset 0 0 100px rgba(0,255,65,0.02);
+  /* Hero section styles */
+  .hero-gradient {
+    position: relative;
+    background-size: cover;
+    background-position: center;
   }
 
-  .terminal-window::before {
+  .hero-gradient::before {
     content: '';
-    @apply absolute inset-0 pointer-events-none;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 255, 65, 0.03) 0px,
-      transparent 1px,
-      transparent 2px,
-      rgba(0, 255, 65, 0.03) 3px
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(99, 102, 241, 0.15) 0%,
+      rgba(139, 92, 246, 0.10) 50%,
+      transparent 100%
     );
+    pointer-events: none;
+  }
+
+  .mesh-overlay {
+    position: absolute;
+    inset: 0;
+    opacity: 0.05;
+    pointer-events: none;
+    background-image: url('/images/redesign/hero/hero-mesh-pattern.svg');
+    background-repeat: repeat;
+  }
+
+  /* Terminal window - modernized */
+  .terminal-window {
+    @apply relative rounded-xl overflow-hidden;
+    background: linear-gradient(180deg, rgba(15, 15, 20, 0.95) 0%, rgba(15, 15, 20, 0.98) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+    box-shadow:
+      0 0 0 1px rgba(99, 102, 241, 0.1),
+      0 4px 24px -4px rgba(0, 0, 0, 0.5),
+      0 8px 32px -8px rgba(99, 102, 241, 0.15);
   }
 
   .terminal-header {
-    @apply flex items-center gap-2 px-4 py-3 bg-terminal-text/5 border-b border-terminal-text/20;
+    @apply flex items-center gap-2 px-4 py-3 border-b border-zinc-800/50;
+    background: rgba(0, 0, 0, 0.3);
   }
 
   .terminal-dot {
@@ -79,69 +109,133 @@
   }
 
   .terminal-content {
-    @apply p-6 font-mono text-sm;
+    @apply p-6 font-mono text-sm text-zinc-300;
   }
 
-  .scanline {
-    @apply absolute inset-0 pointer-events-none opacity-10;
-    background: linear-gradient(
-      to bottom,
-      transparent 50%,
-      rgba(0, 255, 65, 0.5) 51%,
-      transparent 52%
-    );
-    background-size: 100% 4px;
-    animation: scanline 8s linear infinite;
-  }
-
-  .glow-text {
-    @apply text-terminal-text;
-    text-shadow: 0 0 10px rgba(0, 255, 65, 0.8);
-  }
-
-  .glow-accent {
-    @apply text-terminal-accent;
-    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
-  }
-
+  /* Feature cards */
   .feature-card {
-    @apply terminal-window p-6 transition-all duration-300 hover:scale-105 hover:border-terminal-text/60;
+    @apply relative p-6 rounded-xl transition-all duration-300;
+    background: linear-gradient(180deg, rgba(24, 24, 27, 0.8) 0%, rgba(24, 24, 27, 0.6) 100%);
+    border: 1px solid rgba(99, 102, 241, 0.1);
   }
 
   .feature-card:hover {
-    box-shadow:
-      0 0 30px rgba(0, 255, 65, 0.3),
-      inset 0 0 100px rgba(0, 255, 65, 0.05);
+    border-color: rgba(99, 102, 241, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -12px rgba(99, 102, 241, 0.25);
   }
 
+  .feature-icon {
+    @apply w-12 h-12 mb-4 text-brand-primary;
+  }
+
+  /* Buttons */
   .btn-primary {
-    @apply px-6 py-3 bg-terminal-text/10 border-2 border-terminal-text rounded-lg;
-    @apply font-mono font-bold text-terminal-text transition-all duration-300;
-    @apply hover:bg-terminal-text hover:text-terminal-bg hover:shadow-[0_0_20px_rgba(0,255,65,0.5)];
+    @apply px-6 py-3 rounded-lg font-semibold text-white transition-all duration-300;
+    background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-secondary) 100%);
+    box-shadow: 0 4px 14px -2px rgba(99, 102, 241, 0.4);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px -2px rgba(99, 102, 241, 0.5);
   }
 
   .btn-secondary {
-    @apply px-6 py-3 border-2 border-terminal-accent/50 rounded-lg;
-    @apply font-mono font-bold text-terminal-accent transition-all duration-300;
-    @apply hover:bg-terminal-accent/10 hover:border-terminal-accent hover:shadow-[0_0_20px_rgba(0,217,255,0.3)];
+    @apply px-6 py-3 rounded-lg font-semibold transition-all duration-300;
+    @apply border border-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500;
+    background: rgba(24, 24, 27, 0.5);
   }
 
+  .btn-secondary:hover {
+    background: rgba(24, 24, 27, 0.8);
+  }
+
+  /* Code blocks */
   .code-block {
-    @apply terminal-window p-4 text-sm overflow-x-auto;
+    @apply rounded-xl p-4 text-sm overflow-x-auto font-mono;
+    background: rgba(15, 15, 20, 0.95);
+    border: 1px solid rgba(99, 102, 241, 0.15);
   }
 
-  .blink-cursor::after {
-    content: '▋';
-    @apply inline-block animate-blink ml-1;
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, #6366F1 0%, #8B5CF6 50%, #A78BFA 100%);
+  }
+
+  /* Section divider */
+  .section-divider {
+    @apply w-full h-24 bg-no-repeat bg-center bg-contain;
+    background-image: url('/images/redesign/patterns/section-divider.svg');
+    opacity: 0.5;
+  }
+
+  /* Testimonial card */
+  .testimonial-card {
+    @apply p-6 rounded-xl;
+    background: linear-gradient(180deg, rgba(24, 24, 27, 0.6) 0%, rgba(24, 24, 27, 0.4) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  /* Avatar */
+  .avatar {
+    @apply w-12 h-12 rounded-full object-cover;
+    border: 2px solid rgba(99, 102, 241, 0.3);
+  }
+
+  /* Stats */
+  .stat-value {
+    @apply text-4xl font-bold;
+    background: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Toggle button group */
+  .toggle-group {
+    @apply inline-flex p-1 rounded-lg;
+    background: rgba(24, 24, 27, 0.8);
+    border: 1px solid rgba(99, 102, 241, 0.2);
+  }
+
+  .toggle-btn {
+    @apply px-6 py-2 rounded-md font-medium text-zinc-400 transition-all duration-200;
+  }
+
+  .toggle-btn.active {
+    @apply text-white;
+    background: linear-gradient(135deg, rgba(99, 102, 241, 0.8) 0%, rgba(139, 92, 246, 0.8) 100%);
+  }
+
+  .toggle-btn:not(.active):hover {
+    @apply text-zinc-200;
   }
 }
 
 @layer utilities {
-  .text-glow {
-    text-shadow: 0 0 10px currentColor;
+  .text-balance {
+    text-wrap: balance;
   }
 
-  .text-glow-strong {
-    text-shadow: 0 0 10px currentColor, 0 0 20px currentColor, 0 0 30px currentColor;
+  .animate-delay-100 {
+    animation-delay: 100ms;
+  }
+
+  .animate-delay-200 {
+    animation-delay: 200ms;
+  }
+
+  .animate-delay-300 {
+    animation-delay: 300ms;
+  }
+
+  .animate-delay-400 {
+    animation-delay: 400ms;
+  }
+
+  .animate-delay-500 {
+    animation-delay: 500ms;
   }
 }

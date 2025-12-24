@@ -1,0 +1,20 @@
+<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Providers icon: Connected nodes/integration symbol -->
+  <!-- Style: 2px stroke, rounded, Indigo #6366F1 -->
+  
+  <!-- Center node -->
+  <circle cx="12" cy="12" r="3" stroke="#6366F1" stroke-width="2" fill="rgba(99, 102, 241, 0.1)"/>
+  
+  <!-- Top node -->
+  <circle cx="12" cy="4" r="2" stroke="#6366F1" stroke-width="2" fill="none"/>
+  <line x1="12" y1="6" x2="12" y2="9" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Bottom left node -->
+  <circle cx="5" cy="18" r="2" stroke="#6366F1" stroke-width="2" fill="none"/>
+  <line x1="6.5" y1="16.5" x2="9.5" y2="13.5" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Bottom right node -->
+  <circle cx="19" cy="18" r="2" stroke="#6366F1" stroke-width="2" fill="none"/>
+  <line x1="17.5" y1="16.5" x2="14.5" y2="13.5" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+</svg>
+

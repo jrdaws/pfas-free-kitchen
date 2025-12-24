@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import dynamic from "next/dynamic";
@@ -38,7 +38,8 @@ const STEPS = [
   { number: 4, label: "Review", description: "Approve or reject results" },
 ] as const;
 
-export default function MediaStudioPage() {
+// Inner component that uses useSearchParams
+function MediaStudioContent() {
   const searchParams = useSearchParams();
   
   const {
@@ -203,6 +204,21 @@ export default function MediaStudioPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+// Main page component with Suspense boundary for useSearchParams
+export default function MediaStudioPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-pulse text-brand-primary text-xl font-mono">Loading Media Studio...</div>
+        </div>
+      </div>
+    }>
+      <MediaStudioContent />
+    </Suspense>
   );
 }
 

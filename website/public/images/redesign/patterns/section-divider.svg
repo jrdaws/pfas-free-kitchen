@@ -1,0 +1,21 @@
+<svg width="1920" height="100" viewBox="0 0 1920 100" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+  <!-- Section divider: Subtle wave curve for section transitions -->
+  <!-- Works in light (#E5E5E5) and dark (#333333) modes -->
+  
+  <defs>
+    <linearGradient id="dividerGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.03"/>
+      <stop offset="50%" stop-color="#8B5CF6" stop-opacity="0.05"/>
+      <stop offset="100%" stop-color="#6366F1" stop-opacity="0.03"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Gentle organic wave -->
+  <path d="M0,50 C320,20 640,80 960,50 C1280,20 1600,80 1920,50 L1920,100 L0,100 Z" 
+        fill="url(#dividerGradient)"/>
+  
+  <!-- Subtle stroke for definition -->
+  <path d="M0,50 C320,20 640,80 960,50 C1280,20 1600,80 1920,50" 
+        fill="none" stroke="#6366F1" stroke-opacity="0.1" stroke-width="1"/>
+</svg>
+
