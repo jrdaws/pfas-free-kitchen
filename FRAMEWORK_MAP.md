@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 74c555b 2025-12-23 docs: add SOP proposal for Vercel monorepo deployment best practices
 - 8cc4df8 2025-12-23 fix(website): add stubs for workspace packages to enable Vercel build
 - def604d 2025-12-23 fix: make husky prepare script fail gracefully for CI
 - 41f6c20 2025-12-23 fix(website): fix Button component React types compatibility
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 5b579d3 2025-12-23 chore(curator): complete cycle 6 - cleanup and consolidation
 - 1ad8d63 2025-12-23 feat(integration): complete UploadThing storage integration task
 - 3b80fa3 2025-12-23 docs(automation): add automation setup guide
-- ca5daf9 2025-12-23 feat(automation): add comprehensive automation playbook and scripts
 
 ## Agent Governance Structure
 

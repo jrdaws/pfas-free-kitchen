@@ -1,0 +1,454 @@
+TASK: shadcn/ui Migration + Sidebar Implementation
+==================================================
+
+PRIORITY: P0 - CRITICAL UX IMPROVEMENT
+CREATED: 2025-12-23
+FROM: Research Agent
+TYPE: Implementation
+
+---
+
+## OBJECTIVE
+
+Complete three related tasks:
+1. Install missing shadcn/ui components
+2. Refactor configurator to use shadcn components
+3. Implement the new sidebar navigation pattern
+
+---
+
+## PART 1: INSTALL SHADCN COMPONENTS
+
+### Required Reading
+```bash
+cat docs/sops/SHADCN_IMPLEMENTATION_SOP.md
+```
+
+### Installation Commands
+
+```bash
+cd website
+
+# P0 - Essential (Install First)
+npx shadcn@latest add card
+npx shadcn@latest add radio-group
+npx shadcn@latest add tabs
+
+# P1 - Important
+npx shadcn@latest add alert
+npx shadcn@latest add badge
+npx shadcn@latest add tooltip
+npx shadcn@latest add progress
+npx shadcn@latest add accordion
+npx shadcn@latest add select
+
+# P2 - For Sidebar Redesign
+npx shadcn@latest add sheet
+npx shadcn@latest add separator
+npx shadcn@latest add scroll-area
+npx shadcn@latest add collapsible
+```
+
+### Verify Installation
+```bash
+ls website/components/ui/
+# Should now have ~15+ component files
+```
+
+---
+
+## PART 2: REFACTOR CONFIGURATOR COMPONENTS
+
+### Priority Order
+
+1. **IntegrationSelector.tsx** (Most Complex)
+   - Replace `terminal-window` → `<Card>`
+   - Replace button-based selection → `<RadioGroup>`
+   - Replace custom badges → `<Badge>`
+
+2. **ModeToggle.tsx** (if exists) or inline toggle
+   - Replace custom buttons → `<Tabs>`
+
+3. **PhaseIndicator.tsx**
+   - Replace custom dots → `<Progress>` + status badges
+
+4. **TemplateSelector.tsx**
+   - Replace custom cards → `<Card>` + `<RadioGroup>`
+
+5. **EnvironmentKeys.tsx**
+   - Keep terminal styling for actual code/keys
+   - Wrap in `<Card>` for container
+
+### Component Mapping Reference
+
+| Current | Replace With |
+|---------|--------------|
+| `<div className="terminal-window">` | `<Card>` |
+| `<div className="terminal-header">` | `<CardHeader>` |
+| `<div className="terminal-content">` | `<CardContent>` |
+| `<button onClick={select}>` for choices | `<RadioGroup>` + `<RadioGroupItem>` |
+| `<select>` | `<Select>` |
+| Custom status pills | `<Badge>` |
+| Custom progress bar | `<Progress>` |
+| Warning/error divs | `<Alert>` |
+
+### Example Refactor: IntegrationSelector
+
+**Before:**
+```tsx
+<div className="terminal-window">
+  <div className="terminal-header">
+    <div className="terminal-dot bg-terminal-error"></div>
+    <div className="terminal-dot bg-terminal-warning"></div>
+    <div className="terminal-dot bg-terminal-text"></div>
+    <span className="text-xs text-terminal-dim ml-2">Auth</span>
+  </div>
+  <div className="terminal-content">
+    <button onClick={() => onSelect("supabase")} className={...}>
+      Supabase
+    </button>
+  </div>
+</div>
+```
+
+**After:**
+```tsx
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+
+<Card>
+  <CardHeader className="pb-3">
+    <div className="flex items-center justify-between">
+      <CardTitle className="text-lg">Auth</CardTitle>
+      <Badge variant="destructive">Required</Badge>
+    </div>
+  </CardHeader>
+  <CardContent>
+    <RadioGroup value={selected} onValueChange={onSelect}>
+      <div className="grid gap-3">
+        <Label
+          htmlFor="supabase"
+          className="flex items-center gap-4 p-4 border rounded-lg cursor-pointer hover:bg-accent/10 [&:has([data-state=checked])]:border-primary"
+        >
+          <RadioGroupItem value="supabase" id="supabase" />
+          <div>
+            <span className="font-medium">Supabase</span>
+            <span className="text-sm text-muted-foreground block">
+              Email/password and OAuth
+            </span>
+          </div>
+        </Label>
+      </div>
+    </RadioGroup>
+  </CardContent>
+</Card>
+```
+
+---
+
+## PART 3: IMPLEMENT SIDEBAR NAVIGATION
+
+### Required Reading
+```bash
+cat output/media-pipeline/shared/briefs/configurator-sidebar-ux-brief.md
+```
+
+### Architecture Change
+
+**Current:** Full-page step wizard with Previous/Next only
+**Target:** Persistent sidebar with expandable panels
+
+```
+┌──────────┬───────────────────────────────────────────────────────────┐
+│  SIDEBAR │              MAIN CONTENT AREA                           │
+│          │                                                           │
+│  ● Setup │   ┌─────────────────────────────────────────────────────┐│
+│    └ Tmpl│   │  Currently editing: Template Selection              ││
+│    └ Insp│   └─────────────────────────────────────────────────────┘│
+│    └ Proj│                                                           │
+│          │                                                           │
+│  ○ Config│                                                           │
+│    └ Intg│                                                           │
+│    └ Env │                                                           │
+│          │                                                           │
+│  ○ Launch│                                                           │
+│    └ Prev│                                                           │
+│    └ Ctxt│                                                           │
+│    └ Expo│                                                           │
+│          │                                                           │
+├──────────┴───────────────────────────────────────────────────────────┤
+│  Progress: 37%  ████████░░░░░░░░░░░░░░  [Previous] [Next →]          │
+└──────────────────────────────────────────────────────────────────────┘
+```
+
+### Create New Components
+
+#### 1. ConfiguratorSidebar.tsx
+
+```tsx
+"use client";
+
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { Check, ChevronDown, Layers, Settings, Rocket } from "lucide-react";
+
+interface Phase {
+  id: string;
+  label: string;
+  icon: React.ReactNode;
+  steps: { id: string; label: string }[];
+  status: 'completed' | 'current' | 'pending';
+}
+
+const PHASES: Phase[] = [
+  {
+    id: 'setup',
+    label: 'Setup',
+    icon: <Layers className="h-4 w-4" />,
+    steps: [
+      { id: 'template', label: 'Template' },
+      { id: 'inspiration', label: 'Inspiration' },
+      { id: 'project', label: 'Project' },
+    ],
+    status: 'current',
+  },
+  {
+    id: 'configure',
+    label: 'Configure',
+    icon: <Settings className="h-4 w-4" />,
+    steps: [
+      { id: 'integrations', label: 'Integrations' },
+      { id: 'environment', label: 'Environment' },
+    ],
+    status: 'pending',
+  },
+  {
+    id: 'launch',
+    label: 'Launch',
+    icon: <Rocket className="h-4 w-4" />,
+    steps: [
+      { id: 'preview', label: 'Preview' },
+      { id: 'context', label: 'Context' },
+      { id: 'export', label: 'Export' },
+    ],
+    status: 'pending',
+  },
+];
+
+interface ConfiguratorSidebarProps {
+  currentStep: string;
+  completedSteps: string[];
+  onStepChange: (step: string) => void;
+}
+
+export function ConfiguratorSidebar({
+  currentStep,
+  completedSteps,
+  onStepChange,
+}: ConfiguratorSidebarProps) {
+  return (
+    <aside className="hidden md:flex w-64 border-r bg-background flex-col">
+      <ScrollArea className="flex-1 p-4">
+        {PHASES.map((phase) => {
+          const phaseCompleted = phase.steps.every(s => completedSteps.includes(s.id));
+          const phaseCurrent = phase.steps.some(s => s.id === currentStep);
+          
+          return (
+            <Collapsible 
+              key={phase.id} 
+              defaultOpen={phaseCurrent}
+              className="mb-2"
+            >
+              <CollapsibleTrigger className={cn(
+                "flex items-center w-full p-2 rounded-lg transition-colors",
+                phaseCurrent && "bg-accent/10",
+                "hover:bg-accent/5"
+              )}>
+                <div className={cn(
+                  "flex items-center justify-center h-6 w-6 rounded-full mr-2",
+                  phaseCompleted && "bg-emerald-500 text-white",
+                  phaseCurrent && !phaseCompleted && "bg-primary text-white",
+                  !phaseCurrent && !phaseCompleted && "bg-muted text-muted-foreground"
+                )}>
+                  {phaseCompleted ? (
+                    <Check className="h-3 w-3" />
+                  ) : (
+                    phase.icon
+                  )}
+                </div>
+                <span className="font-medium flex-1 text-left">{phase.label}</span>
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+              </CollapsibleTrigger>
+              
+              <CollapsibleContent className="pl-8 space-y-1 mt-1">
+                {phase.steps.map((step) => {
+                  const isCompleted = completedSteps.includes(step.id);
+                  const isCurrent = currentStep === step.id;
+                  
+                  return (
+                    <Button
+                      key={step.id}
+                      variant={isCurrent ? "secondary" : "ghost"}
+                      size="sm"
+                      className={cn(
+                        "w-full justify-start",
+                        isCompleted && "text-emerald-500"
+                      )}
+                      onClick={() => onStepChange(step.id)}
+                    >
+                      {isCompleted && <Check className="h-3 w-3 mr-2" />}
+                      {step.label}
+                    </Button>
+                  );
+                })}
+              </CollapsibleContent>
+            </Collapsible>
+          );
+        })}
+      </ScrollArea>
+    </aside>
+  );
+}
+```
+
+#### 2. MobileSidebar.tsx (Using Sheet)
+
+```tsx
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Menu } from "lucide-react";
+import { ConfiguratorSidebar } from "./ConfiguratorSidebar";
+
+export function MobileSidebar({ currentStep, completedSteps, onStepChange }) {
+  return (
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button variant="ghost" size="icon" className="md:hidden">
+          <Menu className="h-5 w-5" />
+        </Button>
+      </SheetTrigger>
+      <SheetContent side="left" className="w-64 p-0">
+        <ConfiguratorSidebar 
+          currentStep={currentStep}
+          completedSteps={completedSteps}
+          onStepChange={onStepChange}
+        />
+      </SheetContent>
+    </Sheet>
+  );
+}
+```
+
+#### 3. Update ConfigurePage Layout
+
+```tsx
+// website/app/configure/page.tsx
+
+export default function ConfigurePage() {
+  // ... existing state
+
+  return (
+    <div className="flex h-screen">
+      {/* Desktop Sidebar */}
+      <ConfiguratorSidebar
+        currentStep={currentStep}
+        completedSteps={completedSteps}
+        onStepChange={setStep}
+      />
+      
+      {/* Main Content */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Mobile Header */}
+        <header className="md:hidden flex items-center p-4 border-b">
+          <MobileSidebar 
+            currentStep={currentStep}
+            completedSteps={completedSteps}
+            onStepChange={setStep}
+          />
+          <h1 className="ml-4 font-semibold">Project Configurator</h1>
+        </header>
+        
+        {/* Step Content */}
+        <div className="flex-1 overflow-auto p-6">
+          {/* Breadcrumb */}
+          <div className="text-sm text-muted-foreground mb-4">
+            {getPhaseLabel(currentStep)} › {getStepLabel(currentStep)}
+          </div>
+          
+          {/* Current Step Component */}
+          {renderCurrentStep()}
+        </div>
+        
+        {/* Footer with Progress */}
+        <footer className="border-t p-4 flex items-center justify-between">
+          <Progress value={calculateProgress()} className="flex-1 mr-4" />
+          <div className="flex gap-2">
+            <Button variant="outline" onClick={prevStep} disabled={isFirstStep}>
+              Previous
+            </Button>
+            <Button onClick={nextStep}>
+              {isLastStep ? "Export" : "Next"}
+            </Button>
+          </div>
+        </footer>
+      </main>
+    </div>
+  );
+}
+```
+
+---
+
+## IMPLEMENTATION ORDER
+
+### Day 1: Foundation
+1. [ ] Install all shadcn components
+2. [ ] Verify components work with current theme
+3. [ ] Update globals.css if needed for brand colors
+
+### Day 2: Component Migration
+1. [ ] Refactor IntegrationSelector.tsx
+2. [ ] Refactor TemplateSelector.tsx  
+3. [ ] Refactor ModeToggle (if separate component)
+
+### Day 3: Layout Change
+1. [ ] Create ConfiguratorSidebar.tsx
+2. [ ] Create MobileSidebar.tsx
+3. [ ] Update ConfigurePage layout
+
+### Day 4: Polish
+1. [ ] Add Progress bar to footer
+2. [ ] Add Alerts for validation errors
+3. [ ] Test mobile experience
+4. [ ] Test keyboard navigation
+
+---
+
+## SUCCESS CRITERIA
+
+- [ ] All P0/P1 shadcn components installed
+- [ ] IntegrationSelector uses Card + RadioGroup
+- [ ] Beginner/Advanced uses Tabs
+- [ ] Sidebar navigation works on desktop
+- [ ] Sheet-based drawer works on mobile
+- [ ] Progress bar shows completion percentage
+- [ ] All steps navigable via sidebar
+- [ ] Terminal styling preserved for CLI/code output only
+
+---
+
+## REFERENCES
+
+- SOP: `docs/sops/SHADCN_IMPLEMENTATION_SOP.md`
+- Sidebar Brief: `output/media-pipeline/shared/briefs/configurator-sidebar-ux-brief.md`
+- Color Philosophy: `output/media-pipeline/shared/COLOR_PHILOSOPHY.md`
+- shadcn Docs: https://ui.shadcn.com
+
+---
+
+*Task created by Research Agent | 2025-12-23*
+

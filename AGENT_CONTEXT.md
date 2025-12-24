@@ -282,6 +282,8 @@ This rule is non-negotiable and applies to ALL responses.
 | `docs/standards/PROMPT_STANDARDS.md` | **Required** - Token-optimized AI prompt writing |
 | `docs/standards/API_CONTRACTS.md` | **Required** - Standard API response formats and error handling |
 | `docs/standards/CODING_STANDARDS.md` | Code style and conventions |
+| `docs/sops/SHADCN_IMPLEMENTATION_SOP.md` | **UI Dev** - shadcn/ui component standards |
+| `output/media-pipeline/shared/COLOR_PHILOSOPHY.md` | **Design** - Brand color guidelines |
 | `prompts/agents/UNIVERSAL_BOOTSTRAP.md` | For initializing agents on any platform |
 | `prompts/agents/roles/ROLE_PROTOCOL.md` | Agent lifecycle and memory management |
 | `prompts/agents/MEMORY_FORMAT.md` | Standard format for memory files (append-only) |
