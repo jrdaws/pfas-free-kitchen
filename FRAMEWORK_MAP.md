@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- ca95fc6 2025-12-24 test(integration): validate UploadThing storage integration - 6/6 pass
 - 99a8dbc 2025-12-24 docs(priorities): mark SaaS template content fix as complete
 - 09696b4 2025-12-24 feat(templates): add dashboard, pricing, and settings pages to SaaS template
 - 9d827c7 2025-12-24 fix(website): P0 - fix ZIP export to include actual template components
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - e6ae322 2025-12-24 chore(sop): sign off on Agent Folder Structure SOP (98/100)
 - 0bfe75f 2025-12-24 docs(sop): create Agent Folder Structure SOP and standardize folders
 - cc52f41 2025-12-24 feat(website): add feedback API with rate limiting
-- a3ed807 2025-12-24 feat(website): add feedback API with rate limiting
 
 ## Agent Governance Structure
 
