@@ -121,14 +121,14 @@ export default function ConfigurePage() {
   const isLastStep = currentStep === 8;
 
   return (
-    <div className="min-h-screen bg-terminal-bg py-12 px-4">
+    <div className="min-h-screen bg-brand-dark py-12 px-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-display font-bold glow-text mb-4">
-            Project Configurator
+          <h1 className="text-4xl font-display font-bold mb-4">
+            <span className="gradient-text">Project Configurator</span>
           </h1>
-          <p className="text-terminal-dim text-lg mb-6">
+          <p className="text-zinc-400 text-lg mb-6">
             Configure your project and generate the CLI command
           </p>
 
@@ -196,23 +196,23 @@ export default function ConfigurePage() {
           {currentStep === 6 && (
             <div className="max-w-7xl mx-auto">
               {/* Tab Selector */}
-              <div className="flex gap-2 mb-6 border-b border-terminal-text/20">
+              <div className="flex gap-2 mb-6 border-b border-zinc-700">
                 <button
                   onClick={() => setAiTab("preview")}
-                  className={`px-4 py-2 font-mono text-sm transition-colors ${
+                  className={`px-4 py-2 font-medium text-sm transition-colors ${
                     aiTab === "preview"
-                      ? "text-terminal-accent border-b-2 border-terminal-accent"
-                      : "text-terminal-dim hover:text-terminal-text"
+                      ? "text-brand-primary border-b-2 border-brand-primary"
+                      : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
                   Visual Preview
                 </button>
                 <button
                   onClick={() => setAiTab("generate")}
-                  className={`px-4 py-2 font-mono text-sm transition-colors ${
+                  className={`px-4 py-2 font-medium text-sm transition-colors ${
                     aiTab === "generate"
-                      ? "text-terminal-accent border-b-2 border-terminal-accent"
-                      : "text-terminal-dim hover:text-terminal-text"
+                      ? "text-brand-primary border-b-2 border-brand-primary"
+                      : "text-zinc-400 hover:text-zinc-200"
                   }`}
                 >
                   Full Project Generator
@@ -221,18 +221,18 @@ export default function ConfigurePage() {
 
               {/* Model Tier Selector - Only show for Full Project Generator tab */}
               {aiTab === "generate" && (
-                <div className="flex items-center gap-4 mb-6 p-4 border border-terminal-text/20 rounded-lg bg-terminal-bg/50">
-                  <label className="text-sm font-mono text-terminal-dim">Model Quality:</label>
+                <div className="flex items-center gap-4 mb-6 p-4 border border-zinc-700 rounded-xl bg-zinc-800/50">
+                  <label className="text-sm font-medium text-zinc-400">Model Quality:</label>
                   <select
                     value={modelTier}
                     onChange={(e) => setModelTier(e.target.value as ModelTier)}
-                    className="bg-terminal-bg border border-terminal-text/30 text-terminal-text px-3 py-2 rounded font-mono text-sm focus:border-terminal-accent focus:outline-none"
+                    className="bg-zinc-900 border border-zinc-700 text-zinc-100 px-3 py-2 rounded-lg text-sm focus:border-brand-primary focus:outline-none focus:ring-1 focus:ring-brand-primary/50"
                   >
                     <option value="fast">⚡ Fast (~$0.02) - Quickest, uses Haiku</option>
                     <option value="balanced">⚖️ Balanced (~$0.08) - Best value</option>
                     <option value="quality">✨ Quality (~$0.18) - Most reliable, uses Sonnet</option>
                   </select>
-                  <span className="text-xs text-terminal-dim">
+                  <span className="text-xs text-zinc-500">
                     {modelTier === 'fast' && 'Fastest generation, may have occasional issues'}
                     {modelTier === 'balanced' && 'Recommended for most projects'}
                     {modelTier === 'quality' && 'Best for complex or critical projects'}
@@ -291,7 +291,7 @@ export default function ConfigurePage() {
             onClick={handlePrevious}
             disabled={isFirstStep}
             variant="outline"
-            className="border-terminal-text/30 text-terminal-text hover:border-terminal-accent hover:text-terminal-accent disabled:opacity-50 disabled:cursor-not-allowed"
+            className="border-zinc-700 text-zinc-300 hover:border-brand-primary hover:text-brand-primary disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="mr-2 h-4 w-4" />
             Previous
@@ -299,7 +299,7 @@ export default function ConfigurePage() {
 
           <div className="text-center">
             {!canProceed() && currentStep !== 8 && (
-              <p className="text-terminal-error text-sm font-mono">
+              <p className="text-red-400 text-sm font-medium">
                 Complete this step to continue
               </p>
             )}
@@ -309,7 +309,7 @@ export default function ConfigurePage() {
             <Button
               onClick={handleNext}
               disabled={!canProceed()}
-              className="bg-terminal-accent hover:bg-terminal-accent/80 text-terminal-bg disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Next
               <ChevronRight className="ml-2 h-4 w-4" />
@@ -320,7 +320,7 @@ export default function ConfigurePage() {
                 // Reset configurator or provide option to start over
                 window.scrollTo({ top: 0, behavior: "smooth" });
               }}
-              className="bg-terminal-text hover:bg-terminal-text/80 text-terminal-bg"
+              className="bg-zinc-700 hover:bg-zinc-600 text-white"
             >
               Start Over
             </Button>

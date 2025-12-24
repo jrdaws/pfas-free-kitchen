@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- c617fcc 2025-12-23 test(sops): verify priority SOPs are complete and actionable
 - d7e5a19 2025-12-23 docs(website): move UI redesign task to done and add completion notice
 - 558885a 2025-12-23 feat(website): implement framework UI redesign with new brand identity
 - 91f8fd2 2025-12-23 chore: ignore test-saas-project directory
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - a72d538 2025-12-22 docs(api): create comprehensive API documentation
 - f237029 2025-12-22 docs(agents): update website memory with production deployment session
 - 5529ea2 2025-12-22 feat(testing): add production smoke test suite
-- 849c3f4 2025-12-22 docs(deploy): add Vercel deployment guide and production optimizations
 
 ## Agent Governance Structure
 
