@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 88350b7 2025-12-24 docs(governance): enhance Permission Probing Protocol (v2.9)
 - 7cb5739 2025-12-24 docs(sops): add Session Checkpoint SOP for progress offloading
 - fce67c3 2025-12-24 feat(templates): integrate E2E test project media assets
 - c7f791a 2025-12-24 chore: add SEO_GENERATION_SOP.md to protected files
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 8cc4df8 2025-12-23 fix(website): add stubs for workspace packages to enable Vercel build
 - def604d 2025-12-23 fix: make husky prepare script fail gracefully for CI
 - 41f6c20 2025-12-23 fix(website): fix Button component React types compatibility
-- 85a82d0 2025-12-23 docs(sops): add 4 new SOPs for remaining opportunities
 
 ## Agent Governance Structure
 

@@ -2,7 +2,7 @@
 
 > **Purpose**: Collective consciousness of all agents - certified system state
 > **Philosophy**: "If the Auditor certified it, I trust it. If Testing signed off, it works."
-> **Last Updated**: 2025-12-24 06:00 UTC
+> **Last Updated**: 2025-12-24 06:20 UTC
 
 ---
 
@@ -10,18 +10,12 @@
 
 **ALL agents MUST follow these rules on EVERY response. No exceptions.**
 
-### 1. Permission Probing (FIRST RESPONSE ONLY)
-**Predict ALL permissions needed, then PROBE for them upfront.**
-
+### 1. Permission Request (FIRST RESPONSE ONLY)
 ```bash
-# Standard probe (network + git_write):
+# Request ALL permissions upfront before ANY work
 git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Permissions ready"
-
-# If creating files in specific locations, probe those too:
-mkdir -p output/[target]/inbox && touch output/[target]/inbox/.probe && rm output/[target]/inbox/.probe
 ```
-
-**Rule**: Fire ALL permission triggers at START with dummy operations, not during work.
+**Predict what you'll need:** network, git_write, all. Request them ONCE at session start.
 
 ### 2. Quick Actions Section (EVERY RESPONSE)
 ```
@@ -112,7 +106,7 @@ Major UX overhaul proposed! Transforming configurator from linear wizard to side
 ### Code Quality
 | Certified By | Date | Status | Vibe | Notes |
 |--------------|------|--------|------|-------|
-| Testing Agent | 2025-12-23 | ✅ SOP Guardian + Sequence Check | 🟢 Solid | All SOPs verified, sequence protocol active |
+| Testing Agent | 2025-12-24 | ✅ Checkpoint SOP verified | 🟢 Good | All 6 sections actionable, files exist |
 
 ### Governance
 | Certified By | Date | Status | Vibe | Notes |
