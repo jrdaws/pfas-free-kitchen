@@ -1,0 +1,102 @@
+TASK: Export Preview Components to Generated Project
+====================================================
+
+AGENT: CLI Agent
+PRIORITY: P0 - CRITICAL
+DATE: 2025-12-24
+FROM: Auditor Agent
+
+---
+
+## PROBLEM
+
+The web configurator shows a beautiful preview with:
+- Nav component
+- Hero section
+- Feature cards
+- Pricing table
+- Testimonials
+- FAQ accordion
+- CTA section
+- Footer
+
+But the exported project only contains:
+
+```tsx
+<main style={{ padding: 24 }}>
+  <h1>SaaS Template</h1>
+  <p>Export succeeded...</p>
+</main>
+```
+
+## USER EXPECTATION
+
+"What you see is what you get" - the preview shows exactly what should be exported.
+
+## REQUIRED CHANGES
+
+### 1. Export Command Should Include Components
+
+When user runs:
+```bash
+framework export saas ./mytestproject07 --auth supabase ...
+```
+
+The output should include:
+```
+mytestproject07/
+├── app/
+│   ├── page.tsx         # Full page with all sections
+│   └── layout.tsx
+├── components/
+│   ├── Nav.tsx
+│   ├── Hero.tsx
+│   ├── FeatureCards.tsx
+│   ├── PricingTable.tsx
+│   ├── Testimonials.tsx
+│   ├── FAQ.tsx
+│   ├── CTA.tsx
+│   └── Footer.tsx
+├── integrations/        # Selected integrations
+│   ├── auth/supabase/
+│   ├── payments/stripe/
+│   └── ...
+└── ...
+```
+
+### 2. Copy Template Components
+
+The components exist in:
+- `templates/saas/components/` (if they exist)
+- OR generate from `website/components/preview/` components
+
+### 3. Include Selected Integrations
+
+User selected: auth/supabase, payments/stripe, email/resend, db/supabase, ai/openai, analytics/posthog, storage/r2
+
+These should be scaffolded in `integrations/` folder.
+
+## INVESTIGATION
+
+1. Check `bin/framework.js` export command logic
+2. Check `src/commands/export.mjs` 
+3. See what's in `templates/saas/` vs what gets copied
+4. Check if there's a gap between web configurator selection and CLI export
+
+## VERIFICATION
+
+After fix:
+1. Run full export with integrations
+2. Verify components folder exists
+3. Verify integrations folder exists
+4. Run `npm run dev` in exported project
+5. Confirm it matches the preview
+
+---
+
+## HANDOFF
+
+This is the #1 gap between promise and delivery. Fix this to make the product work as advertised.
+
+(AUD Agent)
+

@@ -1,0 +1,74 @@
+TASK: Ensure SaaS Template Has All Preview Components
+=====================================================
+
+AGENT: Template Agent
+PRIORITY: P1 - HIGH
+DATE: 2025-12-24
+FROM: Auditor Agent
+
+---
+
+## CONTEXT
+
+The web configurator preview shows components that may not exist in the SaaS template:
+- Nav
+- Hero
+- FeatureCards
+- PricingTable
+- Testimonials
+- FAQ
+- CTA
+- Footer
+
+## INVESTIGATION NEEDED
+
+1. Check what's in `templates/saas/`:
+   ```bash
+   ls -la templates/saas/
+   ls -la templates/saas/components/ 2>/dev/null
+   ```
+
+2. Compare to preview components:
+   ```bash
+   ls -la website/components/preview/
+   ```
+
+3. Identify gaps
+
+## POSSIBLE SOLUTIONS
+
+### Option A: Use Preview Components as Source
+
+Copy `website/components/preview/*.tsx` to `templates/saas/components/`
+
+### Option B: Generate Components on Export
+
+Have CLI generate components from preview definitions
+
+### Option C: Sync Template with Preview
+
+Ensure template always matches what preview shows
+
+## REQUIREMENTS
+
+Whatever solution:
+1. Exported project must render same as preview
+2. Components must use Tailwind + shadcn/ui
+3. Components must be customizable
+4. No inline styles
+
+## VERIFICATION
+
+1. Export a SaaS project
+2. Run it locally
+3. Compare visually to configurator preview
+4. They should match
+
+---
+
+## HANDOFF
+
+Coordinate with CLI Agent on P0-export-missing-components.txt
+
+(AUD Agent)
+

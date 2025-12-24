@@ -1,0 +1,53 @@
+TASK: Fix Hydration Error in Badge Component
+=============================================
+
+AGENT: Website Agent
+PRIORITY: P0 - CRITICAL
+DATE: 2025-12-24
+FROM: Auditor Agent
+
+---
+
+## BUG DESCRIPTION
+
+Hydration error detected in the configurator preview:
+
+```
+In HTML, <div> cannot be a descendant of <p>.
+This will cause a hydration error.
+```
+
+**Location**: `components/ui/badge.tsx` line 36
+**Trigger**: Viewing Component Preview with Badge elements
+
+## SCREENSHOT REFERENCE
+
+The error shows:
+- Badge component using `<div>` inside a parent `<p>` element
+- This violates HTML nesting rules
+- Causes React hydration mismatch
+
+## FIX REQUIRED
+
+1. Open `website/components/ui/badge.tsx`
+2. Find the Badge component (line ~36)
+3. Either:
+   - Change Badge to render as `<span>` instead of `<div>`
+   - Or change the parent element from `<p>` to `<div>`
+
+## VERIFICATION
+
+After fix:
+1. Run `npm run dev` in website/
+2. Navigate to AI Preview step
+3. Confirm no hydration errors in console
+4. Confirm badges render correctly
+
+---
+
+## HANDOFF
+
+After fixing, run tests and commit.
+
+(AUD Agent)
+
