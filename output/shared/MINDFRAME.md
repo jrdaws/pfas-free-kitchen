@@ -82,6 +82,29 @@ cd /Users/joseph.dawson/Documents/dawson-does-framework && cat docs/automation/A
 
 ---
 
+## 📦 Checkpoint Protocol
+
+**Offload progress every 15-20 minutes. Include pending prompts.**
+
+**Full SOP**: `docs/sops/CHECKPOINT_SOP.md`
+
+---
+
+## 📁 Prompt File Rule (ONE LOCATION)
+
+**A prompt exists in exactly ONE location:**
+
+| Stage | Location |
+|-------|----------|
+| Created | Target agent's `inbox/` |
+| Completed | Executor's `done/` (MOVED) |
+
+**Never duplicate. Always MOVE to done/ when complete.**
+
+**Full SOP**: `docs/sops/AGENT_FOLDER_STRUCTURE_SOP.md`
+
+---
+
 ## ⚡ Quick Vibe Check
 
 For agents starting work, here's the 10-second status:

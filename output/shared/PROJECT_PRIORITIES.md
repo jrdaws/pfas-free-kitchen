@@ -26,7 +26,7 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
-| P2 | **Vercel deployment** (user auth required) | User/Platform | Needs `vercel login` | PLT |
+| P2 | **Fix primary Vercel domain** | User | Dashboard config: Root Dir=website | PLT |
 | P2 | Test UploadThing integration | Integration | Feature complete | AUD |
 | P2 | Add UI tests for configurator | Testing | Coverage gap | WEB |
 
@@ -65,6 +65,9 @@ Current recommended order based on dependencies:
 
 | Task | Agent | Date | Notes |
 |------|-------|------|-------|
+| Vercel alt domain working | PLT | 2025-12-24 | `-bv8x` subdomain live, primary needs dashboard fix |
+| CI Vercel status checks | PLT | 2025-12-24 | Added vercel-status + pr-preview-comment jobs |
+| Monorepo build fixes | PLT | 2025-12-24 | Stubs, husky, lazy init - all pushed |
 | Media Pipeline E2E tests | TST | 2025-12-24 | 47/47 checks pass, Part 4 needs API keys |
 | Vercel deployment prep | PLT | 2025-12-23 | Build verified, scripts created, awaiting auth |
 | Verify Priority SOPs | TST | 2025-12-23 | All 3 SOPs verified actionable |
