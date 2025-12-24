@@ -132,6 +132,7 @@ export function parseExportFlags(args) {
     branch: "main",
     dryRun: false,
     force: false,
+    listIntegrations: false,
     integrations: {
       auth: null,
       payments: null,
@@ -160,6 +161,8 @@ export function parseExportFlags(args) {
       flags.dryRun = true;
     } else if (arg === "--force") {
       flags.force = true;
+    } else if (arg === "--list-integrations") {
+      flags.listIntegrations = true;
     } else if (arg === "--after-install" && hasValue(i)) {
       const v = String(args[++i]).trim();
       if (v === "prompt" || v === "auto" || v === "off") flags.afterInstall = v;
@@ -190,6 +193,54 @@ export function parseExportFlags(args) {
   }
 
   return flags;
+}
+
+/**
+ * List available integrations for a template
+ * @param {string} templatePath - Path to the template directory
+ */
+async function listAvailableIntegrations(templatePath, templateId) {
+  const integrationsPath = path.join(templatePath, "integrations");
+
+  if (!fs.existsSync(integrationsPath)) {
+    console.log(`\nTemplate "${templateId}" does not have any integrations.\n`);
+    return;
+  }
+
+  console.log(`\nAvailable integrations for ${templateId} template:\n`);
+
+  const types = fs.readdirSync(integrationsPath).filter(d => {
+    const stat = fs.statSync(path.join(integrationsPath, d));
+    return stat.isDirectory() && !d.startsWith("_");
+  });
+
+  for (const type of types.sort()) {
+    const typePath = path.join(integrationsPath, type);
+    const providers = fs.readdirSync(typePath).filter(p => {
+      const pPath = path.join(typePath, p);
+      return fs.statSync(pPath).isDirectory() && fs.existsSync(path.join(pPath, "integration.json"));
+    });
+
+    if (providers.length === 0) continue;
+
+    console.log(`${type.toUpperCase()}`);
+
+    for (const provider of providers.sort()) {
+      const integrationJsonPath = path.join(typePath, provider, "integration.json");
+      try {
+        const metadata = JSON.parse(fs.readFileSync(integrationJsonPath, "utf8"));
+        const desc = metadata.description || "";
+        const shortDesc = desc.length > 50 ? desc.substring(0, 47) + "..." : desc;
+        console.log(`  ${provider.padEnd(12)} ${shortDesc}`);
+      } catch {
+        console.log(`  ${provider.padEnd(12)} (integration available)`);
+      }
+    }
+    console.log("");
+  }
+
+  // Show usage example
+  console.log(`Use: framework export ${templateId} ./myapp --auth supabase --payments stripe\n`);
 }
 
 /**
@@ -298,12 +349,13 @@ Arguments:
   projectDir    Output directory for the project
 
 Options:
-  --name <repoName>     Name for the project (defaults to folder name)
-  --remote <gitUrl>     Git remote URL to add as origin
-  --push                Push to remote after init (requires --remote)
-  --branch <branch>     Branch name (default: main)
-  --dry-run             Show what would happen without making changes
-  --force               Overwrite existing directory
+  --name <repoName>       Name for the project (defaults to folder name)
+  --remote <gitUrl>       Git remote URL to add as origin
+  --push                  Push to remote after init (requires --remote)
+  --branch <branch>       Branch name (default: main)
+  --dry-run               Show what would happen without making changes
+  --force                 Overwrite existing directory
+  --list-integrations     List available integrations for the template
 
 Integration Options:
   --auth <provider>      Auth integration (supabase, clerk, nextauth)
@@ -326,6 +378,19 @@ Examples:
 
   const flags = parseExportFlags(restArgs || []);
 const dryRun = flags.dryRun;
+
+  // Handle --list-integrations flag
+  if (flags.listIntegrations) {
+    // Validate template exists
+    if (!TEMPLATES[templateId]) {
+      console.error(`Unknown templateId: ${templateId}`);
+      console.error(`Valid templates: ${Object.keys(TEMPLATES).join(", ")}`);
+      process.exit(1);
+    }
+    const templatePath = path.join(PKG_ROOT, "templates", templateId);
+    await listAvailableIntegrations(templatePath, templateId);
+    return;
+  }
 
   // Validate required args BEFORE resolving template
   if (!projectDir) {
@@ -1610,7 +1675,18 @@ Examples:
   }
   logger.endStep("env", "     Environment files ready");
 
-  // Generate Cursor files if --cursor flag
+  // Always generate START_PROMPT.md with project context (P2 fix)
+  // This ensures vision/mission/successCriteria are included
+  const hasContext = project.vision || project.mission || project.success_criteria || project.description;
+  if (hasContext) {
+    logger.startStep("start-prompt", "Generating START_PROMPT.md with project context...");
+    const startPromptContent = generateStartPrompt(project);
+    fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
+    logger.stepSuccess("START_PROMPT.md generated with vision/mission context");
+    logger.endStep("start-prompt", "     Start prompt ready");
+  }
+
+  // Generate .cursorrules if --cursor flag
   if (flags.cursor) {
     logger.startStep("cursor", "Generating Cursor AI files...");
     
@@ -1619,10 +1695,12 @@ Examples:
     fs.writeFileSync(path.join(absTargetDir, ".cursorrules"), cursorRulesContent, "utf8");
     logger.stepSuccess(".cursorrules generated");
 
-    // Generate START_PROMPT.md
-    const startPromptContent = generateStartPrompt(project);
-    fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
-    logger.stepSuccess("START_PROMPT.md generated");
+    // Also generate START_PROMPT.md if it wasn't already generated above
+    if (!hasContext) {
+      const startPromptContent = generateStartPrompt(project);
+      fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
+      logger.stepSuccess("START_PROMPT.md generated");
+    }
     
     logger.endStep("cursor", "     Cursor files ready");
   }
@@ -1745,8 +1823,20 @@ if (isEntrypoint) {
     process.exit(0);
   }
   if (a === "export") {
-    const restArgs = process.argv.slice(5); // Everything after "export <templateId> <projectDir>"
-    await cmdExport(b, c, restArgs);
+    // Handle case where second arg is a flag (like --list-integrations)
+    let templateId = b;
+    let projectDir = c;
+    let restArgs;
+    
+    if (c && c.startsWith("--")) {
+      // No projectDir provided, c is actually a flag
+      projectDir = null;
+      restArgs = process.argv.slice(4); // Everything after "export <templateId>"
+    } else {
+      restArgs = process.argv.slice(5); // Everything after "export <templateId> <projectDir>"
+    }
+    
+    await cmdExport(templateId, projectDir, restArgs);
     process.exit(0);
   }
 

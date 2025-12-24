@@ -4,6 +4,8 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- b3b07cf 2025-12-24 feat(cli): add --list-integrations flag and dynamic START_PROMPT.md
+- 940afe0 2025-12-24 test(website): verify Component-Aware Preview and 3 bug fixes
 - 68c9f0e 2025-12-24 docs: add Auto-Continuation quick reference to core governance files
 - e310b8e 2025-12-24 feat(templates): add SaaS landing page components
 - 623a1b2 2025-12-24 fix(website): P0 hydration error + P2 UX improvements
@@ -27,8 +29,6 @@ Hash: cc90b85a1f
 - d76ba14 2025-12-24 docs(sops): add SEO Generation SOP with multi-agent pipeline
 - 60578d4 2025-12-24 ci: add PR preview deployment comments
 - c774ae2 2025-12-24 ci: add Vercel deployment status checks to CI workflow
-- 2301b52 2025-12-24 chore(website): improve Supabase lazy initialization pattern
-- 786bbee 2025-12-23 docs(governance): update handoff format - fenced block immediately after header
 
 ## Agent Governance Structure
 
