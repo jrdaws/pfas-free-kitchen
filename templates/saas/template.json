@@ -1,11 +1,11 @@
 {
   "id": "saas",
   "name": "SaaS Starter",
-  "version": "1.1.0",
-  "description": "Full-stack SaaS template with authentication, billing, and database. Perfect for launching subscription-based web applications.",
+  "version": "1.2.0",
+  "description": "Full-stack SaaS template with landing page, dashboard, authentication, and billing. Perfect for launching subscription-based web applications.",
   "author": "Dawson Framework Team",
   "category": "SaaS",
-  "tags": ["nextjs", "react", "saas", "subscription", "auth", "billing"],
+  "tags": ["nextjs", "react", "saas", "subscription", "auth", "billing", "dashboard"],
   "minFrameworkVersion": "0.1.0",
   "capabilities": ["auth.supabase", "billing.stripe"],
   "dependencies": {
@@ -13,8 +13,18 @@
     "react": "^19.0.0",
     "@supabase/supabase-js": "^2.47.0"
   },
+  "pages": {
+    "landing": "app/page.tsx",
+    "dashboard": "app/dashboard/page.tsx",
+    "settings": "app/dashboard/settings/page.tsx",
+    "pricing": "app/pricing/page.tsx"
+  },
   "features": [
     "Next.js 15 with App Router",
+    "Landing page with Hero, Features, Pricing, Testimonials",
+    "Dashboard with stats, charts, and data tables",
+    "Settings page with profile, billing, team management",
+    "Standalone pricing page",
     "Supabase authentication",
     "Stripe billing integration",
     "TypeScript support",
