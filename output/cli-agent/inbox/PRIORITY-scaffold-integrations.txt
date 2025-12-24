@@ -1,0 +1,51 @@
+# P1: Scaffold Integrations Without Env Check
+
+**Priority**: P1 - HIGH
+**Agent**: CLI Agent
+**Date**: 2025-12-24
+
+---
+
+## Problem
+
+When exporting a project with integrations (e.g., Stripe), the CLI requires environment variables to be set even during scaffolding. This blocks users who just want to generate the structure first.
+
+## Current Behavior
+
+```bash
+npx @jrdaws/framework export ecommerce ./myapp
+# Error: STRIPE_SECRET_KEY not set
+```
+
+## Expected Behavior
+
+```bash
+npx @jrdaws/framework export ecommerce ./myapp
+# Success: Project scaffolded with Stripe integration code
+# Note: Set environment variables before running
+```
+
+## Tasks
+
+1. Review `bin/framework.js` export command
+2. Remove or defer env validation during scaffold
+3. Add validation only when running `npm run dev` or building
+4. Update generated `.env.local.example` with all required vars
+
+## Files to Review
+
+- `bin/framework.js`
+- `src/dd/export.mjs`
+- `templates/*/template.json`
+
+## Acceptance Criteria
+
+- [ ] Export succeeds without env vars set
+- [ ] Generated project includes `.env.local.example` with all vars
+- [ ] Clear instructions in README about setting env vars
+- [ ] Validation happens at runtime, not scaffold time
+
+## Handoff
+
+When complete, hand off to Testing Agent to verify with all templates.
+

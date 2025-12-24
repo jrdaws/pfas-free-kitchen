@@ -1,0 +1,63 @@
+# P3: Create Missing Deployment Guides
+
+**Priority**: P3 - LOW
+**Agent**: Documentation Agent
+**Date**: 2025-12-24
+
+---
+
+## Problem
+
+The docs reference deployment guides that don't exist:
+- `docs/deployment/vercel.md`
+- `docs/deployment/netlify.md`
+- `docs/deployment/railway.md`
+
+## Tasks
+
+1. Create `docs/deployment/` directory
+2. Create Vercel deployment guide
+3. Create Netlify deployment guide
+4. Create Railway deployment guide
+
+## Content for Each Guide
+
+- Prerequisites
+- Step-by-step deployment
+- Environment variables needed
+- Common issues and fixes
+- Verification steps
+
+## Vercel Guide Template
+
+```markdown
+# Deploy to Vercel
+
+## Prerequisites
+- Vercel account
+- GitHub repository
+
+## Steps
+1. Connect repository to Vercel
+2. Configure build settings
+3. Add environment variables
+4. Deploy
+
+## Environment Variables
+[List from .env.local.example]
+
+## Troubleshooting
+[Common issues]
+```
+
+## Acceptance Criteria
+
+- [ ] All three guides exist
+- [ ] Each guide is actionable
+- [ ] Environment variables documented
+- [ ] Links from other docs work
+
+## Handoff
+
+When complete, update MINDFRAME.md documentation status.
+

@@ -1,0 +1,56 @@
+# Priority Agent Activation Prompts
+# Date: 2025-12-24
+# Copy ONE prompt to activate the corresponding agent
+
+================================================================================
+## 1. WEBSITE AGENT (P0 - CRITICAL)
+================================================================================
+
+Confirm you are the Website Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/website-agent/inbox/PRIORITY-p0-export-mismatch-fix.txt
+
+================================================================================
+## 2. TESTING AGENT (P1 - HIGH)
+================================================================================
+
+Confirm you are the Testing Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/testing-agent/inbox/PRIORITY-verify-export-clarity.txt
+
+================================================================================
+## 3. CLI AGENT (P1 - HIGH)
+================================================================================
+
+Confirm you are the CLI Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/cli-agent/inbox/PRIORITY-scaffold-integrations.txt
+
+================================================================================
+## 4. PLATFORM AGENT (P2 - MEDIUM)
+================================================================================
+
+Confirm you are the Platform Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/platform-agent/inbox/PRIORITY-vercel-deployment.txt
+
+================================================================================
+## 5. DOCUMENTATION AGENT (P3 - LOW)
+================================================================================
+
+Confirm you are the Documentation Agent.
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/documentation-agent/inbox/PRIORITY-update-deployment-guides.txt
+
+================================================================================
+## RECOMMENDED SEQUENCE
+================================================================================
+
+1. Website Agent (P0) → Fix export mismatch
+2. Testing Agent (P1) → Verify export clarity
+3. CLI Agent (P1) → Scaffold without env
+4. Platform Agent (P2) → Deploy to Vercel
+5. Documentation Agent (P3) → Create deployment guides
+
+================================================================================
+## VIEW ACCOMPLISHMENTS
+================================================================================
+
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/shared/ACCOMPLISHMENTS-20251224.md
+
+

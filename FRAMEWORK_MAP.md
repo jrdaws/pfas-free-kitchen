@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 4bbcda8 2025-12-24 fix(templates): remove duplicate component definitions
 - 7c90102 2025-12-24 feat(cli): add --list-integrations flag and dynamic START_PROMPT.md
 - b3b07cf 2025-12-24 feat(cli): add --list-integrations flag and dynamic START_PROMPT.md
 - 940afe0 2025-12-24 test(website): verify Component-Aware Preview and 3 bug fixes
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - fce67c3 2025-12-24 feat(templates): integrate E2E test project media assets
 - c7f791a 2025-12-24 chore: add SEO_GENERATION_SOP.md to protected files
 - d76ba14 2025-12-24 docs(sops): add SEO Generation SOP with multi-agent pipeline
-- 60578d4 2025-12-24 ci: add PR preview deployment comments
 
 ## Agent Governance Structure
 
