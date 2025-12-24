@@ -11,7 +11,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isRedisAvailable } from "@/lib/rate-limiter";
 import { isCostTrackingAvailable, getUsageStats } from "@/lib/cost-tracker";
-import { createClient } from "@supabase/supabase-js";
+import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 
 interface ServiceStatus {
   status: "up" | "down" | "degraded";

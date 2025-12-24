@@ -1,27 +1,55 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+/**
+ * Lazy-initialized Supabase client singleton.
+ * 
+ * Uses lazy initialization pattern to:
+ * 1. Allow build without env vars (Vercel preview builds)
+ * 2. Fail fast at runtime with clear error message
+ * 3. Create only one client instance per process
+ * 
+ * @example
+ * import { getSupabase } from "@/lib/supabase";
+ * const supabase = getSupabase();
+ * const { data } = await supabase.from("projects").select();
+ */
 
-// Lazy initialization to allow build without env vars
 let _supabase: SupabaseClient | null = null;
+let _initError: Error | null = null;
 
 export function getSupabase(): SupabaseClient {
-  if (!_supabase) {
-    if (!supabaseUrl || !supabaseAnonKey) {
-      throw new Error(
-        "Missing Supabase environment variables. Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY"
-      );
-    }
-    _supabase = createClient(supabaseUrl, supabaseAnonKey);
+  // Return cached client if already initialized
+  if (_supabase) return _supabase;
+  
+  // Re-throw cached initialization error
+  if (_initError) throw _initError;
+
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+
+  if (!supabaseUrl || !supabaseAnonKey) {
+    _initError = new Error(
+      "Missing Supabase environment variables. " +
+      "Please set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY. " +
+      "See docs/deploy/VERCEL_DEPLOYMENT.md for setup instructions."
+    );
+    throw _initError;
   }
+
+  _supabase = createClient(supabaseUrl, supabaseAnonKey);
   return _supabase;
 }
 
-// Legacy export for backwards compatibility - will throw at runtime if env vars missing
-export const supabase = supabaseUrl && supabaseAnonKey 
-  ? createClient(supabaseUrl, supabaseAnonKey)
-  : (null as unknown as SupabaseClient);
+/**
+ * Check if Supabase is configured (without throwing)
+ * Useful for conditional logic and health checks
+ */
+export function isSupabaseConfigured(): boolean {
+  return !!(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && 
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
 
 // Type definitions for projects table
 export interface Project {

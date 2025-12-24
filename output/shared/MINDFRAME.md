@@ -29,12 +29,11 @@ git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Perm
 ```
 
 ### 3. Handoff Prompt (END OF SESSION)
+Fenced block starts IMMEDIATELY after the header line:
 ```
-## Next Agent: [Role] Agent
-
+Next Agent: [Role] Agent
 ```
-Confirm you are the [Role] Agent.
-cd /Users/joseph.dawson/Documents/dawson-does-framework && cat [task-file]
+[Task description - what they should do, file references, context]
 ```
 ```
 

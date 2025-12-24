@@ -619,16 +619,16 @@ Before ending a session, you must:
    
    ⛔ **SESSION CANNOT END WITHOUT A VALID HANDOFF PROMPT**
    
-   Failure to provide a handoff prompt is a governance violation and will be flagged by `validate-agent-work.sh`.
+   Failure to provide a handoff prompt is a governance violation.
    
    **EXACT FORMAT (no variations allowed):**
    
-   ```
-   ## Next Agent: [Role] Agent
+   The fenced code block starts IMMEDIATELY after the header line.
    
    ```
-   Confirm you are the [Role] Agent.
-   cd /Users/joseph.dawson/Documents/dawson-does-framework && cat [task-file-path]
+   Next Agent: [Role] Agent
+   ```
+   [Task description with context, file references, and what to do]
    ```
    ```
    
@@ -636,53 +636,44 @@ Before ending a session, you must:
    
    | Element | Location | Required |
    |---------|----------|----------|
-   | `## Next Agent: [Role] Agent` | Header ABOVE fenced block | ✅ Yes |
-   | `Confirm you are the [Role] Agent.` | INSIDE fenced block, first line | ✅ Yes |
-   | `cd ... && cat [file]` | INSIDE fenced block, second line | ✅ Yes |
+   | `Next Agent: [Role] Agent` | Header line (no ##) | ✅ Yes |
+   | Fenced block | IMMEDIATELY after header | ✅ Yes |
+   | Task description | INSIDE fenced block | ✅ Yes |
    
-   **Both lines go INSIDE the fenced code block.** The user copies the entire block.
+   **The entire task goes INSIDE the fenced block for easy copying.**
    
    ---
    
    **Example - Testing Agent:**
    
-   ## Next Agent: Testing Agent
-   
+   Next Agent: Testing Agent
    ```
-   Confirm you are the Testing Agent.
-   cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/testing-agent/inbox/TASK-verify-sops.txt
+   Verify the 3 new SOPs in docs/sops/ are actionable by walking through each checklist. Create a sample bug report using BUG_TRIAGE_SOP.md. Reference output/shared/MINDFRAME.md for current system state.
+   ```
+   
+   ---
+   
+   **Example - Website Agent (with file reference):**
+   
+   Next Agent: Website Agent
+   ```
+   Implement the 24 approved sidebar icons from output/media-pipeline/shared/approved/configurator-sidebar/ into the configurator. Reference output/website-agent/inbox/media-configurator-sidebar/IMPLEMENT.txt for integration details.
    ```
    
    ---
    
    **Example - Quality Agent:**
    
-   ## Next Agent: Quality Agent
-   
+   Next Agent: Quality Agent
    ```
-   Confirm you are the Quality Agent.
-   cd /Users/joseph.dawson/Documents/dawson-does-framework && cat output/media-pipeline/quality-agent/inbox/TASK-review-assets.txt
+   Review the 5 newly generated hero images in output/media-pipeline/media-agent/outbox/. Apply photorealism checklist from PHOTOREALISTIC_PROMPT_GUIDE.md. Approve or provide feedback.
    ```
    
    ---
-   
-   **If no task file exists, create one first:**
-   
-   1. Write task to appropriate inbox folder
-   2. Provide the handoff prompt pointing to that file
    
    **If no further work is needed:**
    
    State explicitly: "No handoff required - task complete." But this should be RARE.
-   
-   ---
-   
-   **Validation Check:**
-   
-   The script `scripts/validate-agent-work.sh` Check 8 verifies:
-   - Recent outbox files contain `## Next Agent:` header
-   - Warning issued if missing
-   - **This will become a blocking error in future versions**
 
    ### Step 4e: Update Project Priorities
    
