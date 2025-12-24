@@ -1,0 +1,145 @@
+# SOP Proposal: Vercel Monorepo Deployment Best Practices
+
+**Proposed By**: Platform Agent
+**Date**: 2025-12-24
+**Priority**: P1
+**Status**: Proposed
+
+---
+
+## Problem Statement
+
+Deploying a Next.js website from a monorepo to Vercel involves multiple failure points that are not obvious until deployment time. Common issues include:
+
+1. Workspace packages using `file:../packages/...` references fail when Vercel builds from a subdirectory
+2. Husky prepare scripts fail in CI environments where git hooks aren't available
+3. Supabase/database clients that throw errors at import time block static page generation
+4. React type mismatches between libraries cause TypeScript build failures
+5. Vercel project settings override local vercel.json configuration
+
+These issues cause repeated deployment failures and significant debugging time.
+
+## Proposed Solution
+
+Create an SOP that documents pre-flight checks and code patterns that prevent these deployment issues. The SOP should be followed when:
+- Setting up a new website for Vercel deployment
+- Adding new workspace package dependencies
+- Modifying build configurations
+
+## Scope
+
+- **Applies To**: Website Agent, Platform Agent, Template Agent, any agent modifying website code
+- **Does NOT Apply To**: CLI-only code, local development, non-Vercel deployments
+
+## Key Requirements
+
+### 1. Workspace Package Stubs
+
+When a website depends on workspace packages (`packages/*`), create stub files that provide fallback exports:
+
+```typescript
+// website/lib/[package-name]-stub.ts
+export interface SomeType { /* minimal interface */ }
+export function someFunction() { return null; }
+```
+
+Configure webpack aliases in `next.config.js`:
+
+```javascript
+webpack: (config) => {
+  config.resolve.alias = {
+    ...config.resolve.alias,
+    '@dawson-framework/package-name': path.resolve(__dirname, 'lib/package-name-stub.ts'),
+  };
+  return config;
+}
+```
+
+### 2. CI-Safe Prepare Scripts
+
+Root `package.json` prepare scripts must fail gracefully:
+
+```json
+"prepare": "husky || true"
+```
+
+### 3. Lazy Database Client Initialization
+
+Database clients (Supabase, Prisma, etc.) must not throw at import time:
+
+```typescript
+// BAD - throws at import time
+if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL");
+export const db = createClient(process.env.DATABASE_URL);
+
+// GOOD - throws at runtime only
+let _db: Client | null = null;
+export function getDb(): Client {
+  if (!_db) {
+    if (!process.env.DATABASE_URL) throw new Error("Missing DATABASE_URL");
+    _db = createClient(process.env.DATABASE_URL);
+  }
+  return _db;
+}
+```
+
+### 4. React Type Compatibility
+
+When using Radix UI Slot or similar polymorphic components with React 19, add type assertions:
+
+```typescript
+<Comp
+  ref={ref as React.Ref<HTMLButtonElement>}
+  {...(props as React.ComponentPropsWithoutRef<"button">)}
+/>
+```
+
+### 5. Vercel Project Settings Checklist
+
+Before deployment, verify in Vercel Dashboard:
+
+| Setting | Expected Value |
+|---------|----------------|
+| Root Directory | `website` (or subdirectory) |
+| Framework Preset | `Next.js` |
+| Build Command | Default or `npm run build` |
+| Install Command | Default (NOT custom commands with `cd ..`) |
+
+### 6. Pre-Deployment Verification
+
+Run these checks before pushing deployment code:
+
+```bash
+# 1. Clean build test
+cd website && rm -rf .next && npm run build
+
+# 2. Verify no workspace imports at module level
+grep -r "from.*@dawson-framework" website/app --include="*.tsx" | grep -v "stub"
+
+# 3. Check husky script is CI-safe
+grep '"prepare"' package.json | grep "|| true"
+```
+
+## Expected Benefit
+
+- Reduce deployment failures from ~5-10 attempts to 1-2
+- Save 1-2 hours of debugging per deployment
+- Document tribal knowledge for future agents
+- Prevent regression when adding new features
+
+## Related Documents
+
+- `docs/deploy/VERCEL_DEPLOYMENT.md` - Existing deployment guide
+- `docs/deployment/DEPLOYMENT_CHECKLIST.md` - Pre-flight checklist
+- `website/vercel.json` - Vercel configuration
+- `website/next.config.js` - Next.js webpack configuration
+
+---
+
+## Review Notes (filled by Auditor)
+
+**Reviewed By**: 
+**Review Date**: 
+**Decision**: Approved / Needs Revision / Rejected
+**Feedback**: 
+
