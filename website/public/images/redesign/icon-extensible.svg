@@ -1,0 +1,19 @@
+<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Extensible icon: Modular blocks -->
+  <!-- Style: 2px stroke, rounded, Indigo #6366F1 -->
+  
+  <!-- Top left block -->
+  <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#6366F1" stroke-width="2" fill="rgba(99, 102, 241, 0.1)" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Top right block -->
+  <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#6366F1" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Bottom left block -->
+  <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#6366F1" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Bottom right block with plus (add more) -->
+  <rect x="14" y="14" width="7" height="7" rx="1.5" stroke="#6366F1" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <line x1="17.5" y1="15.5" x2="17.5" y2="19.5" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+  <line x1="15.5" y1="17.5" x2="19.5" y2="17.5" stroke="#6366F1" stroke-width="2" stroke-linecap="round"/>
+</svg>
+

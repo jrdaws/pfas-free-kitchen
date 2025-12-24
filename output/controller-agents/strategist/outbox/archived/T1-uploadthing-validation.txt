@@ -1,31 +1,43 @@
-# Task: UploadThing End-to-End Validation
+# Task: Validate UploadThing Storage Integration
 
-Priority: P1
+Priority: P1 (CRITICAL PATH)
 Assigned To: Testing Agent
 Depends On: None
-Estimated Effort: Medium
+Estimated Effort: Medium (1-2 hours)
+Existing Task: output/testing-agent/inbox/20251223-1900-P1-task-uploadthing-validation.txt
 
 ## Context
-The UploadThing storage integration was completed last cycle. Before marking Phase 1 as truly complete, we must validate the integration works in a real exported project - not just in the template directory.
+The UploadThing storage integration was completed in commit dd95924. Before production deployment, we MUST verify:
+1. Integration files are complete and valid
+2. TypeScript compiles without errors
+3. Component imports work correctly
+
+This is the first storage integration and sets the pattern for future integrations.
 
 ## Objectives
-1. Export a SaaS project with UploadThing integration enabled
-2. Verify the exported project builds without errors
-3. Validate UploadThing routes and components are correctly scaffolded
-4. Confirm environment variables are properly templated
+1. Validate integration.json schema compliance
+2. Verify all 6 integration files exist and are syntactically correct
+3. Run TypeScript compilation check
+4. Test component import resolution
+5. Verify .env.example documentation
 
 ## Success Criteria
-- [ ] Exported project with UploadThing builds successfully (npm run build)
-- [ ] Route handler exists at app/api/uploadthing/route.ts
-- [ ] Component imports resolve correctly
-- [ ] .env.example contains UPLOADTHING_SECRET and UPLOADTHING_APP_ID
+- [ ] integration.json passes JSON parse and has required fields
+- [ ] All files exist: route.ts, core.ts, file-upload.tsx, uploadthing.ts
+- [ ] `npx tsc --noEmit` passes for integration files
+- [ ] Component can be imported in a test file
+- [ ] UPLOADTHING_TOKEN documented in .env.example
 
-## Files to Modify
-- tests/integrations/uploadthing.test.mjs (create)
-- Output project in test-output/
+## Files to Review
+- templates/saas/integrations/storage/uploadthing/integration.json
+- templates/saas/integrations/storage/uploadthing/app/api/uploadthing/route.ts
+- templates/saas/integrations/storage/uploadthing/app/api/uploadthing/core.ts
+- templates/saas/integrations/storage/uploadthing/lib/uploadthing.ts
+- templates/saas/integrations/storage/uploadthing/components/storage/file-upload.tsx
 
 ## Handoff
-1. Move task to done/
-2. Write validation report to outbox/
-3. Update TESTING_MEMORY.md
+1. Create validation report in output/testing-agent/outbox/
+2. Move task from inbox/ to done/
+3. If issues found, create bug report for Integration Agent
+4. Update Testing Agent memory file
 

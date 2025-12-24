@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- e6ae322 2025-12-24 chore(sop): sign off on Agent Folder Structure SOP (98/100)
 - 0bfe75f 2025-12-24 docs(sop): create Agent Folder Structure SOP and standardize folders
 - cc52f41 2025-12-24 feat(website): add feedback API with rate limiting
 - a3ed807 2025-12-24 feat(website): add feedback API with rate limiting
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 27048a2 2025-12-24 docs(sops): auditor sign-off on all 10 SOPs
 - a4137bb 2025-12-24 chore: add website agent inbox tasks for export alignment
 - 18fe75f 2025-12-24 test(media-pipeline): complete E2E verification - 47/47 checks pass
-- 0afd7f5 2025-12-24 test(sop): verify checkpoint protocol is actionable
 
 ## Agent Governance Structure
 

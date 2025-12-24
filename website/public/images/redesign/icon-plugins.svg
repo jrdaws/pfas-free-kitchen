@@ -1,0 +1,8 @@
+<svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Plugins icon: Puzzle piece connector -->
+  <!-- Style: 2px stroke, rounded, Indigo #6366F1 -->
+  
+  <!-- Main puzzle piece shape -->
+  <path d="M12 2C12 2 14 2 14 4C14 6 12 6 12 6V8H16C18 8 18 10 18 10V14C18 14 20 14 20 16C20 18 18 18 18 18H14V20C14 22 12 22 12 22C10 22 10 20 10 20V18H6C4 18 4 16 4 16V14H6C6 14 6 12 4 12C2 12 2 10 2 10C2 8 4 8 4 8V6C4 4 6 4 6 4H10V6C10 6 10 4 12 4C14 4 12 2 12 2Z" stroke="#6366F1" stroke-width="2" fill="rgba(99, 102, 241, 0.1)" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
+
