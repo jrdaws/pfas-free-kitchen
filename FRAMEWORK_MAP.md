@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- b5c9c9d 2025-12-24 docs(memory): update CURATOR_MEMORY.md with cycle 9 session
 - 7078ddc 2025-12-24 feat(strategist): complete cycle 9 strategy - 5 tasks for execution
 - 5edf78a 2025-12-24 docs: add 'cp' shorthand for checkpoint trigger
 - 0259f95 2025-12-24 chore(curator): complete cycle 9 curation - 5 prompts approved (9.0 avg)
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 3e9ab4f 2025-12-24 refactor(website): remove terminal window chrome from configurator components
 - bc92c82 2025-12-24 feat(governance): add CHECKPOINT_SOP with mandatory memory updates
 - 7ef4d09 2025-12-24 test(e2e): comprehensive export flow tests - catches known bugs
-- cbca859 2025-12-24 docs(export): clarify ZIP vs CLI export differences
 
 ## Agent Governance Structure
 

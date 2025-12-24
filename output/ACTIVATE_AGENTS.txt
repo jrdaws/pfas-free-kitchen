@@ -1,108 +1,71 @@
-AGENT ACTIVATION COMMANDS
-Copy the line under each agent name into a new Cursor chat
-Last Updated: 2025-12-24 11:30 by CURATOR Agent (Cycle 9)
+# Agent Activation Queue
 
-================================================================================
-🚨 EXECUTION GAP CRITICAL - 4TH CONSECUTIVE CYCLE WITH NO WORKER EXECUTION 🚨
-================================================================================
+> Updated: 2025-12-24 12:10 by CURATOR Agent (Cycle 9)
+> 
+> Copy any of these prompts into a new Cursor chat to launch the agent.
 
-Status: 9 tasks queued, 0 executed since Cycle 5
-This file has been updated 4 times with the same recommendations.
-Tasks are curated, quality-scored (9.0/10 avg), and READY.
+---
 
-**STOP CREATING NEW TASKS. START EXECUTING.**
+## 🔴 Priority 1 (Launch Immediately - Parallel)
 
-================================================================================
-PHASE 1 - LAUNCH IMMEDIATELY (Parallel OK, No Dependencies)
-================================================================================
+### Testing Agent - Verify Export Clarity
+```
+Read and execute output/testing-agent/inbox/20251224-1210-P1-task-verify-export-clarity.txt
+```
+**Effort**: ~20 min | **Blocks**: Platform deployment
 
-TESTING AGENT (2 Tasks: UploadThing + Design Resources Validation)
-I'm the Testing Agent. Execute these tasks in order: 1) output/testing-agent/inbox/20251223-1900-P1-task-uploadthing-validation.txt 2) output/testing-agent/inbox/20251223-1900-P2-task-design-resources-validation.txt. Move completed tasks to done/, create reports in outbox/.
+### CLI Agent - Scaffold Without Env Check  
+```
+Read and execute output/cli-agent/inbox/20251224-1210-P1-task-scaffold-without-env.txt
+```
+**Effort**: ~45 min | **Blocks**: None (independent)
 
-DOCUMENTATION AGENT (Deployment Checklist)
-I'm the Documentation Agent. Execute: output/documentation-agent/inbox/20251223-1900-P2-task-deployment-execution-guide.txt. Create docs/deploy/VERCEL_EXECUTION_CHECKLIST.md, move task to done/.
+---
 
-================================================================================
-PHASE 2 - AFTER PHASE 1 COMPLETES
-================================================================================
+## 🟡 Priority 2 (Launch After Dependencies)
 
-PLATFORM AGENT (Chunked Code Generation - Complex, Needs Focus)
-I'm the Platform Agent. Read and execute: output/platform-agent/inbox/20251223-1900-P1-task-chunked-code-generation.txt
+### Platform Agent - Deploy to Vercel
+```
+Read and execute output/platform-agent/inbox/20251224-1210-P2-task-deploy-vercel.txt
+```
+**Effort**: ~30 min | **Requires**: T1 (Export Clarity) to pass first
 
-WEBSITE AGENT (Feedback API - Blocked on Production Deployment)
-I'm the Website Agent. Read and execute: output/website-agent/inbox/20251223-1900-P2-task-user-feedback-api.txt
+### Documentation Agent - Update Deployment Guides
+```
+Read and execute output/documentation-agent/inbox/20251224-1210-P2-task-update-deploy-guides.txt
+```
+**Effort**: ~20 min | **Requires**: T3 (Vercel deployment) complete
 
-================================================================================
-PHASE 3 - BACKLOG (After Phase 1 & 2)
-================================================================================
+### Testing Agent - UploadThing Validation
+```
+Read and execute output/testing-agent/inbox/20251224-1210-P2-task-uploadthing-validation.txt
+```
+**Effort**: ~30 min | **Blocks**: None (independent)
 
-TESTING AGENT (Integration Tests)
-I'm the Testing Agent. Execute: output/testing-agent/inbox/20251223-1900-P2-task-integration-test-expansion.txt
+---
 
-DOCUMENTATION AGENT (API Docs)
-I'm the Documentation Agent. Execute: output/documentation-agent/inbox/20251223-1900-P2-task-api-documentation-update.txt
+## Execution Order
 
-TEMPLATE AGENT (Flagship Integrations)
-I'm the Template Agent. Execute: output/template-agent/inbox/20251223-1900-P3-task-flagship-saas-integrations.txt
+```
+PARALLEL:    Testing Agent (T1)  +  CLI Agent (T2)
+                    ↓
+SEQUENTIAL:  Platform Agent (T3) → Documentation Agent (T4)
+                    
+ANYTIME:     Testing Agent (T5)
+```
 
-CLI AGENT (Integration UX)
-I'm the CLI Agent. Execute: output/cli-agent/inbox/20251223-0600-P2-task-integration-selection-ux.txt
+---
 
-================================================================================
-HUMAN ACTION REQUIRED: PRODUCTION DEPLOYMENT
-================================================================================
+## Stats
 
-After Documentation Agent creates the deployment checklist:
-1. Read: docs/deploy/VERCEL_EXECUTION_CHECKLIST.md (created by Doc Agent)
-2. Reference: docs/deploy/VERCEL_DEPLOYMENT.md
-3. Environment vars: website/.env.example
+| Metric | Value |
+|--------|-------|
+| Total Tasks | 5 |
+| P1 Tasks | 2 |
+| P2 Tasks | 3 |
+| Avg Quality | 8.6/10 |
+| Cycle | 9 |
 
-================================================================================
-CYCLE 9 CURATION SUMMARY
-================================================================================
+---
 
-Cycle: 9 (Curation phase of PDCA)
-Date: 2025-12-24 11:30
-Curator: CURATOR Agent
-
-**Quality Scores (5 Prompts Reviewed, All Approved):**
-| Prompt | Score | Status |
-|--------|-------|--------|
-| LAUNCH-testing-agent | 9.4/10 | ✅ Approved |
-| LAUNCH-documentation-agent | 9.2/10 | ✅ Approved |
-| T1-uploadthing-validation | 9.0/10 | ✅ In inbox |
-| T2-deployment-execution-guide | 8.8/10 | ✅ In inbox |
-| T3-design-resources-validation | 8.8/10 | ✅ In inbox |
-
-**Average Quality Score: 9.0/10**
-**Rejected Prompts: 0**
-
-**Cycle Observation:**
-- Execution gap now spans 4 consecutive controller cycles
-- All prompts exceed quality threshold (min 7.0)
-- No new tasks created - correct execution focus
-- Tasks are READY, just need agent activation
-
-**Recommendation:**
-PAUSE controller cycles until worker agents execute.
-Launch Testing + Documentation agents IMMEDIATELY.
-
-**Full Report:** output/shared/reports/cycle-summary-20251224-1130.txt
-
-================================================================================
-QUEUE STATUS
-================================================================================
-
-| Agent | Tasks | Priority | Recommended Action |
-|-------|-------|----------|-------------------|
-| Testing | 6 | P1 | EXECUTE NOW (2 tasks) |
-| Documentation | 9 | P2 | EXECUTE NOW (1 task) |
-| Platform | 1 | P1 | After Phase 1 |
-| Website | 1 | P2 | Blocked on deploy |
-| Template | 1 | P3 | Backlog |
-| CLI | 1 | P2 | Backlog |
-
-**Total Queued Tasks: 19 across 6 agents**
-**Ready for Immediate Execution: 3 tasks (Testing x2, Docs x1)**
-
-================================================================================
+*Launch Testing Agent (T1) first to unblock deployment.*

@@ -171,6 +171,7 @@ Major UX overhaul proposed! Transforming configurator from linear wizard to side
 ### Governance
 | Certified By | Date | Status | Vibe | Notes |
 |--------------|------|--------|------|-------|
+| Curator Agent | 2025-12-24 | ✅ Cycle 9 complete | 👀 Watching | 5 prompts reviewed, 9.0 avg score, execution gap critical |
 | Website Agent | 2025-12-23 | ✅ v2.3 + Freshness | 🟢 Aligned | Context freshness script + policies complete |
 | Auditor Agent | 2025-12-23 | ✅ Sequence oversight active | 🟢 Good | Certification matrix SOP, SOP Guardian adopted |
 
@@ -326,6 +327,7 @@ Agent Onboarding → 🔴 (can't train new agents)
 
 | Agent | Last Active | Last Certification |
 |-------|-------------|-------------------|
+| Curator | 2025-12-24 11:30 | Cycle 9 curation, 5 prompts approved (9.0 avg) |
 | Website | 2025-12-23 19:50 | UI Redesign, Phase Grouping |
 | Documentation | 2025-12-23 15:00 | Governance, Documentation |
 | Testing | 2025-12-23 | Code Quality |
