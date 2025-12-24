@@ -1,0 +1,41 @@
+# Task: Scaffold Integrations Without Env Check
+
+Priority: P1
+Assigned To: CLI Agent
+Depends On: None
+Estimated Effort: Medium (~45 min)
+
+## Context
+Users report that exporting projects with integrations (e.g., Stripe) fails 
+because the CLI requires environment variables during scaffolding. This should 
+only validate at runtime, not scaffold time.
+
+## Objectives
+1. Remove or defer env validation during export scaffold
+2. Add validation only when running npm run dev or building
+3. Generate .env.local.example with all required vars
+
+## Success Criteria
+- [ ] `npx @jrdaws/framework export ecommerce ./myapp` works without env vars
+- [ ] Generated project includes .env.local.example with all vars
+- [ ] README includes clear env setup instructions
+- [ ] All existing tests pass
+
+## Commands
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework
+npm test  # Before changes
+# Make changes
+npm test  # After changes
+```
+
+## Files to Modify
+- bin/framework.js
+- src/dd/export.mjs
+- templates/*/template.json
+
+## Handoff
+1. Move task to done/
+2. Commit with: git add -A && git commit -m "feat(cli): allow export without env vars"
+3. Hand off to Testing Agent to verify with all templates
+

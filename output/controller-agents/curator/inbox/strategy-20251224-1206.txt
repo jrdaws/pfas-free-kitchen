@@ -1,0 +1,340 @@
+# Strategy Report
+
+Cycle: 9
+Date: 2025-12-24 12:06
+Strategist: STRATEGIST Agent
+Responding to: audit-20251224-0330.txt
+
+---
+
+## Strategic Priorities
+
+Based on Auditor's findings, this cycle focuses on:
+
+1. **Execution Over Planning**: Audit identified 9 queued tasks, 0 executed. This cycle prioritizes launching worker agents.
+2. **Export Clarity Verification**: Recent commits added messaging to address preview/export mismatch. Must verify before deployment.
+3. **CLI UX Improvement**: Scaffold integrations without requiring env vars - reduces friction for new users.
+
+---
+
+## Task Matrix
+
+| ID | Task | Agent | Priority | Effort | Depends On |
+|----|------|-------|----------|--------|------------|
+| T1 | Verify Export Clarity Changes | Testing | P1 | Low | None |
+| T2 | Scaffold Integrations Without Env Check | CLI | P1 | Medium | None |
+| T3 | Deploy to Vercel | Platform | P2 | Low | T1 |
+| T4 | Update Deployment Guides | Documentation | P2 | Low | T3 |
+| T5 | UploadThing Validation | Testing | P2 | Medium | None |
+
+---
+
+## Resource Allocation
+
+### Testing Agent
+- T1: Verify Export Clarity Changes (P1)
+- T5: UploadThing Validation (P2)
+
+### CLI Agent
+- T2: Scaffold Integrations Without Env Check (P1)
+
+### Platform Agent
+- T3: Deploy to Vercel (P2 - requires T1 completion)
+
+### Documentation Agent
+- T4: Update Deployment Guides (P2 - requires T3 completion)
+
+### Website Agent
+- No new tasks: P0 export mismatch addressed by messaging in recent commits; await T1 verification
+
+### Template Agent
+- No new tasks this cycle (P3 task can wait)
+
+### Integration Agent
+- No new tasks this cycle (UploadThing complete; testing in T5)
+
+---
+
+## Dependencies Map
+
+```
+T1 (Verify Export) ─────────────────▶ T3 (Deploy)
+                                          │
+                                          └──▶ T4 (Update Docs)
+
+T2 (CLI Scaffold) ───────────────────────────▶ (Independent)
+
+T5 (UploadThing Test) ───────────────────────▶ (Independent)
+```
+
+---
+
+## Risk Assessment
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Export verification fails | Low | High | Website Agent fixes, delays deployment |
+| Vercel deployment blocked by auth | Medium | Medium | User must run vercel login first |
+| CLI scaffold changes break tests | Low | Medium | Run npm test before commit |
+
+---
+
+## Draft Task Prompts
+
+### T1: Verify Export Clarity Changes
+
+```
+# Task: Verify Export Clarity Changes
+
+Priority: P1
+Assigned To: Testing Agent
+Depends On: None
+Estimated Effort: Low (~20 min)
+
+## Context
+Recent commits (cbca859) added export clarity messaging to address user confusion 
+about ZIP vs CLI export. The Auditor flagged this as a critical gap. Verification 
+is required before production deployment.
+
+## Objectives
+1. Verify Export UI clearly differentiates Full Template vs Starter Structure
+2. Verify ZIP README explains what's included/not included
+3. Verify post-download modal guides users to CLI for full template
+
+## Success Criteria
+- [ ] Option A shows "Full Template" with "Recommended" badge
+- [ ] Option B shows "Starter Structure" with warning styling
+- [ ] ZIP README has "⚠️ This is a STARTER STRUCTURE" section
+- [ ] Post-download modal has "Copy Full Template Command" button
+- [ ] Run website E2E tests pass
+
+## Commands
+cd /Users/joseph.dawson/Documents/dawson-does-framework/website
+npm run dev
+# Open http://localhost:3000/configure
+# Complete steps and test export
+
+## Files to Check
+- website/app/components/configurator/ExportView.tsx
+- website/lib/zip-generator.ts
+
+## Handoff
+1. Move task to done/
+2. Update MINDFRAME.md with verification status
+3. If PASS: Hand off to Platform Agent for deployment (T3)
+4. If FAIL: Hand off to Website Agent with specific issues
+```
+
+### T2: Scaffold Integrations Without Env Check
+
+```
+# Task: Scaffold Integrations Without Env Check
+
+Priority: P1
+Assigned To: CLI Agent
+Depends On: None
+Estimated Effort: Medium (~45 min)
+
+## Context
+Users report that exporting projects with integrations (e.g., Stripe) fails 
+because the CLI requires environment variables during scaffolding. This should 
+only validate at runtime, not scaffold time.
+
+## Objectives
+1. Remove or defer env validation during export scaffold
+2. Add validation only when running npm run dev or building
+3. Generate .env.local.example with all required vars
+
+## Success Criteria
+- [ ] `npx @jrdaws/framework export ecommerce ./myapp` works without env vars
+- [ ] Generated project includes .env.local.example with all vars
+- [ ] README includes clear env setup instructions
+- [ ] All existing tests pass
+
+## Commands
+cd /Users/joseph.dawson/Documents/dawson-does-framework
+npm test  # Before changes
+# Make changes
+npm test  # After changes
+
+## Files to Modify
+- bin/framework.js
+- src/dd/export.mjs
+- templates/*/template.json
+
+## Handoff
+1. Move task to done/
+2. Commit with: git add -A && git commit -m "feat(cli): allow export without env vars"
+3. Hand off to Testing Agent to verify with all templates
+```
+
+### T3: Deploy to Vercel
+
+```
+# Task: Deploy to Vercel
+
+Priority: P2
+Assigned To: Platform Agent
+Depends On: T1 (Export Clarity Verification must pass)
+Estimated Effort: Low (~30 min)
+
+## Context
+The website is production-ready. Build verified locally, all critical bugs fixed, 
+export clarity messaging added. Awaiting deployment.
+
+## Prerequisites
+- [ ] T1 verification passed (Export Clarity)
+- [ ] User has run `vercel login` (requires GitHub/email auth)
+- [ ] Latest commits pushed to main
+
+## Objectives
+1. Deploy website to Vercel production
+2. Configure environment variables
+3. Verify deployment works end-to-end
+
+## Success Criteria
+- [ ] Website accessible at production URL
+- [ ] All pages load correctly
+- [ ] Configurator flow works end-to-end
+- [ ] Export options function correctly
+
+## Commands
+cd /Users/joseph.dawson/Documents/dawson-does-framework/website
+npm run build   # Verify build
+vercel --prod   # Deploy (user must auth first)
+
+## Environment Variables to Set in Vercel Dashboard
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+- STABILITY_API_KEY (optional)
+
+## Handoff
+1. Update MINDFRAME.md with deployment status: 🟢
+2. Record production URL
+3. Hand off to Documentation Agent for T4
+```
+
+### T4: Update Deployment Guides
+
+```
+# Task: Update Deployment Guides
+
+Priority: P2
+Assigned To: Documentation Agent
+Depends On: T3 (Vercel deployment complete)
+Estimated Effort: Low (~20 min)
+
+## Context
+Once deployed to Vercel, deployment guides need to reflect actual process and 
+any lessons learned. Dead links to vercel.md/netlify.md were flagged in testing.
+
+## Objectives
+1. Create or update docs/deployment/vercel.md
+2. Add actual production URL and configuration steps
+3. Document any gotchas or issues encountered
+
+## Success Criteria
+- [ ] docs/deployment/vercel.md exists with accurate content
+- [ ] Production URL documented
+- [ ] Environment variable setup documented
+- [ ] No dead links in documentation
+
+## Files to Create/Modify
+- docs/deployment/vercel.md
+- docs/deployment/README.md (if exists)
+- Quick Start Guide (add deployment section if missing)
+
+## Handoff
+1. Move task to done/
+2. Commit with: git add -A && git commit -m "docs(deployment): add Vercel deployment guide"
+3. Update PROJECT_PRIORITIES.md to remove deployment guide from backlog
+```
+
+### T5: UploadThing Validation
+
+```
+# Task: UploadThing Validation
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: None (can run parallel to T1/T2)
+Estimated Effort: Medium (~30 min)
+
+## Context
+UploadThing storage integration was completed in Cycle 6 but never tested. The 
+Auditor flagged this as a P1 gap. This task validates the integration works.
+
+## Objectives
+1. Verify UploadThing integration scaffolds correctly
+2. Test file upload functionality (if API key available)
+3. Ensure graceful degradation without API key
+
+## Success Criteria
+- [ ] Export with UploadThing integration includes correct files
+- [ ] Generated code compiles without errors
+- [ ] Upload component renders (even without API key)
+- [ ] Proper warning shown when API key missing
+
+## Commands
+cd /Users/joseph.dawson/Documents/dawson-does-framework
+npx @jrdaws/framework export saas ./test-uploadthing --storage uploadthing
+cd test-uploadthing
+npm install
+npm run build
+
+## Files to Check
+- templates/saas/integrations/storage/uploadthing/
+- Generated UploadThing components
+
+## Handoff
+1. Move task to done/
+2. Document test results in outbox/
+3. If issues found, create bug fix task for Integration Agent
+```
+
+---
+
+## Deferred Items
+
+Tasks explicitly NOT included this cycle:
+- **Chunked Code Generation** (P2): Complex task, requires Platform Agent focus; defer until after deployment
+- **Flagship-SaaS Integrations** (P3): Not blocking; defer to next cycle
+- **User Feedback API** (P2): Depends on deployment; defer until T3 complete
+- **Media Pipeline GUI Integration**: Lower priority than core functionality
+
+---
+
+## Execution Order Recommendation
+
+For maximum velocity, launch agents in this order:
+
+1. **PARALLEL**: Testing Agent (T1) + CLI Agent (T2)
+   - Both can run immediately with no dependencies
+   - Testing verifies export clarity; CLI improves UX
+
+2. **SEQUENTIAL**: Platform Agent (T3)
+   - Requires T1 to pass before deploying
+   - User must authenticate with Vercel
+
+3. **SEQUENTIAL**: Documentation Agent (T4)
+   - Runs after T3 deployment complete
+
+4. **PARALLEL**: Testing Agent (T5)
+   - Can run anytime; validates UploadThing integration
+
+---
+
+## Handoff
+
+Report saved to: output/shared/reports/strategy-20251224-1206.txt
+Draft prompts saved to: output/controller-agents/strategist/outbox/drafts/
+Next agent: CURATOR
+Activation: Read and execute output/controller-agents/curator/inbox/START_CYCLE.txt
+
+STRATEGIST HANDOFF COMPLETE
+Report: output/shared/reports/strategy-20251224-1206.txt
+Drafts: output/controller-agents/strategist/outbox/drafts/
+Next: Launch Curator Agent
+
+

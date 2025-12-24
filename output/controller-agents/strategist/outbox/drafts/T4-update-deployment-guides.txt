@@ -1,0 +1,32 @@
+# Task: Update Deployment Guides
+
+Priority: P2
+Assigned To: Documentation Agent
+Depends On: T3 (Vercel deployment complete)
+Estimated Effort: Low (~20 min)
+
+## Context
+Once deployed to Vercel, deployment guides need to reflect actual process and 
+any lessons learned. Dead links to vercel.md/netlify.md were flagged in testing.
+
+## Objectives
+1. Create or update docs/deployment/vercel.md
+2. Add actual production URL and configuration steps
+3. Document any gotchas or issues encountered
+
+## Success Criteria
+- [ ] docs/deployment/vercel.md exists with accurate content
+- [ ] Production URL documented
+- [ ] Environment variable setup documented
+- [ ] No dead links in documentation
+
+## Files to Create/Modify
+- docs/deployment/vercel.md
+- docs/deployment/README.md (if exists)
+- Quick Start Guide (add deployment section if missing)
+
+## Handoff
+1. Move task to done/
+2. Commit with: git add -A && git commit -m "docs(deployment): add Vercel deployment guide"
+3. Update PROJECT_PRIORITIES.md to remove deployment guide from backlog
+

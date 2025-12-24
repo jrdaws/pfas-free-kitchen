@@ -1,0 +1,45 @@
+# Task: Deploy to Vercel
+
+Priority: P2
+Assigned To: Platform Agent
+Depends On: T1 (Export Clarity Verification must pass)
+Estimated Effort: Low (~30 min)
+
+## Context
+The website is production-ready. Build verified locally, all critical bugs fixed, 
+export clarity messaging added. Awaiting deployment.
+
+## Prerequisites
+- [ ] T1 verification passed (Export Clarity)
+- [ ] User has run `vercel login` (requires GitHub/email auth)
+- [ ] Latest commits pushed to main
+
+## Objectives
+1. Deploy website to Vercel production
+2. Configure environment variables
+3. Verify deployment works end-to-end
+
+## Success Criteria
+- [ ] Website accessible at production URL
+- [ ] All pages load correctly
+- [ ] Configurator flow works end-to-end
+- [ ] Export options function correctly
+
+## Commands
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework/website
+npm run build   # Verify build
+vercel --prod   # Deploy (user must auth first)
+```
+
+## Environment Variables to Set in Vercel Dashboard
+- NEXT_PUBLIC_SUPABASE_URL
+- NEXT_PUBLIC_SUPABASE_ANON_KEY
+- SUPABASE_SERVICE_ROLE_KEY
+- STABILITY_API_KEY (optional)
+
+## Handoff
+1. Update MINDFRAME.md with deployment status: 🟢
+2. Record production URL
+3. Hand off to Documentation Agent for T4
+

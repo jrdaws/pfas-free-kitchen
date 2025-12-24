@@ -1,0 +1,40 @@
+# Task: UploadThing Validation
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: None (can run parallel to T1/T2)
+Estimated Effort: Medium (~30 min)
+
+## Context
+UploadThing storage integration was completed in Cycle 6 but never tested. The 
+Auditor flagged this as a P1 gap. This task validates the integration works.
+
+## Objectives
+1. Verify UploadThing integration scaffolds correctly
+2. Test file upload functionality (if API key available)
+3. Ensure graceful degradation without API key
+
+## Success Criteria
+- [ ] Export with UploadThing integration includes correct files
+- [ ] Generated code compiles without errors
+- [ ] Upload component renders (even without API key)
+- [ ] Proper warning shown when API key missing
+
+## Commands
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework
+npx @jrdaws/framework export saas ./test-uploadthing --storage uploadthing
+cd test-uploadthing
+npm install
+npm run build
+```
+
+## Files to Check
+- templates/saas/integrations/storage/uploadthing/
+- Generated UploadThing components
+
+## Handoff
+1. Move task to done/
+2. Document test results in outbox/
+3. If issues found, create bug fix task for Integration Agent
+

@@ -1,0 +1,42 @@
+# Task: Verify Export Clarity Changes
+
+Priority: P1
+Assigned To: Testing Agent
+Depends On: None
+Estimated Effort: Low (~20 min)
+
+## Context
+Recent commits (cbca859) added export clarity messaging to address user confusion 
+about ZIP vs CLI export. The Auditor flagged this as a critical gap. Verification 
+is required before production deployment.
+
+## Objectives
+1. Verify Export UI clearly differentiates Full Template vs Starter Structure
+2. Verify ZIP README explains what's included/not included
+3. Verify post-download modal guides users to CLI for full template
+
+## Success Criteria
+- [ ] Option A shows "Full Template" with "Recommended" badge
+- [ ] Option B shows "Starter Structure" with warning styling
+- [ ] ZIP README has "⚠️ This is a STARTER STRUCTURE" section
+- [ ] Post-download modal has "Copy Full Template Command" button
+- [ ] Run website E2E tests pass
+
+## Commands
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework/website
+npm run dev
+# Open http://localhost:3000/configure
+# Complete steps and test export
+```
+
+## Files to Check
+- website/app/components/configurator/ExportView.tsx
+- website/lib/zip-generator.ts
+
+## Handoff
+1. Move task to done/
+2. Update MINDFRAME.md with verification status
+3. If PASS: Hand off to Platform Agent for deployment (T3)
+4. If FAIL: Hand off to Website Agent with specific issues
+
