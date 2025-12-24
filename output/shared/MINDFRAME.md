@@ -2,7 +2,7 @@
 
 > **Purpose**: Collective consciousness of all agents - certified system state
 > **Philosophy**: "If the Auditor certified it, I trust it. If Testing signed off, it works."
-> **Last Updated**: 2025-12-24 06:20 UTC
+> **Last Updated**: 2025-12-24 10:25 UTC
 
 ---
 
@@ -42,6 +42,43 @@ Next Agent: [Role] Agent
 (FULL ROLE NAME AGENT)
 ```
 Examples: `(DOCUMENTATION AGENT)` | `(WEBSITE AGENT)` | `(TESTING AGENT)`
+
+---
+
+## 🔄 Auto-Continuation System
+
+**For multi-step tasks that run unattended.**
+
+### Quick Commands
+
+```bash
+# Trigger continuation (agent will receive prompt after WAIT seconds)
+./scripts/auto-continue/trigger-continue.sh "AGENT_NAME" "prompt text" WAIT_SECS STEP TOTAL
+
+# Check status
+./scripts/auto-continue/check-continue.sh
+
+# Cancel pending
+./scripts/auto-continue/cancel-continue.sh
+```
+
+### When to Use
+
+- Task requires 3+ distinct steps
+- Overnight/unattended operation needed
+- Each step can run independently
+
+### Safety
+
+- Max 5 auto-continues per task (prevents infinite loops)
+- User can cancel anytime
+- All triggers logged to `output/automation/continue-log.csv`
+
+### Full Documentation
+
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework && cat docs/automation/AUTO_CONTINUE.md
+```
 
 ---
 

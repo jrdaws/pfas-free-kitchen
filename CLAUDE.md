@@ -146,6 +146,17 @@ framework export saas ./app # Export template
 framework pull <token>      # Pull from platform
 ```
 
+### Auto-Continuation (Multi-Step Tasks)
+```bash
+# Trigger next step (KM will paste prompt after WAIT seconds)
+./scripts/auto-continue/trigger-continue.sh "AGENT" "prompt" WAIT STEP TOTAL
+
+# Check/cancel pending
+./scripts/auto-continue/check-continue.sh
+./scripts/auto-continue/cancel-continue.sh
+```
+See `docs/automation/AUTO_CONTINUE.md` for full documentation.
+
 ### What NOT To Do
 - ❌ Add features not requested
 - ❌ Refactor unrelated code

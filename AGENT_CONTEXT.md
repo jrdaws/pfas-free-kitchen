@@ -332,6 +332,16 @@ This rule is non-negotiable and applies to ALL responses.
 | `./scripts/validate-agent-work.sh --strict` | Strict mode (fail on warnings) |
 | `./scripts/install-hooks.sh` | Install git hooks (run once after clone) |
 
+### Auto-Continuation (Multi-Step Tasks)
+| Script | Usage |
+|--------|-------|
+| `./scripts/auto-continue/trigger-continue.sh "AGENT" "prompt" WAIT STEP TOTAL` | Trigger next step |
+| `./scripts/auto-continue/check-continue.sh` | Check pending continuation |
+| `./scripts/auto-continue/cancel-continue.sh` | Cancel pending continuation |
+
+**When to use**: Tasks with 3+ steps, overnight operation, unattended multi-step work.
+**Full docs**: `docs/automation/AUTO_CONTINUE.md`
+
 ---
 *Governance Version 2.3 | This context applies to all agents working on dawson-does-framework.*
 

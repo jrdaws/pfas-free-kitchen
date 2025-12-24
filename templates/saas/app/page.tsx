@@ -1,150 +1,176 @@
 "use client";
 
-import Image from "next/image";
+import { Nav } from "@/components/Nav";
+import { Hero } from "@/components/Hero";
+import { FeatureCards } from "@/components/FeatureCards";
+import { PricingTable } from "@/components/PricingTable";
+import { Testimonials } from "@/components/Testimonials";
+import { FAQ } from "@/components/FAQ";
+import { CTA } from "@/components/CTA";
+import { Footer } from "@/components/Footer";
+
+// Default content - customize these for your project
+const PROJECT_NAME = "SaaS App";
+
+const FEATURES = [
+  {
+    title: "Lightning Fast",
+    description: "Built on Next.js 15 with optimized performance out of the box.",
+    iconName: "zap",
+  },
+  {
+    title: "Secure by Default",
+    description: "Enterprise-grade security with authentication ready to configure.",
+    iconName: "shield",
+  },
+  {
+    title: "Real-time Updates",
+    description: "Live data synchronization powered by modern database technology.",
+    iconName: "clock",
+  },
+  {
+    title: "Analytics Built-in",
+    description: "Track user behavior and make data-driven decisions.",
+    iconName: "chart",
+  },
+  {
+    title: "Team Collaboration",
+    description: "Multi-user support with role-based access controls.",
+    iconName: "users",
+  },
+  {
+    title: "Premium Support",
+    description: "Get help when you need it with our responsive support team.",
+    iconName: "star",
+  },
+];
+
+const PRICING_PLANS = [
+  {
+    name: "Starter",
+    price: 0,
+    features: [
+      "Up to 3 team members",
+      "Basic analytics",
+      "Community support",
+      "1GB storage",
+    ],
+  },
+  {
+    name: "Pro",
+    price: 29,
+    highlighted: true,
+    features: [
+      "Unlimited team members",
+      "Advanced analytics",
+      "Priority support",
+      "100GB storage",
+      "Custom integrations",
+    ],
+  },
+  {
+    name: "Enterprise",
+    price: 99,
+    features: [
+      "Everything in Pro",
+      "Dedicated account manager",
+      "SLA guarantee",
+      "Unlimited storage",
+      "On-premise deployment",
+    ],
+  },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: "This platform transformed how we manage our business. The time savings alone have been worth it.",
+    author: "Sarah Chen",
+    role: "CEO",
+    company: "TechStart Inc",
+  },
+  {
+    quote: "The best developer experience I've had. Everything just works, and the documentation is excellent.",
+    author: "Marcus Johnson",
+    role: "Lead Developer",
+    company: "BuildFast",
+  },
+  {
+    quote: "We cut our development time in half. The integrations work seamlessly with our existing tools.",
+    author: "Emily Rodriguez",
+    role: "CTO",
+    company: "ScaleUp",
+  },
+];
+
+const FAQ_ITEMS = [
+  {
+    question: "How do I get started?",
+    answer: "Simply sign up for a free account and you'll be guided through the setup process. No credit card required for the Starter plan.",
+  },
+  {
+    question: "Can I upgrade or downgrade my plan?",
+    answer: "Yes, you can change your plan at any time. Changes take effect immediately, and we'll prorate the billing accordingly.",
+  },
+  {
+    question: "Is there a free trial for paid plans?",
+    answer: "Yes! All paid plans come with a 14-day free trial. You can explore all features before committing.",
+  },
+  {
+    question: "What kind of support do you offer?",
+    answer: "We offer community support for Starter plans, priority email support for Pro, and dedicated account managers for Enterprise customers.",
+  },
+];
 
 export default function Page() {
   return (
-    <div className="min-h-screen">
-      {/* Navigation */}
-      <nav className="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">SaaS App</div>
-          <div className="flex gap-3 sm:gap-4 items-center">
-            <a href="#features" className="hidden sm:inline text-sm md:text-base text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">Features</a>
-            <a href="#pricing" className="hidden sm:inline text-sm md:text-base text-gray-600 dark:text-gray-300 no-underline hover:text-gray-900 dark:hover:text-white">Pricing</a>
-            <button className="bg-blue-600 text-white border-none rounded-md px-3 sm:px-4 py-1.5 sm:py-2 text-sm cursor-pointer font-medium hover:bg-blue-700">
-              Sign In
-            </button>
-          </div>
-        </div>
-      </nav>
-
-      {/* Hero Section */}
-      <section className="bg-white dark:bg-gray-900 px-4 sm:px-6 py-12 sm:py-16 md:py-24">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
-            SaaS Template
-          </h1>
-          <p className="text-base sm:text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-6 sm:mb-8 px-4">
-            Export succeeded. Next is wiring real features (auth, billing, db).
-          </p>
-          <div className="flex gap-3 sm:gap-4 justify-center flex-wrap">
-            <button className="bg-blue-600 text-white border-none rounded-lg px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold cursor-pointer hover:bg-blue-700">
-              Get Started
-            </button>
-            <button className="bg-white dark:bg-gray-800 text-gray-900 dark:text-white border-2 border-gray-200 dark:border-gray-700 rounded-lg px-5 sm:px-6 py-2.5 sm:py-3 text-sm sm:text-base font-semibold cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700">
-              Learn More
-            </button>
-          </div>
-          {/* Hero Image */}
-          <div className="mt-10 sm:mt-12 md:mt-16 relative w-full max-w-4xl mx-auto">
-            {/* Desktop Image */}
-            <Image
-              src="/images/hero-workspace.webp"
-              alt="Modern analytics dashboard on a MacBook Pro in a minimal workspace"
-              width={1920}
-              height={1080}
-              className="hidden sm:block rounded-xl shadow-2xl border border-gray-200 dark:border-gray-700"
-              priority
-            />
-            {/* Mobile Image */}
-            <Image
-              src="/images/hero-workspace-mobile.webp"
-              alt="Analytics dashboard interface"
-              width={750}
-              height={1000}
-              className="block sm:hidden rounded-xl shadow-xl border border-gray-200 dark:border-gray-700 mx-auto"
-              priority
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Features Section */}
-      <section id="features" className="bg-gray-50 dark:bg-gray-800 px-4 sm:px-6 py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-            Key Features
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-10 sm:mb-12 md:mb-16 px-4">
-            Build your SaaS with these powerful integrations
-          </p>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {[
-              { title: "Authentication", description: "Ready for Supabase, Clerk, or Auth0", icon: "🔐" },
-              { title: "Payments", description: "Stripe integration ready to configure", icon: "💳" },
-              { title: "Database", description: "PostgreSQL with Prisma or Drizzle ORM", icon: "🗄️" },
-              { title: "API Routes", description: "Next.js API routes with TypeScript", icon: "⚡" },
-              { title: "Email", description: "Transactional email with Resend", icon: "✉️" },
-              { title: "Analytics", description: "Track usage with your preferred analytics", icon: "analytics" }
-            ].map((feature, i) => (
-              <div key={i} className="p-5 sm:p-6 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
-                <div className="flex items-center gap-3 mb-3">
-                  {feature.icon === "analytics" ? (
-                    <Image
-                      src="/images/icon-analytics.svg"
-                      alt="Analytics"
-                      width={32}
-                      height={32}
-                      className="w-8 h-8"
-                    />
-                  ) : (
-                    <span className="text-2xl">{feature.icon}</span>
-                  )}
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
-                    {feature.title}
-                  </h3>
-                </div>
-                <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 m-0 leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="bg-white dark:bg-gray-900 px-4 sm:px-6 py-12 sm:py-16 md:py-20">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-center text-2xl sm:text-3xl md:text-4xl font-bold mb-3 sm:mb-4 text-gray-900 dark:text-white">
-            Simple Pricing
-          </h2>
-          <p className="text-center text-gray-600 dark:text-gray-400 text-base sm:text-lg mb-10 sm:mb-12 md:mb-16 px-4">
-            Choose the plan that fits your needs
-          </p>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
-            {[
-              { name: "Starter", price: "$19", features: ["Up to 100 users", "Basic support", "Core features"] },
-              { name: "Pro", price: "$49", features: ["Unlimited users", "Priority support", "All features", "Custom integrations"] }
-            ].map((plan, i) => (
-              <div key={i} className="p-6 sm:p-8 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-                <h3 className="text-xl sm:text-2xl font-semibold mb-2 text-gray-900 dark:text-white">{plan.name}</h3>
-                <div className="text-3xl sm:text-4xl font-bold mb-4 sm:mb-6 text-gray-900 dark:text-white">
-                  {plan.price}<span className="text-base sm:text-lg text-gray-600 dark:text-gray-400 font-normal">/mo</span>
-                </div>
-                <ul className="list-none p-0 mb-6 sm:mb-8">
-                  {plan.features.map((feature, j) => (
-                    <li key={j} className="py-1.5 sm:py-2 text-sm sm:text-base text-gray-600 dark:text-gray-400">✓ {feature}</li>
-                  ))}
-                </ul>
-                <button className="w-full bg-blue-600 text-white border-none rounded-lg py-2.5 sm:py-3 text-sm sm:text-base font-semibold cursor-pointer hover:bg-blue-700">
-                  Get Started
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-gray-900 text-white px-4 sm:px-6 py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto text-center">
-          <p className="text-sm sm:text-base text-gray-400">
-            © 2024 SaaS App. Built with Next.js and Tailwind CSS.
-          </p>
-        </div>
-      </footer>
+    <div className="min-h-screen bg-[#0A0A0A]">
+      <Nav 
+        projectName={PROJECT_NAME} 
+        links={["Features", "Pricing", "About"]}
+      />
+      
+      <Hero
+        title="Build Your SaaS Faster Than Ever"
+        subtitle="The complete platform for launching your next big idea. From authentication to payments, everything you need in one place."
+        ctaText="Get Started Free"
+        ctaSecondaryText="View Demo"
+      />
+      
+      <FeatureCards
+        title="Everything You Need to Scale"
+        features={FEATURES}
+        columns={3}
+      />
+      
+      <Testimonials
+        testimonials={TESTIMONIALS}
+        title="Loved by Teams Worldwide"
+      />
+      
+      <PricingTable
+        title="Simple, Transparent Pricing"
+        plans={PRICING_PLANS}
+        showToggle={true}
+      />
+      
+      <FAQ
+        title="Got Questions?"
+        items={FAQ_ITEMS}
+        layout="accordion"
+      />
+      
+      <CTA
+        title="Ready to Get Started?"
+        subtitle="Join thousands of teams already using our platform to build better products."
+        buttonText="Start Your Free Trial"
+        variant="gradient"
+      />
+      
+      <Footer
+        projectName={PROJECT_NAME}
+        links={["Privacy", "Terms", "Contact"]}
+        description="Building the future of SaaS, one feature at a time."
+      />
     </div>
   );
 }

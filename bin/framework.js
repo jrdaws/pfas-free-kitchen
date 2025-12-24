@@ -745,6 +745,74 @@ coverage/
     logger.stepInfo(`failed to copy .dd/after-install.sh (non-fatal): ${e?.message || e}`);
   }
 
+  // Generate .env.example with integration env vars
+  const envExamplePath = path.join(absProjectDir, ".env.example");
+  if (!fs.existsSync(envExamplePath)) {
+    const envLines = [
+      "# Environment Variables",
+      "# Copy this file to .env.local and fill in your values",
+      "",
+      "# App Configuration",
+      "NEXT_PUBLIC_APP_URL=http://localhost:3000",
+      "",
+    ];
+
+    // Add integration-specific env vars
+    const ints = flags.integrations;
+    if (ints.auth === "supabase" || ints.db === "supabase") {
+      envLines.push("# Supabase");
+      envLines.push("NEXT_PUBLIC_SUPABASE_URL=");
+      envLines.push("NEXT_PUBLIC_SUPABASE_ANON_KEY=");
+      envLines.push("SUPABASE_SERVICE_ROLE_KEY=");
+      envLines.push("");
+    }
+    if (ints.auth === "clerk") {
+      envLines.push("# Clerk");
+      envLines.push("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=");
+      envLines.push("CLERK_SECRET_KEY=");
+      envLines.push("");
+    }
+    if (ints.payments === "stripe") {
+      envLines.push("# Stripe");
+      envLines.push("STRIPE_SECRET_KEY=");
+      envLines.push("STRIPE_WEBHOOK_SECRET=");
+      envLines.push("NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=");
+      envLines.push("");
+    }
+    if (ints.email === "resend") {
+      envLines.push("# Resend");
+      envLines.push("RESEND_API_KEY=");
+      envLines.push("");
+    }
+    if (ints.ai === "openai") {
+      envLines.push("# OpenAI");
+      envLines.push("OPENAI_API_KEY=");
+      envLines.push("");
+    }
+    if (ints.ai === "anthropic") {
+      envLines.push("# Anthropic");
+      envLines.push("ANTHROPIC_API_KEY=");
+      envLines.push("");
+    }
+    if (ints.analytics === "posthog") {
+      envLines.push("# PostHog");
+      envLines.push("NEXT_PUBLIC_POSTHOG_KEY=");
+      envLines.push("NEXT_PUBLIC_POSTHOG_HOST=https://app.posthog.com");
+      envLines.push("");
+    }
+    if (ints.storage === "uploadthing") {
+      envLines.push("# UploadThing");
+      envLines.push("UPLOADTHING_SECRET=");
+      envLines.push("UPLOADTHING_APP_ID=");
+      envLines.push("");
+    }
+
+    await fse.writeFile(envExamplePath, envLines.join("\n"), "utf8");
+    logger.stepSuccess(".env.example created");
+  } else {
+    logger.stepInfo(".env.example already exists, skipped");
+  }
+
   logger.endStep("files", "     Starter files ready");
 
   // 3. Initialize git (use -b to set initial branch, requires git 2.28+)

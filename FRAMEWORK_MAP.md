@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- e310b8e 2025-12-24 feat(templates): add SaaS landing page components
 - 623a1b2 2025-12-24 fix(website): P0 hydration error + P2 UX improvements
 - d63568e 2025-12-24 docs(audit): add 4 more tasks from user feedback
 - 75f9a55 2025-12-24 docs(audit): add P0/P1 tasks from configurator review
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 2301b52 2025-12-24 chore(website): improve Supabase lazy initialization pattern
 - 786bbee 2025-12-23 docs(governance): update handoff format - fenced block immediately after header
 - 38c004c 2025-12-23 feat(website): implement configurator sidebar navigation
-- 573afea 2025-12-23 docs(governance): make permission request BLOCKING + add Reply Rules to MINDFRAME
 
 ## Agent Governance Structure
 
