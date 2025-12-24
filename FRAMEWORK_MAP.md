@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 68c9f0e 2025-12-24 docs: add Auto-Continuation quick reference to core governance files
 - e310b8e 2025-12-24 feat(templates): add SaaS landing page components
 - 623a1b2 2025-12-24 fix(website): P0 hydration error + P2 UX improvements
 - d63568e 2025-12-24 docs(audit): add 4 more tasks from user feedback
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - c774ae2 2025-12-24 ci: add Vercel deployment status checks to CI workflow
 - 2301b52 2025-12-24 chore(website): improve Supabase lazy initialization pattern
 - 786bbee 2025-12-23 docs(governance): update handoff format - fenced block immediately after header
-- 38c004c 2025-12-23 feat(website): implement configurator sidebar navigation
 
 ## Agent Governance Structure
 

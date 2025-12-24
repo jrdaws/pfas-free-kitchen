@@ -5,14 +5,15 @@ import { parseExportFlags } from "../../bin/framework.js";
 function defaults() {
   return {
     afterInstall: "prompt",
-  templateSource: "auto",
-  frameworkVersion: null,
+    templateSource: "auto",
+    frameworkVersion: null,
     name: null,
     remote: null,
     push: false,
     branch: "main",
     dryRun: false,
     force: false,
+    listIntegrations: false,
     integrations: {
       auth: null,
       payments: null,
@@ -64,6 +65,11 @@ test("parseExportFlags: --force flag", () => {
   assert.equal(result.force, true);
 });
 
+test("parseExportFlags: --list-integrations flag", () => {
+  const result = parseExportFlags(["--list-integrations"]);
+  assert.equal(result.listIntegrations, true);
+});
+
 test("parseExportFlags: all flags combined", () => {
   expectFlags(
     [
@@ -81,6 +87,7 @@ test("parseExportFlags: all flags combined", () => {
       branch: "main",
       dryRun: true,
       force: true,
+      listIntegrations: false,
     }
   );
 });
