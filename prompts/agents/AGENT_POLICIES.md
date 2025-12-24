@@ -1131,6 +1131,7 @@ The following SOPs define mandatory processes that ALL agents must follow:
 | **Template Hygiene** | `docs/sops/TEMPLATE_HYGIENE_SOP.md` | node_modules, versioning, structure |
 | **Media Naming** | `docs/sops/MEDIA_NAMING_SOP.md` | Asset naming conventions |
 | **SSR Compatibility** | `docs/sops/SSR_COMPATIBILITY_SOP.md` | Client-only component patterns |
+| **SEO Generation** | `docs/sops/SEO_GENERATION_SOP.md` | Multi-agent SEO pipeline |
 
 ### SOP Compliance
 

@@ -1,0 +1,153 @@
+{
+  "_template": "META_CONTENT_TEMPLATE",
+  "_version": "1.0.0",
+  "_instructions": "Fill in all fields. Delete this _instructions field when using.",
+  
+  "page": "[page-name]",
+  "url": "/[slug]",
+  "project": "[project-name]",
+  "createdBy": "Documentation Agent",
+  "createdAt": "YYYY-MM-DD",
+  "status": "draft",
+  
+  "meta": {
+    "title": "[50-60 chars] Primary Keyword - Brand Name",
+    "titleLength": 0,
+    "description": "[150-160 chars] Compelling description with primary keyword and clear CTA.",
+    "descriptionLength": 0,
+    "keywords": ["primary-keyword", "secondary-1", "secondary-2"],
+    "canonical": "https://[domain]/[slug]",
+    "robots": "index, follow",
+    "author": "[Author name if applicable]"
+  },
+  
+  "openGraph": {
+    "title": "[Can be slightly longer than meta title]",
+    "description": "[Social-optimized description]",
+    "type": "website",
+    "url": "https://[domain]/[slug]",
+    "siteName": "[Brand Name]",
+    "locale": "en_US",
+    "image": {
+      "url": "/og/[page-name]-og.png",
+      "width": 1200,
+      "height": 630,
+      "alt": "[Descriptive alt text with keyword]",
+      "type": "image/png"
+    }
+  },
+  
+  "twitter": {
+    "card": "summary_large_image",
+    "site": "@[twitter-handle]",
+    "creator": "@[creator-handle]",
+    "title": "[Twitter-optimized title]",
+    "description": "[Twitter-optimized description]",
+    "image": "/og/[page-name]-og.png",
+    "imageAlt": "[Descriptive alt text]"
+  },
+  
+  "structuredData": {
+    "@context": "https://schema.org",
+    "@type": "[WebPage|Product|Article|FAQPage|Organization]",
+    "@id": "https://[domain]/[slug]#[type]",
+    "name": "[Page/Product/Article name]",
+    "description": "[Description]",
+    "url": "https://[domain]/[slug]",
+    "image": "https://[domain]/og/[page-name]-og.png",
+    
+    "_comment": "Add type-specific properties below",
+    
+    "_Organization_example": {
+      "logo": "https://[domain]/logo.png",
+      "sameAs": [
+        "https://twitter.com/[handle]",
+        "https://github.com/[handle]",
+        "https://linkedin.com/company/[handle]"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "[email]",
+        "contactType": "customer service"
+      }
+    },
+    
+    "_Product_example": {
+      "brand": { "@type": "Brand", "name": "[Brand]" },
+      "offers": {
+        "@type": "Offer",
+        "price": "[price]",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock"
+      }
+    },
+    
+    "_Article_example": {
+      "headline": "[Article headline]",
+      "author": { "@type": "Person", "name": "[Author]" },
+      "datePublished": "YYYY-MM-DD",
+      "dateModified": "YYYY-MM-DD",
+      "publisher": {
+        "@type": "Organization",
+        "name": "[Publisher]",
+        "logo": { "@type": "ImageObject", "url": "[logo-url]" }
+      }
+    },
+    
+    "_FAQPage_example": {
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "[Question 1]",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "[Answer 1]"
+          }
+        }
+      ]
+    }
+  },
+  
+  "headings": {
+    "h1": "[Primary keyword focused H1]",
+    "h2s": [
+      "[Section 1 heading]",
+      "[Section 2 heading]",
+      "[Section 3 heading]"
+    ]
+  },
+  
+  "images": [
+    {
+      "src": "/images/[image-name].webp",
+      "alt": "[Descriptive alt text with keyword naturally included]",
+      "title": "[Optional title attribute]"
+    }
+  ],
+  
+  "internalLinks": [
+    {
+      "url": "/[related-page]",
+      "anchorText": "[Descriptive anchor text]",
+      "context": "[Where in content this link appears]"
+    }
+  ],
+  
+  "sitemap": {
+    "include": true,
+    "priority": 0.8,
+    "changeFrequency": "weekly"
+  },
+  
+  "qualityChecklist": {
+    "titleLength": false,
+    "descriptionLength": false,
+    "keywordInTitle": false,
+    "keywordInDescription": false,
+    "keywordInH1": false,
+    "structuredDataValid": false,
+    "ogImageExists": false,
+    "canonicalSet": false
+  }
+}
+

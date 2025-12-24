@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 60578d4 2025-12-24 ci: add PR preview deployment comments
 - c774ae2 2025-12-24 ci: add Vercel deployment status checks to CI workflow
 - 2301b52 2025-12-24 chore(website): improve Supabase lazy initialization pattern
 - 786bbee 2025-12-23 docs(governance): update handoff format - fenced block immediately after header
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 8d12657 2025-12-23 docs(memory): update Documentation Agent memory with SOP session
 - f466e2e 2025-12-23 docs(sops): add AI Model Selection SOP and SOP Proposal Process
 - 2b426da 2025-12-23 feat(platform): add Vercel deployment script and status report
-- 980c076 2025-12-23 chore(agents): mark context freshness task complete, update MINDFRAME
 
 ## Agent Governance Structure
 
