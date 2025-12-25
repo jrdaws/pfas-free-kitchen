@@ -58,7 +58,7 @@
 
 | Task | Agent | Status | Inbox File |
 |------|-------|--------|------------|
-| 6.1 Marketing Landing | Website | ⏳ No blockers | - |
+| 6.1 Marketing Landing | Website | ✅ Complete | - |
 | 6.2 Value Comparison | Website | ⏳ Waiting on 6.1 | - |
 | 6.3 Social Proof | Website | ⏳ Waiting on 6.1 | - |
 
