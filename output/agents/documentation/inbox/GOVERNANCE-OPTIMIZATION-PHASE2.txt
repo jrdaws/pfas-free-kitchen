@@ -1,0 +1,586 @@
+# Governance Optimization Phase 2 - Complete Overhaul
+
+**Priority**: P0 - Cost Reduction (Phase 2)
+**Agent**: Documentation Agent
+**Estimated Savings**: Additional 60-70% reduction on top of Phase 1
+
+---
+
+## Status Check
+
+Phase 1 (completed):
+- ✅ `.cursorrules`: 243 → 120 lines (51% reduced)
+- ✅ `AGENT_CONTEXT.md`: 347 → 94 lines (73% reduced)
+- ❌ `AGENT_POLICIES.md`: 1,389 → 1,439 lines (STILL BLOATED)
+- ⚠️ `MINDFRAME.md`: 356 → 388 lines (slightly larger)
+
+Phase 2 targets:
+- `AGENT_POLICIES.md`: 1,439 → 300 lines (79% reduction)
+- Create single-page governance card
+- Implement lazy-load and simplified session end
+
+---
+
+## ⚠️ BACKUP VERIFICATION
+
+Before proceeding, verify backups exist:
+
+```bash
+ls -la docs/archive/governance-v2.3-backup/
+```
+
+Expected files:
+- AGENT_CONTEXT-original.md
+- AGENT_POLICIES-original.md
+- cursorrules-original.txt
+- MINDFRAME-original.md
+- MANIFEST.md
+
+**If backups don't exist, STOP and create them first.**
+
+---
+
+## Recommendation 1: Create Single-Page Governance Card
+
+### Goal
+Replace all governance files with ONE 50-line reference that agents internalize.
+
+### Implementation
+
+**Create `GOVERNANCE_CARD.md` in project root:**
+
+```markdown
+# Governance Card v3.0
+
+## Philosophy
+Export-first | Zero lock-in | Main branch only | Cursor-native
+
+## Code Style
+| Language | Semicolons | Indent |
+|----------|------------|--------|
+| .mjs | No | 2 spaces |
+| .ts/.tsx | Yes | 2 spaces |
+
+## Commands
+```bash
+npm test                    # Before commit
+git add -A && git commit    # Save work
+git push origin main        # Share work
+```
+
+## Never Do
+- Delete protected files (.cursorrules, *_MEMORY.md, AGENT_CONTEXT.md)
+- Create feature branches
+- Add unrequested features
+- Split fenced code blocks
+
+## Session Start (SLIM - Default)
+```
+✓ Governance 3.0 | Export-first | No protected file deletion
+Proceeding with task...
+```
+
+## Session End
+1. Commit with good message
+2. Brief handoff (if needed)
+3. Sign off: `(ROLE AGENT)`
+
+## Protected Files
+.cursorrules | AGENT_CONTEXT.md | prompts/agents/memory/*.md | prompts/agents/roles/*.md
+
+## Role Codes
+CLI | WEB | DOC | TST | PLT | TPL | INT | RES | MED | QUA | AUD | STR | CUR
+```
+
+### Integration
+
+1. Add to `.cursorrules` header: `See GOVERNANCE_CARD.md for quick reference`
+2. Agents should internalize this, not re-read every session
+3. Only reference GOVERNANCE_CARD.md when uncertain
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- All essential rules condensed into one place (no searching)
+- Same rules, just deduplicated
+- Original files archived for reference
+- Card is auto-loaded via .cursorrules reference
+
+---
+
+## Recommendation 2: Remove Verification Test
+
+### Current Problem
+```markdown
+## 🛑 MANDATORY VERIFICATION TEST
+1. Philosophy: What does "export-first" mean?
+2. Code Style: What is the semicolon rule?
+...5 questions forcing ~200 output tokens
+```
+
+### Solution
+
+**Remove entirely from AGENT_CONTEXT.md.**
+
+Replace with trust-based acknowledgment:
+
+```markdown
+## Acknowledgment (3 lines max)
+✓ Governance 3.0
+✓ Export-first | No protected file deletion
+Proceeding...
+```
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- Agent still reads .cursorrules (auto-loaded)
+- Rules are internalized from reading, not from quiz
+- If agent makes governance error → human corrects once → agent learns
+- Quiz tested knowledge agent already has (waste)
+
+### Implementation
+
+```bash
+# In AGENT_CONTEXT.md, remove lines containing:
+# - "MANDATORY VERIFICATION TEST"
+# - "Questions (Answer All)"
+# - The 5 numbered questions
+# - "Required Format" section
+```
+
+---
+
+## Recommendation 3: Archive Version History
+
+### Current Problem
+
+`AGENT_POLICIES.md` lines 1184-1310 contain:
+```markdown
+### Version 3.0 (2025-12-24)
+- Added Auto-Continuation Protocol...
+
+### Version 2.9 (2025-12-24)
+...
+[126 lines of changelog]
+```
+
+Agents don't need version history to do their job.
+
+### Solution
+
+**Move version history to archive:**
+
+```bash
+# Extract version history section
+grep -n "## Version History" prompts/agents/AGENT_POLICIES.md
+# Note the line number, then extract from there to end
+
+# Create changelog file
+mkdir -p docs/governance
+# Move version history section to:
+# docs/governance/CHANGELOG.md
+```
+
+**Create `docs/governance/CHANGELOG.md`:**
+
+```markdown
+# Governance Changelog
+
+> This is the version history for AGENT_POLICIES.md.
+> Moved here to reduce bootstrap token consumption.
+> Reference this only when investigating governance changes.
+
+[Paste version history section here]
+```
+
+**In AGENT_POLICIES.md, replace with:**
+
+```markdown
+---
+
+## Version History
+
+See `docs/governance/CHANGELOG.md` for full version history.
+
+**Current Version**: 3.0 (2025-12-25)
+
+---
+```
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- History still exists (just relocated)
+- Agents can reference if needed
+- Operational content unchanged
+- Saves ~5,000 tokens per [full] bootstrap
+
+---
+
+## Recommendation 4: Merge and Condense AGENT_POLICIES.md
+
+### Current Problem
+
+`AGENT_POLICIES.md` is 1,439 lines with:
+- Repeated examples (handoff format shown 3x)
+- Verbose explanations of simple concepts
+- Version history (126 lines)
+- Media pipeline standards (could be separate doc)
+
+### Solution
+
+**Condense to ~300 lines:**
+
+| Section | Current Lines | Target Lines | Action |
+|---------|---------------|--------------|--------|
+| Overview/Principles | ~100 | 30 | Condense to table |
+| Agent Roles | ~80 | 40 | Keep, slight trim |
+| Session Protocols | ~200 | 50 | Simplify (see Rec 6) |
+| Media Standards | ~150 | 0 | Move to separate doc |
+| Output Formatting | ~100 | 30 | Keep 1 example each |
+| Handoff Protocol | ~150 | 40 | 1 example, not 3 |
+| Error Handling | ~80 | 20 | 1 example |
+| Testing Requirements | ~50 | 20 | Condense |
+| Commit Standards | ~50 | 15 | Condense |
+| Auto-Continuation | ~80 | 30 | Keep essential |
+| SOPs | ~100 | 30 | Table only |
+| Quick Reference | ~50 | 20 | Keep |
+| Version History | ~126 | 5 | Reference only |
+
+**Files to create:**
+- `docs/governance/MEDIA_STANDARDS.md` - Media pipeline (150 lines moved)
+- `docs/governance/EXAMPLES.md` - Detailed examples (for reference)
+- `docs/governance/CHANGELOG.md` - Version history (126 lines moved)
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- All content still exists (just reorganized)
+- Essential rules in main file
+- Details available on demand in /docs/governance/
+- Agents can request `[full]` mode if they need details
+
+---
+
+## Recommendation 5: Lazy-Load Role SOPs
+
+### Current Problem
+
+Every session reads:
+1. Role SOP file (3-4KB)
+2. Even for simple tasks that don't need it
+
+### Solution
+
+**Only read SOP when:**
+
+| Condition | Read SOP? |
+|-----------|-----------|
+| Simple task (< 3 steps) | ❌ No |
+| Complex task (3+ steps) | ✅ Yes |
+| User says `[full]` | ✅ Yes |
+| Task mentions "follow SOP" | ✅ Yes |
+| Agent unsure how to proceed | ✅ Yes |
+| Task is in new area for agent | ✅ Yes |
+
+**Update .cursorrules:**
+
+Add to Slim Bootstrap section:
+```markdown
+**SOP Loading (Lazy)**:
+- Simple tasks: Skip SOP, use internalized knowledge
+- Complex tasks: Read `prompts/agents/roles/[ROLE]_AGENT.md`
+- Unsure? Read SOP to be safe
+```
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- SOPs still exist and are available
+- Complex work still reads SOPs
+- Simple tasks don't need full protocol
+- Agent can always choose to read SOP if uncertain
+
+---
+
+## Recommendation 6: Simplify Session End Protocol
+
+### Current Problem (6 mandatory steps)
+
+1. Update memory file
+2. Update MINDFRAME.md
+3. Update PROJECT_PRIORITIES.md
+4. Output numbered quick actions
+5. Output handoff prompt
+6. Commit and push
+
+**Issues:**
+- 6 steps for every session, even simple ones
+- Memory bloat from constant updates
+- Most sessions don't need priority updates
+
+### Solution: Tiered Session End
+
+**Tier 1: Simple Session (< 30 min, minor changes)**
+```markdown
+## Session End
+1. Commit: `git add -A && git commit -m "type(scope): desc"`
+2. Push: `git push origin main`
+3. Sign off: `(ROLE AGENT)`
+```
+
+**Tier 2: Standard Session (30+ min, significant work)**
+```markdown
+## Session End
+1. Commit and push
+2. Update memory (5 lines max)
+3. Brief handoff if needed
+4. Sign off: `(ROLE AGENT)`
+```
+
+**Tier 3: Major Session (multi-hour, system changes)**
+```markdown
+## Session End
+1. Commit and push
+2. Update memory (detailed)
+3. Update MINDFRAME.md
+4. Update PROJECT_PRIORITIES.md if new tasks found
+5. Full handoff prompt
+6. Sign off: `(ROLE AGENT)`
+```
+
+### What Becomes Optional
+
+| Step | Simple | Standard | Major |
+|------|--------|----------|-------|
+| Commit & push | ✅ Required | ✅ Required | ✅ Required |
+| Memory update | ❌ Optional | ✅ Brief | ✅ Detailed |
+| MINDFRAME update | ❌ Skip | ❌ Skip | ✅ Required |
+| Priorities update | ❌ Skip | ❌ Skip | ✅ If needed |
+| Quick actions | ❌ Skip | ❌ Skip | ✅ Required |
+| Handoff prompt | ❌ Skip | ⚪ If needed | ✅ Required |
+| Sign off | ✅ Required | ✅ Required | ✅ Required |
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- Major work still gets full protocol
+- Simple tasks don't need overhead
+- Handoff still happens when relevant
+- Memory files don't bloat with trivial entries
+- Commit message captures what was done (always)
+
+---
+
+## Recommendation 7: Pre-Computed Governance Hash
+
+### Current Problem
+
+Agents re-read governance files every `[full]` session to verify nothing changed.
+
+### Solution
+
+**Add governance hash to .cursorrules:**
+
+```markdown
+## Governance Hash
+Version: 3.0
+Hash: abc123def456
+Last Updated: 2025-12-25
+
+If hash matches, governance unchanged. Skip re-reading.
+```
+
+**Implementation:**
+
+```bash
+# Create governance hash script
+cat > scripts/governance-hash.sh << 'EOF'
+#!/bin/bash
+# Generate hash of governance files
+FILES=".cursorrules AGENT_CONTEXT.md prompts/agents/AGENT_POLICIES.md"
+HASH=$(cat $FILES 2>/dev/null | shasum -a 256 | cut -c1-12)
+echo "Governance Hash: $HASH"
+echo "Update .cursorrules with this hash after any governance change"
+EOF
+chmod +x scripts/governance-hash.sh
+```
+
+**Agent behavior:**
+1. Read hash from .cursorrules (already loaded)
+2. Compare to last known hash
+3. If same → skip re-reading governance files
+4. If different → re-read all governance files
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- Hash changes when governance changes
+- Agents always get current rules
+- Saves ~20,000 tokens when governance stable
+- Human updates hash when files change
+
+---
+
+## Pre-Work Verification: Simplified (10 steps → 3 steps)
+
+### Current (10 steps)
+1. Read MINDFRAME.md
+2. Read AGENT_CONTEXT.md
+3. Pass 5-question verification
+4. Read AGENT_POLICIES.md
+5. Identify role
+6. Read role SOP
+7. Read memory file
+8. Read PROJECT_PRIORITIES.md
+9. Request permissions
+10. Confirm ready
+
+### Simplified (3 steps for SLIM mode)
+
+```markdown
+## SLIM Bootstrap (Default)
+
+1. **Sync** (1 command):
+   `git pull origin main --quiet && git status --short`
+
+2. **Acknowledge** (1 line):
+   `✓ Governance 3.0 | Proceeding...`
+
+3. **Work** - Start immediately
+```
+
+### For [full] mode (5 steps)
+
+```markdown
+## FULL Bootstrap
+
+1. Sync: `git pull && git status`
+2. Read: AGENT_CONTEXT.md + AGENT_POLICIES.md
+3. Role: Read SOP + memory file
+4. Priorities: Check PROJECT_PRIORITIES.md
+5. Confirm: State role and proceed
+```
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- .cursorrules auto-loads (has all essential rules)
+- SLIM mode trusts agent internalized rules
+- [full] mode available for complex tasks
+- Agents can always escalate to [full] if unsure
+
+---
+
+## Session End: Simplified (6 steps → 2-3 steps)
+
+### Current (6 steps)
+1. Update memory file
+2. Update MINDFRAME.md
+3. Update PROJECT_PRIORITIES.md
+4. Output numbered quick actions
+5. Output handoff prompt
+6. Commit and push
+
+### Simplified (Tier-based)
+
+**Simple Session (default):**
+```markdown
+1. Commit: `git add -A && git commit -m "type(scope): desc" && git push`
+2. Sign off: `(ROLE AGENT)`
+```
+
+**Standard Session:**
+```markdown
+1. Commit and push
+2. Brief memory update (if significant work)
+3. Sign off + handoff if needed
+```
+
+### Quality Maintenance
+
+**How quality is preserved:**
+- Commit message captures work (always)
+- Memory only updated for significant work (prevents bloat)
+- Handoff only when actually handing off
+- Full protocol available for major sessions
+
+---
+
+## Implementation Checklist
+
+### Files to Create
+- [ ] `GOVERNANCE_CARD.md` - 50-line quick reference
+- [ ] `docs/governance/CHANGELOG.md` - Version history archive
+- [ ] `docs/governance/MEDIA_STANDARDS.md` - Media pipeline standards
+- [ ] `docs/governance/EXAMPLES.md` - Detailed examples
+- [ ] `scripts/governance-hash.sh` - Hash generation
+
+### Files to Modify
+- [ ] `AGENT_POLICIES.md` - Condense 1,439 → 300 lines
+- [ ] `.cursorrules` - Add governance hash, lazy-load SOP rules
+- [ ] `AGENT_CONTEXT.md` - Remove verification test (if still present)
+
+### Files to Archive
+- [ ] Version history section → `docs/governance/CHANGELOG.md`
+- [ ] Media standards section → `docs/governance/MEDIA_STANDARDS.md`
+- [ ] Duplicate examples → `docs/governance/EXAMPLES.md`
+
+---
+
+## Verification
+
+After implementation:
+
+```bash
+# Check file sizes
+wc -l .cursorrules AGENT_CONTEXT.md prompts/agents/AGENT_POLICIES.md GOVERNANCE_CARD.md
+
+# Expected:
+# .cursorrules: ~130 lines
+# AGENT_CONTEXT.md: ~100 lines  
+# AGENT_POLICIES.md: ~300 lines
+# GOVERNANCE_CARD.md: ~50 lines
+# Total: ~580 lines (down from 2,526)
+```
+
+---
+
+## Success Metrics
+
+| Metric | Before Phase 1 | After Phase 1 | After Phase 2 | Total Savings |
+|--------|----------------|---------------|---------------|---------------|
+| .cursorrules | 243 | 120 | 130 | 46% |
+| AGENT_CONTEXT.md | 347 | 94 | 100 | 71% |
+| AGENT_POLICIES.md | 1,389 | 1,439 | 300 | 78% |
+| Total lines | 2,526 | 2,041 | 580 | **77%** |
+| SLIM bootstrap tokens | 3,000 | 1,500 | 500 | **83%** |
+| FULL bootstrap tokens | 27,000 | 15,000 | 5,000 | **81%** |
+| Session end steps | 6 | 6 | 2-3 | **50-67%** |
+| Pre-work steps | 10 | 5 | 3 | **70%** |
+
+---
+
+## Rollback Plan
+
+All changes can be reverted:
+
+```bash
+# Restore from backup
+cp docs/archive/governance-v2.3-backup/AGENT_POLICIES-original.md prompts/agents/AGENT_POLICIES.md
+cp docs/archive/governance-v2.3-backup/AGENT_CONTEXT-original.md AGENT_CONTEXT.md
+cp docs/archive/governance-v2.3-backup/cursorrules-original.txt .cursorrules
+echo "✅ Restored to pre-optimization state"
+```
+
+---
+
+## Next Agent
+
+After completing Phase 2, hand off to Testing Agent to verify:
+1. SLIM mode works correctly for simple tasks
+2. [full] mode loads all needed context
+3. Session end tiers work as expected
+4. No quality degradation in agent output
+
