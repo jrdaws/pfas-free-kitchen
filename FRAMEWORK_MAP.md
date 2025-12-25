@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 2933486 2025-12-24 feat(website): add LandingPage marketing component (Task 6.1)
 - 0cdcf95 2025-12-24 feat(website): add GenerateFramework component for unified export flow
 - 1af6bd8 2025-12-24 feat(website): add ExportWizard component (Task 5.4)
 - 0cb6670 2025-12-24 feat(website): add marketing landing page at /platform (Task 6.1)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - f88cf09 2025-12-24 feat(website): add auth state to Nav component
 - 5163150 2025-12-24 docs(5ds): mark completed tasks and update status tracking
 - 6b0c9b3 2025-12-24 docs(memory): update CLI_MEMORY and 5DS_CLONE_TASKS with npx token completion
-- c6a0295 2025-12-24 feat(cli): add direct token support for npx install
 
 ## Agent Governance Structure
 

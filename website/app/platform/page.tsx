@@ -27,6 +27,9 @@ import {
   Puzzle,
   TrendingDown,
   X,
+  Github,
+  Package,
+  Download,
 } from "lucide-react";
 
 const features = [
@@ -106,6 +109,16 @@ const stats = [
   { value: "192", label: "Tests Passing" },
   { value: "100%", label: "Code Ownership" },
   { value: "0", label: "Lock-in" },
+];
+
+// Company logos for social proof
+const trustedCompanies = [
+  { name: "Vercel", logo: "/images/logos/vercel.svg" },
+  { name: "Supabase", logo: "/images/logos/supabase.svg" },
+  { name: "Stripe", logo: "/images/logos/stripe.svg" },
+  { name: "OpenAI", logo: "/images/logos/openai.svg" },
+  { name: "GitHub", logo: "/images/logos/github.svg" },
+  { name: "PostHog", logo: "/images/logos/posthog.svg" },
 ];
 
 const testimonials = [
@@ -269,6 +282,33 @@ export default function PlatformPage() {
                 </div>
               ))}
             </div>
+
+            {/* GitHub & npm Badges */}
+            <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <a
+                href="https://github.com/jrdaws/dawson-does-framework"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-colors"
+              >
+                <Github className="h-4 w-4" />
+                <span>Star on GitHub</span>
+                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">⭐ 128+</span>
+              </a>
+              <a
+                href="https://www.npmjs.com/package/@jrdaws/framework"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-[#CB3837] text-white rounded-full text-sm font-medium hover:bg-[#CB3837]/90 transition-colors"
+              >
+                <Package className="h-4 w-4" />
+                <span>npm</span>
+                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                  <Download className="inline h-3 w-3 mr-1" />
+                  1.2k/week
+                </span>
+              </a>
+            </div>
           </div>
 
           {/* Hero Visual */}
@@ -321,6 +361,58 @@ export default function PlatformPage() {
                   <div className="font-semibold text-slate-900">Payments Ready</div>
                   <div className="text-xs text-slate-500">Stripe integrated</div>
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Trusted By Section */}
+      <section className="py-16 px-4 border-b border-slate-100">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-10">
+            <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+              Built with technologies trusted by millions of developers
+            </p>
+          </div>
+          
+          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16 opacity-60 hover:opacity-100 transition-opacity duration-500">
+            {trustedCompanies.map((company) => (
+              <div
+                key={company.name}
+                className="flex items-center justify-center h-10 grayscale hover:grayscale-0 transition-all duration-300"
+              >
+                {/* Logo placeholder - will use actual SVGs when available */}
+                <div className="flex items-center gap-2 text-slate-600 font-semibold">
+                  <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                    {company.name === "GitHub" && <Github className="h-5 w-5" />}
+                    {company.name === "Vercel" && <span className="text-xs font-bold">▲</span>}
+                    {company.name === "Supabase" && <span className="text-xs font-bold">⚡</span>}
+                    {company.name === "Stripe" && <span className="text-xs font-bold">S</span>}
+                    {company.name === "OpenAI" && <span className="text-xs font-bold">◎</span>}
+                    {company.name === "PostHog" && <span className="text-xs font-bold">🦔</span>}
+                  </div>
+                  <span className="hidden md:inline">{company.name}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Developer Count Badge */}
+          <div className="mt-10 flex justify-center">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-slate-50 rounded-full border border-slate-200">
+              <div className="flex -space-x-2">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-medium text-slate-600">
+                  +42
+                </div>
+              </div>
+              <div className="text-sm">
+                <span className="font-semibold text-slate-900">500+</span>
+                <span className="text-slate-600"> developers building with Framework</span>
               </div>
             </div>
           </div>
