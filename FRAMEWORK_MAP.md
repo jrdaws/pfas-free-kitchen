@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 6ac53d1 2025-12-25 feat(design): select Warm Neutral (Scheme C) as official color scheme
 - 80820e7 2025-12-25 docs(task): complete token efficiency optimization task
 - 4f1f675 2025-12-25 feat(governance): implement token efficiency optimization (P0)
 - ee075e7 2025-12-25 chore(media): complete P1 color scheme research task
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - edc6d1f 2025-12-24 feat(database): add OAuth and connected services schema for 5DS clone
 - 380795d 2025-12-24 feat(website): add development ViewportIndicator component
 - b01c96d 2025-12-24 feat(website): update MobileSidebar to match accordion navigation pattern
-- 8cbeb3a 2025-12-24 feat(website): add persistent state for tool status, domain, and AI provider
 
 ## Agent Governance Structure
 
