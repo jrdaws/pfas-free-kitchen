@@ -27,6 +27,7 @@
 
 | Priority | Task | Best Agent | Prompt File | Status |
 |----------|------|------------|-------------|--------|
+| **P1** | **Color Scheme Test Mockups (3 variants)** | Media | 20251225-P1-color-scheme-research-and-tests.txt | 🔴 Pending |
 | P1 | Accordion UI Tests | Testing | cycle16-T1-testing-accordion.txt | 🔴 Pending |
 | P2 | Connected Services UI | Website | cycle16-T2-website-services.txt | 🔴 Pending |
 | P2 | Supabase OAuth E2E Tests | Testing | cycle16-T3-testing-oauth.txt | 🔴 Pending |

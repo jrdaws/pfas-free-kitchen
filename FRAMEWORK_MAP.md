@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 3031d63 2025-12-25 docs(curator): update curator memory with cycle 16 session
 - 0672768 2025-12-25 docs(curator): cycle 16 curation - 6 tasks distributed, avg quality 8.77
 - 5aee105 2025-12-25 docs(strategist): cycle 16 strategy - GOVERNANCE PAUSE, 6 executor tasks drafted
 - f278a68 2025-12-25 chore(audit): cycle 15 audit - 732 tests passing, 5-cycle execution gap identified
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 997af26 2025-12-24 feat(media): add custom accordion section and file tree icons
 - 2780a08 2025-12-24 docs(media): add P3 UI media polish task for Media Agent
 - 031c571 2025-12-24 docs(design): create comprehensive UI specification from reference screenshots
-- 7584307 2025-12-24 fix(preview): add defensive checks for undefined props in all preview components
 
 ## Agent Governance Structure
 
