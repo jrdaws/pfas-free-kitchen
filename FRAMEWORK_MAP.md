@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- edc6d1f 2025-12-24 feat(database): add OAuth and connected services schema for 5DS clone
 - 380795d 2025-12-24 feat(website): add development ViewportIndicator component
 - b01c96d 2025-12-24 feat(website): update MobileSidebar to match accordion navigation pattern
 - 8cbeb3a 2025-12-24 feat(website): add persistent state for tool status, domain, and AI provider
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 5e916a0 2025-12-24 feat(cli): add clone command for configurator projects
 - 77fa719 2025-12-24 feat(website): add CompletionChecklist component (Task 5.1)
 - ee196a2 2025-12-24 feat(templates): complete all feature template files for feature-mapping.json
-- a725c29 2025-12-24 feat(website): add ImageGenProviderPicker component (Task 4.3)
 
 ## Agent Governance Structure
 

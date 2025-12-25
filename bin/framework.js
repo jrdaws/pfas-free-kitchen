@@ -1216,6 +1216,8 @@ Examples:
   framework clone swift-eagle-1234                   # Clone from configurator (recommended)
   framework clone swift-eagle-1234 --open            # Clone and open in Cursor
   framework clone swift-eagle-1234 ./my-app          # Clone to specific directory
+  framework clone swift-eagle-1234 --features auth   # Clone with extra features
+  framework features                                 # List available features
   framework pull fast-lion-1234                      # Pull project from web platform
   framework pull fast-lion-1234 --cursor --open      # Pull with Cursor AI files and open
   framework d9d8c242-19af-4b6d-92d8-6d6a79094abc     # Pull by full UUID token
@@ -1773,13 +1775,28 @@ Examples:
 
   logger.endStep("context", "     Project context ready");
 
+  // Merge additional features from clone command (if any)
+  let projectFeatures = project.features || []
+  if (process.env.CLONE_ADDITIONAL_FEATURES) {
+    try {
+      const additionalFeatures = JSON.parse(process.env.CLONE_ADDITIONAL_FEATURES)
+      const uniqueFeatures = [...new Set([...projectFeatures, ...additionalFeatures])]
+      if (uniqueFeatures.length > projectFeatures.length) {
+        logger.stepInfo(`Adding ${uniqueFeatures.length - projectFeatures.length} additional feature(s) from --features flag`)
+      }
+      projectFeatures = uniqueFeatures
+    } catch {
+      // Ignore parse errors
+    }
+  }
+
   // Assemble features if project has feature selections
   // Features come from the configurator UI and map to code templates
-  if (project.features && project.features.length > 0) {
+  if (projectFeatures && projectFeatures.length > 0) {
     logger.startStep("features", "Assembling selected features...");
     
     // Validate feature selection first
-    const validation = await validateFeatureSelection(project.features);
+    const validation = await validateFeatureSelection(projectFeatures);
     if (validation.warnings.length > 0) {
       for (const warning of validation.warnings) {
         logger.stepInfo(`⚠️  ${warning}`);
@@ -1793,12 +1810,12 @@ Examples:
     }
     
     // Get feature summary for display
-    const summary = await getFeatureSummary(project.features);
+    const summary = await getFeatureSummary(projectFeatures);
     logger.stepInfo(`Features: ${summary.totalFeatures} (${summary.byComplexity.simple} simple, ${summary.byComplexity.medium} medium, ${summary.byComplexity.complex} complex)`);
     logger.stepInfo(`Complexity: ${summary.level} (estimated ${summary.estimatedHours} hours)`);
     
     // Assemble feature files
-    const assemblyResult = await assembleFeatures(absTargetDir, project.features, {
+    const assemblyResult = await assembleFeatures(absTargetDir, projectFeatures, {
       dryRun: false,
       projectName: project.project_name || path.basename(absTargetDir),
     });
@@ -1824,7 +1841,7 @@ Examples:
     
     // Generate CLAUDE.md with feature context for AI assistance
     try {
-      await generateClaudeMd(absTargetDir, project.features, {
+      await generateClaudeMd(absTargetDir, projectFeatures, {
         projectName: project.project_name || path.basename(absTargetDir),
         description: project.description || "",
       });
@@ -1837,7 +1854,7 @@ Examples:
     fs.writeFileSync(
       path.join(ddDir, "features.json"),
       JSON.stringify({
-        selected: project.features,
+        selected: projectFeatures,
         resolved: assemblyResult.features,
         summary: summary,
         assembledAt: new Date().toISOString(),
@@ -1979,6 +1996,8 @@ function isProjectToken(str) {
 /**
  * Clone command - Generate a project from configurator features
  * This is the primary command for 5DaySprint-style project generation
+ * Uses feature-assembler.mjs to generate projects based on feature selections.
+ * 
  * Usage: framework clone <token> [output-dir] [options]
  */
 async function cmdClone(token, extraArgs = []) {
@@ -1988,12 +2007,13 @@ async function cmdClone(token, extraArgs = []) {
 
 Clone a project from the configurator and generate it locally with all selected features.
 
-This command:
-1. Fetches your project configuration from the platform
-2. Scaffolds the base template with integrations
-3. Assembles all selected features into the project
-4. Generates CLAUDE.md for AI-assisted development
-5. Creates .cursorrules and START_PROMPT.md
+This command uses the feature-assembler module to:
+1. Fetch your project configuration from the platform
+2. Resolve feature dependencies automatically
+3. Scaffold the base template with integrations
+4. Assemble all selected feature templates into the project
+5. Generate CLAUDE.md with feature context for AI-assisted development
+6. Create .cursorrules and START_PROMPT.md
 
 Arguments:
   token         Project token from the configurator (e.g., swift-eagle-1234)
@@ -2004,12 +2024,15 @@ Options:
   --dry-run     Preview what would happen without making changes
   --force       Overwrite existing directory
   --dev         Use localhost API instead of production
+  --features    Comma-separated feature IDs to add (e.g., --features auth,billing)
+  --list-features  Show available features and exit
 
 Examples:
   framework clone swift-eagle-1234
-  framework clone d9d8c242-19af-4b6d-92d8-6d6a79094abc ./my-project
-  framework clone swift-eagle-1234 --open
   framework clone swift-eagle-1234 --dry-run
+  framework clone swift-eagle-1234 ./my-project --open
+  framework clone swift-eagle-1234 --features auth,billing,analytics
+  framework --list-features
   
   # Or use npx directly:
   npx @jrdaws/framework clone swift-eagle-1234
@@ -2018,14 +2041,28 @@ Examples:
     return
   }
 
+  // Handle --list-features
+  if (token === "--list-features") {
+    await cmdListFeatures()
+    return
+  }
+
   // Clone always enables --cursor for AI-ready projects
   // Parse args and ensure cursor is enabled
   let outputDir = null
   let flagArgs = extraArgs
+  let additionalFeatures = []
 
   if (extraArgs[0] && !extraArgs[0].startsWith("--")) {
     outputDir = extraArgs[0]
     flagArgs = extraArgs.slice(1)
+  }
+
+  // Parse --features flag
+  const featuresIdx = flagArgs.findIndex(arg => arg === "--features")
+  if (featuresIdx !== -1 && flagArgs[featuresIdx + 1]) {
+    additionalFeatures = flagArgs[featuresIdx + 1].split(",").map(f => f.trim())
+    flagArgs = [...flagArgs.slice(0, featuresIdx), ...flagArgs.slice(featuresIdx + 2)]
   }
 
   // Add --cursor if not already present
@@ -2036,10 +2073,80 @@ Examples:
   // Reconstruct args for cmdPull
   const pullArgs = outputDir ? [outputDir, ...flagArgs] : flagArgs
 
-  logger.log("🚀 Cloning project from configurator...\n")
+  // Display clone header
+  logger.log("")
+  logger.log("╔════════════════════════════════════════════════════════════╗")
+  logger.log("║       🚀 DAWSON-DOES FRAMEWORK - PROJECT CLONE             ║")
+  logger.log("╚════════════════════════════════════════════════════════════╝")
+  logger.log("")
+
+  // Show additional features if specified
+  if (additionalFeatures.length > 0) {
+    logger.log(`📦 Additional features requested: ${additionalFeatures.join(", ")}`)
+    try {
+      const summary = await getFeatureSummary(additionalFeatures)
+      logger.log(`   → ${summary.totalFeatures} features (complexity: ${summary.level})`)
+      logger.log("")
+    } catch {
+      // Feature mapping may not exist, continue anyway
+    }
+  }
+
+  logger.log(`🔑 Token: ${token}`)
+  logger.log(`📁 Output: ${outputDir || "(from project config)"}`)
+  logger.log("")
+
+  // Store additional features in environment for cmdPull to pick up
+  if (additionalFeatures.length > 0) {
+    process.env.CLONE_ADDITIONAL_FEATURES = JSON.stringify(additionalFeatures)
+  }
 
   // Delegate to pull command with cursor enabled
   await cmdPull(token, pullArgs)
+
+  // Clean up environment
+  delete process.env.CLONE_ADDITIONAL_FEATURES
+}
+
+/**
+ * List available features from feature-mapping.json
+ */
+async function cmdListFeatures() {
+  try {
+    const { loadFeatureMapping } = await import("../src/dd/feature-assembler.mjs")
+    const mapping = await loadFeatureMapping()
+
+    logger.log("")
+    logger.log("╔════════════════════════════════════════════════════════════╗")
+    logger.log("║              📦 AVAILABLE FEATURES                         ║")
+    logger.log("╚════════════════════════════════════════════════════════════╝")
+    logger.log("")
+
+    for (const [categoryId, category] of Object.entries(mapping.categories)) {
+      logger.log(`\n${category.icon || "📁"} ${category.label}`)
+      logger.log("─".repeat(40))
+
+      const categoryFeatures = Object.entries(mapping.features)
+        .filter(([, f]) => f.category === categoryId)
+      
+      for (const [featureId, feature] of categoryFeatures) {
+        const complexity = feature.complexity === "simple" ? "🟢" : 
+                          feature.complexity === "medium" ? "🟡" : "🔴"
+        const deps = feature.dependencies.length > 0 
+          ? ` (requires: ${feature.dependencies.join(", ")})`
+          : ""
+        logger.log(`  ${complexity} ${featureId}${deps}`)
+      }
+    }
+
+    logger.log("")
+    logger.log("Usage: framework clone <token> --features auth,billing,analytics")
+    logger.log("")
+  } catch (error) {
+    logger.error("Could not load feature mapping: " + error.message)
+    logger.log("Run from the framework root directory.")
+    process.exit(1)
+  }
 }
 
 /**
@@ -2100,6 +2207,10 @@ if (isEntrypoint) {
   if (a === "clone") {
     const cloneArgs = process.argv.slice(4); // Everything after "framework clone <token>"
     await cmdClone(b, cloneArgs);
+    process.exit(0);
+  }
+  if (a === "--list-features" || a === "features") {
+    await cmdListFeatures();
     process.exit(0);
   }
   if (a === "demo") {
