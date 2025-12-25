@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- ca547cf 2025-12-24 test(integration): validate UploadThing storage integration
 - e96bf62 2025-12-24 test(website): expand configurator E2E tests - 48 tests pass
 - a5b0933 2025-12-24 docs(deploy): add provider-specific deployment guides
 - 48fc52f 2025-12-24 chore(agents): move completed P3 task to done
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 16814c0 2025-12-24 fix(saas): add paths config to tsconfig.json for @/ alias
 - ca95fc6 2025-12-24 test(integration): validate UploadThing storage integration - 6/6 pass
 - 99a8dbc 2025-12-24 docs(priorities): mark SaaS template content fix as complete
-- 09696b4 2025-12-24 feat(templates): add dashboard, pricing, and settings pages to SaaS template
 
 ## Agent Governance Structure
 

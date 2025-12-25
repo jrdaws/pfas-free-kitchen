@@ -29,6 +29,36 @@ The Quality Agent is the third and final agent in the Media Generation Pipeline.
 
 ## Session History
 
+### Session: 2025-12-24 (SOP Registry Audit)
+
+#### Work Completed
+- ✅ Audited all 17 SOPs in `docs/sops/`
+- ✅ Updated SOP_REGISTRY.md with complete inventory
+- ✅ Identified 2 outdated path references in AGENT_POLICIES.md
+- ✅ Identified 6 SOPs missing from AGENT_POLICIES.md table
+- ✅ Confirmed 0 conflicts and 0 duplicates
+- ✅ Created comprehensive audit report: `output/agents/quality/outbox/sop-review-report.md`
+
+#### Key Findings
+| Finding | Status |
+|---------|--------|
+| Total SOPs | 17 (up from 7 in registry) |
+| Conflicts | 0 ✅ |
+| Duplicates | 0 ✅ |
+| Outdated paths | 2 (lines 933-935 AGENT_POLICIES.md) |
+| Missing from governance | 6 SOPs |
+
+#### Recommendations Created
+- P1: Update `output/media-agent/` → `output/agents/media/` in AGENT_POLICIES.md
+- P1: Add 6 missing SOPs to AGENT_POLICIES.md table
+- P2: Standardize SHADCN_IMPLEMENTATION_SOP version (1.0 → 1.0.0)
+
+#### Handoff Notes
+- Documentation Agent should update AGENT_POLICIES.md
+- Full report at: `output/agents/quality/outbox/sop-review-report.md`
+
+---
+
 ### Session: 2025-12-23 (Configurator UX Redesign - PERFECT SCORE)
 
 #### Work Completed
@@ -153,6 +183,7 @@ Approved assets go to Template Agent (for templates) or Website Agent (for proje
 | Average iterations needed | 1.2 | ↓ |
 | Revision rate | 17% (6/35) | ↓ |
 | Perfect reviews (100%) | 1 | ✓ |
+| SOPs audited | 17 | NEW |
 
 ### Review History
 | Date | Project | Total | Approved | Revisions | Avg Score |
