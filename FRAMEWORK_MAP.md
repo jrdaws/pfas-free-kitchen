@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- ce1fefa 2025-12-24 feat(configurator): integrate SupabaseSetup component into sidebar
 - 640585d 2025-12-24 feat(website): update landing page for clone command & feature-assembler
 - ba99064 2025-12-24 chore: minor page.tsx cleanup
 - 83d87c3 2025-12-24 feat(supabase): implement Supabase OAuth integration for 5DS clone
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 2933486 2025-12-24 feat(website): add LandingPage marketing component (Task 6.1)
 - 0cdcf95 2025-12-24 feat(website): add GenerateFramework component for unified export flow
 - 1af6bd8 2025-12-24 feat(website): add ExportWizard component (Task 5.4)
-- 0cb6670 2025-12-24 feat(website): add marketing landing page at /platform (Task 6.1)
 
 ## Agent Governance Structure
 
