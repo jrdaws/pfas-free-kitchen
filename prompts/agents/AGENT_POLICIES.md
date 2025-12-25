@@ -930,9 +930,9 @@ Read output/[agent]/inbox/[task-file].txt and execute the task.
 
 **Example workflow:**
 ```
-1. Create prompt file → output/media-agent/inbox/PROJECT-xyz.txt
+1. Create prompt file → output/agents/media/inbox/PROJECT-xyz.txt
 2. Create activation file → output/shared/media/ACTIVATE_XYZ.txt
-3. Tell user: "Copy this to activate: Read output/media-agent/inbox/PROJECT-xyz.txt and execute the task."
+3. Tell user: "Copy this to activate: Read output/agents/media/inbox/PROJECT-xyz.txt and execute the task."
 ```
 
 **Benefits:**
@@ -1327,6 +1327,12 @@ The following SOPs define mandatory processes that ALL agents must follow:
 | **SSR Compatibility** | `docs/sops/SSR_COMPATIBILITY_SOP.md` | Client-only component patterns |
 | **SEO Generation** | `docs/sops/SEO_GENERATION_SOP.md` | Multi-agent SEO pipeline |
 | **Session Checkpoint** | `docs/sops/CHECKPOINT_SOP.md` | Periodic progress offloading |
+| **Agent Creation** | `docs/sops/AGENT_CREATION_SOP.md` | How to create new agents |
+| **Agent Folder Structure** | `docs/sops/AGENT_FOLDER_STRUCTURE_SOP.md` | Standard inbox/outbox/done/workspace |
+| **Agent Persistent Settings** | `docs/sops/AGENT_PERSISTENT_SETTINGS_SOP.md` | Agent-specific configuration |
+| **Certification Requirements** | `docs/sops/CERTIFICATION_REQUIREMENTS_SOP.md` | MINDFRAME certification standards |
+| **Folder Deprecation** | `docs/sops/FOLDER_DEPRECATION_SOP.md` | Migrating old folder structures |
+| **shadcn/ui Implementation** | `docs/sops/SHADCN_IMPLEMENTATION_SOP.md` | UI component standards |
 
 ### SOP Compliance
 

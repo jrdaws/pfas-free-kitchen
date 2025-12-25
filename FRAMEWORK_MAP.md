@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- a7655ec 2025-12-24 docs(memory): update CLI_MEMORY.md with export without env session
 - 0c524e0 2025-12-24 feat(cli): allow export without env vars
 - 5f4f505 2025-12-24 chore(quality): complete SOP registry audit - 17 SOPs verified
 - ca547cf 2025-12-24 test(integration): validate UploadThing storage integration
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 88f76c0 2025-12-24 chore(curator): cycle 10 cleanup - acknowledge completed tasks
 - 4529937 2025-12-24 chore(test): verify export clarity - CLI & ZIP both export full templates
 - eda7180 2025-12-24 chore: mark export build verification complete
-- 16814c0 2025-12-24 fix(saas): add paths config to tsconfig.json for @/ alias
 
 ## Agent Governance Structure
 
