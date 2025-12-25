@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 6b0c9b3 2025-12-24 docs(memory): update CLI_MEMORY and 5DS_CLONE_TASKS with npx token completion
 - c6a0295 2025-12-24 feat(cli): add direct token support for npx install
 - 76de53c 2025-12-24 feat(api): add user_projects schema, RLS, and CRUD API routes
 - 4cd1f53 2025-12-24 style(website): modernize terminal/code block styling
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - d52db80 2025-12-24 chore: checkpoint - uploadthing integration updates and agent tasks
 - d71aed3 2025-12-24 feat(templates): add UploadThing components and update integration
 - f54fc9b 2025-12-24 chore(website): archive completed inbox tasks to done/
-- 07fc3fa 2025-12-24 chore: update framework map and template memory
 
 ## Agent Governance Structure
 
