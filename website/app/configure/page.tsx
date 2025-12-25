@@ -30,6 +30,7 @@ const ResearchSection = dynamic(() => import("@/app/components/configurator/sect
 const CoreFeaturesSection = dynamic(() => import("@/app/components/configurator/sections/CoreFeaturesSection").then(mod => ({ default: mod.CoreFeaturesSection })), { ssr: false });
 const IntegrateAISection = dynamic(() => import("@/app/components/configurator/sections/IntegrateAISection").then(mod => ({ default: mod.IntegrateAISection })), { ssr: false });
 const ToolSetupSection = dynamic(() => import("@/app/components/configurator/sections/ToolSetupSection").then(mod => ({ default: mod.ToolSetupSection })), { ssr: false });
+const SupabaseSetup = dynamic(() => import("@/app/components/configurator/setup/SupabaseSetup").then(mod => ({ default: mod.SupabaseSetup })), { ssr: false });
 
 // Map section IDs to step numbers (for the new 8-section layout)
 const SECTION_TO_STEP: Record<string, number> = {
@@ -267,13 +268,15 @@ export default function ConfigurePage() {
         );
       case "supabase":
         return (
-          <ToolSetupSection
-            toolId="supabase"
-            isComplete={toolStatus.supabase}
-            onMarkComplete={() => handleToolComplete("supabase")}
-            onConnect={() => {
-              // Trigger Supabase OAuth
-              window.open("https://supabase.com", "_blank");
+          <SupabaseSetup
+            onComplete={(project) => {
+              console.log("Supabase project connected:", project);
+              handleToolComplete("supabase");
+            }}
+            onToolStatusChange={(complete) => {
+              if (complete) {
+                handleToolComplete("supabase");
+              }
             }}
           />
         );
