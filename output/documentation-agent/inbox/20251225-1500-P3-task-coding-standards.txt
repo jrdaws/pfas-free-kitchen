@@ -1,0 +1,43 @@
+# Task: Create CODING_STANDARDS.md
+
+Priority: P3
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Low (30 minutes)
+
+## Context
+docs/standards/CODING_STANDARDS.md is referenced in AGENT_CONTEXT.md but doesn't exist.
+This creates dead links and missing guidance for agents.
+
+## Objectives
+1. Create comprehensive coding standards document
+2. Cover JavaScript (.mjs) and TypeScript (.ts/.tsx) styles
+3. Include naming conventions, formatting, imports
+4. Reference existing patterns from codebase
+
+## Success Criteria
+- [ ] docs/standards/CODING_STANDARDS.md exists
+- [ ] Covers: semicolons, indentation, naming, imports
+- [ ] Consistent with existing .cursorrules content
+- [ ] No duplicate info from AGENT_CONTEXT.md
+
+## Files to Create
+- docs/standards/CODING_STANDARDS.md
+
+## Reference Files
+- AGENT_CONTEXT.md (existing standards)
+- .cursorrules (existing rules)
+- src/dd/*.mjs (JavaScript examples)
+- website/app/**/*.tsx (TypeScript examples)
+
+## Handoff
+1. Verify file created and accurate
+2. Update DOCUMENTATION_MEMORY.md
+3. Report: "CODING_STANDARDS.md created"
+
+---
+
+Assigned by: STRATEGIST Agent
+Cycle: 13
+Date: 2025-12-25 15:00
+

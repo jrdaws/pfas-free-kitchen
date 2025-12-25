@@ -1,0 +1,38 @@
+# Task: Create CODING_STANDARDS.md
+
+Priority: P3
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Low (30 minutes)
+
+## Context
+CODING_STANDARDS.md is referenced in AGENT_CONTEXT.md but doesn't exist. This creates dead links and missing guidance for agents.
+
+## Objectives
+1. Create docs/standards/CODING_STANDARDS.md
+2. Document existing conventions from AGENT_CONTEXT.md
+3. Add examples for each language (JS/TS)
+
+## Success Criteria
+- [ ] docs/standards/CODING_STANDARDS.md exists
+- [ ] Documents semicolon rules, indent style
+- [ ] Includes naming conventions
+- [ ] Has code examples
+- [ ] Referenced files updated if needed
+
+## Files to Modify
+- docs/standards/CODING_STANDARDS.md (new)
+
+## Content Outline
+1. JavaScript (.mjs) conventions
+2. TypeScript (.ts/.tsx) conventions
+3. Naming conventions
+4. Import ordering
+5. Error handling patterns
+6. Testing conventions
+
+## Handoff
+1. Move task to done/
+2. Verify link from AGENT_CONTEXT.md works
+3. Update DOCUMENTATION_MEMORY.md
+

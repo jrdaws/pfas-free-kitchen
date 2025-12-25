@@ -1,0 +1,94 @@
+# Task: Commit Uncommitted Work
+
+Priority: P0 (IMMEDIATE - DO FIRST)
+Assigned To: CLI Agent
+Depends On: None
+Estimated Effort: Low (5 minutes)
+Cycle: 12
+
+---
+
+## Context
+
+The Auditor has identified 14 uncommitted files that have persisted for 2+ cycles:
+- 4 modified files
+- 10 untracked files (governance reports, test files)
+
+This is a CRITICAL hygiene issue. Work is at risk of loss. Git status shows dirty state. All other tasks are blocked until this is resolved.
+
+---
+
+## Objectives
+
+1. Stage all modified and untracked files
+2. Commit with descriptive message
+3. Push to origin main
+4. Verify clean git status
+
+---
+
+## Success Criteria
+
+- [ ] `git status` shows "nothing to commit, working tree clean"
+- [ ] Commit pushed to origin/main
+- [ ] No files lost in process
+
+---
+
+## Files to Commit
+
+Modified:
+- output/shared/PROJECT_PRIORITIES.md
+- output/shared/workspace/PROJECT_STATUS.md
+- prompts/agents/memory/AUDITOR_MEMORY.md
+- tests/integration-tests/uploadthing-e2e.test.mjs
+- FRAMEWORK_MAP.md
+
+Untracked:
+- website/tests/configurator-accordion.spec.ts
+- output/agents/curator/inbox/strategy-*.txt
+- output/agents/strategist/inbox/audit-*.txt
+- output/agents/strategist/outbox/drafts/*.txt
+- output/shared/reports/strategy-*.txt
+- output/shared/reports/audit-20251225-*.txt
+
+---
+
+## Commands to Execute
+
+```bash
+# Verify current state
+git status
+
+# Stage all changes
+git add -A
+
+# Commit with descriptive message
+git commit -m "chore: commit cycles 10-12 work (governance, tests, reports, UI specs)"
+
+# Push to origin
+git push origin main
+
+# Verify clean state
+git status
+```
+
+---
+
+## Handoff
+
+1. Verify commit appears in `git log --oneline -1`
+2. Update CLI_MEMORY.md with completion note
+3. Signal completion: "T0 COMPLETE - Git clean, ready for T1-T5"
+4. Next: Testing Agent can start T1 (Accordion UI Tests)
+
+---
+
+## Blockers
+
+None - this is the first task and unblocks all others.
+
+---
+
+(Task created by STRATEGIST Agent - Cycle 12)
+

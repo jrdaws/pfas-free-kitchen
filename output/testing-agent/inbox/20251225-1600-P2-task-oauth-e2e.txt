@@ -1,0 +1,105 @@
+# Task: Supabase OAuth E2E Tests
+
+Priority: P2 (Medium)
+Assigned To: Testing Agent
+Depends On: T0 (Commit Work)
+Estimated Effort: Medium (1-2 hours)
+Cycle: 14
+Created: 2025-12-25 16:00
+
+---
+
+## Context
+
+Supabase OAuth integration was implemented in Cycle 10-11. The flow includes:
+- OAuth initiation via `/api/auth/supabase`
+- Callback handling via `/api/auth/callback`
+- Connected services management via `/api/connected-services`
+
+End-to-end tests are needed to validate this flow works correctly.
+
+---
+
+## Objectives
+
+1. Create E2E test file for Supabase OAuth flow
+2. Test OAuth initiation (redirect to Supabase)
+3. Test callback handling (mock or integration)
+4. Test connected services API endpoints
+5. Test error handling for OAuth failures
+
+---
+
+## Success Criteria
+
+- [ ] OAuth initiation test passes (redirect verified)
+- [ ] Callback handling test passes (with mock)
+- [ ] Connected services CRUD tests pass
+- [ ] Error cases are covered
+- [ ] Tests run in CI without Supabase credentials (mocked)
+
+---
+
+## Files to Create
+
+- `tests/oauth/supabase-oauth.test.mjs` - E2E tests for OAuth flow
+
+## Files to Reference
+
+- `website/app/api/auth/supabase/route.ts` - OAuth initiation
+- `website/app/api/auth/callback/route.ts` - Callback handler
+- `website/app/api/connected-services/route.ts` - Service management
+- `tests/integration-tests/uploadthing-e2e.test.mjs` - Reference for API testing pattern
+
+---
+
+## Test Cases to Cover
+
+1. **OAuth Initiation**
+   - Initiating OAuth returns redirect URL
+   - Redirect URL includes correct scopes
+   - State parameter is properly set
+
+2. **Callback Handling**
+   - Valid callback creates/updates user connection
+   - Invalid callback returns appropriate error
+   - Missing code parameter handled
+
+3. **Connected Services API**
+   - GET returns list of connected services
+   - DELETE removes connection correctly
+   - Unauthorized requests rejected
+
+4. **Error Handling**
+   - Network failures handled gracefully
+   - Expired tokens handled
+   - Invalid provider names rejected
+
+---
+
+## Mock Strategy
+
+Since E2E tests may not have real Supabase credentials:
+
+1. Mock the Supabase OAuth response
+2. Test our callback handler with mock data
+3. Verify database operations (if test database available)
+4. Skip actual OAuth redirect test in CI
+
+---
+
+## Handoff
+
+1. Move task file to done/
+2. Write completion report to outbox/
+3. Update TESTING_MEMORY.md with new tests
+4. Note any OAuth flow issues discovered
+
+---
+
+## Activation Prompt
+
+```
+Execute P2 task: Create E2E tests for Supabase OAuth flow. Test OAuth initiation, callback handling, and connected services API. Use mocks where necessary to avoid requiring real Supabase credentials in CI.
+```
+

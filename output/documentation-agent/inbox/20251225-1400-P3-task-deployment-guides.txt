@@ -1,0 +1,88 @@
+# Task: Create Deployment Guides
+
+Priority: **P3 (Low)**
+Assigned To: Documentation Agent
+Depends On: None (can run parallel)
+Estimated Effort: Medium (1 hour)
+Cycle: 12
+Quality Score: 7.8/10
+
+---
+
+## Context
+
+Auditor identified missing deployment guides: vercel.md, netlify.md, railway.md are referenced but don't exist.
+
+---
+
+## Objectives
+
+1. Create docs/deploy/vercel.md
+2. Create docs/deploy/netlify.md
+3. Create docs/deploy/railway.md
+4. Document env vars required for each platform
+
+---
+
+## Success Criteria
+
+- [ ] All 3 deployment guides created
+- [ ] Each guide has step-by-step instructions
+- [ ] Required env vars documented per platform
+- [ ] Links from other docs work
+
+---
+
+## Files to Create
+
+- docs/deploy/vercel.md (new)
+- docs/deploy/netlify.md (new)
+- docs/deploy/railway.md (new)
+
+---
+
+## Content Template for Each Guide
+
+1. **Prerequisites**
+   - Account setup
+   - CLI installation (if applicable)
+
+2. **Quick Start**
+   - One-click deploy button (if available)
+   - CLI deploy command
+
+3. **Configuration**
+   - Build command
+   - Output directory
+   - Node version
+
+4. **Environment Variables**
+   - Required vars (with placeholder values)
+   - Optional vars
+
+5. **Custom Domain**
+   - DNS configuration
+   - SSL setup
+
+6. **Troubleshooting**
+   - Common issues and solutions
+
+---
+
+## Reference
+
+- Existing deployment attempts documented in Platform Agent memory
+- Vercel deployment live at website-iota-ten-11.vercel.app
+
+---
+
+## Handoff
+
+1. Move task to done/
+2. Update DOCUMENTATION_MEMORY.md
+3. Update any referencing docs if needed
+
+---
+
+(Curated by CURATOR Agent - Cycle 12)
+

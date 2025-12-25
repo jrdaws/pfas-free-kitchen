@@ -1,0 +1,82 @@
+# Task: Test Supabase OAuth E2E
+
+Priority: **P2 (Medium)**
+Assigned To: Testing Agent
+Depends On: T0 (Commit), T1 (Accordion Tests)
+Estimated Effort: Medium (1 hour)
+Cycle: 12
+Quality Score: 7.6/10
+
+---
+
+## Context
+
+Supabase OAuth integration was completed in Cycle 10. Need to validate the full flow works end-to-end with real user interaction.
+
+**Note**: This test may require Supabase credentials. If env vars are missing, document what's needed and create a mock test instead.
+
+---
+
+## Objectives
+
+1. Create E2E test for Supabase OAuth flow
+2. Test connect flow (redirect, callback, token storage)
+3. Test disconnect flow (API call, UI update)
+4. Document any issues found
+
+---
+
+## Success Criteria
+
+- [ ] Playwright test for OAuth flow created
+- [ ] Connect flow redirects to Supabase correctly
+- [ ] Callback processes token and updates UI
+- [ ] Disconnect removes connection from database
+- [ ] Test passes OR issues documented with workaround
+
+---
+
+## Files to Create/Modify
+
+- website/tests/supabase-oauth.spec.ts (new)
+
+---
+
+## Reference Files
+
+- website/app/api/auth/supabase/route.ts
+- website/app/api/auth/supabase/callback/route.ts
+- website/components/configurator/SupabaseSetup.tsx
+
+---
+
+## Commands
+
+```bash
+cd website
+npx playwright test supabase-oauth.spec.ts --project=chromium --headed
+```
+
+---
+
+## Environment Variables Needed
+
+- SUPABASE_URL
+- SUPABASE_ANON_KEY
+- NEXT_PUBLIC_SUPABASE_URL
+
+If missing, create mock tests that validate the UI behavior without actual OAuth flow.
+
+---
+
+## Handoff
+
+1. Move task to done/
+2. Report test results to outbox/
+3. Flag any OAuth issues to Platform Agent
+4. Website Agent can proceed with T3 (Connected Services UI)
+
+---
+
+(Curated by CURATOR Agent - Cycle 12)
+

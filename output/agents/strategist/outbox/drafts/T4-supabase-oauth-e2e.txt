@@ -1,0 +1,31 @@
+# Task: Test Supabase OAuth E2E
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: T3 (Connected Services UI)
+Estimated Effort: Medium (1 hour)
+
+## Context
+Supabase OAuth integration was completed in Cycle 10. Need to validate the full flow works end-to-end with real user interaction.
+
+## Objectives
+1. Create E2E test for Supabase OAuth flow
+2. Test connect flow (redirect, callback, token storage)
+3. Test disconnect flow (API call, UI update)
+4. Document any issues found
+
+## Success Criteria
+- [ ] Playwright test for OAuth flow created
+- [ ] Connect flow redirects to Supabase correctly
+- [ ] Callback processes token and updates UI
+- [ ] Disconnect removes connection from database
+- [ ] Test passes or issues documented
+
+## Files to Modify
+- website/tests/supabase-oauth.spec.ts (new)
+
+## Handoff
+1. Move task to done/
+2. Report test results to outbox/
+3. Flag any OAuth issues to Platform Agent
+

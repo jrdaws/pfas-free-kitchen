@@ -1,0 +1,92 @@
+# Task: Create CODING_STANDARDS.md
+
+Priority: **P3 (Low)**
+Assigned To: Documentation Agent
+Depends On: None (can run parallel)
+Estimated Effort: Low (30 minutes)
+Cycle: 12
+Quality Score: 8.4/10
+
+---
+
+## Context
+
+CODING_STANDARDS.md is referenced in AGENT_CONTEXT.md but doesn't exist. This creates dead links and missing guidance for agents.
+
+---
+
+## Objectives
+
+1. Create docs/standards/CODING_STANDARDS.md
+2. Document existing conventions from AGENT_CONTEXT.md
+3. Add examples for each language (JS/TS)
+
+---
+
+## Success Criteria
+
+- [ ] docs/standards/CODING_STANDARDS.md exists
+- [ ] Documents semicolon rules, indent style
+- [ ] Includes naming conventions
+- [ ] Has code examples
+- [ ] Referenced files updated if needed
+
+---
+
+## Files to Create
+
+- docs/standards/CODING_STANDARDS.md (new)
+
+---
+
+## Content Outline
+
+1. **JavaScript (.mjs) Conventions**
+   - No semicolons
+   - 2-space indent
+   - ES modules (import/export)
+
+2. **TypeScript (.ts/.tsx) Conventions**
+   - Semicolons required
+   - 2-space indent
+   - Strict mode
+
+3. **Naming Conventions**
+   - camelCase for functions/variables
+   - PascalCase for components/classes
+   - SCREAMING_SNAKE for constants
+
+4. **Import Ordering**
+   - Node built-ins first
+   - External packages
+   - Internal modules
+   - Relative imports
+
+5. **Error Handling Patterns**
+   - Use recovery-guidance.mjs patterns
+   - Fail gracefully with actionable messages
+
+6. **Testing Conventions**
+   - Test file naming: *.test.mjs or *.spec.ts
+   - Describe blocks for grouping
+
+---
+
+## Source Material
+
+- AGENT_CONTEXT.md (lines 65-73)
+- Existing code patterns in src/dd/*.mjs
+- Existing patterns in website/components/*.tsx
+
+---
+
+## Handoff
+
+1. Move task to done/
+2. Verify link from AGENT_CONTEXT.md works
+3. Update DOCUMENTATION_MEMORY.md
+
+---
+
+(Curated by CURATOR Agent - Cycle 12)
+

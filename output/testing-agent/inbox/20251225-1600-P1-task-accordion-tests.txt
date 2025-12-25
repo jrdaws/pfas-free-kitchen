@@ -1,0 +1,85 @@
+# Task: Complete Accordion UI Tests
+
+Priority: P1 (High)
+Assigned To: Testing Agent
+Depends On: T0 (Commit Work)
+Estimated Effort: Medium (30-45 minutes)
+Cycle: 14
+Created: 2025-12-25 16:00
+
+---
+
+## Context
+
+The accordion sidebar UI was implemented in Cycle 10-11 with mobile support and inline sections. A test file was started but is incomplete: `website/tests/configurator-accordion.spec.ts`. This test needs to be completed to validate the UI works correctly.
+
+The accordion sidebar is a key UX component for the configurator, so ensuring it works reliably is important.
+
+---
+
+## Objectives
+
+1. Review existing test file: `website/tests/configurator-accordion.spec.ts`
+2. Complete tests for accordion expand/collapse behavior
+3. Add tests for mobile sidebar accordion
+4. Verify section content renders correctly
+5. Run tests and ensure all pass
+
+---
+
+## Success Criteria
+
+- [ ] All accordion expand/collapse tests pass
+- [ ] Mobile sidebar tests pass
+- [ ] Section content rendering tests pass
+- [ ] No regressions in existing tests
+- [ ] Test count increases from 732 baseline
+
+---
+
+## Files to Modify
+
+- `website/tests/configurator-accordion.spec.ts` - Complete this test file
+
+## Files to Reference
+
+- `website/app/components/configurator/AccordionSidebar.tsx` - Main component
+- `website/app/components/configurator/MobileSidebar.tsx` - Mobile version
+- `website/app/components/configurator/sections/*.tsx` - Section components
+
+---
+
+## Test Cases to Cover
+
+1. **Accordion Expand/Collapse**
+   - Clicking section header expands section
+   - Clicking expanded section collapses it
+   - Only one section can be expanded at a time (if accordion mode)
+
+2. **Mobile Sidebar**
+   - Hamburger menu opens sidebar
+   - Sections work in mobile view
+   - Closing sidebar resets state
+
+3. **Section Content**
+   - SupabaseSetup section renders form
+   - Other sections render appropriate content
+   - Error states handled gracefully
+
+---
+
+## Handoff
+
+1. Move task file to done/
+2. Write test completion report to outbox/
+3. Update TESTING_MEMORY.md with new test count
+4. Note any issues found during testing
+
+---
+
+## Activation Prompt
+
+```
+Execute P1 task: Complete the accordion UI tests in website/tests/configurator-accordion.spec.ts. Ensure accordion expand/collapse, mobile sidebar, and section content rendering are all tested. Run tests and verify all pass.
+```
+

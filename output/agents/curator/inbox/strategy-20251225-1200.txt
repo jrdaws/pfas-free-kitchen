@@ -1,0 +1,167 @@
+# Strategy Report
+
+Cycle: 12
+Date: 2025-12-25 12:00
+Strategist: STRATEGIST Agent
+Responding to: audit-20251225-0131.txt
+
+---
+
+## Executive Summary
+
+**CRITICAL FINDING**: Execution gap persists. Cycle 11 completed governance loop (Auditor → Strategist → Curator) and distributed 6 tasks, but **ZERO** were executed. This mirrors the Cycle 8 pattern - governance overhead without work output.
+
+**Strategy for Cycle 12**: EXECUTE, DON'T PLAN. Minimal new tasks. Focus on completing Cycle 11 pending work.
+
+---
+
+## Strategic Priorities
+
+Based on Auditor's findings, this cycle focuses on:
+
+1. **Commit Uncommitted Work (P0)**: 14 files uncommitted for 2+ cycles. Risk of work loss. IMMEDIATE action required.
+2. **Close Execution Gap (P1)**: Execute the 6 pending tasks from Cycle 11. No new planning until these are done.
+3. **Validate New UI (P1)**: Accordion sidebar implemented but untested. UI bugs may go undetected.
+
+---
+
+## Task Matrix
+
+| ID | Task | Agent | Priority | Effort | Depends On | Status |
+|----|------|-------|----------|--------|------------|--------|
+| T0 | Commit Uncommitted Work | CLI | P0 | Low | None | **NEW - IMMEDIATE** |
+| T1 | Complete Accordion UI Tests | Testing | P1 | Med | T0 | Cycle 11 - PENDING |
+| T2 | Test Supabase OAuth E2E | Testing | P2 | Med | T0 | Cycle 11 - PENDING |
+| T3 | Connected Services UI | Website | P2 | High | T0, T2 | Cycle 11 - PENDING |
+| T4 | Create CODING_STANDARDS.md | Documentation | P3 | Low | None | Cycle 11 - PENDING |
+| T5 | Create Deployment Guides | Documentation | P3 | Med | None | Cycle 11 - PENDING |
+
+---
+
+## Resource Allocation
+
+### CLI Agent
+- **T0**: Commit Uncommitted Work (P0 - IMMEDIATE)
+
+### Testing Agent  
+- **T1**: Complete Accordion UI Tests (P1)
+- **T2**: Test Supabase OAuth E2E (P2)
+
+### Website Agent
+- **T3**: Connected Services UI (P2, after T2)
+
+### Documentation Agent
+- **T4**: Create CODING_STANDARDS.md (P3)
+- **T5**: Create Deployment Guides (P3)
+
+### Platform Agent
+- No new tasks - available as backup
+
+### Template Agent
+- No new tasks - available as backup
+
+### Integration Agent
+- No new tasks - available as backup
+
+---
+
+## Dependencies Map
+
+```
+T0 (Commit) ─────┬──────────▶ T1 (UI Tests)
+                 │
+                 ├──────────▶ T2 (OAuth E2E)
+                 │                    │
+                 │                    ▼
+                 └──────────▶ T3 (Services UI)
+
+T4 (Coding Standards) ─────▶ (Independent)
+T5 (Deploy Guides) ─────────▶ (Independent)
+```
+
+**Critical Path**: T0 → T1/T2 → T3
+
+---
+
+## Risk Assessment
+
+| Risk | Probability | Impact | Mitigation |
+|------|-------------|--------|------------|
+| Execution gap continues (no tasks picked up) | High | High | Reduce to 4 critical tasks only. Escalate in handoff. |
+| Uncommitted work lost to git reset | Medium | High | T0 is P0 - must execute first |
+| OAuth tests fail | Low | Medium | T2 validates before T3 builds on it |
+| Agent overload | Low | Low | Max 2 tasks per agent enforced |
+
+---
+
+## Anti-Patterns Identified
+
+1. **Too Many Tasks**: Cycle 11 had 6 tasks, 0 executed. Reduce scope.
+2. **Governance Without Execution**: PDCA stuck in Plan phase. Force Do phase.
+3. **Documentation Debt Creep**: P3 items keep deferring. Bundle them.
+
+---
+
+## Draft Task Prompts
+
+See: output/agents/strategist/outbox/drafts/
+
+### T0: Commit Uncommitted Work (NEW)
+
+Priority: P0 (IMMEDIATE)
+Assigned To: CLI Agent
+Depends On: None
+Estimated Effort: Low (5 minutes)
+
+### T1-T5: Use Existing Drafts
+
+Cycle 11 Strategist already created prompts for T1-T5. These are still valid:
+- T1: output/agents/strategist/outbox/drafts/T2-accordion-ui-tests.txt
+- T2: output/agents/strategist/outbox/drafts/T4-supabase-oauth-e2e.txt
+- T3: output/agents/strategist/outbox/drafts/T3-connected-services-ui.txt
+- T4: output/agents/strategist/outbox/drafts/T5-coding-standards-doc.txt
+- T5: output/agents/strategist/outbox/drafts/T6-deployment-guides.txt
+
+---
+
+## Deferred Items
+
+Tasks explicitly NOT included this cycle:
+- **Velocity Tracking Automation (P3)**: Deferred until execution gap closed
+- **User Feedback Collection (P3)**: Deferred - need deployed product first
+- **Chunked Code Generation (P3)**: Feature backlog, not urgent
+- **UI Media Polish**: Media Agent completed icons; further polish deferred
+
+---
+
+## Success Metrics for Cycle 12
+
+| Metric | Target | How to Measure |
+|--------|--------|----------------|
+| Uncommitted files | 0 | `git status` shows clean |
+| Tasks executed | ≥3 of 5 | Completion reports in outbox/ |
+| Tests passing | 732+ | `npm test` |
+| New test coverage | +20 lines | configurator-accordion.spec.ts |
+
+---
+
+## Recommended Execution Order
+
+1. **FIRST**: CLI Agent commits work (T0) - unblocks everything
+2. **PARALLEL**: Testing Agent runs T1 (UI tests) + T2 (OAuth E2E)
+3. **AFTER T2**: Website Agent starts T3 (Connected Services UI)
+4. **BACKGROUND**: Documentation Agent works T4/T5 independently
+
+---
+
+## Handoff
+
+Report saved to: output/shared/reports/strategy-20251225-1200.txt
+Draft prompts saved to: output/agents/strategist/outbox/drafts/
+Next agent: CURATOR
+
+**CRITICAL MESSAGE TO CURATOR**: 
+The execution gap is the #1 problem. Do NOT create new tasks. Distribute the existing tasks with urgency messaging. Consider triggering auto-continuation for T0.
+
+(STRATEGIST AGENT)
+

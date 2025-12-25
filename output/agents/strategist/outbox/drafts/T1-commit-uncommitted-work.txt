@@ -1,0 +1,36 @@
+# Task: Commit Uncommitted Work
+
+Priority: P1
+Assigned To: CLI Agent
+Depends On: None
+Estimated Effort: Low (10 minutes)
+
+## Context
+Auditor identified 3 uncommitted files that need to be committed to preserve work from Cycle 10:
+- FRAMEWORK_MAP.md (modified)
+- tests/integration-tests/uploadthing-e2e.test.mjs (modified)
+- website/tests/configurator-accordion.spec.ts (new)
+
+## Objectives
+1. Review the uncommitted changes for correctness
+2. Stage and commit with appropriate message
+3. Push to origin/main
+
+## Success Criteria
+- [ ] All 3 files committed
+- [ ] Commit pushed to origin/main
+- [ ] `git status` shows clean working directory
+
+## Files to Modify
+- No modifications needed, just commit existing changes
+
+## Commands
+git add FRAMEWORK_MAP.md tests/integration-tests/uploadthing-e2e.test.mjs website/tests/configurator-accordion.spec.ts
+git commit -m "chore: commit pending work from cycle 10"
+git push origin main
+
+## Handoff
+1. Verify push succeeded
+2. Report completion to outbox/
+3. Testing Agent can proceed with T2
+

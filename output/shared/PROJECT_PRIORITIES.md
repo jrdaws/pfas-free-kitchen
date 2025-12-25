@@ -2,7 +2,7 @@
 
 > **Purpose**: Central source of truth for what needs to be done next
 > **Updated By**: ALL agents (on session end)
-> **Last Updated**: 2025-12-24
+> **Last Updated**: 2025-12-25 16:00 (Cycle 14 Strategy)
 
 ---
 
@@ -10,7 +10,7 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
-| P0 | - | - | - | - |
+| **P0** | **Commit Uncommitted Work (22 files)** | CLI | 3+ cycles overdue - BLOCKS ALL | STR |
 
 ---
 
@@ -18,8 +18,7 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
-| P1 | Implement Accordion Sidebar (Phase 1) | Website | UI alignment with reference design | RES |
-| P1 | Create Section Content Components | Website | Required for accordion sidebar | RES |
+| P1 | Complete Accordion UI Tests | Testing | Validate new sidebar | STR |
 | P1 | Update Project Cards (terminal style) | Website | UI alignment with reference design | RES |
 
 ---
@@ -28,9 +27,9 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
+| P2 | Connected Services UI | Website | Backend routes ready | STR |
+| P2 | Test Supabase OAuth E2E | Testing | Validate integration | STR |
 | P2 | Configure env vars in Vercel Dashboard | User | ANTHROPIC_API_KEY, SUPABASE, REDIS | PLT |
-| P2 | Test UploadThing integration | Integration | Feature complete | AUD |
-| P2 | Add UI tests for configurator | Testing | Coverage gap | WEB |
 
 ---
 
@@ -48,19 +47,29 @@
 
 ## Development Sequence
 
-Current recommended order based on dependencies:
+Current recommended order based on dependencies (Cycle 14):
 
 ```
-1. Testing Agent  → Verify SOPs, run E2E tests
+0. CLI Agent     → COMMIT WORK (P0, unblocks all) - 22+ FILES!
         ↓
-2. Platform Agent → Deploy to Vercel
+1. Testing Agent → T1: Accordion UI Tests (P1) + T3: OAuth E2E (P2)
         ↓
-3. Integration Agent → Test UploadThing, storage
+2. Website Agent → T2: Connected Services UI (P2)
         ↓
-4. Website Agent → UI improvements, feedback collection
+3. Documentation Agent → T4: CODING_STANDARDS + T5: Deploy Guides (P3)
         ↓
-5. Template Agent → Update templates with lessons learned
+4. (Parallel) Platform, Template, Integration → Available for new work
 ```
+
+### Task Inbox Locations (Cycle 14)
+| Agent | Inbox File | Priority |
+|-------|------------|----------|
+| CLI | 20251225-1600-P0-task-commit-work.txt | **P0** |
+| Testing | 20251225-1600-P1-task-accordion-tests.txt | P1 |
+| Testing | 20251225-1600-P2-task-oauth-e2e.txt | P2 |
+| Website | 20251225-1600-P2-task-connected-services-ui.txt | P2 |
+| Documentation | 20251225-1600-P3-task-coding-standards.txt | P3 |
+| Documentation | 20251225-1600-P3-task-deployment-guides.txt | P3 |
 
 ---
 
@@ -68,6 +77,10 @@ Current recommended order based on dependencies:
 
 | Task | Agent | Date | Notes |
 |------|-------|------|-------|
+| Accordion Sidebar (Phase 1) | Website | 2025-12-25 | Implemented inline sections, mobile pattern |
+| Section Content Components | Website | 2025-12-25 | SupabaseSetup integrated into sidebar |
+| Supabase OAuth Integration | Platform | 2025-12-25 | OAuth routes, database schema complete |
+| UploadThing E2E Tests | Testing | 2025-12-25 | 370 lines of integration tests |
 | **UI Design Specification** | RES | 2025-12-24 | Analyzed reference screenshots, created 5DS_UI_SPECIFICATION.md |
 | **Feature-to-Code Mapping System** | TPL | 2025-12-24 | 20 templates, feature-assembler.mjs, enables 5.4 |
 | **Vercel Production Deploy** | PLT | 2025-12-24 | website-iota-ten-11.vercel.app - needs env vars |

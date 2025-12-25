@@ -1,0 +1,88 @@
+# Task: Supabase OAuth E2E Tests
+
+Priority: P2
+Assigned To: Testing Agent
+Cycle: 13
+Quality Score: 7.8/10
+Depends On: T0 (Commit), T2 (Connected Services UI) for full flow
+Estimated Effort: 1-2 hours
+
+---
+
+## Context
+
+Supabase OAuth integration completed by Platform Agent:
+- OAuth callback routes implemented
+- Connected services storage working
+- Needs E2E test coverage to validate flow
+
+---
+
+## Objectives
+
+1. Create E2E tests for OAuth flow (mock provider responses)
+2. Test callback handling
+3. Test connected services storage/retrieval
+4. Test disconnect flow
+
+---
+
+## Success Criteria
+
+- [ ] OAuth E2E test file created
+- [ ] Tests cover: initiate flow, callback, store service, disconnect
+- [ ] Mocking used for external OAuth providers (don't hit real providers)
+- [ ] All tests passing
+- [ ] Any issues documented
+
+---
+
+## Files to Create
+
+- `tests/integration-tests/supabase-oauth-e2e.test.mjs`
+
+Or if Playwright:
+- `website/tests/supabase-oauth.spec.ts`
+
+---
+
+## Test Cases
+
+1. **Initiate Flow**: POST to /api/oauth/github returns redirect URL
+2. **Callback Handling**: GET /api/oauth/callback?code=xxx stores token
+3. **List Connected**: GET /api/connected-services returns array
+4. **Store Service**: After OAuth, service appears in list
+5. **Disconnect**: DELETE removes service from database and list
+
+---
+
+## Mocking Strategy
+
+Since we can't hit real OAuth providers in tests:
+1. Mock the OAuth provider's token endpoint
+2. Simulate callback with test code
+3. Verify database state changes
+4. Use environment flag to enable test mode
+
+---
+
+## Commands
+
+```bash
+npm test
+# or for Playwright
+cd website && npx playwright test supabase-oauth.spec.ts
+```
+
+---
+
+## Handoff
+
+1. Update TESTING_MEMORY.md with OAuth test coverage
+2. Flag any OAuth issues to Platform Agent
+3. Report: "T3 COMPLETE - OAuth E2E tests passing"
+
+---
+
+(Task curated by CURATOR Agent - Cycle 13)
+
