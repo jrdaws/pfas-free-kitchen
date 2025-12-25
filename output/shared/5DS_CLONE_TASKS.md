@@ -8,7 +8,7 @@
 
 | Task | Agent | Status | Inbox File |
 |------|-------|--------|------------|
-| 1.1 Database Schema | Platform | 📋 Ready | `20251224-P1-5ds-clone-database-schema.txt` |
+| 1.1 Database Schema | Platform | ✅ Complete | `20251224-P1-5ds-clone-database-schema.txt` |
 | 1.2 User Auth Flow | Website | ✅ Complete | `20251224-P1-5ds-clone-user-auth.txt` |
 | 1.3 Accordion Navigation | Website | ✅ Complete | `20251224-P1-5ds-clone-accordion-nav.txt` |
 | 1.4 Persistent Project State | Website | ✅ Complete | - |
@@ -33,7 +33,7 @@
 | 3.2 Cursor Setup | Website | ✅ Complete (in 3.1) | - |
 | 3.3 GitHub Setup | Website | ✅ Complete (in 3.1) | - |
 | 3.4 Claude Code Setup | Website | ✅ Complete (in 3.1) | - |
-| 3.5 Supabase OAuth | Platform | ⏳ Waiting on 1.1 | - |
+| 3.5 Supabase OAuth | Platform | 📋 Ready (1.1 done) | - |
 | 3.6 Vercel Deploy | Website | ✅ Complete (in 3.1) | - |
 
 ## Phase 4: AI Integration (Week 4-5)

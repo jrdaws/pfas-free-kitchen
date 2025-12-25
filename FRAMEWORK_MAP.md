@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 380795d 2025-12-24 feat(website): add development ViewportIndicator component
 - b01c96d 2025-12-24 feat(website): update MobileSidebar to match accordion navigation pattern
 - 8cbeb3a 2025-12-24 feat(website): add persistent state for tool status, domain, and AI provider
 - 655bb72 2025-12-24 docs: update 5DS clone tasks with Phase 7 integration tasks
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 77fa719 2025-12-24 feat(website): add CompletionChecklist component (Task 5.1)
 - ee196a2 2025-12-24 feat(templates): complete all feature template files for feature-mapping.json
 - a725c29 2025-12-24 feat(website): add ImageGenProviderPicker component (Task 4.3)
-- b32b656 2025-12-24 feat(website): add AIProviderPicker component (Task 4.1, 4.2, 4.4)
 
 ## Agent Governance Structure
 

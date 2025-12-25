@@ -94,6 +94,22 @@ export interface ToolStatus {
   vercel: boolean;
 }
 
+export interface AIConfig {
+  language?: string; // 'anthropic', 'openai', 'google'
+  image?: string; // 'openai', 'google', 'stability'
+  voice?: string; // 'elevenlabs'
+  api_keys?: Record<string, string>; // Stored encrypted
+}
+
+export interface ConnectedAccounts {
+  github_repo?: string;
+  github_username?: string;
+  supabase_project?: string;
+  supabase_org?: string;
+  vercel_project?: string;
+  vercel_team?: string;
+}
+
 export interface UserProject {
   id: string;
   user_id: string;
@@ -107,6 +123,25 @@ export interface UserProject {
   supabase_project_id?: string;
   npx_token: string;
   status: ProjectStatus;
+  connected_accounts?: ConnectedAccounts;
+  project_config?: Record<string, unknown>;
+  ai_config?: AIConfig;
+  feedback_notes?: string;
+  created_at: string;
+  updated_at: string;
+}
+
+// Connected Services (OAuth tokens)
+export type ServiceType = 'github' | 'supabase' | 'vercel';
+
+export interface ConnectedService {
+  id: string;
+  user_id: string;
+  service_type: ServiceType;
+  access_token: string;
+  refresh_token?: string;
+  expires_at?: string;
+  account_data: Record<string, unknown>;
   created_at: string;
   updated_at: string;
 }
@@ -128,6 +163,10 @@ export interface UpdateUserProjectInput {
   tool_status?: Partial<ToolStatus>;
   supabase_project_id?: string;
   status?: ProjectStatus;
+  connected_accounts?: Partial<ConnectedAccounts>;
+  project_config?: Record<string, unknown>;
+  ai_config?: Partial<AIConfig>;
+  feedback_notes?: string;
 }
 
 // Generate a human-readable token
