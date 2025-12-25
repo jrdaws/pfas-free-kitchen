@@ -35,19 +35,23 @@
 
 ## Session History
 
-### Session: 2025-12-24 (Clone Command)
+### Session: 2025-12-24 (Clone Command + Feature Assembler)
 
 **Work Completed**
 - ✅ Added dedicated `clone` command as wrapper for pull+features
 - ✅ Clone always enables `--cursor` for AI-ready projects
-- ✅ Updated help with Clone Options section and examples
-- ✅ Added 4 tests for clone command functionality
+- ✅ Added `--features` flag to add features during clone
+- ✅ Added `framework features` command to list available features
+- ✅ Enhanced clone header with token and output display
+- ✅ Feature dependencies automatically resolved via feature-assembler.mjs
 - ✅ All 732 tests passing
 
 **Clone Command Usage**:
 ```bash
 npx @jrdaws/framework clone swift-eagle-1234
 npx @jrdaws/framework clone {token} ./my-project --open
+npx @jrdaws/framework clone {token} --features auth,billing
+npx @jrdaws/framework features  # List available features
 ```
 
 ---

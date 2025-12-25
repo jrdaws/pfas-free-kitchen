@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 64adc9b 2025-12-24 feat(cli): enhance clone command with feature-assembler integration
 - edc6d1f 2025-12-24 feat(database): add OAuth and connected services schema for 5DS clone
 - 380795d 2025-12-24 feat(website): add development ViewportIndicator component
 - b01c96d 2025-12-24 feat(website): update MobileSidebar to match accordion navigation pattern
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 8156acc 2025-12-24 docs(memory): update CLI_MEMORY with clone command session
 - 5e916a0 2025-12-24 feat(cli): add clone command for configurator projects
 - 77fa719 2025-12-24 feat(website): add CompletionChecklist component (Task 5.1)
-- ee196a2 2025-12-24 feat(templates): complete all feature template files for feature-mapping.json
 
 ## Agent Governance Structure
 
