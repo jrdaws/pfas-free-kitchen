@@ -132,3 +132,4 @@ End responses with role in caps: `(CLI AGENT)`, `(WEBSITE AGENT)`, etc.
 3. **Batch file reads** when possible
 4. **Skip verification questions** in slim mode
 5. **No verbose acknowledgments** - 3 lines max
+6. **New rules**: See `docs/sops/GOVERNANCE_MAINTENANCE_SOP.md` before adding
