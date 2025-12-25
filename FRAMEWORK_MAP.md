@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 6fb471d 2025-12-25 docs: update color references for Warm Neutral scheme
 - 6d675c0 2025-12-25 test(website): verify accordion UI tests complete - 732 tests pass
 - 688f777 2025-12-25 docs(governance): clarify Human Terminal Command vs Next Agent Prompt rules
 - 73b2216 2025-12-25 chore(media): complete P2 orange palette migration task
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - ee075e7 2025-12-25 chore(media): complete P1 color scheme research task
 - 6c359eb 2025-12-25 feat(design): add 3 color scheme mockup websites for comparison
 - fa88398 2025-12-25 docs(efficiency): add archive retention policy - no auto-delete, manual review for 90+ days
-- c163450 2025-12-25 docs(efficiency): create token optimization task - P0 cost reduction
 
 ## Agent Governance Structure
 
