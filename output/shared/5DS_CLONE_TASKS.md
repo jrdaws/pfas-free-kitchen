@@ -20,10 +20,10 @@
 | Task | Agent | Status | Inbox File |
 |------|-------|--------|------------|
 | 2.1 Feature Categories Data | Website | ✅ Complete | `20251224-P1-5ds-clone-feature-categories.txt` |
-| 2.2 Core Features UI | Website | 📋 Ready (2.1 done) | - |
-| 2.3 Project Overview Box | Website | ⏳ Waiting on 2.2 | - |
+| 2.2 Core Features UI | Website | ✅ Complete | - |
+| 2.3 Project Overview Box | Website | 📋 Ready (2.2 done) | - |
 | 2.4 Feature-to-Code Mapping | Template | 📋 Ready | `20251224-P2-5ds-clone-feature-code-mapping.txt` |
-| 2.5 Add Feedback Toggle | Website | ⏳ Waiting on 2.2 | - |
+| 2.5 Add Feedback Toggle | Website | 📋 Ready (2.2 done) | - |
 
 ## Phase 3: Tool Setup Wizard (Week 3-4)
 
@@ -51,7 +51,7 @@
 |------|-------|--------|------------|
 | 5.1 Completion Checklist | Website | ⏳ Waiting on Phase 3 | - |
 | 5.2 File Tree View | Website | ⏳ Waiting on 2.4 | - |
-| 5.3 NPX Command Display | Website | ⏳ Waiting on 1.6 | - |
+| 5.3 NPX Command Display | Website | ✅ Complete | - |
 | 5.4 Generate Framework | CLI + Website | ⏳ Waiting on all | - |
 
 ## Phase 6: Polish (Week 6)
