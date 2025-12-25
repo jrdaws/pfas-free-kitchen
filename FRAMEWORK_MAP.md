@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- e081c72 2025-12-24 feat(website): add FileTreeView component (Task 5.2)
 - 8156acc 2025-12-24 docs(memory): update CLI_MEMORY with clone command session
 - 5e916a0 2025-12-24 feat(cli): add clone command for configurator projects
 - 77fa719 2025-12-24 feat(website): add CompletionChecklist component (Task 5.1)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 76de53c 2025-12-24 feat(api): add user_projects schema, RLS, and CRUD API routes
 - 4cd1f53 2025-12-24 style(website): modernize terminal/code block styling
 - f1f5fe4 2025-12-24 feat(website): implement 3-panel integration selector and workspace layout
-- 2154c90 2025-12-24 docs(memory): record successful Vercel deployment
 
 ## Agent Governance Structure
 
