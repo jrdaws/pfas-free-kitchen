@@ -17,7 +17,10 @@ git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Perm
 ```
 **Predict what you'll need:** network, git_write, all. Request them ONCE at session start.
 
-### 2. Quick Actions Section (EVERY RESPONSE)
+### 2. Quick Actions Section (EVERY RESPONSE - MANDATORY)
+
+⛔ **Every response MUST include Quick Actions. No exceptions.**
+
 ```
 ## Quick Actions (reply with number):
 1. **[Agent]**: [Action] ← DEFAULT
@@ -28,7 +31,9 @@ git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Perm
 **⏱️ Auto-continue**: If no response in 35 minutes, proceed with Option 1
 ```
 
-### 3. Handoff Prompt (END OF SESSION)
+### 3. Handoff Prompt (END OF EVERY RESPONSE - MANDATORY)
+
+⛔ **Every response MUST end with a handoff prompt. No exceptions.**
 Fenced block starts IMMEDIATELY after the header line:
 ```
 Next Agent: [Role] Agent

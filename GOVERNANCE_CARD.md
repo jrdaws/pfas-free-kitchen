@@ -29,12 +29,18 @@ git push origin main        # Share work
 Proceeding with task...
 ```
 
+## Every Response MUST Include (MANDATORY)
+
+1. **Quick Actions** - Numbered options with DEFAULT + auto-continue timer
+2. **Handoff Prompt** - `Next Agent: [Role] Agent` with fenced task
+3. **Identity** - `(ROLE AGENT)` in ALL CAPS
+
 ## Session End (Tiered)
 
 | Session Type | Required Steps |
 |--------------|----------------|
 | Simple (<30m) | Commit + Sign off |
-| Standard (30m+) | Commit + Brief memory + Handoff if needed |
+| Standard (30m+) | Commit + Brief memory (5 lines) |
 | Major (multi-hour) | Full protocol (memory, MINDFRAME, priorities) |
 
 ## Protected Files

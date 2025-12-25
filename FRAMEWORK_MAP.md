@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 97176dc 2025-12-25 chore: add Quality Agent review task for dark mode fix
 - 0159112 2025-12-25 chore: update SVG comments to reflect orange color scheme
 - 46a638e 2025-12-25 docs(sop): add Governance Maintenance SOP - prevents re-bloating
 - 6c81507 2025-12-25 fix(website): replace purple/pink dark mode with warm stone tones
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 0672768 2025-12-25 docs(curator): cycle 16 curation - 6 tasks distributed, avg quality 8.77
 - 5aee105 2025-12-25 docs(strategist): cycle 16 strategy - GOVERNANCE PAUSE, 6 executor tasks drafted
 - f278a68 2025-12-25 chore(audit): cycle 15 audit - 732 tests passing, 5-cycle execution gap identified
-- 4447b5c 2025-12-25 docs(curator): cycle 14 curation - 6 tasks distributed, governance pause recommended
 
 ## Agent Governance Structure
 
