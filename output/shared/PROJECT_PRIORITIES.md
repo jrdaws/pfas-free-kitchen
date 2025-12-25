@@ -65,6 +65,7 @@ Current recommended order based on dependencies:
 
 | Task | Agent | Date | Notes |
 |------|-------|------|-------|
+| **Feature-to-Code Mapping System** | TPL | 2025-12-24 | 20 templates, feature-assembler.mjs, enables 5.4 |
 | **Vercel Production Deploy** | PLT | 2025-12-24 | website-iota-ten-11.vercel.app - needs env vars |
 | SaaS template content fix | TPL | 2025-12-24 | Added dashboard, pricing, settings pages; templates/README.md |
 | Vercel alt domain working | PLT | 2025-12-24 | `-bv8x` subdomain live, primary needs dashboard fix |

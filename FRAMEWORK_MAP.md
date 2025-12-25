@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- be86b51 2025-12-24 feat(website): add Core Features UI and NPX Command Display components
 - 760a520 2025-12-24 feat(templates): add feature-to-code mapping system
 - f88cf09 2025-12-24 feat(website): add auth state to Nav component
 - 5163150 2025-12-24 docs(5ds): mark completed tasks and update status tracking
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - b2be2b7 2025-12-24 feat(website): add panel slide animations for step transitions
 - 0df5a94 2025-12-24 feat(ai-agent): implement chunked code generation for complex projects
 - 0e3226e 2025-12-24 test(ai-agent): add 31 integration tests for JSON repair utility
-- 5e8aa47 2025-12-24 feat(storage): implement UploadThing integration
 
 ## Agent Governance Structure
 
