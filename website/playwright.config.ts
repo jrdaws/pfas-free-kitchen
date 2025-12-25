@@ -38,8 +38,8 @@ export default defineConfig({
     },
   ],
 
-  // Only start local server if not running against remote URL
-  webServer: isSmoke && baseURL !== 'http://localhost:3000' ? undefined : {
+  // Only start local server if not running against remote URL or if SKIP_WEBSERVER is set
+  webServer: (isSmoke && baseURL !== 'http://localhost:3000') || process.env.SKIP_WEBSERVER === 'true' ? undefined : {
     command: 'npm run dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,

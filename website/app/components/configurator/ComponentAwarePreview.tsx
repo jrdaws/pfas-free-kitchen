@@ -164,7 +164,7 @@ export function ComponentAwarePreview({
           <span className="inline-flex items-center gap-1 text-xs bg-emerald-500/10 text-emerald-400 px-2 py-1 rounded">
             <Check className="h-3 w-3" /> Same components as export
           </span>
-          <span className="inline-flex items-center gap-1 text-xs bg-indigo-500/10 text-indigo-400 px-2 py-1 rounded">
+          <span className="inline-flex items-center gap-1 text-xs bg-orange-500/10 text-orange-400 px-2 py-1 rounded">
             <Layers className="h-3 w-3" /> Customizable sections
           </span>
         </div>
@@ -225,7 +225,7 @@ export function ComponentAwarePreview({
                 onClick={handleAIEnhance}
                 disabled={isGenerating}
                 size="sm"
-                className="bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600"
+                className="bg-gradient-to-r from-orange-500 to-orange-400 hover:from-orange-600 hover:to-orange-700"
               >
                 {isGenerating ? (
                   <>
@@ -268,8 +268,8 @@ export function ComponentAwarePreview({
             </div>
             
             {/* Instructions banner */}
-            <div className="bg-indigo-500/10 border border-indigo-500/20 rounded-lg p-3 mb-4">
-              <p className="text-xs text-indigo-300">
+            <div className="bg-orange-500/10 border border-orange-500/20 rounded-lg p-3 mb-4">
+              <p className="text-xs text-orange-300">
                 <strong>How it works:</strong> Click the up/down arrows to move sections. 
                 Required sections (Nav, Footer) stay in the layout. 
                 Click × to hide optional sections, or click items on the right to add them back.

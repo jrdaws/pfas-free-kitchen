@@ -65,18 +65,18 @@ export function LivePreviewPanel({
     body { font-family: 'Inter', system-ui, sans-serif; }
   </style>
 </head>
-<body class="bg-zinc-950 text-white min-h-screen">
+<body class="bg-stone-950 text-white min-h-screen">
   <!-- Nav -->
-  <nav class="border-b border-zinc-800 px-6 py-4">
+  <nav class="border-b border-stone-800 px-6 py-4">
     <div class="max-w-6xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
-        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500"></div>
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-400"></div>
         <span class="font-bold text-lg">${projectName || "My Project"}</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="#" class="text-zinc-400 hover:text-white text-sm">Features</a>
-        <a href="#" class="text-zinc-400 hover:text-white text-sm">Pricing</a>
-        ${integrations.auth ? `<button class="px-4 py-2 text-sm bg-indigo-600 hover:bg-indigo-500 rounded-lg">Sign In</button>` : ""}
+        <a href="#" class="text-stone-400 hover:text-white text-sm">Features</a>
+        <a href="#" class="text-stone-400 hover:text-white text-sm">Pricing</a>
+        ${integrations.auth ? `<button class="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-500 rounded-lg">Sign In</button>` : ""}
       </div>
     </div>
   </nav>
@@ -84,23 +84,23 @@ export function LivePreviewPanel({
   <!-- Hero -->
   <section class="px-6 py-24 text-center">
     <div class="max-w-4xl mx-auto">
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-sm mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-orange-500/10 border border-orange-500/20 text-orange-400 text-sm mb-6">
         <span>✨</span>
         <span>${templateName}</span>
       </div>
-      <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+      <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-stone-400 bg-clip-text text-transparent">
         ${description || "Build Something Amazing"}
       </h1>
-      <p class="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
+      <p class="text-xl text-stone-400 mb-8 max-w-2xl mx-auto">
         ${configuredIntegrations > 0 
           ? `Powered by ${configuredIntegrations} integration${configuredIntegrations > 1 ? 's' : ''}: ${integrationsText || 'None configured'}`
           : 'Configure your integrations to see them reflected here.'}
       </p>
       <div class="flex gap-4 justify-center">
-        <button class="px-6 py-3 bg-gradient-to-r from-indigo-600 to-violet-600 rounded-lg font-medium hover:opacity-90 transition-opacity">
+        <button class="px-6 py-3 bg-gradient-to-r from-orange-600 to-orange-700 rounded-lg font-medium hover:opacity-90 transition-opacity">
           Get Started
         </button>
-        <button class="px-6 py-3 border border-zinc-700 rounded-lg font-medium hover:border-zinc-500 transition-colors">
+        <button class="px-6 py-3 border border-stone-700 rounded-lg font-medium hover:border-stone-500 transition-colors">
           Learn More
         </button>
       </div>
@@ -108,55 +108,55 @@ export function LivePreviewPanel({
   </section>
 
   <!-- Features Grid -->
-  <section class="px-6 py-16 border-t border-zinc-800">
+  <section class="px-6 py-16 border-t border-stone-800">
     <div class="max-w-6xl mx-auto">
       <h2 class="text-3xl font-bold text-center mb-12">Features</h2>
       <div class="grid md:grid-cols-3 gap-6">
         ${integrations.auth ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
-          <div class="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4">🔐</div>
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
+          <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">🔐</div>
           <h3 class="font-semibold mb-2">Authentication</h3>
-          <p class="text-zinc-400 text-sm">Secure ${integrations.auth} authentication built-in</p>
+          <p class="text-stone-400 text-sm">Secure ${integrations.auth} authentication built-in</p>
         </div>
         ` : ""}
         ${integrations.payments ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">💳</div>
           <h3 class="font-semibold mb-2">Payments</h3>
-          <p class="text-zinc-400 text-sm">${integrations.payments} integration for billing</p>
+          <p class="text-stone-400 text-sm">${integrations.payments} integration for billing</p>
         </div>
         ` : ""}
         ${integrations.db ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">🗄️</div>
           <h3 class="font-semibold mb-2">Database</h3>
-          <p class="text-zinc-400 text-sm">${integrations.db} for data storage</p>
+          <p class="text-stone-400 text-sm">${integrations.db} for data storage</p>
         </div>
         ` : ""}
         ${integrations.ai ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
-          <div class="w-10 h-10 rounded-lg bg-violet-500/20 flex items-center justify-center mb-4">🤖</div>
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
+          <div class="w-10 h-10 rounded-lg bg-orange-400/20 flex items-center justify-center mb-4">🤖</div>
           <h3 class="font-semibold mb-2">AI Powered</h3>
-          <p class="text-zinc-400 text-sm">${integrations.ai} integration for AI features</p>
+          <p class="text-stone-400 text-sm">${integrations.ai} integration for AI features</p>
         </div>
         ` : ""}
         ${integrations.email ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-4">📧</div>
           <h3 class="font-semibold mb-2">Email</h3>
-          <p class="text-zinc-400 text-sm">${integrations.email} for transactional emails</p>
+          <p class="text-stone-400 text-sm">${integrations.email} for transactional emails</p>
         </div>
         ` : ""}
         ${integrations.analytics ? `
-        <div class="p-6 rounded-xl bg-zinc-900 border border-zinc-800">
+        <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center mb-4">📊</div>
           <h3 class="font-semibold mb-2">Analytics</h3>
-          <p class="text-zinc-400 text-sm">${integrations.analytics} for insights</p>
+          <p class="text-stone-400 text-sm">${integrations.analytics} for insights</p>
         </div>
         ` : ""}
         ${configuredIntegrations === 0 ? `
-        <div class="p-6 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-700 col-span-full text-center">
-          <p class="text-zinc-500">Configure integrations to see feature cards here</p>
+        <div class="p-6 rounded-xl bg-stone-900/50 border border-dashed border-stone-700 col-span-full text-center">
+          <p class="text-stone-500">Configure integrations to see feature cards here</p>
         </div>
         ` : ""}
       </div>
@@ -164,7 +164,7 @@ export function LivePreviewPanel({
   </section>
 
   <!-- Footer -->
-  <footer class="px-6 py-8 border-t border-zinc-800 text-center text-zinc-500 text-sm">
+  <footer class="px-6 py-8 border-t border-stone-800 text-center text-stone-500 text-sm">
     <p>Built with Dawson-Does Framework • ${templateName}</p>
   </footer>
 </body>
@@ -260,7 +260,7 @@ export function LivePreviewPanel({
       </div>
 
       {/* Preview Frame */}
-      <div className="flex-1 bg-zinc-900 p-4 overflow-hidden">
+      <div className="flex-1 bg-stone-900 p-4 overflow-hidden">
         <div
           className={cn(
             "h-full mx-auto bg-stone-50 rounded-lg overflow-hidden shadow-2xl transition-all duration-300",

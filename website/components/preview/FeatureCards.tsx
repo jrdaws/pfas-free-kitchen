@@ -89,14 +89,14 @@ export function FeatureCards({
               key={i}
               className={cn(
                 variant === "cards" &&
-                  "bg-[#111111] rounded-xl p-6 border border-white/5 hover:border-indigo-500/30 transition-all",
+                  "bg-[#111111] rounded-xl p-6 border border-white/5 hover:border-orange-500/30 transition-all",
                 variant === "minimal" && "p-4",
                 variant === "icons-left" && "flex gap-4 p-4"
               )}
             >
               {variant === "icons-left" ? (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center text-indigo-400 shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-400/20 flex items-center justify-center text-orange-400 shrink-0">
                     {getIcon(feature.iconName)}
                   </div>
                   <div>
@@ -108,7 +108,7 @@ export function FeatureCards({
                 </>
               ) : (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center text-indigo-400 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-400/20 flex items-center justify-center text-orange-400 mb-4">
                     {getIcon(feature.iconName)}
                   </div>
                   <h3 className="text-white font-semibold mb-2">{feature.title}</h3>

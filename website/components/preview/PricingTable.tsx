@@ -37,7 +37,7 @@ export function PricingTable({
         {showToggle && (
           <div className="flex justify-center mb-10">
             <div className="inline-flex bg-[#111111] rounded-lg p-1">
-              <button className="px-4 py-2 text-sm font-medium text-white bg-indigo-500 rounded-md">
+              <button className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md">
                 Monthly
               </button>
               <button className="px-4 py-2 text-sm font-medium text-gray-400 hover:text-white">
@@ -57,12 +57,12 @@ export function PricingTable({
                 className={cn(
                   "relative rounded-2xl p-6 transition-all",
                   isHighlighted
-                    ? "bg-gradient-to-b from-indigo-500/20 to-violet-500/10 border-2 border-indigo-500"
+                    ? "bg-gradient-to-b from-orange-500/20 to-orange-400/10 border-2 border-orange-500"
                     : "bg-[#111111] border border-white/5"
                 )}
               >
                 {isHighlighted && (
-                  <div className="absolute -top-3 left-1/2 -transtone-x-1/2 px-3 py-1 bg-indigo-500 text-white text-xs font-medium rounded-full">
+                  <div className="absolute -top-3 left-1/2 -transtone-x-1/2 px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-full">
                     Most Popular
                   </div>
                 )}
@@ -93,7 +93,7 @@ export function PricingTable({
                   className={cn(
                     "w-full py-3 rounded-xl font-medium transition-all",
                     isHighlighted
-                      ? "bg-indigo-500 hover:bg-indigo-600 text-white"
+                      ? "bg-orange-500 hover:bg-orange-600 text-white"
                       : "bg-stone-50/5 hover:bg-stone-50/10 text-white"
                   )}
                 >

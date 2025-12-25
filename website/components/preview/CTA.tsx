@@ -20,8 +20,8 @@ export function CTA({
       className={cn(
         "w-full px-6 py-20",
         variant === "gradient" &&
-          "bg-gradient-to-r from-indigo-600 via-violet-600 to-indigo-600",
-        variant === "solid" && "bg-indigo-500",
+          "bg-gradient-to-r from-orange-600 via-orange-600 to-orange-600",
+        variant === "solid" && "bg-orange-500",
         variant === "outlined" && "bg-[#0A0A0A]"
       )}
     >
@@ -48,11 +48,11 @@ export function CTA({
           className={cn(
             "px-8 py-4 rounded-xl font-semibold text-lg transition-all",
             variant === "gradient" &&
-              "bg-stone-50 text-indigo-600 hover:bg-gray-100 shadow-lg",
+              "bg-stone-50 text-orange-600 hover:bg-gray-100 shadow-lg",
             variant === "solid" &&
-              "bg-stone-50 text-indigo-600 hover:bg-gray-100",
+              "bg-stone-50 text-orange-600 hover:bg-gray-100",
             variant === "outlined" &&
-              "bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:from-indigo-600 hover:to-violet-600"
+              "bg-gradient-to-r from-orange-500 to-orange-400 text-white hover:from-orange-600 hover:to-orange-600"
           )}
         >
           {buttonText}

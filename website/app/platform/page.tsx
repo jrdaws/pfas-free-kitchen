@@ -37,8 +37,8 @@ const features = [
     icon: Sparkles,
     title: "Visual Configurator",
     description: "Point-and-click project setup. Select features, integrations, and AI providers visually.",
-    color: "text-violet-500",
-    bgColor: "bg-violet-500/10",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400/10",
   },
   {
     icon: Zap,
@@ -179,8 +179,8 @@ const valueMetrics = [
     withFramework: "Pre-configured",
     withoutFramework: "Manual setup",
     savings: "90%",
-    color: "text-violet-500",
-    bgColor: "bg-violet-500",
+    color: "text-orange-400",
+    bgColor: "bg-orange-400",
   },
 ];
 
@@ -240,7 +240,7 @@ export default function PlatformPage() {
         {/* Background gradient */}
         <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white pointer-events-none" />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#F97316]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-violet-500/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-400/5 rounded-full blur-3xl" />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center max-w-4xl mx-auto">
@@ -354,8 +354,8 @@ export default function PlatformPage() {
             
             <div className="absolute -right-4 top-1/3 bg-stone-50 rounded-xl shadow-xl p-4 border border-stone-200 hidden lg:block">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-violet-500" />
+                <div className="w-10 h-10 rounded-lg bg-orange-400/10 flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-orange-400" />
                 </div>
                 <div>
                   <div className="font-semibold text-stone-900">Payments Ready</div>
@@ -404,7 +404,7 @@ export default function PlatformPage() {
               <div className="flex -space-x-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 border-2 border-white" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-stone-200 border-2 border-white flex items-center justify-center text-xs font-medium text-stone-600">
                   +42

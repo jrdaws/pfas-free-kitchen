@@ -34,7 +34,7 @@ export function DashboardPreview({
           <div className="hidden md:flex flex-col w-64 bg-[#050505] border-r border-white/5 p-4">
             {/* Logo */}
             <div className="flex items-center gap-2 mb-8">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500" />
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-400" />
               <span className="text-white font-semibold">Dashboard</span>
             </div>
 
@@ -46,7 +46,7 @@ export function DashboardPreview({
                   className={cn(
                     "px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors",
                     i === 0
-                      ? "bg-indigo-500/10 text-indigo-400"
+                      ? "bg-orange-500/10 text-orange-400"
                       : "text-gray-400 hover:text-white hover:bg-stone-50/5"
                   )}
                 >
@@ -66,7 +66,7 @@ export function DashboardPreview({
               <div className="px-4 py-2 bg-[#111111] rounded-lg text-sm text-gray-400">
                 Last 7 days
               </div>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center text-white font-medium">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center text-white font-medium">
                 JD
               </div>
             </div>
@@ -116,7 +116,7 @@ export function DashboardPreview({
                     className={cn(
                       "px-3 py-1 rounded text-xs",
                       i === 1
-                        ? "bg-indigo-500 text-white"
+                        ? "bg-orange-500 text-white"
                         : "bg-stone-50/5 text-gray-400 hover:text-white"
                     )}
                   >
@@ -135,9 +135,9 @@ export function DashboardPreview({
                     <div
                       className={cn(
                         "w-full rounded-t",
-                        chartType === "bar" && "bg-indigo-500",
-                        chartType === "area" && "bg-gradient-to-t from-indigo-500/20 to-indigo-500",
-                        chartType === "line" && "bg-indigo-500"
+                        chartType === "bar" && "bg-orange-500",
+                        chartType === "area" && "bg-gradient-to-t from-orange-500/20 to-orange-500",
+                        chartType === "line" && "bg-orange-500"
                       )}
                       style={{ height: `${height * 100}%` }}
                     />

@@ -43,7 +43,7 @@ export function ProjectSaveIndicator({ className }: ProjectSaveIndicatorProps) {
     return (
       <div
         className={cn(
-          "flex items-center gap-2 text-xs text-zinc-500",
+          "flex items-center gap-2 text-xs text-stone-500",
           className
         )}
         title="Sign in to sync your project across devices"
@@ -120,7 +120,7 @@ export function ProjectSaveIndicator({ className }: ProjectSaveIndicatorProps) {
     return (
       <div
         className={cn(
-          "flex items-center gap-2 text-xs text-zinc-500",
+          "flex items-center gap-2 text-xs text-stone-500",
           className
         )}
         title={`Project: ${project.name}`}
@@ -135,7 +135,7 @@ export function ProjectSaveIndicator({ className }: ProjectSaveIndicatorProps) {
   return (
     <div
       className={cn(
-        "flex items-center gap-2 text-xs text-zinc-500",
+        "flex items-center gap-2 text-xs text-stone-500",
         className
       )}
     >

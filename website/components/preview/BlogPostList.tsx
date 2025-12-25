@@ -46,7 +46,7 @@ export function BlogPostList({
           {posts.map((post, i) => (
             <article
               key={i}
-              className="group bg-[#111111] rounded-xl overflow-hidden border border-white/5 hover:border-indigo-500/30 transition-all"
+              className="group bg-[#111111] rounded-xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all"
             >
               {/* Image Placeholder */}
               <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
@@ -58,13 +58,13 @@ export function BlogPostList({
               <div className="p-5">
                 {/* Category */}
                 {post.category && (
-                  <span className="text-indigo-400 text-xs font-medium uppercase tracking-wider">
+                  <span className="text-orange-400 text-xs font-medium uppercase tracking-wider">
                     {post.category}
                   </span>
                 )}
 
                 {/* Title */}
-                <h3 className="text-white font-semibold mt-2 mb-2 group-hover:text-indigo-400 transition-colors line-clamp-2">
+                <h3 className="text-white font-semibold mt-2 mb-2 group-hover:text-orange-400 transition-colors line-clamp-2">
                   {post.title}
                 </h3>
 

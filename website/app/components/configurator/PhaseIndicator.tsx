@@ -65,7 +65,7 @@ export function PhaseIndicator({
                       ${status === "completed" ? "bg-brand-success shadow-lg shadow-brand-success/20" : ""}
                       ${status === "current" ? "bg-brand-primary shadow-lg shadow-brand-primary/30 phase-pulse" : ""}
                       ${status === "partial" ? "bg-brand-primary/80" : ""}
-                      ${status === "pending" ? "bg-zinc-800 border border-zinc-700" : ""}
+                      ${status === "pending" ? "bg-stone-800 border border-stone-700" : ""}
                     `}
                   >
                     {status === "completed" ? (
@@ -96,12 +96,12 @@ export function PhaseIndicator({
                         ${status === "current" ? "text-brand-primary" : ""}
                         ${status === "completed" ? "text-brand-success" : ""}
                         ${status === "partial" ? "text-brand-primary/80" : ""}
-                        ${status === "pending" ? "text-zinc-500" : ""}
+                        ${status === "pending" ? "text-stone-500" : ""}
                       `}
                     >
                       {phase.label}
                     </div>
-                    <div className="text-xs text-zinc-500 mt-0.5">
+                    <div className="text-xs text-stone-500 mt-0.5">
                       {phase.description}
                     </div>
                   </div>
@@ -124,7 +124,7 @@ export function PhaseIndicator({
                               text-xs font-medium transition-all duration-200
                               ${isCurrent ? "bg-brand-primary text-white scale-110" : ""}
                               ${isCompleted ? "bg-brand-success text-white hover:scale-110" : ""}
-                              ${!isCompleted && !isCurrent ? "bg-zinc-800 text-zinc-500 border border-zinc-700" : ""}
+                              ${!isCompleted && !isCurrent ? "bg-stone-800 text-stone-500 border border-stone-700" : ""}
                               ${isCompleted || isCurrent ? "cursor-pointer" : "cursor-not-allowed"}
                             `}
                             title={stepDef?.label}
@@ -140,7 +140,7 @@ export function PhaseIndicator({
                 {/* Connector between phases */}
                 {index < PHASES.length - 1 && (
                   <div className="flex-1 flex items-center px-4 mt-8">
-                    <div className="w-full h-1 bg-zinc-800 rounded-full overflow-hidden">
+                    <div className="w-full h-1 bg-stone-800 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-brand-primary to-brand-secondary transition-all duration-500"
                         style={{
@@ -162,14 +162,14 @@ export function PhaseIndicator({
 
         {/* Current step indicator */}
         <div className="text-center mt-6">
-          <span className="text-sm text-zinc-400">
+          <span className="text-sm text-stone-400">
             <span className="text-brand-primary font-medium">
               {currentPhase?.label}
             </span>
             <span className="mx-2">›</span>
-            <span className="text-zinc-300">{currentStepDef?.label}</span>
-            <span className="mx-2 text-zinc-600">•</span>
-            <span className="text-zinc-500">Step {currentStep} of 8</span>
+            <span className="text-stone-300">{currentStepDef?.label}</span>
+            <span className="mx-2 text-stone-600">•</span>
+            <span className="text-stone-500">Step {currentStep} of 8</span>
           </span>
         </div>
       </div>
@@ -188,7 +188,7 @@ export function PhaseIndicator({
                   flex items-center gap-2 px-4 py-2 rounded-xl transition-all
                   ${status === "completed" ? "bg-brand-success/10 border border-brand-success/30" : ""}
                   ${status === "current" ? "bg-brand-primary/10 border border-brand-primary/30" : ""}
-                  ${status === "pending" ? "bg-zinc-800/50 border border-zinc-700/50" : ""}
+                  ${status === "pending" ? "bg-stone-800/50 border border-stone-700/50" : ""}
                 `}
               >
                 <Image
@@ -205,7 +205,7 @@ export function PhaseIndicator({
                     text-sm font-medium
                     ${status === "completed" ? "text-brand-success" : ""}
                     ${status === "current" ? "text-brand-primary" : ""}
-                    ${status === "pending" ? "text-zinc-500" : ""}
+                    ${status === "pending" ? "text-stone-500" : ""}
                   `}
                 >
                   {phase.label}
@@ -217,7 +217,7 @@ export function PhaseIndicator({
                 <div
                   className={`
                     flex-1 h-0.5 mx-2
-                    ${status === "completed" ? "bg-brand-success" : "bg-zinc-700"}
+                    ${status === "completed" ? "bg-brand-success" : "bg-stone-700"}
                   `}
                 />
               )}
@@ -240,7 +240,7 @@ export function PhaseIndicator({
                   w-3 h-3 rounded-full transition-all
                   ${status === "completed" ? "bg-brand-success" : ""}
                   ${status === "current" ? "bg-brand-primary w-8" : ""}
-                  ${status === "pending" ? "bg-zinc-700" : ""}
+                  ${status === "pending" ? "bg-stone-700" : ""}
                 `}
               />
             );
@@ -252,13 +252,13 @@ export function PhaseIndicator({
           <div className="text-brand-primary font-semibold">
             {currentPhase?.label}
           </div>
-          <div className="text-zinc-400 text-sm">
+          <div className="text-stone-400 text-sm">
             {currentStepDef?.label} • Step {currentStep} of 8
           </div>
         </div>
 
         {/* Progress bar */}
-        <div className="h-2 bg-zinc-800 rounded-full overflow-hidden mx-4">
+        <div className="h-2 bg-stone-800 rounded-full overflow-hidden mx-4">
           <div
             className="h-full bg-gradient-to-r from-brand-primary to-brand-secondary transition-all duration-300"
             style={{ width: `${(currentStep / 8) * 100}%` }}
@@ -285,7 +285,7 @@ export function PhaseIndicator({
                   text-xs font-medium transition-all
                   ${isCurrent ? "bg-brand-primary text-white" : ""}
                   ${isCompleted ? "bg-brand-success text-white" : ""}
-                  ${!isCompleted && !isCurrent ? "bg-zinc-800 text-zinc-600" : ""}
+                  ${!isCompleted && !isCurrent ? "bg-stone-800 text-stone-600" : ""}
                 `}
               >
                 {isCompleted ? "✓" : stepNum}

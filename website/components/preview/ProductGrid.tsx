@@ -47,17 +47,17 @@ export function ProductGrid({
           {products.map((product, i) => (
             <div
               key={i}
-              className="group bg-[#111111] rounded-xl overflow-hidden border border-white/5 hover:border-indigo-500/50 transition-all"
+              className="group bg-[#111111] rounded-xl overflow-hidden border border-white/5 hover:border-orange-500/50 transition-all"
             >
               {/* Product Image Placeholder */}
               <div className="aspect-square bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-indigo-500/20 to-violet-500/20 flex items-center justify-center">
+                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-orange-500/20 to-orange-400/20 flex items-center justify-center">
                   <svg className="w-8 h-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                   </svg>
                 </div>
                 {product.category && (
-                  <span className="absolute top-3 left-3 px-2 py-1 bg-indigo-500/80 text-white text-xs rounded-md">
+                  <span className="absolute top-3 left-3 px-2 py-1 bg-orange-500/80 text-white text-xs rounded-md">
                     {product.category}
                   </span>
                 )}
@@ -65,7 +65,7 @@ export function ProductGrid({
               
               {/* Product Info */}
               <div className="p-4">
-                <h3 className="text-white font-medium mb-2 group-hover:text-indigo-400 transition-colors">
+                <h3 className="text-white font-medium mb-2 group-hover:text-orange-400 transition-colors">
                   {product.name}
                 </h3>
                 <div className="flex items-center justify-between">
@@ -75,7 +75,7 @@ export function ProductGrid({
                     </span>
                   )}
                   {showAddToCart && (
-                    <button className="px-3 py-1.5 bg-stone-50/5 hover:bg-indigo-500 text-gray-400 hover:text-white rounded-lg text-sm transition-all">
+                    <button className="px-3 py-1.5 bg-stone-50/5 hover:bg-orange-500 text-gray-400 hover:text-white rounded-lg text-sm transition-all">
                       Add to Cart
                     </button>
                   )}

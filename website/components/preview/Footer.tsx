@@ -20,7 +20,7 @@ export function Footer({
           {/* Brand */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center">
                 <span className="text-white font-bold text-sm">
                   {projectName?.charAt(0)?.toUpperCase() || "P"}
                 </span>

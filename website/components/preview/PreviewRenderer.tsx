@@ -61,7 +61,7 @@ function ComponentLoader({ height = "100px" }: { height?: string }) {
       className="w-full bg-[#111111] flex items-center justify-center"
       style={{ height }}
     >
-      <Loader2 className="w-6 h-6 text-indigo-500 animate-spin" />
+      <Loader2 className="w-6 h-6 text-orange-500 animate-spin" />
     </div>
   );
 }

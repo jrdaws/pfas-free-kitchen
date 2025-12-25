@@ -37,7 +37,7 @@ export function Nav({
     >
       {/* Logo */}
       <div className="flex items-center gap-2">
-        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#F97316] to-indigo-500 flex items-center justify-center">
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#F97316] to-orange-500 flex items-center justify-center">
           <span className="text-white font-bold text-sm">
             {projectName?.charAt(0)?.toUpperCase() || "P"}
           </span>

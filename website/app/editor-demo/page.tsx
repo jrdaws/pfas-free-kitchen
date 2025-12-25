@@ -151,9 +151,9 @@ export default function EditorDemoPage() {
               <div className="terminal-header-modern">
                 <span className="terminal-title">HTML Source</span>
                 <div className="flex gap-1.5">
-                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
-                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
-                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <div className="w-2 h-2 rounded-full bg-stone-600" />
+                  <div className="w-2 h-2 rounded-full bg-stone-600" />
+                  <div className="w-2 h-2 rounded-full bg-stone-600" />
                 </div>
               </div>
               <div className="terminal-content h-full overflow-auto">

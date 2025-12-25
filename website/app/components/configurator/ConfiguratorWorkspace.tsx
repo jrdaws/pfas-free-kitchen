@@ -50,7 +50,7 @@ const STEP_LABELS: Record<number, string> = {
 // Phase colors
 const PHASE_COLORS: Record<PhaseId, string> = {
   setup: "text-blue-400",
-  configure: "text-violet-400",
+  configure: "text-orange-300",
   launch: "text-emerald-400",
 };
 

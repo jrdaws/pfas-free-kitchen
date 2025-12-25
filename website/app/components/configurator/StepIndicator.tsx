@@ -106,7 +106,7 @@ export function StepIndicator({
                       ? "bg-brand-primary/20 text-brand-primary border border-brand-primary/30"
                       : isComplete || isPast
                       ? "bg-brand-success/10 text-brand-success border border-brand-success/20"
-                      : "bg-zinc-800/50 text-zinc-500 border border-zinc-700/50"
+                      : "bg-stone-800/50 text-stone-500 border border-stone-700/50"
                   }
                 `}
               >
@@ -117,7 +117,7 @@ export function StepIndicator({
                 <div
                   className={`
                     w-8 h-0.5 mx-2 transition-colors
-                    ${isPast || isComplete ? "bg-brand-success/50" : "bg-zinc-700/50"}
+                    ${isPast || isComplete ? "bg-brand-success/50" : "bg-stone-700/50"}
                   `}
                 />
               )}
@@ -141,10 +141,10 @@ export function StepIndicator({
                   flex items-center px-3 py-2 rounded-xl transition-all
                   ${
                     isActivePhase
-                      ? "bg-zinc-800/80 border border-brand-primary/20"
+                      ? "bg-stone-800/80 border border-brand-primary/20"
                       : isPastPhase
-                      ? "bg-zinc-800/40 border border-zinc-700/30"
-                      : "bg-zinc-900/30 border border-zinc-800/30"
+                      ? "bg-stone-800/40 border border-stone-700/30"
+                      : "bg-stone-900/30 border border-stone-800/30"
                   }
                 `}
               >
@@ -170,8 +170,8 @@ export function StepIndicator({
                               : isCompleted
                               ? "bg-brand-success text-white hover:scale-110"
                               : isAccessible
-                              ? "bg-zinc-700 text-zinc-400 border border-zinc-600"
-                              : "bg-zinc-800/50 text-zinc-600 border border-zinc-700/50"
+                              ? "bg-stone-700 text-stone-400 border border-stone-600"
+                              : "bg-stone-800/50 text-stone-600 border border-stone-700/50"
                           }
                           ${isClickable ? "cursor-pointer" : "cursor-not-allowed"}
                         `}
@@ -199,7 +199,7 @@ export function StepIndicator({
                             ${
                               isCompleted
                                 ? "bg-brand-success"
-                                : "bg-zinc-700"
+                                : "bg-stone-700"
                             }
                           `}
                         />
@@ -216,7 +216,7 @@ export function StepIndicator({
                       ${
                         isPastPhase || isPhaseComplete(phaseIndex)
                           ? "bg-brand-success/50"
-                          : "bg-zinc-700/30"
+                          : "bg-stone-700/30"
                       }
                     `}
                   />
@@ -245,7 +245,7 @@ export function StepIndicator({
                       ? "bg-brand-primary w-6"
                       : isComplete
                       ? "bg-brand-success"
-                      : "bg-zinc-700"
+                      : "bg-stone-700"
                   }
                 `}
               />
@@ -255,7 +255,7 @@ export function StepIndicator({
 
         {/* Current step display */}
         <div className="text-center">
-          <div className="text-xs text-zinc-500 mb-1">
+          <div className="text-xs text-stone-500 mb-1">
             {PHASES[currentPhaseIndex].name}
           </div>
           <div className="flex items-center justify-center gap-2">
@@ -266,7 +266,7 @@ export function StepIndicator({
               {ALL_STEPS[currentStep - 1].label}
         </span>
           </div>
-          <div className="text-xs text-zinc-500 mt-2">
+          <div className="text-xs text-stone-500 mt-2">
             Step {currentStep} of {ALL_STEPS.length}
           </div>
         </div>
@@ -293,7 +293,7 @@ export function StepIndicator({
                       ? "bg-brand-primary w-4"
                       : isCompleted
                       ? "bg-brand-success cursor-pointer hover:scale-125"
-                      : "bg-zinc-700"
+                      : "bg-stone-700"
                   }
                 `}
                 title={step.label}
