@@ -71,11 +71,11 @@ The Media Agent is the second agent in the Media Generation Pipeline. It receive
 - Use consistent 2px stroke, rounded caps, viewBox 0 0 24 24
 - Follow Lucide/Heroicons style for consistency
 
-**Color Philosophy Compliance:**
+**Color Philosophy Compliance (Warm Neutral v2.0):**
+- Orange #F97316 = PRIMARY (CTAs, active states)
 - Emerald #10B981 = SUCCESS ONLY (completed steps)
-- Indigo #6366F1 = Primary/current
-- Violet #8B5CF6 = Gradients/hover only
-- Gray #71717A = Disabled/pending
+- Amber #F59E0B = Warning states
+- Stone #78716C = Disabled/pending (warm neutral, not gray)
 
 #### Blockers Encountered
 - SDXL dimension errors (solved with dimension mapping)

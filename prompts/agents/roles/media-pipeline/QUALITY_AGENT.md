@@ -328,7 +328,7 @@ cat > output/agents/media/inbox/feedback-[project].md << 'EOF'
 ### icon-dashboard.svg
 - [ ] Resize to 64x64
 - [ ] Adjust stroke to consistent 2px
-- [ ] Use exact color #6366F1
+- [ ] Use exact color #F97316 (Orange primary)
 
 ### feature-illustration.webp
 - [ ] Regenerate completely

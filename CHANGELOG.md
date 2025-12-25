@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Brand Color Scheme**: Indigo/Gray → Orange/Stone (Warm Neutral v2.0)
+  - Primary: `#6366F1` → `#F97316` (Orange)
+  - Primary Hover: `#4F46E5` → `#EA580C` (Orange Dark)
+  - Neutral scale: Cool Gray → Warm Stone palette
+  - Dark mode background: Purple gradient → Stone-950 `#0C0A09`
+  - All UI components updated to use warm neutral palette
+- Updated documentation to reference `COLOR_PHILOSOPHY.md` v2.0
+- Updated shadcn/ui SOP with new color mappings
+
 ## [0.2.0] - 2025-12-20
 
 ### Added
