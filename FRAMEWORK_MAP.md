@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 66fa15a 2025-12-24 feat(website): implement accordion sidebar with inline sections
 - 72e9d9f 2025-12-24 chore(media): move ui-media-polish task to done
 - 997af26 2025-12-24 feat(media): add custom accordion section and file tree icons
 - 2780a08 2025-12-24 docs(media): add P3 UI media polish task for Media Agent
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 879a543 2025-12-24 feat(website): add My Projects dashboard page (Task 1.5)
 - 08992b0 2025-12-24 feat(website): add GuidedSetup wizard (Task 3.1-3.4, 3.6)
 - 347f5a3 2025-12-24 feat(website): add ProjectSaveIndicator component (Task 1.4)
-- 4fa5147 2025-12-24 feat(website): add FeedbackToggle component (Task 2.5)
 
 ## Agent Governance Structure
 

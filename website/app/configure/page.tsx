@@ -6,49 +6,91 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TEMPLATES } from "@/lib/templates";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 
 // Dynamically import components to avoid SSR issues
-const ConfiguratorSidebar = dynamic(() => import("@/app/components/configurator/ConfiguratorSidebar").then(mod => ({ default: mod.ConfiguratorSidebar })), { ssr: false });
+const AccordionSidebar = dynamic(() => import("@/app/components/configurator/AccordionSidebar").then(mod => ({ default: mod.AccordionSidebar })), { ssr: false });
 const MobileSidebar = dynamic(() => import("@/app/components/configurator/MobileSidebar").then(mod => ({ default: mod.MobileSidebar })), { ssr: false });
 const ModeToggle = dynamic(() => import("@/app/components/configurator/ModeToggle").then(mod => ({ default: mod.ModeToggle })), { ssr: false });
 const TemplateSelector = dynamic(() => import("@/app/components/configurator/TemplateSelector").then(mod => ({ default: mod.TemplateSelector })), { ssr: false });
 const InspirationUpload = dynamic(() => import("@/app/components/configurator/InspirationUpload").then(mod => ({ default: mod.InspirationUpload })), { ssr: false });
 const ProjectDetails = dynamic(() => import("@/app/components/configurator/ProjectDetails").then(mod => ({ default: mod.ProjectDetails })), { ssr: false });
-const IntegrationSelector = dynamic(() => import("@/app/components/configurator/IntegrationSelector").then(mod => ({ default: mod.IntegrationSelector })), { ssr: false });
 const IntegrationPanel = dynamic(() => import("@/app/components/configurator/IntegrationPanel").then(mod => ({ default: mod.IntegrationPanel })), { ssr: false });
 const EnvironmentKeys = dynamic(() => import("@/app/components/configurator/EnvironmentKeys").then(mod => ({ default: mod.EnvironmentKeys })), { ssr: false });
 const AIPreview = dynamic(() => import("@/app/components/configurator/AIPreview").then(mod => ({ default: mod.AIPreview })), { ssr: false });
 const ComponentAwarePreview = dynamic(() => import("@/app/components/configurator/ComponentAwarePreview").then(mod => ({ default: mod.ComponentAwarePreview })), { ssr: false });
 const ProjectGenerator = dynamic(() => import("@/app/components/configurator/ProjectGenerator").then(mod => ({ default: mod.ProjectGenerator })), { ssr: false });
 const ContextFields = dynamic(() => import("@/app/components/configurator/ContextFields").then(mod => ({ default: mod.ContextFields })), { ssr: false });
-const ExportView = dynamic(() => import("@/app/components/configurator/ExportView").then(mod => ({ default: mod.ExportView })), { ssr: false });
 const GenerateFramework = dynamic(() => import("@/app/components/configurator/GenerateFramework").then(mod => ({ default: mod.GenerateFramework })), { ssr: false });
 const LivePreviewPanel = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.LivePreviewPanel })), { ssr: false });
 const PreviewToggleButton = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.PreviewToggleButton })), { ssr: false });
 
+// Import section components for inline sidebar content
+const ResearchSection = dynamic(() => import("@/app/components/configurator/sections/ResearchSection").then(mod => ({ default: mod.ResearchSection })), { ssr: false });
+const CoreFeaturesSection = dynamic(() => import("@/app/components/configurator/sections/CoreFeaturesSection").then(mod => ({ default: mod.CoreFeaturesSection })), { ssr: false });
+const IntegrateAISection = dynamic(() => import("@/app/components/configurator/sections/IntegrateAISection").then(mod => ({ default: mod.IntegrateAISection })), { ssr: false });
+const ToolSetupSection = dynamic(() => import("@/app/components/configurator/sections/ToolSetupSection").then(mod => ({ default: mod.ToolSetupSection })), { ssr: false });
+
+// Map section IDs to step numbers (for the new 8-section layout)
+const SECTION_TO_STEP: Record<string, number> = {
+  "research": 1,
+  "core-features": 2,
+  "integrate-ai": 3,
+  "cursor": 4,
+  "github": 5,
+  "claude-code": 6,
+  "supabase": 7,
+  "vercel": 8,
+};
+
+const STEP_TO_SECTION: Record<number, string> = {
+  1: "research",
+  2: "core-features",
+  3: "integrate-ai",
+  4: "cursor",
+  5: "github",
+  6: "claude-code",
+  7: "supabase",
+  8: "vercel",
+};
+
 // Step titles for breadcrumb
 const STEP_TITLES: Record<number, string> = {
-  1: "Template Selection",
-  2: "Inspiration & Vision",
-  3: "Project Details",
-  4: "Integrations",
-  5: "Environment Keys",
-  6: "AI Preview",
-  7: "Context Fields",
-  8: "Export",
+  1: "Research",
+  2: "Core Features",
+  3: "Integrate AI",
+  4: "Cursor Setup",
+  5: "GitHub Setup",
+  6: "Claude Code",
+  7: "Supabase",
+  8: "Vercel Deploy",
 };
 
 // Phase names for breadcrumb
 const getPhaseForStep = (step: number): string => {
-  if (step <= 3) return "Setup";
-  if (step <= 5) return "Configure";
-  return "Launch";
+  if (step <= 1) return "Research";
+  if (step <= 3) return "Features";
+  return "Tools";
 };
 
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"component" | "preview" | "generate">("component");
   const [showLivePreview, setShowLivePreview] = useState(false);
+  const [toolStatus, setToolStatus] = useState<Record<string, boolean>>({
+    cursor: false,
+    github: false,
+    "claude-code": false,
+    supabase: false,
+    vercel: false,
+  });
+  
+  // Research section state
+  const [domain, setDomain] = useState("");
+  const [inspirationUrls, setInspirationUrls] = useState<string[]>([]);
+  
+  // AI provider state
+  const [aiProvider, setAiProvider] = useState<string>("");
+  const [aiApiKey, setAiApiKey] = useState("");
   
   // Track navigation direction for slide animations
   const [animationDirection, setAnimationDirection] = useState<"left" | "right">("right");
@@ -70,6 +112,7 @@ export default function ConfigurePage() {
     mission,
     successCriteria,
     modelTier,
+    selectedFeatures,
     setStep,
     completeStep,
     setMode,
@@ -85,6 +128,8 @@ export default function ConfigurePage() {
     setMission,
     setSuccessCriteria,
     setModelTier,
+    toggleFeature,
+    clearFeatures,
   } = useConfiguratorStore();
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
@@ -98,42 +143,36 @@ export default function ConfigurePage() {
     prevStepRef.current = currentStep;
   }, [currentStep]);
 
+  // Calculate section badges (e.g., feature count)
+  const sectionBadges = useMemo(() => {
+    const totalFeatures = Object.values(selectedFeatures).flat().length;
+    return {
+      "core-features": totalFeatures > 0 ? totalFeatures : undefined,
+    };
+  }, [selectedFeatures]);
+
   // Calculate progress
   const progress = (completedSteps.size / 8) * 100;
 
   // Validation for each step
   const canProceed = () => {
     switch (currentStep) {
-      case 1: // Template selection
-        return template !== "";
-      case 2: // Inspiration (optional step)
-        return true;
-      case 3: // Project details
-        const slugifiedName = projectName
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "");
-        return (
-          projectName.length > 0 &&
-          /^[a-z0-9][a-z0-9-]*[a-z0-9]$/.test(slugifiedName) &&
-          outputDir.length > 0 &&
-          outputDir.startsWith("./")
-        );
-      case 4: // Integrations
-        // Check if all required integrations are selected
-        if (!selectedTemplate) return false;
-        const missingRequired = selectedTemplate.requiredIntegrations.filter(
-          (type) => !integrations[type]
-        );
-        return missingRequired.length === 0;
-      case 5: // Environment (optional step)
-        return true;
-      case 6: // AI Preview (optional step)
-        return true;
-      case 7: // Context (optional step)
-        return true;
-      case 8: // Export
-        return true;
+      case 1: // Research
+        return domain.length > 0 || description.length > 0;
+      case 2: // Core Features
+        return Object.values(selectedFeatures).flat().length > 0;
+      case 3: // Integrate AI
+        return aiProvider !== "";
+      case 4: // Cursor
+        return toolStatus.cursor;
+      case 5: // GitHub
+        return toolStatus.github;
+      case 6: // Claude Code
+        return true; // Optional
+      case 7: // Supabase
+        return true; // Optional
+      case 8: // Vercel
+        return true; // Optional
       default:
         return false;
     }
@@ -143,40 +182,249 @@ export default function ConfigurePage() {
     if (!canProceed()) return;
 
     completeStep(currentStep);
-
-    // All steps are now active
     const nextStep = (currentStep + 1) as Step;
-
     if (nextStep <= 8) {
       setStep(nextStep);
     }
   };
 
   const handlePrevious = () => {
-    // All steps are now active
     const prevStep = (currentStep - 1) as Step;
-
     if (prevStep >= 1) {
       setStep(prevStep);
     }
   };
 
+  const handleToolComplete = (toolId: string) => {
+    setToolStatus((prev) => ({ ...prev, [toolId]: true }));
+    completeStep(SECTION_TO_STEP[toolId] as Step);
+  };
+
   const isFirstStep = currentStep === 1;
   const isLastStep = currentStep === 8;
 
+  // Render inline section content for accordion
+  const renderSectionContent = (sectionId: string) => {
+    switch (sectionId) {
+      case "research":
+        return (
+          <ResearchSection
+            domain={domain}
+            onDomainChange={setDomain}
+            inspirationUrls={inspirationUrls}
+            onInspirationUrlsChange={setInspirationUrls}
+            onStartResearch={() => {
+              completeStep(1);
+              setStep(2);
+            }}
+            onShowMe={() => {
+              // Show documentation or tutorial
+            }}
+          />
+        );
+      case "core-features":
+        return (
+          <CoreFeaturesSection
+            selectedFeatures={selectedFeatures}
+            onToggleFeature={toggleFeature}
+            onClearCategory={(category) => {
+              // Clear features for a specific category
+              const currentFeatures = selectedFeatures[category] || [];
+              currentFeatures.forEach((featureId) => {
+                toggleFeature(category, featureId);
+              });
+            }}
+          />
+        );
+      case "integrate-ai":
+        return (
+          <IntegrateAISection
+            selectedProvider={aiProvider}
+            onProviderChange={setAiProvider}
+            apiKey={aiApiKey}
+            onApiKeyChange={setAiApiKey}
+            isKeyValid={aiApiKey.length > 10}
+          />
+        );
+      case "cursor":
+        return (
+          <ToolSetupSection
+            toolId="cursor"
+            isComplete={toolStatus.cursor}
+            onMarkComplete={() => handleToolComplete("cursor")}
+          />
+        );
+      case "github":
+        return (
+          <ToolSetupSection
+            toolId="github"
+            isComplete={toolStatus.github}
+            onMarkComplete={() => handleToolComplete("github")}
+          />
+        );
+      case "claude-code":
+        return (
+          <ToolSetupSection
+            toolId="claude-code"
+            isComplete={toolStatus["claude-code"]}
+            onMarkComplete={() => handleToolComplete("claude-code")}
+          />
+        );
+      case "supabase":
+        return (
+          <ToolSetupSection
+            toolId="supabase"
+            isComplete={toolStatus.supabase}
+            onMarkComplete={() => handleToolComplete("supabase")}
+            onConnect={() => {
+              // Trigger Supabase OAuth
+              window.open("https://supabase.com", "_blank");
+            }}
+          />
+        );
+      case "vercel":
+        return (
+          <ToolSetupSection
+            toolId="vercel"
+            isComplete={toolStatus.vercel}
+            onMarkComplete={() => handleToolComplete("vercel")}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  // Render main content area based on current step
+  const renderMainContent = () => {
+    const currentSection = STEP_TO_SECTION[currentStep];
+    
+    switch (currentSection) {
+      case "research":
+        return (
+          <div className="space-y-6">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Define Your Project</h2>
+              <p className="text-slate-600">
+                Start by describing your project domain and adding inspiration websites. 
+                This helps us understand what you&apos;re building.
+              </p>
+            </div>
+            <InspirationUpload
+              inspirations={inspirations}
+              description={description}
+              onAddInspiration={addInspiration}
+              onRemoveInspiration={removeInspiration}
+              onDescriptionChange={setDescription}
+            />
+          </div>
+        );
+        
+      case "core-features":
+        return (
+          <div className="space-y-6">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">Select Features</h2>
+              <p className="text-slate-600">
+                Choose the features you want in your project. You can always add more later.
+              </p>
+            </div>
+            {/* Show feature preview or template info */}
+            {selectedTemplate && (
+              <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-2">{selectedTemplate.name}</h3>
+                <p className="text-sm text-slate-600">{selectedTemplate.description}</p>
+              </div>
+            )}
+          </div>
+        );
+        
+      case "integrate-ai":
+        return (
+          <div className="space-y-6">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">AI Integration</h2>
+              <p className="text-slate-600">
+                Configure your AI provider for intelligent features in your app.
+              </p>
+            </div>
+            <ComponentAwarePreview
+              template={template}
+              integrations={integrations}
+              inspirations={inspirations}
+              description={description}
+            />
+          </div>
+        );
+        
+      case "cursor":
+      case "github":
+      case "claude-code":
+      case "supabase":
+      case "vercel":
+        return (
+          <div className="space-y-6">
+            <div className="max-w-2xl">
+              <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                {STEP_TITLES[currentStep]}
+              </h2>
+              <p className="text-slate-600">
+                Follow the steps in the sidebar to set up {STEP_TITLES[currentStep]}.
+              </p>
+            </div>
+            
+            {/* Show Generate Framework when on final step */}
+            {currentSection === "vercel" && (
+              <GenerateFramework />
+            )}
+            
+            {/* Show progress overview for tool setup steps */}
+            <div className="bg-slate-50 rounded-xl p-6 border border-slate-200">
+              <h3 className="font-semibold text-slate-900 mb-4">Setup Progress</h3>
+              <div className="grid grid-cols-2 gap-4">
+                {Object.entries(toolStatus).map(([tool, isComplete]) => (
+                  <div
+                    key={tool}
+                    className={`flex items-center gap-2 p-3 rounded-lg ${
+                      isComplete ? "bg-emerald-50 text-emerald-700" : "bg-white text-slate-600"
+                    }`}
+                  >
+                    <div
+                      className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                        isComplete ? "bg-emerald-500 text-white" : "bg-slate-200"
+                      }`}
+                    >
+                      {isComplete ? "✓" : ""}
+                    </div>
+                    <span className="capitalize">{tool.replace("-", " ")}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        );
+        
+      default:
+        return null;
+    }
+  };
+
   return (
-    <div className="flex h-screen bg-background overflow-hidden">
-      {/* Desktop Sidebar */}
-      <ConfiguratorSidebar
+    <div className="flex h-screen bg-slate-50 overflow-hidden">
+      {/* Accordion Sidebar with inline section content */}
+      <AccordionSidebar
         currentStep={currentStep}
         completedSteps={completedSteps}
-        onStepChange={setStep}
-      />
+        onStepChange={(step) => setStep(step as Step)}
+        sectionBadges={sectionBadges}
+      >
+        {renderSectionContent}
+      </AccordionSidebar>
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center gap-4 px-6 py-4 border-b border-border bg-card/50">
+        <header className="flex items-center gap-4 px-6 py-4 border-b border-slate-200 bg-white">
           {/* Mobile menu */}
           <MobileSidebar
             currentStep={currentStep}
@@ -186,10 +434,10 @@ export default function ConfigurePage() {
 
           {/* Breadcrumb */}
           <div className="flex-1">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-slate-500">
               {getPhaseForStep(currentStep)} › {STEP_TITLES[currentStep]}
             </div>
-            <h1 className="text-lg font-display font-semibold text-foreground">
+            <h1 className="text-lg font-semibold text-slate-900">
               {STEP_TITLES[currentStep]}
             </h1>
           </div>
@@ -208,169 +456,27 @@ export default function ConfigurePage() {
         <main className="flex-1 overflow-auto">
           <div 
             key={animationKey}
-            className={`max-w-6xl mx-auto px-6 py-8 ${
+            className={`max-w-4xl mx-auto px-6 py-8 ${
               animationDirection === "right" ? "slide-in-right" : "slide-in-left"
             }`}
           >
-            {currentStep === 1 && (
-              <TemplateSelector
-                selectedTemplate={template}
-                onSelect={setTemplate}
-              />
-            )}
-
-            {currentStep === 2 && (
-              <InspirationUpload
-                inspirations={inspirations}
-                description={description}
-                onAddInspiration={addInspiration}
-                onRemoveInspiration={removeInspiration}
-                onDescriptionChange={setDescription}
-              />
-            )}
-
-            {currentStep === 3 && (
-              <ProjectDetails
-                projectName={projectName}
-                outputDir={outputDir}
-                onProjectNameChange={setProjectName}
-                onOutputDirChange={setOutputDir}
-              />
-            )}
-
-            {currentStep === 4 && (
-              <IntegrationPanel
-                template={template}
-                integrations={integrations}
-                onIntegrationChange={setIntegration}
-                mode={mode}
-              />
-            )}
-
-            {currentStep === 5 && (
-              <EnvironmentKeys
-                integrations={integrations}
-                envKeys={envKeys}
-                onEnvKeyChange={setEnvKey}
-              />
-            )}
-
-            {currentStep === 6 && (
-              <div className="space-y-6">
-                {/* Tab Selector */}
-                <div className="flex gap-2 border-b border-border">
-                  <button
-                    onClick={() => setAiTab("component")}
-                    className={`px-4 py-2 font-medium text-sm transition-colors ${
-                      aiTab === "component"
-                        ? "text-primary border-b-2 border-primary"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    Component Preview ✨
-                  </button>
-                  <button
-                    onClick={() => setAiTab("preview")}
-                    className={`px-4 py-2 font-medium text-sm transition-colors ${
-                      aiTab === "preview"
-                        ? "text-primary border-b-2 border-primary"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    AI HTML Preview
-                  </button>
-                  <button
-                    onClick={() => setAiTab("generate")}
-                    className={`px-4 py-2 font-medium text-sm transition-colors ${
-                      aiTab === "generate"
-                        ? "text-primary border-b-2 border-primary"
-                        : "text-muted-foreground hover:text-foreground"
-                    }`}
-                  >
-                    Full Project Generator
-                  </button>
-                </div>
-
-                {/* Model Tier Selector - Only show for Full Project Generator tab */}
-                {aiTab === "generate" && (
-                  <div className="flex items-center gap-4 p-4 border border-border rounded-xl bg-card">
-                    <label className="text-sm font-medium text-muted-foreground">Model Quality:</label>
-                    <select
-                      value={modelTier}
-                      onChange={(e) => setModelTier(e.target.value as ModelTier)}
-                      className="bg-background border border-border text-foreground px-3 py-2 rounded-lg text-sm focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary/50"
-                    >
-                      <option value="fast">⚡ Fast (~$0.02) - Quickest, uses Haiku</option>
-                      <option value="balanced">⚖️ Balanced (~$0.08) - Best value</option>
-                      <option value="quality">✨ Quality (~$0.18) - Most reliable, uses Sonnet</option>
-                    </select>
-                    <span className="text-xs text-muted-foreground">
-                      {modelTier === 'fast' && 'Fastest generation, may have occasional issues'}
-                      {modelTier === 'balanced' && 'Recommended for most projects'}
-                      {modelTier === 'quality' && 'Best for complex or critical projects'}
-                    </span>
-                  </div>
-                )}
-
-                {/* Tab Content */}
-                {aiTab === "component" && (
-                  <ComponentAwarePreview
-                    template={template}
-                    integrations={integrations}
-                    inspirations={inspirations}
-                    description={description}
-                  />
-                )}
-                {aiTab === "preview" && (
-                  <AIPreview
-                    template={template}
-                    integrations={integrations}
-                    inspirations={inspirations}
-                    description={description}
-                  />
-                )}
-                {aiTab === "generate" && (
-                  <ProjectGenerator
-                    template={template}
-                    integrations={integrations}
-                    inspirations={inspirations}
-                    description={description}
-                    modelTier={modelTier}
-                  />
-                )}
-              </div>
-            )}
-
-            {currentStep === 7 && (
-              <ContextFields
-                vision={vision}
-                mission={mission}
-                successCriteria={successCriteria}
-                onVisionChange={setVision}
-                onMissionChange={setMission}
-                onSuccessCriteriaChange={setSuccessCriteria}
-              />
-            )}
-
-            {currentStep === 8 && (
-              <GenerateFramework />
-            )}
+            {renderMainContent()}
           </div>
         </main>
 
         {/* Footer with Navigation */}
-        <footer className="flex items-center gap-4 px-6 py-4 border-t border-border bg-card/50">
+        <footer className="flex items-center gap-4 px-6 py-4 border-t border-slate-200 bg-white">
           {/* Progress */}
           <div className="flex-1 flex items-center gap-4">
             <Progress value={progress} className="flex-1 h-2 max-w-xs" />
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-slate-500">
               {completedSteps.size}/8 complete
             </span>
           </div>
 
           {/* Validation message */}
           {!canProceed() && currentStep !== 8 && (
-            <p className="text-destructive text-sm font-medium">
+            <p className="text-red-600 text-sm font-medium">
               Complete this step to continue
             </p>
           )}
@@ -391,7 +497,7 @@ export default function ConfigurePage() {
               <Button
                 onClick={handleNext}
                 disabled={!canProceed()}
-                className="disabled:opacity-50"
+                className="disabled:opacity-50 bg-[#0052FF] hover:bg-[#0041CC]"
               >
                 Next
                 <ChevronRight className="ml-2 h-4 w-4" />
@@ -399,7 +505,6 @@ export default function ConfigurePage() {
             ) : (
               <Button
                 onClick={() => {
-                  // Reset configurator or provide option to start over
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
                 variant="secondary"
