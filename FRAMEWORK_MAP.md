@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- a725c29 2025-12-24 feat(website): add ImageGenProviderPicker component (Task 4.3)
 - b32b656 2025-12-24 feat(website): add AIProviderPicker component (Task 4.1, 4.2, 4.4)
 - 62e18fc 2025-12-24 feat(templates): add nutritional info product feature components
 - 879a543 2025-12-24 feat(website): add My Projects dashboard page (Task 1.5)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 86f8098 2025-12-24 fix(website): update stubs to match actual package APIs for Vercel build
 - 55c2a35 2025-12-24 chore(docs): mark coding-standards task complete (already exists)
 - 54975f4 2025-12-24 chore(auditor): move review task to done
-- 15e1630 2025-12-24 docs(deploy): add Vercel execution checklist and complete P2 tasks
 
 ## Agent Governance Structure
 
