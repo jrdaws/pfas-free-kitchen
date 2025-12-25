@@ -75,8 +75,8 @@ test.describe('Configurator - Accordion Sidebar', () => {
       await inputField.fill('My awesome SaaS project');
     }
 
-    // Click Next to complete step 1
-    const nextBtn = page.getByRole('button', { name: /Next/i });
+    // Click Next to complete step 1 (use exact: true)
+    const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
     if (await nextBtn.isVisible({ timeout: 3000 })) {
       await nextBtn.click();
       await page.waitForTimeout(500);
@@ -89,11 +89,12 @@ test.describe('Configurator - Accordion Sidebar', () => {
 
   test('current step has active indicator', async ({ page }) => {
     // The current step should have an active indicator (blue bar or background)
-    // The sidebar has the Research section active by default with bg-[#F97316]/5
     const sidebar = page.locator('aside');
     await expect(sidebar).toBeVisible({ timeout: 5000 });
-    // At least one accordion item should be visible
-    await expect(sidebar.locator('[data-radix-accordion-item]').first()).toBeVisible();
+    // At least one accordion trigger (Research) should be visible and expanded
+    const researchBtn = sidebar.getByRole('button', { name: /Research/i }).first();
+    await expect(researchBtn).toBeVisible();
+    await expect(researchBtn).toHaveAttribute('aria-expanded', 'true');
   });
 
   test('progress indicator shows correct count', async ({ page }) => {
@@ -220,8 +221,8 @@ test.describe('Configurator - Step Flow Integration', () => {
       await textarea.fill('Building a project management SaaS');
     }
 
-    // Click Next button
-    const nextBtn = page.getByRole('button', { name: /Next/i });
+    // Click Next button (use exact: true to avoid matching Next.js dev tools)
+    const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
     await nextBtn.click();
     await page.waitForTimeout(500);
 
@@ -283,8 +284,8 @@ test.describe('Configurator - Step Flow Integration', () => {
       await textarea.fill('Test project');
     }
 
-    // Click Next button
-    const nextBtn = page.getByRole('button', { name: /Next/i });
+    // Click Next button (use exact: true to avoid matching Next.js dev tools)
+    const nextBtn = page.getByRole('button', { name: 'Next', exact: true });
     await nextBtn.click();
     await page.waitForTimeout(500);
 
