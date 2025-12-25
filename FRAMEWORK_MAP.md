@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 55c2a35 2025-12-24 chore(docs): mark coding-standards task complete (already exists)
 - 54975f4 2025-12-24 chore(auditor): move review task to done
 - 15e1630 2025-12-24 docs(deploy): add Vercel execution checklist and complete P2 tasks
 - a7655ec 2025-12-24 docs(memory): update CLI_MEMORY.md with export without env session
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 8858ab9 2025-12-24 chore(memory): checkpoint - Auditor approved checkpoint snapshots
 - a964eaf 2025-12-24 chore(auditor): approve checkpoint snapshots feature
 - dd2cd29 2025-12-24 feat(checkpoint): add persistent checkpoint snapshots
-- 88f76c0 2025-12-24 chore(curator): cycle 10 cleanup - acknowledge completed tasks
 
 ## Agent Governance Structure
 
