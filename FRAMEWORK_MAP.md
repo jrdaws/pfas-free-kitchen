@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- ac7eb2d 2025-12-25 test(configurator): add E2E tests for accordion sidebar and feature selection
 - e35490a 2025-12-25 feat(website): implement Warm Neutral color scheme (Orange/Stone)
 - 02cda18 2025-12-25 docs(task): complete governance optimization Phase 2
 - 1548915 2025-12-25 feat(governance): implement Phase 2 token optimization
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 1f62eb1 2025-12-25 docs(curator): cycle 11 curation - 6 tasks distributed (avg 8.4 quality)
 - 2538ed0 2025-12-24 chore: update framework map and add uploadthing e2e test
 - ce1fefa 2025-12-24 feat(configurator): integrate SupabaseSetup component into sidebar
-- 640585d 2025-12-24 feat(website): update landing page for clone command & feature-assembler
 
 ## Agent Governance Structure
 

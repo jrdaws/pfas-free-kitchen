@@ -2,18 +2,102 @@
 
 **Priority**: P0 - Cost Reduction
 **Agent**: Documentation Agent (with CLI Agent assist)
-**Estimated Savings**: 50-70% reduction in per-session token consumption
+**Estimated Savings**: 70-80% reduction in per-session token consumption
 
 ---
 
 ## Background
 
-Current architecture consumes 12,500-20,000 tokens per session just for bootstrap overhead:
+Current architecture consumes 12,500-27,000 tokens per session just for bootstrap overhead:
 - Memory files: 6-38KB each (growing unbounded)
-- Duplicate governance content across CLAUDE.md, .cursorrules, AGENT_CONTEXT.md
+- Duplicate governance content across AGENT_CONTEXT.md, AGENT_POLICIES.md, .cursorrules
 - Heavy bootstrap runs even for simple tasks
+- 2,526 lines of governance content across 5 files
 
-This task implements three optimizations to reduce costs.
+This task implements optimizations to reduce costs while preserving quality.
+
+---
+
+## ⚠️ CRITICAL: Backup Original Files First
+
+**Before making ANY changes, archive all original governance files.**
+
+### Step 0: Create Archive Directory and Backup All Files
+
+```bash
+#!/bin/bash
+# Run this BEFORE any modifications
+
+ARCHIVE_DIR="docs/archive/governance-v2.3-backup"
+TIMESTAMP=$(date +%Y%m%d-%H%M)
+
+# Create archive directory
+mkdir -p "$ARCHIVE_DIR"
+
+# Backup all governance files that will be modified
+cp AGENT_CONTEXT.md "$ARCHIVE_DIR/AGENT_CONTEXT-$TIMESTAMP.md"
+cp .cursorrules "$ARCHIVE_DIR/cursorrules-$TIMESTAMP.txt"
+cp prompts/agents/AGENT_POLICIES.md "$ARCHIVE_DIR/AGENT_POLICIES-$TIMESTAMP.md"
+cp prompts/agents/UNIVERSAL_BOOTSTRAP.md "$ARCHIVE_DIR/UNIVERSAL_BOOTSTRAP-$TIMESTAMP.md"
+cp output/shared/MINDFRAME.md "$ARCHIVE_DIR/MINDFRAME-$TIMESTAMP.md"
+
+# Backup all memory files
+mkdir -p "$ARCHIVE_DIR/memory"
+cp prompts/agents/memory/*_MEMORY.md "$ARCHIVE_DIR/memory/"
+
+# Create manifest of what was backed up
+cat > "$ARCHIVE_DIR/MANIFEST.md" << EOF
+# Governance Backup Manifest
+
+**Backup Date**: $(date)
+**Governance Version**: 2.3
+**Reason**: Pre-optimization backup before token efficiency improvements
+
+## Files Backed Up
+
+| Original File | Backup File |
+|---------------|-------------|
+| AGENT_CONTEXT.md | AGENT_CONTEXT-$TIMESTAMP.md |
+| .cursorrules | cursorrules-$TIMESTAMP.txt |
+| prompts/agents/AGENT_POLICIES.md | AGENT_POLICIES-$TIMESTAMP.md |
+| prompts/agents/UNIVERSAL_BOOTSTRAP.md | UNIVERSAL_BOOTSTRAP-$TIMESTAMP.md |
+| output/shared/MINDFRAME.md | MINDFRAME-$TIMESTAMP.md |
+| prompts/agents/memory/*.md | memory/*.md |
+
+## Restoration Instructions
+
+To restore any file:
+\`\`\`bash
+cp docs/archive/governance-v2.3-backup/[BACKUP_FILE] [ORIGINAL_LOCATION]
+\`\`\`
+
+To restore everything:
+\`\`\`bash
+cp docs/archive/governance-v2.3-backup/AGENT_CONTEXT-*.md AGENT_CONTEXT.md
+cp docs/archive/governance-v2.3-backup/cursorrules-*.txt .cursorrules
+cp docs/archive/governance-v2.3-backup/AGENT_POLICIES-*.md prompts/agents/AGENT_POLICIES.md
+cp docs/archive/governance-v2.3-backup/UNIVERSAL_BOOTSTRAP-*.md prompts/agents/UNIVERSAL_BOOTSTRAP.md
+cp docs/archive/governance-v2.3-backup/MINDFRAME-*.md output/shared/MINDFRAME.md
+cp docs/archive/governance-v2.3-backup/memory/*.md prompts/agents/memory/
+\`\`\`
+EOF
+
+echo "✅ Backup complete: $ARCHIVE_DIR"
+echo "📋 Manifest created: $ARCHIVE_DIR/MANIFEST.md"
+ls -la "$ARCHIVE_DIR"
+```
+
+**Save this as `scripts/backup-governance.sh` and run it FIRST.**
+
+### Verification Before Proceeding
+
+After backup, verify:
+```bash
+ls -la docs/archive/governance-v2.3-backup/
+cat docs/archive/governance-v2.3-backup/MANIFEST.md
+```
+
+**DO NOT proceed with any modifications until backup is confirmed.**
 
 ---
 
@@ -190,47 +274,6 @@ fi
 echo "✅ Archive management complete"
 ```
 
-**Make executable:**
-```bash
-chmod +x scripts/manage-memory-archives.sh
-```
-
-**Run monthly or as needed:**
-```bash
-./scripts/manage-memory-archives.sh
-```
-
-### Archive Structure After Rotation
-
-```
-output/
-├── agents/
-│   └── [agent]/
-│       └── logs/
-│           ├── memory-archive-20251225-1200.md      # < 7 days (full)
-│           └── memory-archive-20251220-0900.md.gz   # 7-30 days (compressed)
-└── shared/
-    └── archive/
-        └── memory/
-            ├── NEEDS_REVIEW.txt                      # Files > 90 days
-            ├── auditor/
-            │   └── memory-archive-20251001-1500.md  # > 30 days (moved)
-            └── cli/
-                └── memory-archive-20250915-0800.md  # > 90 days (flagged)
-```
-
-### How to Review Old Archives
-
-When `NEEDS_REVIEW.txt` has entries:
-
-1. Check the file: `cat output/shared/archive/memory/NEEDS_REVIEW.txt`
-2. Review flagged archives for any critical patterns/insights
-3. Extract important learnings to `docs/lessons-learned/` if valuable
-4. Delete archives only after confirming no critical info: `rm [file]`
-5. Clear reviewed entries from NEEDS_REVIEW.txt
-
-**Memory archives are preserved indefinitely until manual deletion.**
-
 ---
 
 ## Task 2: Slim Bootstrap (Default) + [full] Override
@@ -359,36 +402,86 @@ End responses with role in caps: `(CLI AGENT)`, `(WEBSITE AGENT)`, etc.
 ## Task 3: Consolidate Governance Files
 
 ### Goal
-Eliminate CLAUDE.md entirely, merge essential content into .cursorrules.
+Reduce governance from 2,526 lines to ~500 lines while preserving all rules.
 
 ### Implementation
 
-**Step 1: Archive CLAUDE.md**
+**Step 1: Archive ALL original files (see Step 0 above)**
+
+**Step 2: Archive CLAUDE.md (if exists)**
 ```bash
-mv CLAUDE.md docs/archive/CLAUDE-v2.3-archived.md
+[ -f CLAUDE.md ] && mv CLAUDE.md docs/archive/governance-v2.3-backup/CLAUDE.md
 ```
 
-**Step 2: Trim AGENT_CONTEXT.md to essentials only**
+**Step 3: Extract Version History from AGENT_POLICIES.md**
 
-Keep only:
+Move lines 1184-1310 (version history) to archive:
+```bash
+# Create changelog archive
+mkdir -p docs/archive
+# The version history section will be moved during the consolidation
+```
+
+**Step 4: Create Condensed AGENT_CONTEXT.md**
+
+Reduce from 347 lines to ~100 lines. Keep only:
 - Project Vision (2 lines)
-- Architecture Overview (the directory tree)
+- Architecture Overview (directory tree)
 - Key Flows (3 bullet points)
 - Coding Standards (condensed table)
 - Protected Files list
 - Agent Identity section
 
-Remove:
-- Duplicate bootstrap instructions (now in .cursorrules)
-- Verbose explanations
-- Example code blocks
-- Script listings (reference docs/scripts/ instead)
+**REMOVE from AGENT_CONTEXT.md:**
+- 5-question verification test (wastes output tokens)
+- Detailed script listings (reference docs/scripts/)
+- Duplicate philosophy explanations
 
-**Target size: 4-5KB (down from 12KB)**
+**Target size: 100 lines, ~4KB (down from 347 lines, 12KB)**
 
-**Step 3: Create reference doc for rarely-needed content**
+**Step 5: Create Condensed GOVERNANCE.md**
 
-Move verbose content to `docs/governance/FULL_CONTEXT.md` for when [full] mode is used.
+Merge essential content from AGENT_POLICIES.md (1,407 lines) into single reference:
+
+**Keep:**
+- Core Principles (condensed to table)
+- Role table (keep)
+- Essential protocols (condensed)
+- SOP list (keep as table)
+
+**REMOVE/ARCHIVE:**
+- Version history (126 lines) → `docs/archive/governance-changelog.md`
+- Detailed examples (keep 1 per concept, remove duplicates)
+- Media pipeline standards (move to separate doc)
+- Repeated handoff format explanations (explain once)
+
+**Target size: 400 lines, ~15KB (down from 1,407 lines, 52KB)**
+
+**Step 6: Create Reference Docs for [full] Mode**
+
+Move verbose content to `docs/governance/` for when [full] mode is used:
+- `docs/governance/FULL_CONTEXT.md` - Complete policies
+- `docs/governance/CHANGELOG.md` - Version history
+- `docs/governance/EXAMPLES.md` - Detailed examples
+
+---
+
+## Task 4: Remove Mandatory Verification Test
+
+### Current (wastes ~200 output tokens every session):
+```markdown
+## 🛑 MANDATORY VERIFICATION TEST
+Answer these 5 questions...
+```
+
+### Change to:
+```markdown
+## Governance Acknowledgment
+State: `✓ Governance 3.0` and proceed.
+```
+
+**Implementation:**
+Remove the verification test section from AGENT_CONTEXT.md entirely.
 
 ---
 
@@ -396,21 +489,27 @@ Move verbose content to `docs/governance/FULL_CONTEXT.md` for when [full] mode i
 
 After implementation, verify:
 
-1. **Memory file sizes:**
+1. **Backup exists:**
+   ```bash
+   ls -la docs/archive/governance-v2.3-backup/
+   cat docs/archive/governance-v2.3-backup/MANIFEST.md
+   ```
+
+2. **Memory file sizes:**
    ```bash
    wc -c prompts/agents/memory/*_MEMORY.md | sort -n
    ```
    All should be < 15KB
 
-2. **Governance file sizes:**
+3. **Governance file sizes:**
    ```bash
-   wc -c .cursorrules AGENT_CONTEXT.md
+   wc -l .cursorrules AGENT_CONTEXT.md
    ```
-   Total should be < 15KB (down from 31KB)
+   Total should be < 200 lines (down from 456)
 
-3. **Bootstrap token count:**
-   - Slim mode: < 3,000 tokens
-   - Full mode: < 10,000 tokens
+4. **Bootstrap token count:**
+   - Slim mode: < 1,000 tokens
+   - Full mode: < 8,000 tokens
 
 ---
 
@@ -418,28 +517,55 @@ After implementation, verify:
 
 | Metric | Before | After | Savings |
 |--------|--------|-------|---------|
-| .cursorrules | 7.6KB | 3KB | 60% |
-| AGENT_CONTEXT.md | 12.1KB | 5KB | 59% |
-| CLAUDE.md | 11.2KB | 0KB | 100% |
-| Avg memory file | 20KB | 8KB | 60% |
+| .cursorrules | 109 lines | 110 lines | - (already optimized) |
+| AGENT_CONTEXT.md | 347 lines | 100 lines | 71% |
+| AGENT_POLICIES.md | 1,407 lines | 400 lines | 72% |
+| CLAUDE.md | Existed | Archived | 100% |
+| Avg memory file | 400 lines | 150 lines | 62% |
 | Bootstrap reads | 6-8 files | 1-2 files | 75% |
-| Est. tokens/session | 15,000 | 4,000 | 73% |
+| Est. tokens/session (slim) | 3,000 | 750 | 75% |
+| Est. tokens/session (full) | 27,000 | 8,000 | 70% |
 
 ---
 
 ## Deliverables
 
-1. [ ] `scripts/rotate-memory.sh` - Memory rotation script
-2. [ ] `scripts/manage-memory-archives.sh` - Archive retention management
-3. [ ] `output/shared/archive/memory/` - Centralized archive location
-4. [ ] Updated `.cursorrules` - Slim-first bootstrap
-5. [ ] Trimmed `AGENT_CONTEXT.md` - Essential content only
-6. [ ] Archived `CLAUDE.md` - Moved to docs/archive/
-7. [ ] `docs/governance/FULL_CONTEXT.md` - Verbose content for [full] mode
+1. [ ] **FIRST: Run backup script** - `scripts/backup-governance.sh`
+2. [ ] Verify backup exists in `docs/archive/governance-v2.3-backup/`
+3. [ ] `scripts/rotate-memory.sh` - Memory rotation script
+4. [ ] `scripts/manage-memory-archives.sh` - Archive retention management
+5. [ ] `output/shared/archive/memory/` - Centralized archive location
+6. [ ] Updated `.cursorrules` - Slim-first bootstrap (already done)
+7. [ ] Trimmed `AGENT_CONTEXT.md` - 100 lines max
+8. [ ] Condensed `GOVERNANCE.md` - Replaces AGENT_POLICIES.md
+9. [ ] `docs/governance/CHANGELOG.md` - Version history archive
+10. [ ] `docs/governance/FULL_CONTEXT.md` - Verbose content for [full] mode
+
+---
+
+## Rollback Plan
+
+If optimization causes issues:
+
+```bash
+# Restore from backup
+cp docs/archive/governance-v2.3-backup/AGENT_CONTEXT-*.md AGENT_CONTEXT.md
+cp docs/archive/governance-v2.3-backup/cursorrules-*.txt .cursorrules
+cp docs/archive/governance-v2.3-backup/AGENT_POLICIES-*.md prompts/agents/AGENT_POLICIES.md
+cp docs/archive/governance-v2.3-backup/MINDFRAME-*.md output/shared/MINDFRAME.md
+
+# Restore memory files if needed
+cp docs/archive/governance-v2.3-backup/memory/*.md prompts/agents/memory/
+
+echo "✅ Rollback complete - governance restored to v2.3"
+```
 
 ---
 
 ## Next Agent
 
-After completing, hand off to Testing Agent to verify slim mode works correctly across different agent types.
+After completing, hand off to Testing Agent to verify:
+1. Slim mode works correctly
+2. [full] mode still loads complete context
+3. Agents can complete tasks with reduced governance
 
