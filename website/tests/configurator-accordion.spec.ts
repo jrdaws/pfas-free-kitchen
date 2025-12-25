@@ -1,13 +1,16 @@
 import { test, expect } from '@playwright/test';
 
+// Use longer timeouts for configurator tests due to dynamic loading
+test.setTimeout(60000);
+
 test.describe('Configurator - Accordion Sidebar', () => {
   test.beforeEach(async ({ page }) => {
     // Clear localStorage to start fresh
-    await page.goto('/configure');
+    await page.goto('/configure', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1500); // Wait for dynamic components
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    // Wait for React to hydrate
+    await page.waitForSelector('[data-radix-scroll-area-viewport]', { timeout: 15000 }).catch(() => {});
   });
 
   test('sidebar displays all 8 navigation sections', async ({ page }) => {

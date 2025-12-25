@@ -81,6 +81,17 @@ npm test                    # Before committing
 - Delete protected files
 - Create feature branches (work on main)
 - Split fenced output blocks
+- Add `# comments` in fenced command blocks for humans
+
+### Clean Command Blocks (For Human Execution)
+Fenced commands must be PURE, runnable - no comments inside:
+```
+❌ BAD: # Open browser
+        open file.html
+
+✅ GOOD: cd /path/to/project && open file.html
+```
+Explanations go OUTSIDE the fence, before it.
 
 ---
 

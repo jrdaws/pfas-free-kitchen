@@ -832,6 +832,38 @@ nothing left out...
 - **AFTER**: Follow-up notes go AFTER the closing fence
 - **NEVER BETWEEN**: NOTHING goes between multiple fences that should be one
 
+### Clean Command Blocks (BLOCKING REQUIREMENT)
+
+**Fenced command blocks for human execution must be PURE, RUNNABLE commands.**
+
+⛔ **This is a governance violation** if command blocks contain comments or explanatory text.
+
+| Element | Allowed? | Reason |
+|---------|----------|--------|
+| `# comments` | ❌ NO | Copied with command, can cause errors |
+| Explanatory text | ❌ NO | Not executable |
+| Multiple alternatives | ❌ NO | Confuses copy-paste |
+| `cd /path &&` prefix | ✅ YES | Required for human execution |
+| Chained commands `&&` | ✅ YES | Single copy-paste operation |
+
+**❌ BAD (Contains comments):**
+```bash
+# Open in browser
+open file.html
+```
+
+**✅ GOOD (Pure command):**
+
+Open the color test page:
+
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework && open output/shared/design/color-tests/index.html
+```
+
+**Rule**: Explanations go OUTSIDE the fence (before it). The fence contains ONLY runnable commands.
+
+**Note**: This applies to commands for HUMANS. Agent-to-agent handoffs follow the Handoff Prompt Format rules.
+
 #### Content Too Long?
 If content is genuinely too long for one block:
 1. **SAY SO EXPLICITLY**: Tell the user it's too long

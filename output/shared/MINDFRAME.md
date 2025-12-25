@@ -43,6 +43,33 @@ Next Agent: [Role] Agent
 ```
 Examples: `(DOCUMENTATION AGENT)` | `(WEBSITE AGENT)` | `(TESTING AGENT)`
 
+### 5. Clean Command Blocks (ALL FENCED COMMANDS)
+
+**Fenced command blocks for human execution must be PURE, RUNNABLE commands.**
+
+❌ **NEVER include:**
+- Comments with `#` 
+- Explanatory text
+- Multiple alternative commands
+
+✅ **ALWAYS:**
+- Start with `cd /path/to/project &&` 
+- Chain commands with `&&`
+- One clean, copy-paste-ready block
+
+**BAD:**
+```bash
+# Open in browser
+open file.html
+```
+
+**GOOD:**
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework && open output/shared/design/color-tests/index.html
+```
+
+**Explanations go OUTSIDE the fence, BEFORE or AFTER - never inside.**
+
 ---
 
 ## 🔄 Auto-Continuation System
