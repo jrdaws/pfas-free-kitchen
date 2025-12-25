@@ -1,0 +1,40 @@
+TASK: User Authentication Flow
+PRIORITY: P1
+PHASE: 1.2 - Foundation
+DEPENDENCIES: 1.1 (Database Schema) - but can start UI now
+
+---
+
+Implement user authentication using Supabase Auth.
+
+Requirements:
+1. Create `/login` page with:
+   - Email/password sign in
+   - Google OAuth button
+   - GitHub OAuth button
+   - "Create account" link
+   
+2. Create `/signup` page with:
+   - Email/password registration
+   - Terms acceptance checkbox
+   
+3. Create auth context provider at `lib/auth-context.tsx`:
+   - useAuth() hook with user, loading, signIn, signOut
+   - Session persistence
+   
+4. Create protected route wrapper component
+5. Add auth state to header navigation
+6. Style matching the blue sidebar aesthetic (#0052FF primary)
+
+Reference: Screenshots show user "Omar Choudhry" with avatar in sidebar
+
+Files to create:
+- website/app/(auth)/login/page.tsx
+- website/app/(auth)/signup/page.tsx
+- website/lib/auth-context.tsx
+- website/components/auth/AuthProvider.tsx
+
+CONTEXT: This is part of a 28-task UI redesign to match the 5DaySprint platform design.
+
+HANDOFF: When complete, enables 1.4 (Persistent Project State) and 1.5 (Projects Dashboard)
+

@@ -23,6 +23,8 @@ const ComponentAwarePreview = dynamic(() => import("@/app/components/configurato
 const ProjectGenerator = dynamic(() => import("@/app/components/configurator/ProjectGenerator").then(mod => ({ default: mod.ProjectGenerator })), { ssr: false });
 const ContextFields = dynamic(() => import("@/app/components/configurator/ContextFields").then(mod => ({ default: mod.ContextFields })), { ssr: false });
 const ExportView = dynamic(() => import("@/app/components/configurator/ExportView").then(mod => ({ default: mod.ExportView })), { ssr: false });
+const LivePreviewPanel = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.LivePreviewPanel })), { ssr: false });
+const PreviewToggleButton = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.PreviewToggleButton })), { ssr: false });
 
 // Step titles for breadcrumb
 const STEP_TITLES: Record<number, string> = {
@@ -45,6 +47,7 @@ const getPhaseForStep = (step: number): string => {
 
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"component" | "preview" | "generate">("component");
+  const [showLivePreview, setShowLivePreview] = useState(false);
   
   // Track navigation direction for slide animations
   const [animationDirection, setAnimationDirection] = useState<"left" | "right">("right");
@@ -189,6 +192,12 @@ export default function ConfigurePage() {
               {STEP_TITLES[currentStep]}
             </h1>
           </div>
+
+          {/* Preview Toggle */}
+          <PreviewToggleButton 
+            isVisible={showLivePreview} 
+            onToggle={() => setShowLivePreview(!showLivePreview)} 
+          />
 
           {/* Mode Toggle */}
           <ModeToggle mode={mode} onChange={setMode} />
@@ -409,6 +418,16 @@ export default function ConfigurePage() {
           </div>
         </footer>
       </div>
+
+      {/* Live Preview Panel */}
+      <LivePreviewPanel
+        template={template}
+        integrations={integrations}
+        projectName={projectName}
+        description={description}
+        isVisible={showLivePreview}
+        onToggle={() => setShowLivePreview(!showLivePreview)}
+      />
     </div>
   );
 }

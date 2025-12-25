@@ -1,0 +1,30 @@
+TASK: NPX Command Generation System
+PRIORITY: P2
+PHASE: 1.6 - Foundation
+DEPENDENCIES: 1.1 (Database Schema) - needs project tokens
+
+---
+
+Implement the NPX token system for project installation.
+
+Requirements:
+1. Generate unique token for each project (format: d9d8c242-19af-4b6d-92d8-6d6a79094...)
+2. Create command: `npx @5daysprint/framework {token}`
+3. When run:
+   - Fetch project config from API by token
+   - Clone/scaffold project locally
+   - Apply selected features and integrations
+   - Set up file structure matching the file tree shown in design
+   
+4. Add token validation and expiry (30 days)
+5. Add rate limiting per token
+
+Example command: npx @5daysprint/framework d9d8c242-19af-4b6d-92d8-6d6a79094...
+
+Files to modify: bin/framework.js
+Files to create: src/dd/commands/pull-project.mjs
+
+CONTEXT: This is part of a 28-task UI redesign to match the 5DaySprint platform design.
+
+HANDOFF: When complete, enables 5.3 (NPX Command Display)
+

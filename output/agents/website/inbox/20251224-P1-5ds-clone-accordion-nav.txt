@@ -1,0 +1,38 @@
+TASK: Accordion Navigation Sidebar
+PRIORITY: P1
+PHASE: 1.3 - Foundation
+DEPENDENCIES: None (can start immediately)
+
+---
+
+Replace the current ConfiguratorSidebar with an accordion-style navigation matching the 5DaySprint design.
+
+Requirements:
+1. Create AccordionSidebar component with:
+   - Collapsible sections for each major step
+   - Icons matching screenshots (Research, Core Features, Integrate AI, Cursor, GitHub, Claude Code, Supabase, Vercel)
+   - Active step highlighting with left border accent
+   - Completion checkmarks for finished steps
+   - Step descriptions visible when expanded
+   
+2. Sections should be:
+   - Research: "Define your project vision"
+   - Core Features: "Select features for your project"  
+   - Integrate AI: "Add AI capabilities to your project"
+   - Cursor: "Download & Install Cursor"
+   - GitHub: "Create your GitHub repository"
+   - Claude Code: "Install Claude Code CLI for AI assistance"
+   - Supabase: "Configure your Supabase project"
+   - Vercel: "Deploy your application"
+   
+3. Each section expands to show content inline (not navigate away)
+4. Persist expanded state in localStorage
+5. Style: Blue accent color (#0052FF), white background, subtle shadows
+
+Reference: 5DaySprint screenshots showing accordion navigation
+Replace: website/app/components/configurator/ConfiguratorSidebar.tsx
+
+CONTEXT: This is part of a 28-task UI redesign to match the 5DaySprint platform design.
+
+HANDOFF: When complete, this enables Phase 2 and Phase 3 tasks.
+

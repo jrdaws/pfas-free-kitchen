@@ -83,6 +83,53 @@ export interface CreateProjectInput {
   description?: string;
 }
 
+// Types for user-owned projects (5DS clone)
+export type ProjectStatus = 'draft' | 'active' | 'archived';
+
+export interface ToolStatus {
+  cursor: boolean;
+  github: boolean;
+  claude: boolean;
+  supabase: boolean;
+  vercel: boolean;
+}
+
+export interface UserProject {
+  id: string;
+  user_id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  template?: string;
+  features: string[];
+  integrations: Record<string, string>;
+  tool_status: ToolStatus;
+  supabase_project_id?: string;
+  npx_token: string;
+  status: ProjectStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CreateUserProjectInput {
+  name: string;
+  description?: string;
+  template?: string;
+  features?: string[];
+  integrations?: Record<string, string>;
+}
+
+export interface UpdateUserProjectInput {
+  name?: string;
+  description?: string;
+  template?: string;
+  features?: string[];
+  integrations?: Record<string, string>;
+  tool_status?: Partial<ToolStatus>;
+  supabase_project_id?: string;
+  status?: ProjectStatus;
+}
+
 // Generate a human-readable token
 export function generateToken(): string {
   const adjectives = ["fast", "bright", "smart", "cool", "bold", "swift", "keen", "wise", "true", "pure"];

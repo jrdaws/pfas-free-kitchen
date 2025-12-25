@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 4cd1f53 2025-12-24 style(website): modernize terminal/code block styling
 - f1f5fe4 2025-12-24 feat(website): implement 3-panel integration selector and workspace layout
 - 2154c90 2025-12-24 docs(memory): record successful Vercel deployment
 - 5cd1744 2025-12-24 fix(website): resolve Vercel build issues with tsconfig paths and stubs
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 07fc3fa 2025-12-24 chore: update framework map and template memory
 - 7c10999 2025-12-24 docs(strategy): Cycle 10 strategy - consolidation focus
 - 0feac84 2025-12-24 docs(cli): complete P1 scaffold without env check task
-- 39ed2f6 2025-12-24 docs(audit): complete cycle 9 - 34 commits, 694 tests, high velocity day
 
 ## Agent Governance Structure
 

@@ -1,0 +1,36 @@
+TASK: Feature Categories Data Model
+PRIORITY: P1
+PHASE: 2.1 - Core Features System
+DEPENDENCIES: None (can start immediately)
+
+---
+
+Create the data model for Core Features selection.
+
+Requirements:
+1. Define feature categories in `lib/features.ts`:
+   - User Management: Social login, Email registration, Guest browsing, Admin dashboard
+   - Product Database: Nutritional info, Price tracking, Stock availability, Brand profiles, Product categories
+   - Search & Filter: Full-text search, Advanced filters, Saved searches
+   - E-commerce Integration: Cart, Checkout, Order history, Wishlist
+   - Analytics Features: Page views, User tracking, Conversion funnels, Reports
+   
+2. Each feature should have:
+   - id, label, description
+   - category
+   - complexity (simple/medium/complex)
+   - dependencies (other features required)
+   - codeTemplates (file paths to generate)
+   
+3. Add `selectedFeatures: Record<string, string[]>` to configurator state
+4. Create feature recommendation engine based on project description
+
+Reference: Screenshots showing expandable feature categories with checkboxes
+
+Files to create: website/lib/features.ts
+Files to modify: website/lib/configurator-state.ts
+
+CONTEXT: This is part of a 28-task UI redesign to match the 5DaySprint platform design.
+
+HANDOFF: When complete, enables 2.2 (Core Features UI) and 2.4 (Feature-to-Code Mapping)
+

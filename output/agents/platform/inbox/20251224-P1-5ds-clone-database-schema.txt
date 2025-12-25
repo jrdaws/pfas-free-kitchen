@@ -1,0 +1,37 @@
+TASK: Projects Database Schema for 5DaySprint Clone
+PRIORITY: P1
+PHASE: 1.1 - Foundation
+DEPENDENCIES: None
+
+---
+
+Design and implement the database schema for the My Projects dashboard.
+
+Requirements:
+1. Create Supabase migration for `projects` table:
+   - id (uuid, primary key)
+   - user_id (uuid, references auth.users)
+   - name (text, not null)
+   - slug (text, unique)
+   - description (text)
+   - template (text)
+   - features (jsonb) - selected core features
+   - integrations (jsonb) - selected integrations
+   - tool_status (jsonb) - {cursor: bool, github: bool, claude: bool, supabase: bool, vercel: bool}
+   - supabase_project_id (text, nullable)
+   - npx_token (text, unique) - for npx @5ds/framework {token}
+   - status (enum: 'draft', 'active', 'archived')
+   - created_at, updated_at
+   
+2. Create RLS policies for user ownership
+3. Create API route: POST /api/projects/create
+4. Create API route: GET /api/projects/list
+5. Create API route: PATCH /api/projects/[id]
+
+Output location: website/app/api/projects/
+
+CONTEXT: This is part of a 28-task UI redesign to match the 5DaySprint platform design.
+See reference screenshots in the conversation history.
+
+HANDOFF: When complete, notify Website Agent to proceed with 1.2 (User Auth) and 1.5 (Projects Dashboard)
+
