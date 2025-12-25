@@ -141,11 +141,11 @@ test.describe('Configurator - Accordion Sidebar', () => {
 
 test.describe('Configurator - Feature Selection', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/configure');
+    await page.goto('/configure', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1500);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    // Wait for React to hydrate
+    await page.waitForSelector('[data-radix-scroll-area-viewport]', { timeout: 15000 }).catch(() => {});
 
     // Navigate to Core Features step
     const coreFeaturesBtn = page.locator('button:has-text("Core Features")').first();
@@ -323,11 +323,11 @@ test.describe('Configurator - Feature Selection', () => {
 
 test.describe('Configurator - Step Flow Integration', () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto('/configure');
+    await page.goto('/configure', { waitUntil: 'domcontentloaded' });
     await page.evaluate(() => localStorage.clear());
-    await page.reload();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(1500);
+    await page.reload({ waitUntil: 'domcontentloaded' });
+    // Wait for React to hydrate
+    await page.waitForSelector('[data-radix-scroll-area-viewport]', { timeout: 15000 }).catch(() => {});
   });
 
   test('complete step 1 and verify progress updates', async ({ page }) => {

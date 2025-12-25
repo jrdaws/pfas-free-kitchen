@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 6b726e5 2025-12-25 docs(governance): add Clean Command Block rule - no comments in fenced commands
 - fa2d288 2025-12-25 docs(efficiency): recreate token optimization task with backup instructions
 - 6ac53d1 2025-12-25 feat(design): select Warm Neutral (Scheme C) as official color scheme
 - 80820e7 2025-12-25 docs(task): complete token efficiency optimization task
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 76ebbdf 2025-12-24 docs(memory): update CLI_MEMORY with feature-assembler enhancements
 - 64adc9b 2025-12-24 feat(cli): enhance clone command with feature-assembler integration
 - edc6d1f 2025-12-24 feat(database): add OAuth and connected services schema for 5DS clone
-- 380795d 2025-12-24 feat(website): add development ViewportIndicator component
 
 ## Agent Governance Structure
 

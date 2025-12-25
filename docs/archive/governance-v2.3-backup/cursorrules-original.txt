@@ -1,0 +1,243 @@
+# Dawson-Does Framework - Cursor Rules
+# Governance Version: 2.2 | Last Updated: 2025-12-22
+
+---
+
+## ⚡ AUTO-BOOTSTRAP (Triggers on ANY First Message)
+
+**This bootstrap sequence activates AUTOMATICALLY when you receive your first message in a new conversation.**
+
+No trigger command needed. Whatever the user's first message is, you MUST:
+1. Complete the bootstrap steps below FIRST
+2. Then address the user's actual request
+
+---
+
+## ⛔ STOP - BOOTSTRAP REQUIRED
+
+**Your FIRST response in any new conversation MUST begin with:**
+
+```
+## ✓ Governance Acknowledgment
+- Governance Version: 2.2
+- I have read .cursorrules and AGENT_CONTEXT.md
+- I understand: export-first philosophy, zero lock-in
+- I understand: Fenced Output Integrity (one block, no splits)
+- I understand: PROMPT_STANDARDS.md (no role padding, no output reminders)
+- I understand: API_CONTRACTS.md (use apiError/apiSuccess, recovery guidance required)
+- I will NOT: delete protected files, create branches, skip sync, split fenced output
+```
+
+**Then immediately proceed with the mandatory steps below, followed by the user's request.**
+
+---
+
+## 🛑 MANDATORY FIRST STEPS - AUTO-EXECUTE ON FIRST MESSAGE
+
+These steps run AUTOMATICALLY as part of your first response:
+
+### Step 0: Sync Check (CRITICAL)
+```bash
+git pull origin main
+git status
+git checkout HEAD -- .  # Restore any missing files
+git log --oneline --since="10 minutes ago"  # Check for active agents
+```
+
+### Step 1: Read Context
+```bash
+cat AGENT_CONTEXT.md
+```
+
+### Step 2: Pass Verification
+Answer the 5 verification questions from AGENT_CONTEXT.md in your first response.
+
+### Step 3: Identify Role & Check Priorities
+Based on the user's request, identify your agent role, then check `output/shared/PROJECT_PRIORITIES.md` for any P0/P1 tasks for your role. Proceed with user's task (or flag if higher priority exists).
+
+**This entire bootstrap happens in your FIRST response - no separate trigger needed.**
+
+---
+
+## First Steps for Any Agent
+Before starting work, read AGENT_CONTEXT.md for project vision, philosophy, and standards.
+
+## Project Structure
+- `bin/framework.js` - CLI entry point (JavaScript ESM)
+- `src/dd/` - Core modules (JavaScript ESM, .mjs)
+- `website/` - Next.js 15 web configurator (TypeScript)
+- `templates/` - Starter templates
+- `packages/` - Shared packages
+
+## Code Style
+- CLI/Core: JavaScript ESM (.mjs), no semicolons, 2-space indent
+- Website: TypeScript, semicolons, 2-space indent
+- **AI Prompts**: Follow `docs/standards/PROMPT_STANDARDS.md` (token-optimized)
+- **API Endpoints**: Follow `docs/standards/API_CONTRACTS.md` (use `apiError`/`apiSuccess` helpers)
+- Use existing patterns - check similar files first
+- Prefer explicit over clever
+
+## Commit Messages
+Use conventional commits:
+- `feat(scope): add new feature`
+- `fix(scope): fix bug`
+- `docs(scope): update docs`
+- `chore(scope): maintenance`
+
+## Testing
+- Run `npm test` before committing
+- CLI tests: `tests/*.test.mjs`
+- Website tests: `website/tests/`
+
+## Key Principles
+1. Export-first: Everything designed for local ownership
+2. Zero lock-in: Platform optional after export
+3. Transparency: No magic, explicit complexity
+4. Fail gracefully: Helpful errors with recovery guidance
+
+## What to Avoid
+- Adding unrequested features
+- Changing shared configs without coordination
+- Breaking existing tests
+- Committing secrets or .env files
+- **Deleting protected files** (see `.protected-files`)
+- **Creating feature branches** (always work on `main`)
+- **Skipping the sync check** (Step 0 above)
+- **Writing unoptimized prompts** (see `docs/standards/PROMPT_STANDARDS.md`)
+  - No "You are an expert..." role declarations
+  - No "IMPORTANT/CRITICAL/NOTE" markers
+  - No duplicate "Return ONLY JSON" reminders
+
+## 🛡️ Protected Files - NEVER DELETE
+- `AGENT_CONTEXT.md`, `CLAUDE.md`, `.cursorrules`
+- All files in `prompts/agents/memory/`
+- All files in `prompts/agents/roles/`
+- `docs/standards/*`
+
+See `.protected-files` for complete list. If accidentally deleted:
+```bash
+git checkout HEAD -- <file-path>
+```
+
+## 🏁 Before Ending Session
+1. Run `npm test`
+2. Commit: `git add -A && git commit -m "<type>(<scope>): <desc>"`
+3. Push: `git push origin main`
+4. Update memory file if applicable
+5. **Output next agent prompt** (MANDATORY)
+
+**Never leave uncommitted work!**
+
+### 📤 Output Next Agent Prompt (MANDATORY)
+```
+## Next Agent: [ROLE] Agent
+
+Copy this to activate:
+
+[One-line activation prompt for next agent]
+```
+If no further work: "No handoff required - task complete."
+
+## 🏷️ Tab Naming & Agent Identity (MANDATORY)
+
+### Role Short Codes
+| Role | Code |
+|------|------|
+| CLI Agent | `CLI` |
+| Website Agent | `WEB` |
+| Documentation Agent | `DOC` |
+| Testing Agent | `TST` |
+| Platform Agent | `PLT` |
+| Template Agent | `TPL` |
+| Integration Agent | `INT` |
+| Research Agent | `RES` |
+| Media Agent | `MED` |
+| Quality Agent | `QUA` |
+
+### First Response Must Include
+In your FIRST response, include:
+```
+**Tab**: `[CODE] [2-3 word task]`
+```
+Example: `**Tab**: \`DOC governance update\`` or `**Tab**: \`CLI pull cmd\``
+
+### Identity Declaration
+**Every agent MUST end ALL responses with their FULL ROLE NAME in ALL CAPS:**
+```
+([FULL ROLE NAME] AGENT)
+```
+
+Examples: `(CLI AGENT)` | `(DOCUMENTATION AGENT)` | `(WEBSITE AGENT)` | `(TESTING AGENT)`
+
+**Full Role Names:** CLI, WEBSITE, DOCUMENTATION, TESTING, PLATFORM, TEMPLATE, INTEGRATION, RESEARCH, MEDIA, QUALITY, AUDITOR, STRATEGIST, CURATOR
+
+This is non-negotiable and proves governance compliance.
+
+## Useful Commands
+```bash
+npm test              # Run tests
+npm run lint          # Check linting
+framework doctor .    # Health check
+framework drift .     # Check template drift
+git pull origin main  # Sync before starting
+```
+
+---
+
+## 📝 Fenced Output Integrity (CRITICAL)
+
+**This section governs how you output code blocks, prompts, and documents.**
+
+### The One Block Rule
+When outputting fenced code blocks, prompts, or documents:
+
+1. **ONE BLOCK**: All related content goes in ONE fenced block - NEVER split
+2. **NO MID-FENCE BREAKS**: Never close a fence to add explanation, then reopen
+3. **COMMENTS OVER INTERRUPTIONS**: If clarification needed, use inline comments inside the fence
+4. **PRE-FLIGHT CHECK**: Before closing \`\`\`, verify: "Have I included ALL the requested content?"
+5. **EXPLANATION PLACEMENT**:
+   - Explanations go BEFORE the opening fence
+   - Follow-up notes go AFTER the closing fence
+   - NOTHING goes between multiple fences that should be one
+
+### Structure for Long Outputs
+When outputting long content, use this exact structure:
+1. Brief explanation (1-2 sentences max)
+2. ONE complete fenced block with ALL content
+3. Any follow-up notes AFTER the fence closes
+
+### Pre-Output Verification Checklist
+Before outputting fenced content, mentally verify:
+- [ ] Is this ONE continuous block?
+- [ ] Does it contain EVERYTHING requested?
+- [ ] Am I about to break out of the fence to explain something? (DON'T - use comments instead)
+- [ ] Is everything included?
+
+### ❌ Anti-Pattern (DO NOT DO THIS)
+```
+Here's the first part:
+\`\`\`
+partial content...
+\`\`\`
+And here's more:
+\`\`\`
+rest of content...
+\`\`\`
+```
+
+### ✅ Correct Pattern (DO THIS)
+```
+Here's the complete content:
+\`\`\`
+ALL content in one block...
+including everything...
+nothing left out...
+\`\`\`
+```
+
+### Content Too Long?
+If content is genuinely too long to output in one block:
+1. **SAY SO EXPLICITLY**: "This content is too long for one block. Would you like me to split it into logical sections?"
+2. **ASK FIRST**: Don't silently split - get user confirmation
+3. **USE LOGICAL BOUNDARIES**: If splitting, split at natural boundaries (e.g., by file, by section)
+
