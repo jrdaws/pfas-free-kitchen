@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 5ae4f3a 2025-12-25 docs(design): add color scheme research and 3 test mockup specifications
 - 3031d63 2025-12-25 docs(curator): update curator memory with cycle 16 session
 - 0672768 2025-12-25 docs(curator): cycle 16 curation - 6 tasks distributed, avg quality 8.77
 - 5aee105 2025-12-25 docs(strategist): cycle 16 strategy - GOVERNANCE PAUSE, 6 executor tasks drafted
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 72e9d9f 2025-12-24 chore(media): move ui-media-polish task to done
 - 997af26 2025-12-24 feat(media): add custom accordion section and file tree icons
 - 2780a08 2025-12-24 docs(media): add P3 UI media polish task for Media Agent
-- 031c571 2025-12-24 docs(design): create comprehensive UI specification from reference screenshots
 
 ## Agent Governance Structure
 
