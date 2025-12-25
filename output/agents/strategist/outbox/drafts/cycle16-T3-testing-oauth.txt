@@ -1,0 +1,65 @@
+# Task: Supabase OAuth E2E Tests
+
+Priority: P2
+Assigned To: Testing Agent
+Depends On: None (can run parallel to T2)
+Estimated Effort: Medium (30 minutes)
+
+## Context
+
+Supabase OAuth integration was completed by Platform Agent (Cycle 10). The routes exist but haven't been E2E tested. This validates the complete OAuth flow works.
+
+## Objectives
+
+1. Create E2E test for Supabase OAuth connection flow
+2. Test callback handling
+3. Test session management
+4. Verify connected services API updates correctly
+
+## Success Criteria
+
+- [ ] OAuth initiation test passes (redirects to Supabase)
+- [ ] Callback handling test passes (stores tokens)
+- [ ] Session persistence test passes
+- [ ] Connected services API reflects Supabase connection
+- [ ] All existing tests still pass
+
+## Files to Modify
+
+- Create: `website/tests/supabase-oauth.spec.ts`
+- Reference: `website/app/api/auth/supabase/` routes
+
+## Test Scenarios
+
+1. **OAuth Initiation**: Click "Connect Supabase" → redirects to Supabase
+2. **Callback Success**: Mock callback with valid code → session created
+3. **Callback Failure**: Mock callback with error → graceful error handling
+4. **Token Refresh**: Session near expiry → auto-refresh works
+5. **Disconnect**: Remove connection → tokens cleared, API updated
+
+## Notes
+
+- May need to mock Supabase responses for CI environment
+- Skip tests requiring actual Supabase API key with `test.skip` + TODO comment
+- Reference UploadThing E2E tests for mock patterns
+
+## Handoff
+
+1. Run `npm test` and record results
+2. Move task to done/
+3. Write completion report to outbox/
+4. Update TESTING_MEMORY.md
+
+---
+
+## Quick Start Prompt
+
+Copy this to a new Cursor tab to activate Testing Agent:
+
+```
+Read prompts/agents/roles/TESTING.md and execute task T3 from Cycle 16 strategy.
+Create E2E tests for Supabase OAuth flow in website/tests/supabase-oauth.spec.ts.
+Reference the UploadThing E2E tests for mock patterns. Test OAuth initiation, 
+callback handling, and connected services integration.
+```
+

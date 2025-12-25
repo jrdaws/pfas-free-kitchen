@@ -1,0 +1,57 @@
+# Task: Accordion UI Tests
+
+Priority: P1
+Assigned To: Testing Agent
+Depends On: None
+Estimated Effort: Medium (30 minutes)
+
+## Context
+
+Website Agent implemented accordion sidebar in Phase 7 (5DS Clone). The spec file exists but needs completion and validation. This tests validates the new UI before Connected Services work begins.
+
+## Objectives
+
+1. Complete/fix accordion UI tests in `website/tests/configurator-accordion.spec.ts`
+2. Ensure all accordion sections expand/collapse correctly
+3. Verify mobile responsive behavior
+4. Run full test suite and confirm 732+ tests pass
+
+## Success Criteria
+
+- [ ] Accordion tests written and passing
+- [ ] All existing 732 tests still pass
+- [ ] No regressions in configurator UI
+- [ ] Test file committed to repo
+
+## Files to Modify
+
+- `website/tests/configurator-accordion.spec.ts` (complete tests)
+- May need to check: `website/app/components/configurator/FileTreeView.tsx`
+
+## Test Scenarios to Cover
+
+1. **Accordion open/close**: Click section header toggles content
+2. **Only one section open**: Opening new section closes previous (if that's the pattern)
+3. **Content renders**: Verify section content loads (e.g., SupabaseSetup)
+4. **Mobile behavior**: Sidebar collapses to drawer on mobile
+
+## Handoff
+
+1. Run `npm test` and record results
+2. Move task to done/
+3. Write completion report to outbox/
+4. Update TESTING_MEMORY.md
+5. Signal Website Agent can proceed with T2
+
+---
+
+## Quick Start Prompt
+
+Copy this to a new Cursor tab to activate Testing Agent:
+
+```
+Read prompts/agents/roles/TESTING.md and execute task T1 from Cycle 16 strategy.
+Complete the accordion UI tests in website/tests/configurator-accordion.spec.ts.
+Verify the new sidebar accordion behavior works correctly. Run npm test to confirm.
+```
+

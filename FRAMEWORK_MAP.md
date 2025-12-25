@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- f278a68 2025-12-25 chore(audit): cycle 15 audit - 732 tests passing, 5-cycle execution gap identified
 - 4447b5c 2025-12-25 docs(curator): cycle 14 curation - 6 tasks distributed, governance pause recommended
 - ea3b7d9 2025-12-25 chore(audit): cycle 13 audit + commit 4+ cycles of uncommitted work
 - 1f62eb1 2025-12-25 docs(curator): cycle 11 curation - 6 tasks distributed (avg 8.4 quality)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 7584307 2025-12-24 fix(preview): add defensive checks for undefined props in all preview components
 - 088f5b7 2025-12-24 fix(api): move user-projects routes to avoid dynamic route conflict
 - 7516e96 2025-12-24 feat(website): add value comparison and enhanced social proof sections
-- 1b03124 2025-12-24 docs: update 5DS task status - all Website Agent tasks complete
 
 ## Agent Governance Structure
 
