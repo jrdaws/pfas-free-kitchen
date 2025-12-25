@@ -182,17 +182,20 @@ export default function Home() {
     <main className="min-h-screen relative overflow-hidden bg-brand-dark">
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
-        {/* Background gradient image */}
+        {/* Background with warm stone gradient (replaces purple gradient image) */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: "url('/images/redesign/hero/hero-gradient-bg.webp')" }}
+          className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950"
         />
+        
+        {/* Warm accent glow orbs */}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
 
         {/* Mesh overlay */}
         <div className="mesh-overlay" />
 
         {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/30 via-transparent to-brand-dark" />
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/30 via-transparent to-stone-950" />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">

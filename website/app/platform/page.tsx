@@ -65,8 +65,8 @@ const features = [
     icon: Terminal,
     title: "Powerful CLI",
     description: "Health checks, drift detection, and export commands. Built for developer experience.",
-    color: "text-pink-500",
-    bgColor: "bg-pink-500/10",
+    color: "text-orange-500",
+    bgColor: "bg-orange-500/10",
   },
   {
     icon: Layers,

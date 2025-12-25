@@ -79,11 +79,11 @@ const FILE_ICONS: Record<FileType, React.ReactNode> = {
 
 // Highlight colors
 const HIGHLIGHT_COLORS: Record<NonNullable<FileHighlight>, string> = {
-  route: "text-blue-600 bg-blue-50",
-  component: "text-purple-600 bg-purple-50",
-  config: "text-amber-600 bg-amber-50",
+  route: "text-orange-600 bg-orange-50",
+  component: "text-amber-600 bg-amber-50",
+  config: "text-stone-600 bg-stone-50",
   generated: "text-emerald-600 bg-emerald-50",
-  integration: "text-pink-600 bg-pink-50",
+  integration: "text-orange-500 bg-orange-50",
 };
 
 const HIGHLIGHT_BADGES: Record<NonNullable<FileHighlight>, { label: string; variant: "default" | "secondary" | "destructive" | "outline" | "info" | "success" | "warning" }> = {
@@ -341,11 +341,11 @@ export function FileTreeView({
               <p className="text-xs text-stone-500">Folders</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-lg text-blue-600">{stats.routes}</p>
+              <p className="font-bold text-lg text-orange-600">{stats.routes}</p>
               <p className="text-xs text-stone-500">Routes</p>
             </div>
             <div className="text-center">
-              <p className="font-bold text-lg text-purple-600">{stats.components}</p>
+              <p className="font-bold text-lg text-amber-600">{stats.components}</p>
               <p className="text-xs text-stone-500">Components</p>
             </div>
           </div>
@@ -380,11 +380,11 @@ export function FileTreeView({
         {/* Legend */}
         <div className="flex items-center gap-4 mt-3 text-xs text-stone-500 flex-wrap">
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-blue-100" />
+            <div className="w-3 h-3 rounded bg-orange-100" />
             Routes
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-purple-100" />
+            <div className="w-3 h-3 rounded bg-amber-100" />
             Components
           </span>
           <span className="flex items-center gap-1">
@@ -396,7 +396,7 @@ export function FileTreeView({
             Generated
           </span>
           <span className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded bg-pink-100" />
+            <div className="w-3 h-3 rounded bg-orange-100" />
             Integration
           </span>
         </div>

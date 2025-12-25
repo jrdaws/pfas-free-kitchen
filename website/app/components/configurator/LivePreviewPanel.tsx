@@ -149,7 +149,7 @@ export function LivePreviewPanel({
         ` : ""}
         ${integrations.analytics ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
-          <div class="w-10 h-10 rounded-lg bg-pink-500/20 flex items-center justify-center mb-4">📊</div>
+          <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">📊</div>
           <h3 class="font-semibold mb-2">Analytics</h3>
           <p class="text-stone-400 text-sm">${integrations.analytics} for insights</p>
         </div>

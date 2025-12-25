@@ -38,13 +38,13 @@ function HeroSection() {
       <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent" />
       
       {/* Glowing orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl" />
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32">
         <div className="text-center max-w-4xl mx-auto">
           {/* Badge */}
-          <Badge className="mb-6 px-4 py-2 text-sm bg-blue-500/20 text-blue-300 border-blue-500/30 hover:bg-blue-500/30">
+          <Badge className="mb-6 px-4 py-2 text-sm bg-orange-500/20 text-orange-300 border-orange-500/30 hover:bg-orange-500/30">
             <Sparkles className="h-3 w-3 mr-2" />
             AI-Powered Project Generator
           </Badge>
@@ -52,7 +52,7 @@ function HeroSection() {
           {/* Headline */}
           <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
             Build Your{" "}
-            <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-300 bg-clip-text text-transparent">
               Dream App
             </span>
             <br />
@@ -67,7 +67,7 @@ function HeroSection() {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-blue-600 hover:bg-blue-500" asChild>
+            <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-orange-600 hover:bg-orange-500" asChild>
               <Link href="/configure">
                 Start Building
                 <ArrowRight className="h-5 w-5" />
@@ -102,7 +102,7 @@ function HeroSection() {
 
         {/* Hero Visual */}
         <div className="mt-16 relative max-w-5xl mx-auto">
-          <div className="absolute -inset-4 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-pink-500/20 rounded-2xl blur-xl" />
+          <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/20 via-amber-500/20 to-orange-400/20 rounded-2xl blur-xl" />
           <div className="relative bg-stone-900 border border-stone-800 rounded-xl overflow-hidden shadow-2xl">
             {/* Browser Chrome */}
             <div className="flex items-center gap-2 px-4 py-3 bg-stone-800/50 border-b border-stone-700">
@@ -138,15 +138,15 @@ function ValuePropsSection() {
       icon: <Clock className="h-6 w-6" />,
       title: "5-Day Sprint",
       description: "Go from idea to deployed app in just 5 days with our guided workflow.",
-      color: "text-blue-400",
-      bgColor: "bg-blue-500/10",
+      color: "text-orange-400",
+      bgColor: "bg-orange-500/10",
     },
     {
       icon: <Sparkles className="h-6 w-6" />,
       title: "AI-Optimized",
       description: "Generated code is structured for Cursor AI and Claude Code workflows.",
-      color: "text-purple-400",
-      bgColor: "bg-purple-500/10",
+      color: "text-amber-400",
+      bgColor: "bg-amber-500/10",
     },
     {
       icon: <Download className="h-6 w-6" />,
@@ -225,7 +225,7 @@ function FeaturesSection() {
               <div className="space-y-4">
                 {section.items.map((item, j) => (
                   <div key={j} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-stone-50 shadow-sm flex items-center justify-center text-blue-600">
+                    <div className="w-10 h-10 rounded-lg bg-stone-50 shadow-sm flex items-center justify-center text-orange-600">
                       {item.icon}
                     </div>
                     <span className="text-stone-700">{item.text}</span>
@@ -285,14 +285,14 @@ function HowItWorksSection() {
             <div key={i} className="relative">
               {/* Connector line */}
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-14 left-1/2 w-full h-0.5 bg-gradient-to-r from-blue-200 to-blue-100" />
+                <div className="hidden md:block absolute top-14 left-1/2 w-full h-0.5 bg-gradient-to-r from-orange-200 to-orange-100" />
               )}
               
               <div className="relative text-center">
-                <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-100 flex items-center justify-center mx-auto mb-6 text-blue-600">
+                <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex items-center justify-center mx-auto mb-6 text-orange-600">
                   {step.icon}
                 </div>
-                <div className="text-xs font-bold text-blue-600 mb-2">{step.number}</div>
+                <div className="text-xs font-bold text-orange-600 mb-2">{step.number}</div>
                 <h3 className="text-xl font-bold mb-2">{step.title}</h3>
                 <p className="text-stone-600 text-sm">{step.description}</p>
               </div>
@@ -381,9 +381,9 @@ function PricingPreviewSection() {
           </Card>
 
           {/* Pro Tier */}
-          <Card className="relative border-blue-200 shadow-lg shadow-blue-100/50">
+          <Card className="relative border-orange-200 shadow-lg shadow-orange-100/50">
             <div className="absolute -top-3 left-1/2 -transtone-x-1/2">
-              <Badge className="bg-blue-600">Most Popular</Badge>
+              <Badge className="bg-orange-600">Most Popular</Badge>
             </div>
             <CardHeader>
               <CardTitle className="text-2xl">Pro</CardTitle>
@@ -402,7 +402,7 @@ function PricingPreviewSection() {
                   </li>
                 ))}
               </ul>
-              <Button className="w-full mt-6 bg-blue-600 hover:bg-blue-500" asChild>
+              <Button className="w-full mt-6 bg-orange-600 hover:bg-orange-500" asChild>
                 <Link href="/configure">Start Free Trial</Link>
               </Button>
             </CardContent>
@@ -440,7 +440,7 @@ function PricingPreviewSection() {
 // CTA Section
 function CTASection() {
   return (
-    <section className="py-24 bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white">
+    <section className="py-24 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 text-white">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         <h2 className="text-4xl md:text-5xl font-bold mb-6">
           Ready to Build Something Amazing?
@@ -449,7 +449,7 @@ function CTASection() {
           Join hundreds of developers who ship faster with Dawson Does Framework.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-stone-50 text-blue-600 hover:bg-stone-100" asChild>
+          <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-stone-50 text-orange-600 hover:bg-stone-100" asChild>
             <Link href="/configure">
               Start Building Free
               <ArrowRight className="h-5 w-5" />

@@ -57,7 +57,7 @@ export function ViewportIndicator() {
     md: "bg-yellow-500",
     lg: "bg-green-500",
     xl: "bg-blue-500",
-    "2xl": "bg-purple-500",
+    "2xl": "bg-amber-500",
   };
 
   return (
