@@ -1,0 +1,40 @@
+# Task: Create Deployment Guides
+
+Priority: P2
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Medium (~45 min)
+Curated By: CURATOR Agent
+Quality Score: 9.2/10
+
+## Context
+Testing Agent found dead links to deployment guides (vercel.md, netlify.md, railway.md).
+These need to be created to prevent 404s and help users deploy.
+
+## Objectives
+1. Create docs/deployment/vercel.md
+2. Create docs/deployment/netlify.md
+3. Create docs/deployment/railway.md
+4. Link from docs/deployment/README.md
+
+## Success Criteria
+- [ ] All three deployment guides exist
+- [ ] Each includes environment variable setup
+- [ ] Each includes step-by-step deployment instructions
+- [ ] No dead links in documentation
+- [ ] Tested: all links work
+
+## Files to Create
+- docs/deployment/vercel.md
+- docs/deployment/netlify.md
+- docs/deployment/railway.md
+
+## Reference
+- Existing docs/deploy/VERCEL_DEPLOYMENT.md (merge or consolidate)
+- docs/deployment/PRODUCTION_DEPLOYMENT.md
+
+## Handoff
+1. Move task to done/
+2. Commit: git add -A && git commit -m "docs(deployment): add Vercel, Netlify, Railway guides"
+3. Update PROJECT_PRIORITIES.md (remove from backlog)
+

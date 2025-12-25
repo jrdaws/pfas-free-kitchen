@@ -1,10 +1,9 @@
 {
-  "name": "@integrations/uploadthing",
+  "name": "@dawson-does/integration-uploadthing",
+  "version": "1.0.0",
   "private": true,
-  "description": "UploadThing storage integration for dawson-does-framework",
   "dependencies": {
     "uploadthing": "^7.4.0",
     "@uploadthing/react": "^7.1.0"
   }
 }
-

@@ -1,76 +1,84 @@
 # Agent Activation Queue
 
-> Updated: 2025-12-24 14:53 by CURATOR Agent (Cycle 10)
+> Updated: 2025-12-24 18:00 by CURATOR Agent (Cycle 10)
 > 
 > Copy any of these prompts into a new Cursor chat to launch the agent.
 
 ---
 
-## Recent Completions (Since Cycle 9)
+## Recent Completions (Cycle 10)
 
 | Task | Agent | Status |
 |------|-------|--------|
 | P0 Export Mismatch Fix | Website | ✅ DONE |
-| Scaffold Without Env Check | CLI | ✅ DONE |
 | UploadThing Validation | Testing | ✅ DONE |
-| Component-Aware Preview | Testing | ✅ DONE |
 | SaaS Template Enhancements | Template | ✅ DONE |
 | Agent Folder Standardization | Auditor | ✅ DONE |
+| Checkpoint Snapshots | Documentation | ✅ DONE |
+| Export Clarity Verification | Testing | ✅ DONE |
 
 ---
 
-## 🔴 Priority 1 (Launch Now)
+## 🔴 Priority 2 (Launch Now - All Parallel)
 
-### Testing Agent - Verify Export Clarity
+### Documentation Agent - CODING_STANDARDS.md + Deployment Guides
 ```
-Read and execute output/testing-agent/inbox/20251224-1210-P1-task-verify-export-clarity.txt
+Read and execute the tasks in:
+- output/documentation-agent/inbox/20251224-1800-P2-task-coding-standards.txt
+- output/documentation-agent/inbox/20251224-1800-P2-task-deployment-guides.txt
 ```
-**Effort**: ~20 min | **Blocks**: Platform deployment | **Status**: Ready
+**Effort**: ~90 min | **Status**: Ready | **Quality**: 9.4/10 + 9.2/10
 
 ---
 
-## 🟡 Priority 2 (After Dependencies / User Action)
+### Testing Agent - Configurator UI Tests
+```
+Read and execute the task in output/testing-agent/inbox/20251224-1800-P2-task-configurator-ui-tests.txt
+```
+**Effort**: ~1 hour | **Status**: Ready | **Quality**: 9.2/10
 
-### Platform Agent - Deploy to Vercel
-```
-Read and execute output/platform-agent/inbox/20251224-1210-P2-task-deploy-vercel.txt
-```
-**Effort**: ~30 min | **Requires**: User runs `vercel login` first | **Status**: Blocked on auth
+---
 
-### Documentation Agent - Update Deployment Guides
+### CLI Agent - Export Without Env Vars
 ```
-Read and execute output/documentation-agent/inbox/20251224-1210-P2-task-update-deploy-guides.txt
+Read and execute the task in output/cli-agent/inbox/20251224-1800-P2-task-scaffold-without-env.txt
 ```
-**Effort**: ~20 min | **Requires**: Vercel deployment complete | **Status**: Blocked
+**Effort**: ~45 min | **Status**: Ready | **Quality**: 9.2/10
 
 ---
 
 ## 🟢 Priority 3 (Backlog)
 
+### Quality Agent - SOP Review
+```
+Read and execute the task in output/quality-agent/inbox/20251224-1800-P3-task-sop-review.txt
+```
+**Effort**: ~30 min | **Status**: Ready | **Quality**: 8.6/10
+
+---
+
 ### Platform Agent - Chunked Code Generation
 ```
 Read and execute output/platform-agent/inbox/20251223-1900-P1-task-chunked-code-generation.txt
 ```
-**Effort**: ~2 hours | Complex task, defer until after deployment
-
-### Testing Agent - Design Resources Validation
-```
-Read and execute output/testing-agent/inbox/20251223-1900-P2-task-design-resources-validation.txt
-```
-**Effort**: ~30 min | Lower priority
+**Effort**: ~2 hours | Complex task, defer until after consolidation
 
 ---
 
 ## Execution Order
 
 ```
-NOW:         Testing Agent (T1 - Verify Export)
-                    ↓
-USER ACTION: vercel login (human required)
-                    ↓
-THEN:        Platform Agent (T3) → Documentation Agent (T4)
-                    
-BACKLOG:     Chunked Code Gen, Design Validation
+PARALLEL LAUNCH (All Independent):
+├── Documentation Agent → CODING_STANDARDS + Deployment Guides
+├── Testing Agent → Configurator UI Tests
+├── CLI Agent → Export Without Env Vars
+└── Quality Agent → SOP Review (optional, P3)
+
+HUMAN ACTION (Async):
+└── Vercel Dashboard → Set Root Dir=website
+
+BACKLOG:
+└── Platform Agent → Chunked Code Generation
 ```
 
 ---
@@ -79,24 +87,24 @@ BACKLOG:     Chunked Code Gen, Design Validation
 
 | Metric | Value |
 |--------|-------|
-| Active Tasks | 3 |
-| Completed (Cycle 9-10) | 6 |
-| P1 Tasks | 1 |
-| P2 Tasks | 2 |
+| Active Tasks | 5 |
+| Completed (Cycle 10) | 6 |
+| P2 Tasks | 4 |
+| P3 Tasks | 1 |
 | Cycle | 10 |
+| Avg Quality Score | 9.1/10 |
 
 ---
 
 ## Blocker Alert
 
-**Vercel Deployment** requires human authentication:
-```bash
-cd /Users/joseph.dawson/Documents/dawson-does-framework/website
-vercel login
-```
+**Vercel Primary Domain** requires human action:
+1. Go to Vercel Dashboard → Project Settings
+2. Set Root Directory = `website`
+3. Redeploy
 
-After login, Platform Agent can deploy.
+Alt domain works; primary domain pending this config.
 
 ---
 
-*Launch Testing Agent (T1) to verify export clarity changes.*
+*All 5 tasks can launch in PARALLEL - no dependencies between them.*

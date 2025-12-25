@@ -77,7 +77,8 @@
     "email": ["resend", "sendgrid"],
     "db": ["supabase", "planetscale"],
     "ai": ["openai", "anthropic"],
-    "analytics": ["posthog", "plausible"]
+    "analytics": ["posthog", "plausible"],
+    "storage": ["uploadthing"]
   },
   "defaultIntegrations": {
     "auth": "supabase",
