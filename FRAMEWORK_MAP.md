@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- d71aed3 2025-12-24 feat(templates): add UploadThing components and update integration
 - f54fc9b 2025-12-24 chore(website): archive completed inbox tasks to done/
 - 07fc3fa 2025-12-24 chore: update framework map and template memory
 - 7c10999 2025-12-24 docs(strategy): Cycle 10 strategy - consolidation focus
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - b853307 2025-12-24 docs: complete migration to flat agent folder structure
 - ad9de30 2025-12-24 chore(auditor): sign off on governance and media path updates
 - 1d95f5c 2025-12-24 feat: add color tokens and agent-settings schema + P1 cleanup task
-- 269abd2 2025-12-24 feat: add output/shared/schemas/ and output/shared/design/ folders with READMEs
 
 ## Agent Governance Structure
 
