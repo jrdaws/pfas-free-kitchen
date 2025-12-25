@@ -1,0 +1,172 @@
+TASK: UI Media Polish - Custom Icons and Illustrations
+PRIORITY: P3 (Backlog - Nice to Have)
+TYPE: Media Asset Creation
+DEPENDS_ON: output/shared/design/5DS_UI_SPECIFICATION.md (reference)
+BLOCKED_BY: Website Agent completing accordion sidebar implementation
+
+---
+
+## Objective
+
+Create custom media assets to polish the configurator UI beyond the basic Lucide React icons currently in use. This is optional polish work - the UI is fully functional without these assets.
+
+## Reference
+
+- UI Specification: `output/shared/design/5DS_UI_SPECIFICATION.md`
+- Screenshot analysis shows custom-styled icons and visual elements
+
+---
+
+## Task 1: Custom Accordion Section Icons
+
+Create a cohesive icon set for the 8 configurator sections. Each icon should:
+- Be 24x24px SVG
+- Use the primary blue (#0052FF) or slate gray color
+- Have consistent stroke width (1.5-2px)
+- Match the visual style of the reference design
+
+### Icons Needed
+
+| Section | Current (Lucide) | Custom Icon Concept |
+|---------|------------------|---------------------|
+| Research | `Search` | Magnifying glass with sparkle/lightbulb |
+| Core Features | `Layers` | Stacked blocks/grid with checkmarks |
+| Integrate AI | `Cpu` | Brain/neural network pattern |
+| Cursor | `MousePointer` | Cursor logo stylized |
+| GitHub | `Github` | (Keep standard - recognizable) |
+| Claude Code | `Terminal` | Terminal with Claude icon |
+| Supabase | `Database` | (Keep standard or use Supabase logo) |
+| Vercel | `Rocket` | (Keep standard or use Vercel triangle) |
+
+### Output
+
+Save to: `website/public/images/configurator/sections/`
+- `research.svg`
+- `features.svg`
+- `ai.svg`
+- `cursor.svg`
+- `claude-code.svg`
+
+---
+
+## Task 2: File Tree Custom Icons
+
+The file tree in the "Generate Prompt" step uses emoji for folder types. Create SVG alternatives:
+
+| Type | Emoji | Custom Icon |
+|------|-------|-------------|
+| UI folder | 🎨 | Palette/brush icon |
+| Features folder | ⭐ | Star in folder |
+| Tests folder | 🧪 | Test tube/beaker |
+| Common folder | ↗ | Shared/link arrow |
+| Layouts folder | ▢ | Grid layout icon |
+| Config file | ⚙️ | Gear icon |
+
+### Specifications
+- Size: 16x16px SVG
+- Two color variants: slate-500 (default), primary blue (selected)
+- Consistent with folder/file visual style
+
+### Output
+
+Save to: `website/public/images/configurator/file-tree/`
+
+---
+
+## Task 3: Empty State Illustrations
+
+Create simple illustrations for empty/error states:
+
+### 3.1 No Projects Illustration
+- Used on `/projects` page when user has no saved projects
+- Concept: Empty folder with plus sign, or rocket waiting to launch
+- Size: 200x150px SVG or PNG
+- Colors: Slate-200/300 with primary blue accent
+
+### 3.2 Error State Illustration
+- Used when API calls fail or something goes wrong
+- Concept: Broken chain, warning triangle, or "oops" visual
+- Size: 200x150px SVG or PNG
+- Colors: Slate-200/300 with amber/red accent
+
+### 3.3 Success/Complete Illustration
+- Used when project export is successful
+- Concept: Checkmark celebration, rocket launched, or trophy
+- Size: 200x150px SVG or PNG
+- Colors: Slate-200/300 with green accent
+
+### Output
+
+Save to: `website/public/images/states/`
+- `empty-projects.svg`
+- `error.svg`
+- `success.svg`
+
+---
+
+## Task 4: Tool Status Icons (Optional)
+
+The "Generate Prompt" step shows tool readiness with "Ready" badges. Create small status icons:
+
+| Status | Icon |
+|--------|------|
+| Ready | Green checkmark in circle |
+| Pending | Gray circle outline |
+| Error | Red X in circle |
+| In Progress | Blue spinning/loading |
+
+### Specifications
+- Size: 12x12px or 16x16px SVG
+- Simple, clear at small sizes
+
+### Output
+
+Save to: `website/public/images/configurator/status/`
+
+---
+
+## Task 5: "Show Me How" Video Thumbnails (Future)
+
+When/if tutorial videos are created, design thumbnail templates:
+
+- 16:9 aspect ratio
+- Consistent branding (Dawson Does style)
+- Tool logo prominent
+- Step number indicator
+
+**Note**: This task is only relevant once video content exists. Low priority.
+
+---
+
+## Deliverables Checklist
+
+- [ ] 5-8 custom section icons (SVG)
+- [ ] 6 file tree type icons (SVG)
+- [ ] 3 empty/error state illustrations
+- [ ] 4 status indicator icons (optional)
+- [ ] Video thumbnail template (future)
+
+---
+
+## Design Guidelines
+
+1. **Style**: Clean, modern, slightly rounded edges
+2. **Colors**: Use the palette from `5DS_UI_SPECIFICATION.md`
+   - Primary: #0052FF
+   - Success: #10B981
+   - Warning: #F59E0B
+   - Error: #EF4444
+   - Neutrals: Slate scale
+3. **Format**: SVG preferred (scalable, small file size)
+4. **Naming**: Lowercase, hyphenated (e.g., `core-features.svg`)
+
+---
+
+## Notes
+
+- These are enhancement tasks, not blockers
+- Website Agent can ship without these (using Lucide icons)
+- Focus on quality over quantity
+- Match the professional, clean aesthetic of the reference design
+
+

@@ -38,6 +38,7 @@
 
 | Priority | Task | Best Agent | Reason | Added By |
 |----------|------|------------|--------|----------|
+| P3 | UI Media Polish (custom icons, illustrations) | Media | Enhancement after UI implementation | RES |
 | P3 | Add velocity tracking automation | Platform | Metrics | AUD |
 | P3 | Create user feedback collection | Website | UX improvement | AUD |
 | P3 | Create missing deployment guides (vercel/netlify/railway.md) | Documentation | Dead links | TST |
