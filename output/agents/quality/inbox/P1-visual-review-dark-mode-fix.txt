@@ -1,0 +1,142 @@
+# P1 Task: Visual Review - Dark Mode Color Scheme Fix
+
+> **Priority**: P1 - High
+> **From**: Website Agent
+> **Created**: 2025-12-25
+> **Status**: Ready for review
+
+---
+
+## Context
+
+The Website Agent has completed the dark mode fix to replace the purple/pink gradient with warm stone tones. This task requests a visual review to ensure the implementation is correct and identify any remaining issues.
+
+---
+
+## Changes Made
+
+### Files Modified
+
+1. **`website/app/page.tsx`** (Main homepage)
+   - Replaced purple gradient background image with CSS stone gradient
+   - Added warm orange/amber glow orbs
+   - Changed overlay from `brand-dark` to `stone-950`
+
+2. **`website/app/components/marketing/LandingPage.tsx`**
+   - Replaced `bg-blue-500/20`, `bg-purple-500/20` orbs → `bg-orange-500/20`, `bg-amber-500/20`
+   - Gradient text: `from-blue-400 via-purple-400 to-pink-400` → `from-orange-400 via-amber-400 to-orange-300`
+   - All blue buttons/badges → orange equivalents
+   - CTA section: `from-blue-600 via-purple-600 to-pink-600` → `from-orange-600 via-amber-600 to-orange-500`
+
+3. **`website/app/components/configurator/FileTreeView.tsx`**
+   - Route highlight: `text-blue-600 bg-blue-50` → `text-orange-600 bg-orange-50`
+   - Component highlight: `text-purple-600 bg-purple-50` → `text-amber-600 bg-amber-50`
+   - Integration highlight: `text-pink-600 bg-pink-50` → `text-orange-500 bg-orange-50`
+
+4. **`website/app/platform/page.tsx`**
+   - `text-pink-500` → `text-orange-500`
+
+5. **`website/app/components/configurator/LivePreviewPanel.tsx`**
+   - `bg-pink-500/20` → `bg-orange-500/20`
+
+6. **`website/app/components/dev/ViewportIndicator.tsx`**
+   - `bg-purple-500` → `bg-amber-500`
+
+7. **SVG Assets** (comments updated)
+   - `stepper-connector-horizontal.svg`
+   - `stepper-connector-vertical.svg`
+   - `completion-confetti.svg`
+
+---
+
+## Review Checklist
+
+Please verify the following on http://localhost:3000:
+
+### Homepage (`/`)
+- [ ] Hero section uses warm stone-950 background (no purple gradient)
+- [ ] Orange/amber glow orbs are visible but subtle
+- [ ] Gradient text uses orange tones (not purple/pink)
+- [ ] All buttons are orange (not blue)
+- [ ] Terminal mockup is clearly visible
+- [ ] Text is readable on dark background
+
+### Marketing Landing Page (`/configure` → LandingPage component if used)
+- [ ] Hero badge is orange (not blue)
+- [ ] CTA section gradient is warm orange (not purple/pink)
+- [ ] "How It Works" icons use orange (not blue/purple)
+- [ ] Pricing "Most Popular" badge is orange
+
+### Configurator (`/configure`)
+- [ ] Sidebar and sections use stone backgrounds
+- [ ] No purple/pink accent colors visible
+- [ ] Orange accents work well for active states
+
+### Platform Page (`/platform`)
+- [ ] CLI feature uses orange (not pink)
+
+### Overall Brand Consistency
+- [ ] Dark mode feels warm (not cool/purple)
+- [ ] Orange accents are consistent (#F97316, #EA580C)
+- [ ] Stone neutrals are consistent (stone-900, stone-950)
+- [ ] Light and dark modes feel cohesive
+
+---
+
+## Expected Color Palette
+
+| Element | Light Mode | Dark Mode |
+|---------|------------|-----------|
+| Background | stone-50 (#FAFAF9) | stone-950 (#0C0A09) |
+| Surface | white | stone-900 (#1C1917) |
+| Primary accent | orange-500 (#F97316) | orange-400 (#FB923C) |
+| Secondary accent | orange-600 (#EA580C) | orange-500 (#F97316) |
+| Text | stone-900 | stone-100 |
+| Muted text | stone-500 | stone-400 |
+
+---
+
+## How to Test
+
+```bash
+cd website && npm run dev
+# Open http://localhost:3000
+```
+
+Toggle between light/dark mode (if applicable) and check all pages listed above.
+
+---
+
+## Output Format
+
+Please provide feedback in this format:
+
+```markdown
+## Visual Review Results
+
+### ✅ Passed
+- [List items that look correct]
+
+### ⚠️ Issues Found
+1. **[Component/Page]**: [Description of issue]
+   - Current: [What it looks like]
+   - Expected: [What it should look like]
+   - Fix: [Suggested fix for Website Agent]
+
+### 📸 Screenshots (if applicable)
+[Attach or describe any visual issues]
+```
+
+---
+
+## After Review
+
+Create a follow-up task for Website Agent at:
+`output/agents/website/inbox/P1-visual-fixes-from-quality-review.txt`
+
+Include all issues found with specific file paths and suggested fixes.
+
+---
+
+*Task created by Website Agent | Dark Mode Fix Review | 2025-12-25*
+
