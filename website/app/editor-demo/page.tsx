@@ -148,11 +148,13 @@ export default function EditorDemoPage() {
         {showCode ? (
           <div className="h-full p-4">
             <div className="terminal-window h-full">
-              <div className="terminal-header">
-                <div className="terminal-dot bg-terminal-error"></div>
-                <div className="terminal-dot bg-terminal-warning"></div>
-                <div className="terminal-dot bg-terminal-text"></div>
-                <span className="text-xs text-terminal-dim ml-2">HTML Source</span>
+              <div className="terminal-header-modern">
+                <span className="terminal-title">HTML Source</span>
+                <div className="flex gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                </div>
               </div>
               <div className="terminal-content h-full overflow-auto">
                 <pre className="text-xs text-terminal-text font-mono whitespace-pre-wrap">

@@ -174,13 +174,15 @@ export default function Home() {
                 />
               </div>
 
-              {/* Animated Terminal */}
+              {/* Animated Terminal - Clean Modern Style */}
               <div className="terminal-window relative z-10">
-                <div className="terminal-header">
-                  <div className="terminal-dot bg-red-500" />
-                  <div className="terminal-dot bg-yellow-500" />
-                  <div className="terminal-dot bg-green-500" />
-                  <span className="ml-3 text-xs text-zinc-500 font-mono">terminal</span>
+                <div className="terminal-header-modern">
+                  <span className="terminal-title">~/my-app</span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  </div>
                 </div>
                 <div className="terminal-content text-left">
                   <div className="flex items-center gap-2 mb-4">
@@ -284,11 +286,13 @@ export default function Home() {
 
           {level === 'beginner' ? (
               <div className="terminal-window">
-                <div className="terminal-header">
-                <div className="terminal-dot bg-red-500" />
-                <div className="terminal-dot bg-yellow-500" />
-                <div className="terminal-dot bg-green-500" />
-                <span className="ml-3 text-xs text-zinc-500 font-mono">Quick Start</span>
+                <div className="terminal-header-modern">
+                  <span className="terminal-title">Quick Start</span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  </div>
                 </div>
                 <div className="terminal-content">
                 <div className="space-y-4">
@@ -332,11 +336,13 @@ export default function Home() {
             </div>
           ) : (
               <div className="terminal-window">
-                <div className="terminal-header">
-                <div className="terminal-dot bg-red-500" />
-                <div className="terminal-dot bg-yellow-500" />
-                <div className="terminal-dot bg-green-500" />
-                <span className="ml-3 text-xs text-zinc-500 font-mono">Advanced Workflow</span>
+                <div className="terminal-header-modern">
+                  <span className="terminal-title">Advanced Workflow</span>
+                  <div className="flex gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                    <div className="w-2 h-2 rounded-full bg-zinc-600" />
+                  </div>
                 </div>
                 <div className="terminal-content">
                 <div className="space-y-4">
