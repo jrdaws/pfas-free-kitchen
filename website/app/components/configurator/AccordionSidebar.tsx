@@ -200,9 +200,12 @@ export function AccordionSidebar({
 
   if (!mounted) {
     return (
-      <aside className={cn("hidden md:flex flex-col w-[300px] bg-stone-50 border-r border-stone-200", className)}>
-        <div className="h-14 flex items-center px-4 border-b border-stone-200">
-          <span className="font-bold text-[#F97316]">Loading...</span>
+      <aside className={cn("hidden md:flex flex-col w-[320px] bg-[var(--surface)] border-r border-[var(--border)]", className)}>
+        <div className="h-14 flex items-center px-6 border-b border-[var(--border)]">
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-[var(--primary)] rounded-lg flex items-center justify-center text-white font-bold text-sm">D</div>
+            <span className="font-bold text-[var(--text-secondary)]">Loading...</span>
+          </div>
         </div>
       </aside>
     );
@@ -244,28 +247,28 @@ export function AccordionSidebar({
               <AccordionItem
                 key={section.id}
                 value={section.id}
-                className="border-b border-stone-100"
+                className="border-b border-[var(--border)]"
               >
                 <AccordionTrigger
                   onClick={() => handleSectionClick(section)}
                   className={cn(
-                    "relative px-4 py-3 hover:bg-stone-50 hover:no-underline group",
-                    isActive && "bg-[#F97316]/5"
+                    "sidebar-item relative px-4 py-3.5 hover:bg-[var(--primary-light)] hover:no-underline group",
+                    isActive && "bg-[var(--primary-light)]"
                   )}
                 >
                   {/* Active indicator bar */}
                   {isActive && (
-                    <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#F97316] rounded-r" />
+                    <span className="absolute left-0 top-2.5 bottom-2.5 w-1 bg-[var(--primary)] rounded-r-md" />
                   )}
 
-                  <div className="flex items-center gap-3 flex-1">
+                  <div className="flex items-center gap-3.5 flex-1">
                     {/* Status indicator or icon */}
                     <div
                       className={cn(
-                        "flex items-center justify-center w-8 h-8 rounded-lg transition-colors",
-                        state === "completed" && "bg-emerald-100 text-emerald-600",
-                        state === "current" && "bg-[#F97316]/10 text-[#F97316]",
-                        state === "pending" && "bg-stone-100 text-stone-400"
+                        "sidebar-icon flex items-center justify-center w-9 h-9 rounded-xl transition-colors",
+                        state === "completed" && "bg-[var(--success-light)] text-[var(--success-dark)]",
+                        state === "current" && "bg-[var(--primary-light)] text-[var(--primary)]",
+                        state === "pending" && "bg-[var(--muted)] text-[var(--text-secondary)]"
                       )}
                     >
                       {state === "completed" ? (
@@ -280,29 +283,31 @@ export function AccordionSidebar({
                       <div className="flex items-center gap-2">
                         <span
                           className={cn(
-                            "font-medium text-sm",
-                            state === "completed" && "text-emerald-600",
-                            state === "current" && "text-[#F97316]",
-                            state === "pending" && "text-stone-600"
+                            "font-semibold text-[15px]",
+                            state === "completed" && "text-[var(--success-dark)]",
+                            state === "current" && "text-[var(--primary)]",
+                            state === "pending" && "text-[var(--text-primary)]"
                           )}
                         >
                           {section.label}
                         </span>
                         {badge !== undefined && (
-                          <Badge 
-                            variant={state === "completed" ? "success" : "secondary"} 
-                            className="h-5 px-1.5 text-xs"
-                          >
+                          <span className={cn(
+                            "sidebar-badge px-2.5 py-0.5 rounded-full text-xs font-semibold",
+                            state === "completed" 
+                              ? "bg-[var(--success-light)] text-[var(--success-dark)]" 
+                              : "bg-[var(--muted)] text-[var(--text-secondary)]"
+                          )}>
                             {badge}
-                          </Badge>
+                          </span>
                         )}
                         {state === "completed" && !badge && (
-                          <Badge variant="success" className="h-5 px-1.5 text-xs">
+                          <span className="sidebar-badge px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[var(--success-light)] text-[var(--success-dark)]">
                             Ready
-                          </Badge>
+                          </span>
                         )}
                       </div>
-                      <div className="text-xs text-stone-500">
+                      <div className="text-xs text-[var(--text-secondary)] mt-0.5">
                         {section.description}
                       </div>
                     </div>
@@ -310,9 +315,9 @@ export function AccordionSidebar({
                 </AccordionTrigger>
 
                 <AccordionContent className="px-4 pb-4 pt-0">
-                  <div className="pl-11 text-sm text-stone-600">
+                  <div className="pl-12 text-sm text-[var(--text-secondary)]">
                     {children ? children(section.id) : (
-                      <p className="text-stone-500 italic">
+                      <p className="text-[var(--text-secondary)] italic">
                         Click to configure {section.label.toLowerCase()}
                       </p>
                     )}
@@ -325,18 +330,20 @@ export function AccordionSidebar({
       </ScrollArea>
 
       {/* Progress footer */}
-      <div className="p-4 border-t border-stone-200 bg-stone-50 shrink-0">
-        <div className="flex items-center justify-between text-sm mb-2">
-          <span className="text-stone-600">Progress</span>
-          <span className="font-medium text-[#F97316]">
-            {Math.round((completedSteps.size / NAV_SECTIONS.length) * 100)}%
-          </span>
-        </div>
-        <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+      <div className="sidebar-progress p-5 border-t border-[var(--border)] bg-[var(--surface)] shrink-0">
+        <div className="progress-bar h-1.5 bg-[var(--muted)] rounded-full overflow-hidden">
           <div
-            className="h-full bg-[#F97316] transition-all duration-300 rounded-full"
-            style={{ width: `${(completedSteps.size / NAV_SECTIONS.length) * 100}%` }}
+            className="progress-fill h-full transition-all duration-300 rounded-full"
+            style={{ 
+              width: `${(completedSteps.size / NAV_SECTIONS.length) * 100}%`,
+              background: 'linear-gradient(90deg, var(--primary), #FB923C)'
+            }}
           />
+        </div>
+        <div className="flex items-center justify-between text-[13px] mt-2.5">
+          <span className="text-[var(--text-secondary)] font-medium">
+            {Math.round((completedSteps.size / NAV_SECTIONS.length) * 100)}% complete
+          </span>
         </div>
       </div>
     </aside>

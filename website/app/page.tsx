@@ -179,17 +179,19 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen relative overflow-hidden bg-brand-dark">
+    <main className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg)' }}>
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
-        {/* Background with warm stone gradient (replaces purple gradient image) */}
+      <section className="hero relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
+        {/* Background with warm stone gradient */}
         <div
-          className="absolute inset-0 bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950"
+          className="absolute inset-0"
+          style={{ background: 'linear-gradient(to bottom right, #0C0A09, #1C1917, #0C0A09)' }}
         />
         
-        {/* Warm accent glow orbs */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/3 right-1/4 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl" />
+        {/* Warm accent glow orbs - matches mockup */}
+        <div className="absolute top-[-40%] right-[-20%] w-[80%] h-full rounded-full pointer-events-none" 
+          style={{ background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(251, 146, 60, 0.05) 100%)' }} 
+        />
 
         {/* Mesh overlay */}
         <div className="mesh-overlay" />
@@ -201,117 +203,77 @@ export default function Home() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left side - Text content */}
             <div className="text-center lg:text-left">
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-primary/10 border border-brand-primary/20 mb-6">
-                <span className="w-2 h-2 rounded-full bg-brand-success animate-pulse" />
-                <span className="text-sm font-medium text-brand-primary">v0.3.1 · 732 tests passing · Feature Assembler</span>
+              {/* Hero badge - matches mockup exactly */}
+              <div className="hero-badge inline-flex items-center gap-2 mb-7">
+                <span>✦</span>
+                <span>Export-First Framework · v0.3.1</span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 leading-tight">
-                From idea to production
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight" style={{ color: 'var(--text-primary)' }}>
+                Build SaaS apps
                 <br />
-                <span className="gradient-text">in minutes, not days</span>
-          </h1>
+                <span style={{ color: 'var(--primary)' }}>in days, not months</span>
+              </h1>
 
-              <p className="text-xl text-stone-400 mb-10 max-w-xl mx-auto lg:mx-0">
-            A CLI scaffolding system with plugins, templates, and provider integrations.
-                Ship faster. Stay secure. Scale confidently.
-          </p>
+              <p className="text-xl mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+                Configure your app in a beautiful visual builder, then export to full local ownership. No vendor lock-in, ever.
+              </p>
 
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start mb-12">
-                <a href="/configure" className="btn-primary text-center">
-                  Configure Project →
+              {/* CTA Buttons - matches mockup */}
+              <div className="flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start mb-10">
+                <a href="/configure" className="btn btn-primary text-center">
+                  Start Building →
                 </a>
                 <a
                   href="https://github.com/jrdaws/dawson-does-framework"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn-secondary text-center"
+                  className="btn btn-secondary text-center"
                 >
-                  View on GitHub
+                  Watch Demo
                 </a>
               </div>
 
-              {/* Enhanced Stats row */}
-              <div className="grid grid-cols-4 gap-4 max-w-lg mx-auto lg:mx-0">
-                {heroStats.map((stat) => (
-                  <div key={stat.label} className="text-center">
-                    <div className="stat-value text-2xl md:text-3xl">{stat.value}</div>
-                    <div className="text-xs text-stone-500">{stat.label}</div>
-                  </div>
-                ))}
-              </div>
-
-              {/* Tech Stack Logos */}
-              <div className="mt-10 pt-8 border-t border-stone-800/50">
-                <p className="text-xs text-stone-500 mb-4 uppercase tracking-wider">Built With</p>
-                <div className="flex flex-wrap items-center gap-4 justify-center lg:justify-start">
-                  {techStack.map((tech) => (
-                    <div
-                      key={tech.name}
-                      className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-stone-800/50 border border-stone-700/50 text-xs text-stone-400 hover:text-stone-200 hover:border-stone-600 transition-colors"
-                    >
-                      <span>{tech.name}</span>
-                    </div>
-                  ))}
-                </div>
+              {/* Features strip - matches mockup */}
+              <div className="features-strip flex flex-wrap gap-8 lg:gap-12 justify-center lg:justify-start">
+                <div className="feature-item">Zero lock-in</div>
+                <div className="feature-item">AI-powered</div>
+                <div className="feature-item">Full ownership</div>
+                <div className="feature-item">Deploy anywhere</div>
               </div>
             </div>
 
-            {/* Right side - Terminal/Visual */}
-            <div className="relative">
-              {/* Abstract graphic behind terminal */}
-              <div className="absolute -right-20 -top-20 w-96 h-96 opacity-50 animate-float">
-                <Image
-                  src="/images/redesign/hero/hero-abstract-graphic.webp"
-                  alt=""
-                  width={400}
-                  height={400}
-                  className="object-contain"
-                />
-              </div>
-
-              {/* Animated Terminal - Clean Modern Style */}
-              <div className="terminal-window relative z-10">
-                <div className="terminal-header-modern">
-                  <span className="terminal-title">~/my-app</span>
-                  <div className="flex gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                  </div>
+            {/* Right side - Terminal matching mockup */}
+            <div className="relative mt-14 lg:mt-0">
+              {/* Terminal - matches mockup exactly */}
+              <div className="terminal relative z-10 max-w-[600px] w-full">
+                <div className="terminal-header">
+                  <div className="terminal-dot red" />
+                  <div className="terminal-dot yellow" />
+                  <div className="terminal-dot green" />
                 </div>
-                <div className="terminal-content text-left">
-                  <div className="flex items-center gap-2 mb-4">
-                    <span className="text-brand-primary">$</span>
-                    <span className="text-stone-200">{terminalText}</span>
-                    {showCursor && (
-                      <span className="inline-block w-2 h-5 bg-brand-primary animate-blink" />
-              )}
-            </div>
+                <div className="terminal-body">
+                  <div className="terminal-line">
+                    <span className="terminal-prompt">$</span>
+                    <span className="terminal-command"> {terminalText}</span>
+                    {showCursor && terminalText !== command && (
+                      <span className="inline-block w-2 h-5 bg-orange-500 animate-blink ml-1" />
+                    )}
+                  </div>
                   {terminalText === command && (
-                    <div className="animate-fade-in space-y-2">
-                      <div className="text-stone-500">Fetching project configuration...</div>
-                      <div className="text-stone-400">
-                        <span className="text-brand-success">✓</span> Loaded: <span className="text-brand-primary">swift-eagle-1234</span>
+                    <div className="animate-fade-in space-y-2 mt-2">
+                      <div className="terminal-line">
+                        <span className="terminal-success">✓</span> Downloading your configuration...
                       </div>
-                      <div className="text-stone-400">
-                        <span className="text-brand-success">✓</span> Features: auth, billing, analytics
+                      <div className="terminal-line">
+                        <span className="terminal-success">✓</span> Setting up project structure...
                       </div>
-                      <div className="text-stone-400">
-                        <span className="text-brand-success">✓</span> Template: flagship-saas
+                      <div className="terminal-line">
+                        <span className="terminal-success">✓</span> Ready! Open in Cursor to continue.
                       </div>
-                      <div className="text-stone-400">
-                        <span className="text-brand-success">✓</span> Assembling 12 feature modules...
-                      </div>
-                      <div className="text-stone-300 mt-4">
-                        <span className="text-brand-success">✓</span> Project ready at{' '}
-                        <span className="text-brand-primary">./swift-eagle-1234</span>
-                      </div>
-                      <div className="text-stone-500 mt-2">Run: cd swift-eagle-1234 && npm install && npm run dev</div>
                     </div>
                   )}
-            </div>
+                </div>
             </div>
             </div>
           </div>
