@@ -48,9 +48,9 @@ export function CTA({
           className={cn(
             "px-8 py-4 rounded-xl font-semibold text-lg transition-all",
             variant === "gradient" &&
-              "bg-white text-indigo-600 hover:bg-gray-100 shadow-lg",
+              "bg-stone-50 text-indigo-600 hover:bg-gray-100 shadow-lg",
             variant === "solid" &&
-              "bg-white text-indigo-600 hover:bg-gray-100",
+              "bg-stone-50 text-indigo-600 hover:bg-gray-100",
             variant === "outlined" &&
               "bg-gradient-to-r from-indigo-500 to-violet-500 text-white hover:from-indigo-600 hover:to-violet-600"
           )}

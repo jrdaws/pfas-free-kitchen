@@ -203,22 +203,22 @@ export default function PlatformPage() {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-stone-50">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-50/80 backdrop-blur-md border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-[#F97316] flex items-center justify-center">
               <Code2 className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-slate-900">Framework</span>
+            <span className="font-bold text-stone-900">Framework</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-slate-600 hover:text-slate-900 transition">Features</a>
-            <a href="#how-it-works" className="text-sm text-slate-600 hover:text-slate-900 transition">How it Works</a>
-            <a href="#testimonials" className="text-sm text-slate-600 hover:text-slate-900 transition">Testimonials</a>
-            <Link href="/projects" className="text-sm text-slate-600 hover:text-slate-900 transition">My Projects</Link>
+            <a href="#features" className="text-sm text-stone-600 hover:text-stone-900 transition">Features</a>
+            <a href="#how-it-works" className="text-sm text-stone-600 hover:text-stone-900 transition">How it Works</a>
+            <a href="#testimonials" className="text-sm text-stone-600 hover:text-stone-900 transition">Testimonials</a>
+            <Link href="/projects" className="text-sm text-stone-600 hover:text-stone-900 transition">My Projects</Link>
           </div>
 
           <div className="flex items-center gap-3">
@@ -249,13 +249,13 @@ export default function PlatformPage() {
               Now with AI Context Generation
             </Badge>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold text-slate-900 mb-6 leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-stone-900 mb-6 leading-tight tracking-tight">
               Build Production Apps
               <br />
               <span className="text-[#F97316]">In Minutes, Not Months</span>
             </h1>
 
-            <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto">
               Visual project configurator with battle-tested integrations. 
               Export complete ownership via NPX. Zero vendor lock-in.
             </p>
@@ -277,8 +277,8 @@ export default function PlatformPage() {
             <div className="flex flex-wrap justify-center gap-8 md:gap-16">
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="text-3xl font-bold text-slate-900">{stat.value}</div>
-                  <div className="text-sm text-slate-500">{stat.label}</div>
+                  <div className="text-3xl font-bold text-stone-900">{stat.value}</div>
+                  <div className="text-sm text-stone-500">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -289,11 +289,11 @@ export default function PlatformPage() {
                 href="https://github.com/jrdaws/dawson-does-framework"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-full text-sm font-medium hover:bg-slate-800 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors"
               >
                 <Github className="h-4 w-4" />
                 <span>Star on GitHub</span>
-                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">⭐ 128+</span>
+                <span className="px-2 py-0.5 bg-stone-50/20 rounded-full text-xs">⭐ 128+</span>
               </a>
               <a
                 href="https://www.npmjs.com/package/@jrdaws/framework"
@@ -303,7 +303,7 @@ export default function PlatformPage() {
               >
                 <Package className="h-4 w-4" />
                 <span>npm</span>
-                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">
+                <span className="px-2 py-0.5 bg-stone-50/20 rounded-full text-xs">
                   <Download className="inline h-3 w-3 mr-1" />
                   1.2k/week
                 </span>
@@ -313,53 +313,53 @@ export default function PlatformPage() {
 
           {/* Hero Visual */}
           <div className="mt-16 relative">
-            <div className="bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800">
+            <div className="bg-stone-900 rounded-2xl shadow-2xl overflow-hidden border border-stone-800">
               {/* Browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-slate-800 border-b border-slate-700">
+              <div className="flex items-center gap-2 px-4 py-3 bg-stone-800 border-b border-stone-700">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
                 <div className="flex-1 mx-4">
-                  <div className="bg-slate-700 rounded-md px-3 py-1.5 text-xs text-slate-400 text-center">
+                  <div className="bg-stone-700 rounded-md px-3 py-1.5 text-xs text-stone-400 text-center">
                     framework.dawson.dev/configure
                   </div>
                 </div>
               </div>
               
               {/* Screenshot placeholder */}
-              <div className="aspect-[16/9] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center">
+              <div className="aspect-[16/9] bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 flex items-center justify-center">
                 <div className="text-center">
                   <div className="w-16 h-16 rounded-2xl bg-[#F97316]/20 flex items-center justify-center mx-auto mb-4">
                     <Sparkles className="h-8 w-8 text-[#F97316]" />
                   </div>
-                  <p className="text-slate-400 text-sm">Visual Configurator Preview</p>
+                  <p className="text-stone-400 text-sm">Visual Configurator Preview</p>
                 </div>
               </div>
             </div>
             
             {/* Floating badges */}
-            <div className="absolute -left-4 top-1/4 bg-white rounded-xl shadow-xl p-4 border border-slate-200 hidden lg:block">
+            <div className="absolute -left-4 top-1/4 bg-stone-50 rounded-xl shadow-xl p-4 border border-stone-200 hidden lg:block">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
                   <Check className="h-5 w-5 text-emerald-500" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Auth Ready</div>
-                  <div className="text-xs text-slate-500">Supabase configured</div>
+                  <div className="font-semibold text-stone-900">Auth Ready</div>
+                  <div className="text-xs text-stone-500">Supabase configured</div>
                 </div>
               </div>
             </div>
             
-            <div className="absolute -right-4 top-1/3 bg-white rounded-xl shadow-xl p-4 border border-slate-200 hidden lg:block">
+            <div className="absolute -right-4 top-1/3 bg-stone-50 rounded-xl shadow-xl p-4 border border-stone-200 hidden lg:block">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-violet-500/10 flex items-center justify-center">
                   <Zap className="h-5 w-5 text-violet-500" />
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Payments Ready</div>
-                  <div className="text-xs text-slate-500">Stripe integrated</div>
+                  <div className="font-semibold text-stone-900">Payments Ready</div>
+                  <div className="text-xs text-stone-500">Stripe integrated</div>
                 </div>
               </div>
             </div>
@@ -368,10 +368,10 @@ export default function PlatformPage() {
       </section>
 
       {/* Trusted By Section */}
-      <section className="py-16 px-4 border-b border-slate-100">
+      <section className="py-16 px-4 border-b border-stone-100">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
-            <p className="text-sm font-medium text-slate-500 uppercase tracking-wider">
+            <p className="text-sm font-medium text-stone-500 uppercase tracking-wider">
               Built with technologies trusted by millions of developers
             </p>
           </div>
@@ -383,8 +383,8 @@ export default function PlatformPage() {
                 className="flex items-center justify-center h-10 grayscale hover:grayscale-0 transition-all duration-300"
               >
                 {/* Logo placeholder - will use actual SVGs when available */}
-                <div className="flex items-center gap-2 text-slate-600 font-semibold">
-                  <div className="w-8 h-8 bg-slate-200 rounded-lg flex items-center justify-center">
+                <div className="flex items-center gap-2 text-stone-600 font-semibold">
+                  <div className="w-8 h-8 bg-stone-200 rounded-lg flex items-center justify-center">
                     {company.name === "GitHub" && <Github className="h-5 w-5" />}
                     {company.name === "Vercel" && <span className="text-xs font-bold">▲</span>}
                     {company.name === "Supabase" && <span className="text-xs font-bold">⚡</span>}
@@ -400,19 +400,19 @@ export default function PlatformPage() {
 
           {/* Developer Count Badge */}
           <div className="mt-10 flex justify-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-slate-50 rounded-full border border-slate-200">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-stone-50 rounded-full border border-stone-200">
               <div className="flex -space-x-2">
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-400 to-violet-600 border-2 border-white" />
                 <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-slate-200 border-2 border-white flex items-center justify-center text-xs font-medium text-slate-600">
+                <div className="w-8 h-8 rounded-full bg-stone-200 border-2 border-white flex items-center justify-center text-xs font-medium text-stone-600">
                   +42
                 </div>
               </div>
               <div className="text-sm">
-                <span className="font-semibold text-slate-900">500+</span>
-                <span className="text-slate-600"> developers building with Framework</span>
+                <span className="font-semibold text-stone-900">500+</span>
+                <span className="text-stone-600"> developers building with Framework</span>
               </div>
             </div>
           </div>
@@ -420,14 +420,14 @@ export default function PlatformPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 px-4 bg-slate-50">
+      <section id="features" className="py-24 px-4 bg-stone-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">Features</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Everything You Need to Ship Fast
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
               From visual configuration to production deployment, we've got you covered.
             </p>
           </div>
@@ -439,8 +439,8 @@ export default function PlatformPage() {
                   <div className={`w-12 h-12 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4`}>
                     <feature.icon className={`h-6 w-6 ${feature.color}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">{feature.title}</h3>
-                  <p className="text-slate-600">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{feature.title}</h3>
+                  <p className="text-stone-600">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -453,7 +453,7 @@ export default function PlatformPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">How It Works</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               From Idea to Production in 4 Steps
             </h2>
           </div>
@@ -467,20 +467,20 @@ export default function PlatformPage() {
               >
                 {/* Connector line */}
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-slate-200" />
+                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-stone-200" />
                 )}
                 
                 <div className={`relative z-10 w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center transition-all ${
                   activeStep === index 
                     ? 'bg-[#F97316] shadow-lg shadow-[#F97316]/25' 
-                    : 'bg-slate-100'
+                    : 'bg-stone-100'
                 }`}>
-                  <step.icon className={`h-7 w-7 ${activeStep === index ? 'text-white' : 'text-slate-500'}`} />
+                  <step.icon className={`h-7 w-7 ${activeStep === index ? 'text-white' : 'text-stone-500'}`} />
                 </div>
                 
                 <div className="text-sm font-bold text-[#F97316] mb-2">{step.number}</div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">{step.title}</h3>
-                <p className="text-slate-600 text-sm">{step.description}</p>
+                <h3 className="text-xl font-bold text-stone-900 mb-2">{step.title}</h3>
+                <p className="text-stone-600 text-sm">{step.description}</p>
               </div>
             ))}
           </div>
@@ -488,17 +488,17 @@ export default function PlatformPage() {
       </section>
 
       {/* Value Comparison Section */}
-      <section id="value" className="py-24 px-4 bg-gradient-to-b from-slate-50 to-white">
+      <section id="value" className="py-24 px-4 bg-gradient-to-b from-stone-50 to-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-emerald-500/10 text-emerald-600 border-0">
               <TrendingDown className="mr-1 h-3 w-3" />
               Value Comparison
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Save Weeks of Development Time
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
               See exactly how much time, money, and effort you save compared to building from scratch.
             </p>
           </div>
@@ -514,14 +514,14 @@ export default function PlatformPage() {
                     <div className="text-white/80">Time/Cost Savings</div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-slate-900 mb-4">{metric.title}</h3>
+                    <h3 className="font-bold text-stone-900 mb-4">{metric.title}</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-500">With Framework</span>
+                        <span className="text-sm text-stone-500">With Framework</span>
                         <span className="font-semibold text-emerald-600">{metric.withFramework}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-slate-500">From Scratch</span>
+                        <span className="text-sm text-stone-500">From Scratch</span>
                         <span className="font-semibold text-red-500 line-through">{metric.withoutFramework}</span>
                       </div>
                     </div>
@@ -541,7 +541,7 @@ export default function PlatformPage() {
                     <Zap className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900">With Framework</h3>
+                    <h3 className="font-bold text-stone-900">With Framework</h3>
                     <p className="text-sm text-emerald-600 font-medium">~ 5 minutes total</p>
                   </div>
                 </div>
@@ -549,29 +549,29 @@ export default function PlatformPage() {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                     <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-slate-700">Run one NPX command</span>
+                    <span className="text-stone-700">Run one NPX command</span>
                     <span className="ml-auto text-xs text-emerald-600 font-medium">1 min</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                     <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-slate-700">All integrations pre-configured</span>
+                    <span className="text-stone-700">All integrations pre-configured</span>
                     <span className="ml-auto text-xs text-emerald-600 font-medium">0 min</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                     <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-slate-700">Add your API keys</span>
+                    <span className="text-stone-700">Add your API keys</span>
                     <span className="ml-auto text-xs text-emerald-600 font-medium">2 min</span>
                   </div>
                   <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
                     <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-slate-700">Deploy to Vercel</span>
+                    <span className="text-stone-700">Deploy to Vercel</span>
                     <span className="ml-auto text-xs text-emerald-600 font-medium">2 min</span>
                   </div>
                 </div>
 
                 <div className="mt-6 p-4 bg-[#F97316]/5 rounded-lg border border-[#F97316]/20">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-slate-900">Total Time</span>
+                    <span className="font-medium text-stone-900">Total Time</span>
                     <span className="text-2xl font-bold text-[#F97316]">~5 min</span>
                   </div>
                 </div>
@@ -579,14 +579,14 @@ export default function PlatformPage() {
             </Card>
 
             {/* Without Framework */}
-            <Card className="border border-slate-200">
+            <Card className="border border-stone-200">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-slate-200 flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-slate-500" />
+                  <div className="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-stone-500" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-slate-900">Building From Scratch</h3>
+                    <h3 className="font-bold text-stone-900">Building From Scratch</h3>
                     <p className="text-sm text-red-500 font-medium">~ 40-80 hours total</p>
                   </div>
                 </div>
@@ -596,19 +596,19 @@ export default function PlatformPage() {
                     <div 
                       key={index}
                       className={`flex items-center gap-3 p-2.5 rounded-lg ${
-                        item.done ? 'bg-slate-50' : 'bg-red-50'
+                        item.done ? 'bg-stone-50' : 'bg-red-50'
                       }`}
                     >
                       {item.done ? (
-                        <Check className="h-4 w-4 text-slate-400 flex-shrink-0" />
+                        <Check className="h-4 w-4 text-stone-400 flex-shrink-0" />
                       ) : (
                         <X className="h-4 w-4 text-red-400 flex-shrink-0" />
                       )}
-                      <span className={`text-sm ${item.done ? 'text-slate-500' : 'text-slate-700'}`}>
+                      <span className={`text-sm ${item.done ? 'text-stone-500' : 'text-stone-700'}`}>
                         {item.task}
                       </span>
                       <span className={`ml-auto text-xs font-medium ${
-                        item.done ? 'text-slate-400' : 'text-red-500'
+                        item.done ? 'text-stone-400' : 'text-red-500'
                       }`}>
                         {item.time}
                       </span>
@@ -618,7 +618,7 @@ export default function PlatformPage() {
 
                 <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-100">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-slate-900">Total Time</span>
+                    <span className="font-medium text-stone-900">Total Time</span>
                     <span className="text-2xl font-bold text-red-500">40-80 hrs</span>
                   </div>
                 </div>
@@ -628,7 +628,7 @@ export default function PlatformPage() {
 
           {/* Bottom CTA */}
           <div className="text-center mt-12">
-            <p className="text-slate-600 mb-4">
+            <p className="text-stone-600 mb-4">
               That's <span className="font-bold text-[#F97316]">480x faster</span> than building from scratch.
             </p>
             <Link href="/configure">
@@ -642,43 +642,43 @@ export default function PlatformPage() {
       </section>
 
       {/* Comparison Section */}
-      <section className="py-24 px-4 bg-slate-900 text-white">
+      <section className="py-24 px-4 bg-stone-900 text-white">
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-white/10 text-white border-0">Why Framework?</Badge>
+            <Badge className="mb-4 bg-stone-50/10 text-white border-0">Why Framework?</Badge>
             <h2 className="text-4xl md:text-5xl font-bold mb-4">
               Own Your Code, Not Just Rent It
             </h2>
-            <p className="text-xl text-slate-400">
+            <p className="text-xl text-stone-400">
               Unlike other platforms, we give you complete ownership from day one.
             </p>
           </div>
 
-          <div className="bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-700">
-            <div className="grid grid-cols-3 p-4 border-b border-slate-700 bg-slate-800">
-              <div className="text-slate-400 font-medium">Feature</div>
+          <div className="bg-stone-800/50 rounded-2xl overflow-hidden border border-stone-700">
+            <div className="grid grid-cols-3 p-4 border-b border-stone-700 bg-stone-800">
+              <div className="text-stone-400 font-medium">Feature</div>
               <div className="text-center font-bold text-[#F97316]">Framework</div>
-              <div className="text-center text-slate-400">Others</div>
+              <div className="text-center text-stone-400">Others</div>
             </div>
             
             {comparisons.map((item, index) => (
               <div 
                 key={item.feature}
-                className={`grid grid-cols-3 p-4 ${index !== comparisons.length - 1 ? 'border-b border-slate-700/50' : ''}`}
+                className={`grid grid-cols-3 p-4 ${index !== comparisons.length - 1 ? 'border-b border-stone-700/50' : ''}`}
               >
-                <div className="text-slate-300">{item.feature}</div>
+                <div className="text-stone-300">{item.feature}</div>
                 <div className="text-center">
                   {item.us ? (
                     <Check className="h-5 w-5 text-emerald-400 mx-auto" />
                   ) : (
-                    <span className="text-slate-500">—</span>
+                    <span className="text-stone-500">—</span>
                   )}
                 </div>
                 <div className="text-center">
                   {item.them ? (
-                    <Check className="h-5 w-5 text-slate-500 mx-auto" />
+                    <Check className="h-5 w-5 text-stone-500 mx-auto" />
                   ) : (
-                    <span className="text-slate-600">—</span>
+                    <span className="text-stone-600">—</span>
                   )}
                 </div>
               </div>
@@ -692,7 +692,7 @@ export default function PlatformPage() {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">Testimonials</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Loved by Developers
             </h2>
           </div>
@@ -706,7 +706,7 @@ export default function PlatformPage() {
                       <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <p className="text-slate-600 mb-6">"{testimonial.quote}"</p>
+                  <p className="text-stone-600 mb-6">"{testimonial.quote}"</p>
                   <div className="flex items-center gap-3">
                     <Image
                       src={testimonial.avatar}
@@ -716,8 +716,8 @@ export default function PlatformPage() {
                       className="rounded-full"
                     />
                     <div>
-                      <div className="font-semibold text-slate-900">{testimonial.name}</div>
-                      <div className="text-sm text-slate-500">{testimonial.role}</div>
+                      <div className="font-semibold text-stone-900">{testimonial.name}</div>
+                      <div className="text-sm text-stone-500">{testimonial.role}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -740,13 +740,13 @@ export default function PlatformPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/configure">
-              <Button size="lg" className="bg-white text-[#F97316] hover:bg-white/90 h-14 px-8 text-lg">
+              <Button size="lg" className="bg-stone-50 text-[#F97316] hover:bg-stone-50/90 h-14 px-8 text-lg">
                 Start Building Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="https://github.com/jrdaws/dawson-does-framework">
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-14 px-8 text-lg">
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-stone-50/10 h-14 px-8 text-lg">
                 View on GitHub
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
@@ -756,7 +756,7 @@ export default function PlatformPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 px-4 bg-slate-900 text-white">
+      <footer className="py-16 px-4 bg-stone-900 text-white">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
@@ -766,14 +766,14 @@ export default function PlatformPage() {
                 </div>
                 <span className="font-bold">Framework</span>
               </Link>
-              <p className="text-slate-400 text-sm">
+              <p className="text-stone-400 text-sm">
                 Build production apps in minutes with complete code ownership.
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
+              <ul className="space-y-2 text-sm text-stone-400">
                 <li><Link href="/configure" className="hover:text-white transition">Configurator</Link></li>
                 <li><Link href="/projects" className="hover:text-white transition">My Projects</Link></li>
                 <li><a href="#features" className="hover:text-white transition">Features</a></li>
@@ -782,7 +782,7 @@ export default function PlatformPage() {
             
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
+              <ul className="space-y-2 text-sm text-stone-400">
                 <li><a href="https://github.com/jrdaws/dawson-does-framework" className="hover:text-white transition">Documentation</a></li>
                 <li><a href="https://github.com/jrdaws/dawson-does-framework" className="hover:text-white transition">GitHub</a></li>
                 <li><a href="https://www.npmjs.com/package/@jrdaws/framework" className="hover:text-white transition">npm</a></li>
@@ -791,7 +791,7 @@ export default function PlatformPage() {
             
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-slate-400">
+              <ul className="space-y-2 text-sm text-stone-400">
                 <li><a href="#" className="hover:text-white transition">Privacy</a></li>
                 <li><a href="#" className="hover:text-white transition">Terms</a></li>
                 <li><a href="https://github.com/jrdaws/dawson-does-framework/blob/main/LICENSE" className="hover:text-white transition">License (MIT)</a></li>
@@ -799,11 +799,11 @@ export default function PlatformPage() {
             </div>
           </div>
           
-          <div className="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-slate-500">
+          <div className="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-stone-500">
               © 2024 Framework. Built with ❤️ for developers.
             </p>
-            <div className="flex items-center gap-6 text-sm text-slate-500">
+            <div className="flex items-center gap-6 text-sm text-stone-500">
               <span>v0.3.1</span>
               <span className="text-emerald-400">192 tests passing</span>
             </div>

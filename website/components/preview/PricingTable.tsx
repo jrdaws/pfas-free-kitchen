@@ -62,7 +62,7 @@ export function PricingTable({
                 )}
               >
                 {isHighlighted && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-500 text-white text-xs font-medium rounded-full">
+                  <div className="absolute -top-3 left-1/2 -transtone-x-1/2 px-3 py-1 bg-indigo-500 text-white text-xs font-medium rounded-full">
                     Most Popular
                   </div>
                 )}
@@ -94,7 +94,7 @@ export function PricingTable({
                     "w-full py-3 rounded-xl font-medium transition-all",
                     isHighlighted
                       ? "bg-indigo-500 hover:bg-indigo-600 text-white"
-                      : "bg-white/5 hover:bg-white/10 text-white"
+                      : "bg-stone-50/5 hover:bg-stone-50/10 text-white"
                   )}
                 >
                   {plan.price === 0 ? "Get Started Free" : "Start Free Trial"}

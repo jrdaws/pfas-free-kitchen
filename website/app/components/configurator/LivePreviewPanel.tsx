@@ -263,7 +263,7 @@ export function LivePreviewPanel({
       <div className="flex-1 bg-zinc-900 p-4 overflow-hidden">
         <div
           className={cn(
-            "h-full mx-auto bg-white rounded-lg overflow-hidden shadow-2xl transition-all duration-300",
+            "h-full mx-auto bg-stone-50 rounded-lg overflow-hidden shadow-2xl transition-all duration-300",
             viewport === "mobile" ? "w-[375px]" : "w-full"
           )}
         >

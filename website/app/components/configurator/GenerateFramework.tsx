@@ -422,7 +422,7 @@ export function GenerateFramework({ className }: GenerateFrameworkProps) {
               </div>
             ) : projectToken ? (
               <>
-                <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                <div className="bg-stone-900 rounded-lg p-4 font-mono text-sm">
                   <pre className="text-emerald-400 whitespace-pre-wrap break-all">
                     {cloneCommand}
                   </pre>
@@ -621,7 +621,7 @@ export function GenerateFramework({ className }: GenerateFrameworkProps) {
 
                 <div className="border-t border-border pt-4">
                   <h4 className="font-medium text-foreground mb-3">Clone your repo:</h4>
-                  <div className="bg-slate-900 rounded-lg p-4 font-mono text-sm">
+                  <div className="bg-stone-900 rounded-lg p-4 font-mono text-sm">
                     <pre className="text-emerald-400">
                       git clone {repoUrl}.git
                     </pre>

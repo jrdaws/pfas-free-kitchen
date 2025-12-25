@@ -389,7 +389,7 @@ export default function ConfigurePage() {
                   >
                     <div
                       className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                        isComplete ? "bg-emerald-500 text-white" : "bg-slate-200"
+                        isComplete ? "bg-emerald-500 text-white" : "bg-stone-200"
                       }`}
                     >
                       {isComplete ? "✓" : ""}

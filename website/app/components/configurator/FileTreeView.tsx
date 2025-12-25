@@ -135,7 +135,7 @@ function TreeNodeItem({
     <div>
       <div
         className={cn(
-          "flex items-center gap-1 py-1 px-2 rounded-md cursor-pointer hover:bg-slate-100 transition-colors group",
+          "flex items-center gap-1 py-1 px-2 rounded-md cursor-pointer hover:bg-stone-100 transition-colors group",
           node.highlight && HIGHLIGHT_COLORS[node.highlight]
         )}
         style={{ paddingLeft: `${depth * 16 + 8}px` }}
@@ -145,9 +145,9 @@ function TreeNodeItem({
         <div className="w-4 h-4 flex items-center justify-center shrink-0">
           {isFolder && hasChildren ? (
             isExpanded ? (
-              <ChevronDown className="h-3 w-3 text-slate-400" />
+              <ChevronDown className="h-3 w-3 text-stone-400" />
             ) : (
-              <ChevronRight className="h-3 w-3 text-slate-400" />
+              <ChevronRight className="h-3 w-3 text-stone-400" />
             )
           ) : null}
         </div>
@@ -155,7 +155,7 @@ function TreeNodeItem({
         {/* File Icon */}
         <div className={cn(
           "shrink-0",
-          isFolder ? "text-amber-500" : "text-slate-500"
+          isFolder ? "text-amber-500" : "text-stone-500"
         )}>
           {icon}
         </div>
@@ -195,7 +195,7 @@ function TreeNodeItem({
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <Info className="h-3 w-3 text-slate-400 shrink-0" />
+                <Info className="h-3 w-3 text-stone-400 shrink-0" />
               </TooltipTrigger>
               <TooltipContent side="right" className="max-w-xs">
                 <p className="text-xs">{node.description}</p>
@@ -334,19 +334,19 @@ export function FileTreeView({
           <div className="flex items-center gap-3 text-sm">
             <div className="text-center">
               <p className="font-bold text-lg">{stats.files}</p>
-              <p className="text-xs text-slate-500">Files</p>
+              <p className="text-xs text-stone-500">Files</p>
             </div>
             <div className="text-center">
               <p className="font-bold text-lg">{stats.folders}</p>
-              <p className="text-xs text-slate-500">Folders</p>
+              <p className="text-xs text-stone-500">Folders</p>
             </div>
             <div className="text-center">
               <p className="font-bold text-lg text-blue-600">{stats.routes}</p>
-              <p className="text-xs text-slate-500">Routes</p>
+              <p className="text-xs text-stone-500">Routes</p>
             </div>
             <div className="text-center">
               <p className="font-bold text-lg text-purple-600">{stats.components}</p>
-              <p className="text-xs text-slate-500">Components</p>
+              <p className="text-xs text-stone-500">Components</p>
             </div>
           </div>
         </div>
@@ -354,7 +354,7 @@ export function FileTreeView({
         {/* Controls */}
         <div className="flex items-center gap-2 mt-4">
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Search className="absolute left-3 top-1/2 -transtone-y-1/2 h-4 w-4 text-stone-400" />
             <Input
               placeholder="Search files..."
               value={searchQuery}
@@ -378,7 +378,7 @@ export function FileTreeView({
         </div>
 
         {/* Legend */}
-        <div className="flex items-center gap-4 mt-3 text-xs text-slate-500 flex-wrap">
+        <div className="flex items-center gap-4 mt-3 text-xs text-stone-500 flex-wrap">
           <span className="flex items-center gap-1">
             <div className="w-3 h-3 rounded bg-blue-100" />
             Routes

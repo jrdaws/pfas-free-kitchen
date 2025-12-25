@@ -35,7 +35,7 @@ export function ProtectedRoute({
   // Show loading state while checking auth
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#F97316] mx-auto mb-4" />
           <p className="text-sm text-muted-foreground">Loading...</p>
@@ -47,9 +47,9 @@ export function ProtectedRoute({
   // If not configured, show message instead of redirecting
   if (!isConfigured) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-stone-50">
         <div className="text-center max-w-md p-6">
-          <h2 className="text-xl font-bold text-slate-900 mb-2">
+          <h2 className="text-xl font-bold text-stone-900 mb-2">
             Authentication Not Available
           </h2>
           <p className="text-sm text-muted-foreground">

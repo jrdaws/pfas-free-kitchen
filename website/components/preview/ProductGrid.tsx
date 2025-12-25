@@ -75,7 +75,7 @@ export function ProductGrid({
                     </span>
                   )}
                   {showAddToCart && (
-                    <button className="px-3 py-1.5 bg-white/5 hover:bg-indigo-500 text-gray-400 hover:text-white rounded-lg text-sm transition-all">
+                    <button className="px-3 py-1.5 bg-stone-50/5 hover:bg-indigo-500 text-gray-400 hover:text-white rounded-lg text-sm transition-all">
                       Add to Cart
                     </button>
                   )}

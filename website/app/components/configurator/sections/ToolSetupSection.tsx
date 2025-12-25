@@ -54,8 +54,8 @@ const TOOL_CONFIGS: Record<string, {
     description: "AI coding assistant CLI for your terminal",
     steps: [
       { number: 1, content: "Open your terminal" },
-      { number: 2, content: <>Run: <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono">npm install -g @anthropic-ai/claude-code</code></> },
-      { number: 3, content: <>Run: <code className="bg-slate-100 px-1.5 py-0.5 rounded text-xs font-mono">claude-code auth</code> to authenticate</> },
+      { number: 2, content: <>Run: <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">npm install -g @anthropic-ai/claude-code</code></> },
+      { number: 3, content: <>Run: <code className="bg-stone-100 px-1.5 py-0.5 rounded text-xs font-mono">claude-code auth</code> to authenticate</> },
     ],
     primaryAction: "View Documentation",
     primaryUrl: "https://docs.anthropic.com",
@@ -121,7 +121,7 @@ export function ToolSetupSection({
   return (
     <div className="space-y-4">
       {/* Description */}
-      <p className="text-sm text-slate-600">{config.description}</p>
+      <p className="text-sm text-stone-600">{config.description}</p>
 
       {/* Guided Steps */}
       <div className="space-y-3">
@@ -130,7 +130,7 @@ export function ToolSetupSection({
             <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[#F97316] text-white text-xs font-semibold shrink-0">
               {step.number}
             </div>
-            <div className="text-sm text-slate-600 pt-0.5">{step.content}</div>
+            <div className="text-sm text-stone-600 pt-0.5">{step.content}</div>
           </div>
         ))}
       </div>
@@ -150,7 +150,7 @@ export function ToolSetupSection({
         {config.showConnectButton ? (
           <Button
             size="sm"
-            className="text-sm bg-[#F97316] hover:bg-[#0041CC]"
+            className="text-sm bg-[#F97316] hover:bg-[#EA580C]"
             onClick={onConnect}
             disabled={isLoading}
           >
@@ -169,7 +169,7 @@ export function ToolSetupSection({
         ) : (
           <Button
             size="sm"
-            className="text-sm bg-[#F97316] hover:bg-[#0041CC]"
+            className="text-sm bg-[#F97316] hover:bg-[#EA580C]"
             onClick={() => config.primaryUrl && window.open(config.primaryUrl, "_blank")}
           >
             {config.primaryAction}

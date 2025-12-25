@@ -118,7 +118,7 @@ function ProjectsContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="h-8 w-8 animate-spin text-[#F97316] mx-auto mb-4" />
           <p className="text-muted-foreground">Loading projects...</p>
@@ -128,13 +128,13 @@ function ProjectsContent() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen bg-stone-50">
       {/* Header */}
-      <header className="bg-white border-b">
+      <header className="bg-stone-50 border-b">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-slate-900">My Projects</h1>
+              <h1 className="text-2xl font-bold text-stone-900">My Projects</h1>
               <p className="text-muted-foreground mt-1">
                 {user?.email ? `Signed in as ${user.email}` : "Your saved projects"}
               </p>
@@ -221,16 +221,16 @@ function ProjectsContent() {
 
                   {/* NPX Token */}
                   {project.npx_token && (
-                    <div className="p-3 bg-slate-900 rounded-lg">
+                    <div className="p-3 bg-stone-900 rounded-lg">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 text-xs font-mono text-slate-300 truncate">
+                        <div className="flex items-center gap-2 text-xs font-mono text-stone-300 truncate">
                           <Terminal className="h-3 w-3 flex-shrink-0" />
                           <span className="truncate">{project.npx_token}</span>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0 text-slate-400 hover:text-white"
+                          className="h-6 w-6 p-0 text-stone-400 hover:text-white"
                           onClick={() => handleCopyToken(project.npx_token)}
                         >
                           {copiedToken === project.npx_token ? (

@@ -47,7 +47,7 @@ export function DashboardPreview({
                     "px-3 py-2 rounded-lg text-sm cursor-pointer transition-colors",
                     i === 0
                       ? "bg-indigo-500/10 text-indigo-400"
-                      : "text-gray-400 hover:text-white hover:bg-white/5"
+                      : "text-gray-400 hover:text-white hover:bg-stone-50/5"
                   )}
                 >
                   {item}
@@ -117,7 +117,7 @@ export function DashboardPreview({
                       "px-3 py-1 rounded text-xs",
                       i === 1
                         ? "bg-indigo-500 text-white"
-                        : "bg-white/5 text-gray-400 hover:text-white"
+                        : "bg-stone-50/5 text-gray-400 hover:text-white"
                     )}
                   >
                     {period}

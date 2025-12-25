@@ -40,14 +40,14 @@ export function CoreFeaturesSection({
     <div className="space-y-3">
       {/* Summary */}
       <div className="flex items-center justify-between text-sm">
-        <span className="text-slate-600">
+        <span className="text-stone-600">
           {getTotalSelected()} features selected
         </span>
         {getTotalSelected() > 0 && (
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 text-xs text-slate-500 hover:text-slate-700"
+            className="h-7 text-xs text-stone-500 hover:text-stone-700"
             onClick={() => Object.keys(selectedFeatures).forEach(cat => onClearCategory?.(cat))}
           >
             <RotateCcw className="h-3 w-3 mr-1" />
@@ -72,11 +72,11 @@ export function CoreFeaturesSection({
             <AccordionItem
               key={category.id}
               value={category.id}
-              className="border border-slate-200 rounded-lg overflow-hidden bg-white"
+              className="border border-stone-200 rounded-lg overflow-hidden bg-stone-50"
             >
-              <AccordionTrigger className="px-3 py-2.5 hover:bg-slate-50 hover:no-underline">
+              <AccordionTrigger className="px-3 py-2.5 hover:bg-stone-50 hover:no-underline">
                 <div className="flex items-center gap-2 flex-1">
-                  <span className="font-medium text-sm text-slate-700">
+                  <span className="font-medium text-sm text-stone-700">
                     {category.label}
                   </span>
                   {count > 0 && (
@@ -87,7 +87,7 @@ export function CoreFeaturesSection({
                 </div>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 text-slate-400 transition-transform",
+                    "h-4 w-4 text-stone-400 transition-transform",
                     isExpanded && "rotate-180"
                   )}
                 />
@@ -102,7 +102,7 @@ export function CoreFeaturesSection({
                         key={feature.id}
                         className={cn(
                           "flex items-start gap-2.5 p-2 rounded-md cursor-pointer transition-colors",
-                          isSelected ? "bg-[#F97316]/5" : "hover:bg-slate-50"
+                          isSelected ? "bg-[#F97316]/5" : "hover:bg-stone-50"
                         )}
                         onClick={() => onToggleFeature(category.id, feature.id)}
                       >
@@ -117,12 +117,12 @@ export function CoreFeaturesSection({
                             htmlFor={feature.id}
                             className={cn(
                               "text-sm cursor-pointer",
-                              isSelected ? "text-[#F97316] font-medium" : "text-slate-700"
+                              isSelected ? "text-[#F97316] font-medium" : "text-stone-700"
                             )}
                           >
                             {feature.label}
                           </Label>
-                          <p className="text-xs text-slate-500 mt-0.5">
+                          <p className="text-xs text-stone-500 mt-0.5">
                             {feature.description}
                           </p>
                         </div>
@@ -134,7 +134,7 @@ export function CoreFeaturesSection({
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-7 text-xs text-slate-500 hover:text-slate-700 w-full justify-start"
+                      className="h-7 text-xs text-stone-500 hover:text-stone-700 w-full justify-start"
                       onClick={(e) => {
                         e.stopPropagation();
                         onClearCategory?.(category.id);

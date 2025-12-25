@@ -302,7 +302,7 @@ function CollaborativeVisualEditorContent({
                   if (iframe) registerIframe(iframe);
                 }}
                 srcDoc={enhancedHtml}
-                className="w-full border-0 bg-white shadow-lg"
+                className="w-full border-0 bg-stone-50 shadow-lg"
                 style={{ minHeight: "600px", height: "100%" }}
                 sandbox="allow-scripts allow-same-origin"
                 title="Collaborative Visual Editor"

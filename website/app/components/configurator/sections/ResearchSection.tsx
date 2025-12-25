@@ -45,7 +45,7 @@ export function ResearchSection({
     <div className="space-y-4">
       {/* Domain Input */}
       <div className="space-y-2">
-        <Label htmlFor="domain" className="text-sm font-medium text-slate-700">
+        <Label htmlFor="domain" className="text-sm font-medium text-stone-700">
           What domain is your project in?
         </Label>
         <Input
@@ -60,8 +60,8 @@ export function ResearchSection({
       {/* Inspiration Toggle */}
       <div className="flex items-center justify-between py-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-slate-500" />
-          <Label htmlFor="inspiration-toggle" className="text-sm text-slate-600 cursor-pointer">
+          <Sparkles className="h-4 w-4 text-stone-500" />
+          <Label htmlFor="inspiration-toggle" className="text-sm text-stone-600 cursor-pointer">
             Add inspiration websites
           </Label>
         </div>
@@ -81,7 +81,7 @@ export function ResearchSection({
               <Input
                 value={url}
                 readOnly
-                className="h-9 text-sm bg-slate-50"
+                className="h-9 text-sm bg-stone-50"
               />
               <Button
                 variant="ghost"
@@ -89,7 +89,7 @@ export function ResearchSection({
                 className="h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={() => removeUrl(url)}
               >
-                <X className="h-4 w-4 text-slate-400" />
+                <X className="h-4 w-4 text-stone-400" />
               </Button>
             </div>
           ))}
@@ -114,7 +114,7 @@ export function ResearchSection({
             </Button>
           </div>
 
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-stone-500">
             Add websites that inspire your project&apos;s design or features
           </p>
         </div>
@@ -133,7 +133,7 @@ export function ResearchSection({
         </Button>
         <Button
           size="sm"
-          className="text-sm bg-[#F97316] hover:bg-[#0041CC]"
+          className="text-sm bg-[#F97316] hover:bg-[#EA580C]"
           onClick={onStartResearch}
           disabled={isLoading || !domain.trim()}
         >

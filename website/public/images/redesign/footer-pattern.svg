@@ -24,6 +24,6 @@
   <rect width="100%" height="100%" fill="url(#footerDots)" mask="url(#footerFadeMask)"/>
   
   <!-- Subtle accent glow -->
-  <ellipse cx="960" cy="0" rx="600" ry="150" fill="#6366F1" opacity="0.02"/>
+  <ellipse cx="960" cy="0" rx="600" ry="150" fill="#F97316" opacity="0.02"/>
 </svg>
 

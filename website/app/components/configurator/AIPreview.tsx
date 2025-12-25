@@ -233,7 +233,7 @@ export function AIPreview({
                     <button
                       type="button"
                       onClick={() => setShowApiKey(!showApiKey)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1/2 -transtone-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {showApiKey ? (
                         <EyeOff className="h-4 w-4" />
@@ -499,7 +499,7 @@ export function AIPreview({
                     )}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="bg-white p-4">
+                <CardContent className="bg-stone-50 p-4">
                   <div className="flex justify-center">
                     <div
                       style={{ width: viewportWidths[viewport], maxWidth: "100%" }}

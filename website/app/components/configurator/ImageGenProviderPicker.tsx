@@ -453,7 +453,7 @@ export function ImageGenProviderPicker({
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-slate-500">{provider.description}</p>
+                      <p className="text-sm text-stone-500">{provider.description}</p>
                     </div>
 
                     <div className="text-right">
@@ -461,7 +461,7 @@ export function ImageGenProviderPicker({
                         {provider.pricing.free ? (
                           <span className="text-emerald-600 font-medium">Free tier available</span>
                         ) : (
-                          <span className="text-slate-500">{provider.pricing.startingPrice}</span>
+                          <span className="text-stone-500">{provider.pricing.startingPrice}</span>
                         )}
                       </div>
                     </div>
@@ -500,7 +500,7 @@ export function ImageGenProviderPicker({
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                                  className="absolute right-1 top-1/2 -transtone-y-1/2 h-7 w-7 p-0"
                                   onClick={() => toggleShowApiKey(provider.id)}
                                 >
                                   {showApiKey[provider.id] ? (
@@ -517,7 +517,7 @@ export function ImageGenProviderPicker({
                                 {validating === provider.id ? "Validating..." : "Save Key"}
                               </Button>
                             </div>
-                            <p className="text-xs text-slate-500">
+                            <p className="text-xs text-stone-500">
                               Get your API key from{" "}
                               <a
                                 href={provider.signupUrl}
@@ -540,18 +540,18 @@ export function ImageGenProviderPicker({
                           Pricing
                         </Label>
                         <div className="grid grid-cols-3 gap-4 text-sm">
-                          <div className="bg-slate-50 rounded-lg p-3">
-                            <p className="text-slate-500 text-xs">Starting at</p>
+                          <div className="bg-stone-50 rounded-lg p-3">
+                            <p className="text-stone-500 text-xs">Starting at</p>
                             <p className="font-semibold">{provider.pricing.startingPrice}</p>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-3">
-                            <p className="text-slate-500 text-xs">Free credits</p>
+                          <div className="bg-stone-50 rounded-lg p-3">
+                            <p className="text-stone-500 text-xs">Free credits</p>
                             <p className="font-semibold text-emerald-600">
                               {provider.pricing.freeCredits || "None"}
                             </p>
                           </div>
-                          <div className="bg-slate-50 rounded-lg p-3">
-                            <p className="text-slate-500 text-xs">Bulk pricing</p>
+                          <div className="bg-stone-50 rounded-lg p-3">
+                            <p className="text-stone-500 text-xs">Bulk pricing</p>
                             <p className="font-semibold text-xs">
                               {provider.pricing.bulkDiscount || "Contact sales"}
                             </p>
@@ -569,7 +569,7 @@ export function ImageGenProviderPicker({
                           {provider.models.map((model) => (
                             <div
                               key={model.id}
-                              className="flex items-center justify-between p-3 bg-slate-50 rounded-lg"
+                              className="flex items-center justify-between p-3 bg-stone-50 rounded-lg"
                             >
                               <div className="flex-1">
                                 <div className="flex items-center gap-2 flex-wrap">
@@ -577,10 +577,10 @@ export function ImageGenProviderPicker({
                                   {getSpeedBadge(model.speed)}
                                   {getQualityBadge(model.quality)}
                                 </div>
-                                <p className="text-xs text-slate-500">{model.description}</p>
+                                <p className="text-xs text-stone-500">{model.description}</p>
                               </div>
                               <div className="text-right pl-4">
-                                <div className="flex items-center gap-1 text-xs text-slate-400">
+                                <div className="flex items-center gap-1 text-xs text-stone-400">
                                   <Maximize className="h-3 w-3" />
                                   {model.maxResolution}
                                 </div>
@@ -601,12 +601,12 @@ export function ImageGenProviderPicker({
                           {provider.styles.map((style) => (
                             <div
                               key={style.style}
-                              className="flex items-center gap-2 p-2 bg-slate-50 rounded-lg text-sm"
+                              className="flex items-center gap-2 p-2 bg-stone-50 rounded-lg text-sm"
                             >
                               <span className="text-xl">{style.emoji}</span>
                               <div>
                                 <p className="font-medium text-xs">{style.style}</p>
-                                <p className="text-xs text-slate-400">{style.description}</p>
+                                <p className="text-xs text-stone-400">{style.description}</p>
                               </div>
                             </div>
                           ))}
@@ -617,7 +617,7 @@ export function ImageGenProviderPicker({
                       <div className="grid md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label className="text-emerald-600">✓ Strengths</Label>
-                          <ul className="space-y-1 text-sm text-slate-600">
+                          <ul className="space-y-1 text-sm text-stone-600">
                             {provider.strengths.map((s) => (
                               <li key={s} className="flex items-start gap-2">
                                 <Check className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
@@ -628,7 +628,7 @@ export function ImageGenProviderPicker({
                         </div>
                         <div className="space-y-2">
                           <Label className="text-amber-600">⚠ Limitations</Label>
-                          <ul className="space-y-1 text-sm text-slate-600">
+                          <ul className="space-y-1 text-sm text-stone-600">
                             {provider.limitations.map((l) => (
                               <li key={l} className="flex items-start gap-2">
                                 <AlertCircle className="h-4 w-4 text-amber-500 mt-0.5 shrink-0" />
@@ -664,21 +664,21 @@ export function ImageGenProviderPicker({
                 </thead>
                 <tbody>
                   {/* Free Tier */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Free Tier</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
                         {p.pricing.free ? (
                           <Check className="h-5 w-5 text-emerald-500 mx-auto" />
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-stone-400">—</span>
                         )}
                       </td>
                     ))}
                   </tr>
                   
                   {/* Cheapest Option */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Cheapest Model</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => {
                       const cheapest = p.models.reduce((min, m) => {
@@ -695,7 +695,7 @@ export function ImageGenProviderPicker({
                   </tr>
 
                   {/* Best Quality */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Best Quality Model</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => {
                       const best = p.models.find((m) => m.quality === "ultra") || p.models[0];
@@ -708,7 +708,7 @@ export function ImageGenProviderPicker({
                   </tr>
 
                   {/* Max Resolution */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Max Resolution</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => {
                       const maxRes = p.models.reduce((max, m) => {
@@ -725,21 +725,21 @@ export function ImageGenProviderPicker({
                   </tr>
 
                   {/* Self-Host */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Self-Host Option</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
                         {p.selfHosted ? (
                           <Check className="h-5 w-5 text-emerald-500 mx-auto" />
                         ) : (
-                          <span className="text-slate-400">—</span>
+                          <span className="text-stone-400">—</span>
                         )}
                       </td>
                     ))}
                   </tr>
 
                   {/* Text Rendering */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">Text in Images</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
@@ -757,7 +757,7 @@ export function ImageGenProviderPicker({
                   </tr>
 
                   {/* API Ease */}
-                  <tr className="border-b hover:bg-slate-50">
+                  <tr className="border-b hover:bg-stone-50">
                     <td className="p-3 font-medium">API Ease</td>
                     {IMAGE_GEN_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
@@ -781,7 +781,7 @@ export function ImageGenProviderPicker({
             <Alert className="mt-6 bg-primary/5 border-primary/20">
               <Info className="h-4 w-4 text-primary" />
               <AlertTitle className="text-primary">Our Recommendations</AlertTitle>
-              <AlertDescription className="text-slate-600">
+              <AlertDescription className="text-stone-600">
                 <ul className="mt-2 space-y-1">
                   <li><strong>Best Quality:</strong> DALL-E 3 or Midjourney for marketing assets</li>
                   <li><strong>Best Value:</strong> Flux Schnell ($0.003/image) for prototyping</li>
@@ -795,7 +795,7 @@ export function ImageGenProviderPicker({
           {/* Styles Tab */}
           <TabsContent value="styles">
             <div className="space-y-6">
-              <p className="text-sm text-slate-500">
+              <p className="text-sm text-stone-500">
                 Each provider excels at different visual styles. Here&apos;s what they&apos;re best at:
               </p>
 
@@ -814,11 +814,11 @@ export function ImageGenProviderPicker({
                     {provider.styles.map((style) => (
                       <div
                         key={style.style}
-                        className="relative group overflow-hidden rounded-lg border bg-gradient-to-br from-slate-50 to-slate-100 p-4 hover:shadow-md transition-shadow"
+                        className="relative group overflow-hidden rounded-lg border bg-gradient-to-br from-stone-50 to-stone-100 p-4 hover:shadow-md transition-shadow"
                       >
                         <div className="text-4xl mb-2">{style.emoji}</div>
                         <h4 className="font-semibold text-sm">{style.style}</h4>
-                        <p className="text-xs text-slate-500">{style.description}</p>
+                        <p className="text-xs text-stone-500">{style.description}</p>
                       </div>
                     ))}
                   </div>

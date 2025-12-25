@@ -243,13 +243,13 @@ export function GuidedSetup({
         );
       case "skipped":
         return (
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-400">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-stone-100 text-stone-400">
             {tool.icon}
           </div>
         );
       default:
         return (
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-slate-100 text-slate-600">
+          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-stone-100 text-stone-600">
             {tool.icon}
           </div>
         );
@@ -308,7 +308,7 @@ export function GuidedSetup({
         );
       default:
         return (
-          <div className="text-sm text-slate-500">
+          <div className="text-sm text-stone-500">
             <p>Setup instructions for {tool.name} coming soon.</p>
             <div className="flex gap-2 mt-4">
               <Button size="sm" onClick={() => actions.markComplete()}>
@@ -339,7 +339,7 @@ export function GuidedSetup({
             </CardDescription>
           </div>
           <div className="text-right">
-            <p className="text-sm text-slate-500">
+            <p className="text-sm text-stone-500">
               {completedCount} of {TOOLS.length} complete
             </p>
             <Progress value={progress} className="w-32 h-2 mt-1" />
@@ -381,19 +381,19 @@ export function GuidedSetup({
                   state.status === "in-progress" && "border-blue-200 bg-blue-50/30"
                 )}
               >
-                <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-slate-50/50">
+                <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-stone-50/50">
                   <div className="flex items-center gap-4 flex-1">
                     {getStatusIcon(tool, state)}
 
                     <div className="flex-1 text-left">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-slate-800">{tool.name}</span>
+                        <span className="font-semibold text-stone-800">{tool.name}</span>
                         {getStatusBadge(state.status, tool.required)}
                       </div>
-                      <p className="text-sm text-slate-500">{tool.description}</p>
+                      <p className="text-sm text-stone-500">{tool.description}</p>
                     </div>
 
-                    <div className="flex items-center gap-2 text-xs text-slate-400">
+                    <div className="flex items-center gap-2 text-xs text-stone-400">
                       <span>~{tool.estimatedTime}</span>
                       <ChevronRight
                         className={cn(
@@ -426,7 +426,7 @@ export function GuidedSetup({
                     )}
 
                     {/* Docs link */}
-                    <div className="mt-4 pt-3 border-t border-slate-100">
+                    <div className="mt-4 pt-3 border-t border-stone-100">
                       <a
                         href={tool.docsUrl}
                         target="_blank"
@@ -471,7 +471,7 @@ function CursorSetupContent({ state, actions, copyCommand, copiedCommands }: Set
 
   return (
     <div className="space-y-4 text-sm">
-      <ol className="space-y-3 list-decimal list-inside text-slate-600">
+      <ol className="space-y-3 list-decimal list-inside text-stone-600">
         <li>
           Download Cursor from{" "}
           <a
@@ -510,7 +510,7 @@ function GitHubSetupContent({ state, actions, copyCommand, copiedCommands }: Set
 
   return (
     <div className="space-y-4 text-sm">
-      <ol className="space-y-3 list-decimal list-inside text-slate-600">
+      <ol className="space-y-3 list-decimal list-inside text-stone-600">
         <li>
           Go to{" "}
           <a
@@ -527,13 +527,13 @@ function GitHubSetupContent({ state, actions, copyCommand, copiedCommands }: Set
         <li>Initialize your local project:</li>
       </ol>
 
-      <div className="bg-slate-900 rounded-lg p-3 font-mono text-xs text-slate-100">
+      <div className="bg-stone-900 rounded-lg p-3 font-mono text-xs text-stone-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-slate-400"># Terminal commands</span>
+          <span className="text-stone-400"># Terminal commands</span>
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 text-slate-400 hover:text-white"
+            className="h-6 text-stone-400 hover:text-white"
             onClick={() => copyCommand("git init\ngit add .\ngit commit -m \"Initial commit\"", "github-init")}
           >
             {copiedCommands["github-init"] ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
@@ -568,17 +568,17 @@ function ClaudeCodeSetupContent({ state, actions, copyCommand, copiedCommands }:
 
   return (
     <div className="space-y-4 text-sm">
-      <p className="text-slate-600">
+      <p className="text-stone-600">
         Claude Code provides AI assistance directly in your terminal.
       </p>
 
-      <div className="bg-slate-900 rounded-lg p-3 font-mono text-xs text-slate-100">
+      <div className="bg-stone-900 rounded-lg p-3 font-mono text-xs text-stone-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-slate-400"># Install via npm</span>
+          <span className="text-stone-400"># Install via npm</span>
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 text-slate-400 hover:text-white"
+            className="h-6 text-stone-400 hover:text-white"
             onClick={() => copyCommand("npm install -g @anthropic-ai/claude-code", "claude-install")}
           >
             {copiedCommands["claude-install"] ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
@@ -587,10 +587,10 @@ function ClaudeCodeSetupContent({ state, actions, copyCommand, copiedCommands }:
         <pre>npm install -g @anthropic-ai/claude-code</pre>
       </div>
 
-      <ol className="space-y-2 list-decimal list-inside text-slate-600">
+      <ol className="space-y-2 list-decimal list-inside text-stone-600">
         <li>Run the install command above</li>
-        <li>Run <code className="bg-slate-100 px-1 rounded">claude-code auth</code> to authenticate</li>
-        <li>Use <code className="bg-slate-100 px-1 rounded">claude-code</code> in your project</li>
+        <li>Run <code className="bg-stone-100 px-1 rounded">claude-code auth</code> to authenticate</li>
+        <li>Use <code className="bg-stone-100 px-1 rounded">claude-code</code> in your project</li>
       </ol>
 
       <div className="flex gap-2 mt-4">
@@ -618,7 +618,7 @@ function SupabaseSetupContent({ state, actions, copyCommand, copiedCommands }: S
 
   return (
     <div className="space-y-4 text-sm">
-      <ol className="space-y-3 list-decimal list-inside text-slate-600">
+      <ol className="space-y-3 list-decimal list-inside text-stone-600">
         <li>
           Go to{" "}
           <a
@@ -671,19 +671,19 @@ function VercelSetupContent({ state, actions, copyCommand, copiedCommands }: Set
 
   return (
     <div className="space-y-4 text-sm">
-      <ol className="space-y-3 list-decimal list-inside text-slate-600">
+      <ol className="space-y-3 list-decimal list-inside text-stone-600">
         <li>
           Install Vercel CLI (optional but recommended):
         </li>
       </ol>
 
-      <div className="bg-slate-900 rounded-lg p-3 font-mono text-xs text-slate-100">
+      <div className="bg-stone-900 rounded-lg p-3 font-mono text-xs text-stone-100">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-slate-400"># Install Vercel CLI</span>
+          <span className="text-stone-400"># Install Vercel CLI</span>
           <Button
             variant="ghost"
             size="sm"
-            className="h-6 text-slate-400 hover:text-white"
+            className="h-6 text-stone-400 hover:text-white"
             onClick={() => copyCommand("npm install -g vercel", "vercel-install")}
           >
             {copiedCommands["vercel-install"] ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
@@ -692,7 +692,7 @@ function VercelSetupContent({ state, actions, copyCommand, copiedCommands }: Set
         <pre>npm install -g vercel</pre>
       </div>
 
-      <ol start={2} className="space-y-2 list-decimal list-inside text-slate-600">
+      <ol start={2} className="space-y-2 list-decimal list-inside text-stone-600">
         <li>
           Go to{" "}
           <a

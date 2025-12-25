@@ -255,19 +255,19 @@ export function ExportWizard({ className }: ExportWizardProps) {
           <div className="flex items-center gap-4">
             <div className="text-center">
               <p className="text-sm font-medium">{projectName || "Unnamed"}</p>
-              <p className="text-xs text-slate-500">Project</p>
+              <p className="text-xs text-stone-500">Project</p>
             </div>
             <div className="text-center">
               <Badge variant="secondary" className="capitalize">
                 {template || "None"}
               </Badge>
-              <p className="text-xs text-slate-500 mt-1">Template</p>
+              <p className="text-xs text-stone-500 mt-1">Template</p>
             </div>
             <div className="text-center">
               <p className="text-sm font-medium">
                 {Object.values(selectedFeatures).flat().length}
               </p>
-              <p className="text-xs text-slate-500">Features</p>
+              <p className="text-xs text-stone-500">Features</p>
             </div>
           </div>
         </div>
@@ -331,7 +331,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                   <CheckCircle2 className="h-8 w-8 text-emerald-600" />
                 </div>
                 <h3 className="text-xl font-semibold">Export Complete!</h3>
-                <p className="text-slate-500 max-w-md mx-auto">
+                <p className="text-stone-500 max-w-md mx-auto">
                   {selectedMethod === "npx" && "Command copied! Paste it in your terminal to get started."}
                   {selectedMethod === "zip" && "Your project has been downloaded. Extract and open in Cursor to begin."}
                   {selectedMethod === "github" && "Repository page opened. Complete the setup on GitHub."}
@@ -341,7 +341,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                 <Alert className="max-w-lg mx-auto bg-primary/5 border-primary/20 text-left">
                   <Sparkles className="h-4 w-4 text-primary" />
                   <AlertTitle className="text-primary">Next Steps</AlertTitle>
-                  <AlertDescription className="text-slate-600">
+                  <AlertDescription className="text-stone-600">
                     <ol className="list-decimal list-inside space-y-1 mt-2">
                       {selectedMethod === "npx" && (
                         <>
@@ -355,9 +355,9 @@ export function ExportWizard({ className }: ExportWizardProps) {
                         <>
                           <li>Extract the ZIP file</li>
                           <li>Open the folder in Cursor</li>
-                          <li>Run <code className="bg-slate-100 px-1 rounded">npm install</code></li>
-                          <li>Copy <code className="bg-slate-100 px-1 rounded">.env.local.example</code> to <code className="bg-slate-100 px-1 rounded">.env.local</code></li>
-                          <li>Run <code className="bg-slate-100 px-1 rounded">npm run dev</code></li>
+                          <li>Run <code className="bg-stone-100 px-1 rounded">npm install</code></li>
+                          <li>Copy <code className="bg-stone-100 px-1 rounded">.env.local.example</code> to <code className="bg-stone-100 px-1 rounded">.env.local</code></li>
+                          <li>Run <code className="bg-stone-100 px-1 rounded">npm run dev</code></li>
                         </>
                       )}
                       {selectedMethod === "github" && (
@@ -409,7 +409,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                           "w-14 h-14 rounded-xl flex items-center justify-center mx-auto mb-4",
                           selectedMethod === option.id 
                             ? "bg-primary text-white" 
-                            : "bg-slate-100 text-slate-600"
+                            : "bg-stone-100 text-stone-600"
                         )}>
                           {option.icon}
                         </div>
@@ -422,7 +422,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-slate-500">{option.description}</p>
+                        <p className="text-sm text-stone-500">{option.description}</p>
                         {option.badge && !option.recommended && (
                           <Badge variant="secondary" className="mt-2">
                             {option.badge}
@@ -437,17 +437,17 @@ export function ExportWizard({ className }: ExportWizardProps) {
                 {selectedMethod && (
                   <div className="mt-6 space-y-4">
                     {selectedMethod === "npx" && (
-                      <Card className="bg-slate-900 border-slate-800">
+                      <Card className="bg-stone-900 border-stone-800">
                         <CardContent className="pt-6">
                           <div className="flex items-center justify-between mb-4">
                             <div className="flex items-center gap-2">
-                              <Terminal className="h-4 w-4 text-slate-400" />
-                              <span className="text-sm text-slate-400">Terminal Command</span>
+                              <Terminal className="h-4 w-4 text-stone-400" />
+                              <span className="text-sm text-stone-400">Terminal Command</span>
                             </div>
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="text-slate-400 hover:text-white"
+                              className="text-stone-400 hover:text-white"
                               onClick={handleCopyCommand}
                             >
                               {copied ? (
@@ -463,7 +463,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                               )}
                             </Button>
                           </div>
-                          <pre className="text-emerald-400 font-mono text-sm overflow-x-auto p-4 bg-slate-950 rounded-lg">
+                          <pre className="text-emerald-400 font-mono text-sm overflow-x-auto p-4 bg-stone-950 rounded-lg">
                             {npxCommand}
                           </pre>
                         </CardContent>
@@ -479,7 +479,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                               <span>Generating your project...</span>
                             </div>
                             <Progress value={downloadProgress} className="h-2" />
-                            <p className="text-sm text-slate-500">
+                            <p className="text-sm text-stone-500">
                               This may take a few seconds...
                             </p>
                           </div>
@@ -488,7 +488,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                     )}
 
                     {selectedMethod === "github" && (
-                      <Alert className="bg-slate-50">
+                      <Alert className="bg-stone-50">
                         <Github className="h-4 w-4" />
                         <AlertTitle>GitHub Repository</AlertTitle>
                         <AlertDescription>
@@ -529,7 +529,7 @@ export function ExportWizard({ className }: ExportWizardProps) {
                 )}
 
                 {!selectedMethod && (
-                  <div className="text-center py-8 text-slate-500">
+                  <div className="text-center py-8 text-stone-500">
                     <FileCode className="h-12 w-12 mx-auto mb-3 opacity-30" />
                     <p>Select an export method above to continue</p>
                   </div>

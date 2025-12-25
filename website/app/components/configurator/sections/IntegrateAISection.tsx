@@ -60,7 +60,7 @@ export function IntegrateAISection({
     <div className="space-y-4">
       {/* Provider Selection */}
       <div className="space-y-2">
-        <Label className="text-sm font-medium text-slate-700">
+        <Label className="text-sm font-medium text-stone-700">
           Select AI Provider
         </Label>
         <RadioGroup
@@ -75,7 +75,7 @@ export function IntegrateAISection({
                 "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
                 selectedProvider === provider.id
                   ? "border-[#F97316] bg-[#F97316]/5"
-                  : "border-slate-200 hover:border-slate-300"
+                  : "border-stone-200 hover:border-stone-300"
               )}
               onClick={() => onProviderChange(provider.id)}
             >
@@ -88,7 +88,7 @@ export function IntegrateAISection({
                       "text-sm cursor-pointer",
                       selectedProvider === provider.id
                         ? "text-[#F97316] font-medium"
-                        : "text-slate-700"
+                        : "text-stone-700"
                     )}
                   >
                     {provider.name}
@@ -100,7 +100,7 @@ export function IntegrateAISection({
                     </Badge>
                   )}
                 </div>
-                <p className="text-xs text-slate-500">{provider.description}</p>
+                <p className="text-xs text-stone-500">{provider.description}</p>
               </div>
             </div>
           ))}
@@ -110,11 +110,11 @@ export function IntegrateAISection({
       {/* API Key Input */}
       {selectedProvider && (
         <div className="space-y-2 animate-in slide-in-from-top-2 duration-200">
-          <Label htmlFor="api-key" className="text-sm font-medium text-slate-700">
+          <Label htmlFor="api-key" className="text-sm font-medium text-stone-700">
             API Key
           </Label>
           <div className="relative">
-            <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+            <Key className="absolute left-3 top-1/2 -transtone-y-1/2 h-4 w-4 text-stone-400" />
             <Input
               id="api-key"
               type={showKey ? "text" : "password"}
@@ -127,17 +127,17 @@ export function IntegrateAISection({
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+              className="absolute right-1 top-1/2 -transtone-y-1/2 h-8 w-8"
               onClick={() => setShowKey(!showKey)}
             >
               {showKey ? (
-                <EyeOff className="h-4 w-4 text-slate-400" />
+                <EyeOff className="h-4 w-4 text-stone-400" />
               ) : (
-                <Eye className="h-4 w-4 text-slate-400" />
+                <Eye className="h-4 w-4 text-stone-400" />
               )}
             </Button>
           </div>
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-stone-500">
             Get your API key from{" "}
             <a
               href={
@@ -161,7 +161,7 @@ export function IntegrateAISection({
       {/* Available Models */}
       {selectedProvider && selectedProviderData && (
         <div className="space-y-2">
-          <Label className="text-xs text-slate-500">Available Models</Label>
+          <Label className="text-xs text-stone-500">Available Models</Label>
           <div className="flex flex-wrap gap-1.5">
             {selectedProviderData.models.map((model) => (
               <Badge key={model} variant="secondary" className="text-xs">

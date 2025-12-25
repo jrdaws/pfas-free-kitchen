@@ -124,7 +124,7 @@ export function FeedbackToggle({
                 "rounded-full transition-all",
                 feedback === "positive"
                   ? "bg-emerald-100 text-emerald-600 hover:bg-emerald-200"
-                  : "text-slate-400 hover:text-emerald-600 hover:bg-emerald-50"
+                  : "text-stone-400 hover:text-emerald-600 hover:bg-emerald-50"
               )}
             >
               {isSubmitting && feedback === "positive" ? (
@@ -147,7 +147,7 @@ export function FeedbackToggle({
         </Tooltip>
 
         {showLabels && (
-          <span className={cn(config.text, "text-slate-500")}>
+          <span className={cn(config.text, "text-stone-500")}>
             {feedback === "positive" ? "Helpful" : feedback === "negative" ? "Not helpful" : "Helpful?"}
           </span>
         )}
@@ -165,7 +165,7 @@ export function FeedbackToggle({
                 "rounded-full transition-all",
                 feedback === "negative"
                   ? "bg-rose-100 text-rose-600 hover:bg-rose-200"
-                  : "text-slate-400 hover:text-rose-600 hover:bg-rose-50"
+                  : "text-stone-400 hover:text-rose-600 hover:bg-rose-50"
               )}
             >
               {isSubmitting && feedback === "negative" ? (
@@ -203,7 +203,7 @@ export function InlineFeedback({
   ...props
 }: InlineFeedbackProps) {
   return (
-    <div className="flex items-center gap-2 text-sm text-slate-500">
+    <div className="flex items-center gap-2 text-sm text-stone-500">
       <MessageSquare className="h-4 w-4" />
       <span>{prompt}</span>
       <FeedbackToggle {...props} size="sm" />
@@ -244,11 +244,11 @@ export function FeedbackCard({
   }
 
   return (
-    <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-200 rounded-lg">
+    <div className="flex items-center justify-between p-3 bg-stone-50 border border-stone-200 rounded-lg">
       <div>
-        <p className="text-sm font-medium text-slate-700">{title}</p>
+        <p className="text-sm font-medium text-stone-700">{title}</p>
         {description && (
-          <p className="text-xs text-slate-500">{description}</p>
+          <p className="text-xs text-stone-500">{description}</p>
         )}
       </div>
       <FeedbackToggle {...props} onFeedback={handleFeedback} size="md" />

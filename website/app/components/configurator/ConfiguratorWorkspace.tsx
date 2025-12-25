@@ -307,7 +307,7 @@ export function ConfiguratorWorkspace({
         {!isPanelExpanded && (
           <button
             onClick={() => setIsPanelExpanded(true)}
-            className="hidden md:flex absolute left-14 top-1/2 -translate-y-1/2 z-10 w-6 h-12 items-center justify-center bg-card border border-border rounded-r-lg hover:bg-muted/50 transition-colors"
+            className="hidden md:flex absolute left-14 top-1/2 -transtone-y-1/2 z-10 w-6 h-12 items-center justify-center bg-card border border-border rounded-r-lg hover:bg-muted/50 transition-colors"
           >
             <ChevronRight className="h-4 w-4 text-muted-foreground" />
           </button>

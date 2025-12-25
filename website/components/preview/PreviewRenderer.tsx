@@ -190,7 +190,7 @@ export function MobilePreviewFrame({
         
         {/* Home Indicator */}
         <div className="flex justify-center mt-2">
-          <div className="w-32 h-1 bg-white/20 rounded-full" />
+          <div className="w-32 h-1 bg-stone-50/20 rounded-full" />
         </div>
       </div>
     </div>

@@ -265,7 +265,7 @@ export function EnvironmentKeys({
                     <button
                       type="button"
                       onClick={() => toggleVisibility(envVar)}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                      className="absolute right-2 top-1/2 -transtone-y-1/2 text-muted-foreground hover:text-foreground"
                     >
                       {isVisible ? (
                         <EyeOff className="h-4 w-4" />
