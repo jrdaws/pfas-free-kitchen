@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- f88cf09 2025-12-24 feat(website): add auth state to Nav component
 - 5163150 2025-12-24 docs(5ds): mark completed tasks and update status tracking
 - 6b0c9b3 2025-12-24 docs(memory): update CLI_MEMORY and 5DS_CLONE_TASKS with npx token completion
 - c6a0295 2025-12-24 feat(cli): add direct token support for npx install
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 0e3226e 2025-12-24 test(ai-agent): add 31 integration tests for JSON repair utility
 - 5e8aa47 2025-12-24 feat(storage): implement UploadThing integration
 - d52db80 2025-12-24 chore: checkpoint - uploadthing integration updates and agent tasks
-- d71aed3 2025-12-24 feat(templates): add UploadThing components and update integration
 
 ## Agent Governance Structure
 
