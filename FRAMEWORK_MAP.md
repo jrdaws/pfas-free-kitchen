@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- dd2cd29 2025-12-24 feat(checkpoint): add persistent checkpoint snapshots
 - 88f76c0 2025-12-24 chore(curator): cycle 10 cleanup - acknowledge completed tasks
 - 4529937 2025-12-24 chore(test): verify export clarity - CLI & ZIP both export full templates
 - eda7180 2025-12-24 chore: mark export build verification complete
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - a3a00a7 2025-12-24 docs(mindframe): add Curator Agent certification for cycle 9
 - b5c9c9d 2025-12-24 docs(memory): update CURATOR_MEMORY.md with cycle 9 session
 - 7078ddc 2025-12-24 feat(strategist): complete cycle 9 strategy - 5 tasks for execution
-- 5edf78a 2025-12-24 docs: add 'cp' shorthand for checkpoint trigger
 
 ## Agent Governance Structure
 
