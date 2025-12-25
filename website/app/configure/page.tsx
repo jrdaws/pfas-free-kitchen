@@ -76,21 +76,6 @@ const getPhaseForStep = (step: number): string => {
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"component" | "preview" | "generate">("component");
   const [showLivePreview, setShowLivePreview] = useState(false);
-  const [toolStatus, setToolStatus] = useState<Record<string, boolean>>({
-    cursor: false,
-    github: false,
-    "claude-code": false,
-    supabase: false,
-    vercel: false,
-  });
-  
-  // Research section state
-  const [domain, setDomain] = useState("");
-  const [inspirationUrls, setInspirationUrls] = useState<string[]>([]);
-  
-  // AI provider state
-  const [aiProvider, setAiProvider] = useState<string>("");
-  const [aiApiKey, setAiApiKey] = useState("");
   
   // Track navigation direction for slide animations
   const [animationDirection, setAnimationDirection] = useState<"left" | "right">("right");
@@ -113,6 +98,11 @@ export default function ConfigurePage() {
     successCriteria,
     modelTier,
     selectedFeatures,
+    toolStatus,
+    researchDomain,
+    inspirationUrls,
+    aiProvider,
+    aiApiKey,
     setStep,
     completeStep,
     setMode,
@@ -130,6 +120,11 @@ export default function ConfigurePage() {
     setModelTier,
     toggleFeature,
     clearFeatures,
+    setToolComplete,
+    setResearchDomain,
+    setInspirationUrls,
+    setAiProvider,
+    setAiApiKey,
   } = useConfiguratorStore();
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
@@ -158,7 +153,7 @@ export default function ConfigurePage() {
   const canProceed = () => {
     switch (currentStep) {
       case 1: // Research
-        return domain.length > 0 || description.length > 0;
+        return researchDomain.length > 0 || description.length > 0;
       case 2: // Core Features
         return Object.values(selectedFeatures).flat().length > 0;
       case 3: // Integrate AI
@@ -196,7 +191,7 @@ export default function ConfigurePage() {
   };
 
   const handleToolComplete = (toolId: string) => {
-    setToolStatus((prev) => ({ ...prev, [toolId]: true }));
+    setToolComplete(toolId, true);
     completeStep(SECTION_TO_STEP[toolId] as Step);
   };
 
@@ -209,8 +204,8 @@ export default function ConfigurePage() {
       case "research":
         return (
           <ResearchSection
-            domain={domain}
-            onDomainChange={setDomain}
+            domain={researchDomain}
+            onDomainChange={setResearchDomain}
             inspirationUrls={inspirationUrls}
             onInspirationUrlsChange={setInspirationUrls}
             onStartResearch={() => {

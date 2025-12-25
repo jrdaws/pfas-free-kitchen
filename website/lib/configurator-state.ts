@@ -112,6 +112,17 @@ export interface ConfiguratorState {
   // Feature selections (5DS clone)
   selectedFeatures: Record<string, string[]>; // category -> feature IDs
 
+  // Tool setup status (5DS clone)
+  toolStatus: Record<string, boolean>;
+  
+  // Research domain (5DS clone)
+  researchDomain: string;
+  inspirationUrls: string[];
+  
+  // AI provider settings (5DS clone)
+  aiProvider: string;
+  aiApiKey: string;
+
   // Actions
   setStep: (step: Step) => void;
   completeStep: (step: Step) => void;
@@ -146,6 +157,17 @@ export interface ConfiguratorState {
   setFeatures: (category: string, featureIds: string[]) => void;
   clearFeatures: () => void;
   
+  // Tool status actions
+  setToolComplete: (toolId: string, isComplete: boolean) => void;
+  
+  // Research actions
+  setResearchDomain: (domain: string) => void;
+  setInspirationUrls: (urls: string[]) => void;
+  
+  // AI provider actions
+  setAiProvider: (provider: string) => void;
+  setAiApiKey: (key: string) => void;
+  
   reset: () => void;
 }
 
@@ -174,6 +196,17 @@ const initialState = {
   mission: '',
   successCriteria: '',
   selectedFeatures: {},
+  toolStatus: {
+    cursor: false,
+    github: false,
+    'claude-code': false,
+    supabase: false,
+    vercel: false,
+  },
+  researchDomain: '',
+  inspirationUrls: [],
+  aiProvider: '',
+  aiApiKey: '',
 };
 
 export const useConfiguratorStore = create<ConfiguratorState>()(
@@ -277,6 +310,21 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       clearFeatures: () => set({ selectedFeatures: {} }),
 
+      setToolComplete: (toolId, isComplete) => set((state) => ({
+        toolStatus: {
+          ...state.toolStatus,
+          [toolId]: isComplete,
+        },
+      })),
+
+      setResearchDomain: (domain) => set({ researchDomain: domain }),
+
+      setInspirationUrls: (urls) => set({ inspirationUrls: urls }),
+
+      setAiProvider: (provider) => set({ aiProvider: provider }),
+
+      setAiApiKey: (key) => set({ aiApiKey: key }),
+
       reset: () => set(initialState),
     }),
     {
@@ -298,6 +346,11 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         mission: state.mission,
         successCriteria: state.successCriteria,
         selectedFeatures: state.selectedFeatures,
+        toolStatus: state.toolStatus,
+        researchDomain: state.researchDomain,
+        inspirationUrls: state.inspirationUrls,
+        aiProvider: state.aiProvider,
+        // Note: aiApiKey is NOT persisted for security
       }),
       onRehydrateStorage: () => (state) => {
         // Convert completedSteps array back to Set
