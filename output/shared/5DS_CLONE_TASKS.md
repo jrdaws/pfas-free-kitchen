@@ -52,7 +52,7 @@
 | 5.1 Completion Checklist | Website | ✅ Complete | - |
 | 5.2 File Tree View | Website | ✅ Complete | - |
 | 5.3 NPX Command Display | Website | ✅ Complete | - |
-| 5.4 Generate Framework | CLI + Website | ⏳ Waiting on all | - |
+| 5.4 Generate Framework | CLI + Website | ✅ Complete | - |
 
 ## Phase 6: Polish (Week 6)
 
