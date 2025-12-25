@@ -1,12 +1,12 @@
 # Agent Activation Queue
 
-> Updated: 2025-12-24 15:19 by CURATOR Agent (Cycle 11)
+> Updated: 2025-12-24 14:53 by CURATOR Agent (Cycle 10)
 > 
 > Copy any of these prompts into a new Cursor chat to launch the agent.
 
 ---
 
-## Recent Completions (Cycle 10)
+## Recent Completions (Since Cycle 9)
 
 | Task | Agent | Status |
 |------|-------|--------|
@@ -19,39 +19,27 @@
 
 ---
 
-## 🔴 Priority 1 (Launch Now - Parallel)
+## 🔴 Priority 1 (Launch Now)
 
 ### Testing Agent - Verify Export Clarity
 ```
-Read and execute output/testing-agent/inbox/20251224-1519-P1-task-verify-export-clarity.txt
+Read and execute output/testing-agent/inbox/20251224-1210-P1-task-verify-export-clarity.txt
 ```
 **Effort**: ~20 min | **Blocks**: Platform deployment | **Status**: Ready
-
-### CLI Agent - Scaffold Without Env Check
-```
-Read and execute output/cli-agent/inbox/20251224-1519-P1-task-scaffold-without-env.txt
-```
-**Effort**: ~45 min | **Blocks**: Nothing | **Status**: Ready
 
 ---
 
 ## 🟡 Priority 2 (After Dependencies / User Action)
 
-### Testing Agent - UploadThing Validation
-```
-Read and execute output/testing-agent/inbox/20251224-1519-P2-task-uploadthing-validation.txt
-```
-**Effort**: ~30 min | **Requires**: Nothing | **Status**: Ready (can run parallel)
-
 ### Platform Agent - Deploy to Vercel
 ```
-Read and execute output/platform-agent/inbox/20251224-1519-P2-task-deploy-to-vercel.txt
+Read and execute output/platform-agent/inbox/20251224-1210-P2-task-deploy-vercel.txt
 ```
-**Effort**: ~30 min | **Requires**: T1 passed + User runs `vercel login` | **Status**: Blocked
+**Effort**: ~30 min | **Requires**: User runs `vercel login` first | **Status**: Blocked on auth
 
 ### Documentation Agent - Update Deployment Guides
 ```
-Read and execute output/documentation-agent/inbox/20251224-1519-P2-task-update-deployment-guides.txt
+Read and execute output/documentation-agent/inbox/20251224-1210-P2-task-update-deploy-guides.txt
 ```
 **Effort**: ~20 min | **Requires**: Vercel deployment complete | **Status**: Blocked
 
@@ -76,15 +64,13 @@ Read and execute output/testing-agent/inbox/20251223-1900-P2-task-design-resourc
 ## Execution Order
 
 ```
-NOW (PARALLEL):  Testing Agent (T1) + CLI Agent (T2)
-                         ↓
-USER ACTION:     vercel login (human required)
-                         ↓
-THEN:            Platform Agent (T3) → Documentation Agent (T4)
+NOW:         Testing Agent (T1 - Verify Export)
+                    ↓
+USER ACTION: vercel login (human required)
+                    ↓
+THEN:        Platform Agent (T3) → Documentation Agent (T4)
                     
-PARALLEL:        Testing Agent (T5 - UploadThing)
-
-BACKLOG:         Chunked Code Gen, Design Validation
+BACKLOG:     Chunked Code Gen, Design Validation
 ```
 
 ---
@@ -93,11 +79,11 @@ BACKLOG:         Chunked Code Gen, Design Validation
 
 | Metric | Value |
 |--------|-------|
-| Active Tasks | 5 |
-| Completed (Cycle 10) | 6 |
-| P1 Tasks | 2 |
-| P2 Tasks | 3 |
-| Cycle | 11 |
+| Active Tasks | 3 |
+| Completed (Cycle 9-10) | 6 |
+| P1 Tasks | 1 |
+| P2 Tasks | 2 |
+| Cycle | 10 |
 
 ---
 
@@ -113,4 +99,4 @@ After login, Platform Agent can deploy.
 
 ---
 
-*Launch Testing Agent (T1) and CLI Agent (T2) in parallel to maximize velocity.*
+*Launch Testing Agent (T1) to verify export clarity changes.*

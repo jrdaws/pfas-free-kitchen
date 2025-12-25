@@ -1697,9 +1697,9 @@ Examples:
 
     // Also generate START_PROMPT.md if it wasn't already generated above
     if (!hasContext) {
-      const startPromptContent = generateStartPrompt(project);
-      fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
-      logger.stepSuccess("START_PROMPT.md generated");
+    const startPromptContent = generateStartPrompt(project);
+    fs.writeFileSync(path.join(absTargetDir, "START_PROMPT.md"), startPromptContent, "utf8");
+    logger.stepSuccess("START_PROMPT.md generated");
     }
     
     logger.endStep("cursor", "     Cursor files ready");

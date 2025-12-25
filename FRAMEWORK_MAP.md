@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 8858ab9 2025-12-24 chore(memory): checkpoint - Auditor approved checkpoint snapshots
 - a964eaf 2025-12-24 chore(auditor): approve checkpoint snapshots feature
 - dd2cd29 2025-12-24 feat(checkpoint): add persistent checkpoint snapshots
 - 88f76c0 2025-12-24 chore(curator): cycle 10 cleanup - acknowledge completed tasks
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - f15b215 2025-12-24 feat(agents): add default settings.json for all 13 agents + P1 task for path updates
 - a85827a 2025-12-24 chore(curator): complete cycle 9 - 5 tasks distributed (8.6 avg score)
 - a3a00a7 2025-12-24 docs(mindframe): add Curator Agent certification for cycle 9
-- b5c9c9d 2025-12-24 docs(memory): update CURATOR_MEMORY.md with cycle 9 session
 
 ## Agent Governance Structure
 
