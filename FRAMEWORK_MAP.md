@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- 5e8aa47 2025-12-24 feat(storage): implement UploadThing integration
 - d52db80 2025-12-24 chore: checkpoint - uploadthing integration updates and agent tasks
 - d71aed3 2025-12-24 feat(templates): add UploadThing components and update integration
 - f54fc9b 2025-12-24 chore(website): archive completed inbox tasks to done/
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - 19657d8 2025-12-24 chore(memory): checkpoint - Auditor Agent folder restructuring session
 - 1850802 2025-12-24 chore(auditor): sign off on final path cleanup
 - b853307 2025-12-24 docs: complete migration to flat agent folder structure
-- ad9de30 2025-12-24 chore(auditor): sign off on governance and media path updates
 
 ## Agent Governance Structure
 
