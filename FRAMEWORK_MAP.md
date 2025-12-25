@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: cc90b85a1f
 
 ## Recent changes
+- c6a0295 2025-12-24 feat(cli): add direct token support for npx install
 - 76de53c 2025-12-24 feat(api): add user_projects schema, RLS, and CRUD API routes
 - 4cd1f53 2025-12-24 style(website): modernize terminal/code block styling
 - f1f5fe4 2025-12-24 feat(website): implement 3-panel integration selector and workspace layout
@@ -28,7 +29,6 @@ Hash: cc90b85a1f
 - d71aed3 2025-12-24 feat(templates): add UploadThing components and update integration
 - f54fc9b 2025-12-24 chore(website): archive completed inbox tasks to done/
 - 07fc3fa 2025-12-24 chore: update framework map and template memory
-- 7c10999 2025-12-24 docs(strategy): Cycle 10 strategy - consolidation focus
 
 ## Agent Governance Structure
 

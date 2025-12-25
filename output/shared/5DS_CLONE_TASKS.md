@@ -13,7 +13,7 @@
 | 1.3 Accordion Navigation | Website | 📋 Ready | `20251224-P1-5ds-clone-accordion-nav.txt` |
 | 1.4 Persistent Project State | Website | ⏳ Waiting on 1.1 | - |
 | 1.5 My Projects Dashboard | Website | ⏳ Waiting on 1.1, 1.2 | - |
-| 1.6 NPX Command Generation | CLI | 📋 Ready | `20251224-P2-5ds-clone-npx-command.txt` |
+| 1.6 NPX Command Generation | CLI | ✅ Complete | `20251224-P2-5ds-clone-npx-command.txt` |
 
 ## Phase 2: Core Features System (Week 2-3)
 

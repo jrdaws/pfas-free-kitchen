@@ -19,8 +19,9 @@
 9. ✅ Deploy command enhanced (P2 task completed)
 10. ✅ Generate command implemented (AI-powered project generation)
 11. ✅ Export without env vars (P2 task completed)
-12. All CLI work complete and synced with Platform API
-13. (Optional) Live API testing with production endpoint
+12. ✅ NPX token command system (5DS Clone 1.6 completed)
+13. All CLI work complete and synced with Platform API
+14. (Optional) Live API testing with production endpoint
 
 ---
 
@@ -31,6 +32,44 @@
 ---
 
 ## Session History
+
+### Session: 2025-12-24 (NPX Token Command - P2 5DS Clone)
+
+**Work Completed**
+- ✅ Executed P2 task: NPX Command Generation System (5DS Clone 1.6)
+- ✅ Added `isProjectToken()` function to detect UUID and short token formats
+- ✅ Route token-like first args directly to pull command
+- ✅ Enables: `npx @jrdaws/framework d9d8c242-19af-4b6d-...`
+- ✅ Enables: `npx @jrdaws/framework swift-eagle-1234`
+- ✅ Updated help text with token usage examples
+- ✅ Added 4 new tests for token detection
+- ✅ All 714 tests passing
+
+**Changes Made**
+1. **bin/framework.js**: Added:
+   - `isProjectToken(str)` - detects UUID (8-4-4-4-12) and short (word-word-number) formats
+   - Token detection in dispatcher before template fallback
+   - Updated help text with token examples
+
+2. **tests/cli/commands.test.mjs**: Added 4 tests:
+   - UUID token routes to pull
+   - Short token routes to pull
+   - Template name is NOT treated as token
+   - Help shows token usage
+
+**Token Formats Supported**
+- Full UUID: `d9d8c242-19af-4b6d-92d8-6d6a79094abc`
+- Short token: `swift-eagle-1234`
+
+**Task Completed**
+- Moved `20251224-P2-5ds-clone-npx-command.txt` to `done/`
+- Updated `5DS_CLONE_TASKS.md` with completion status
+- Committed: `feat(cli): add direct token support for npx install`
+- Pushed to origin/main
+
+**Handoff**: Enables 5.3 (NPX Command Display) in website
+
+---
 
 ### Session: 2025-12-24 18:15 PST (Export Without Env Vars - P2)
 
