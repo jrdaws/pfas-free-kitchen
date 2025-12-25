@@ -1,110 +1,62 @@
-# Agent Activation Queue
-
-> Updated: 2025-12-24 18:00 by CURATOR Agent (Cycle 10)
-> 
-> Copy any of these prompts into a new Cursor chat to launch the agent.
+# Active Agent Tasks - Cycle 11
+# Last Updated: 2025-12-25 02:00 by CURATOR Agent
 
 ---
 
-## Recent Completions (Cycle 10)
+## Priority 1 (Must Execute First)
 
-| Task | Agent | Status |
-|------|-------|--------|
-| P0 Export Mismatch Fix | Website | ✅ DONE |
-| UploadThing Validation | Testing | ✅ DONE |
-| SaaS Template Enhancements | Template | ✅ DONE |
-| Agent Folder Standardization | Auditor | ✅ DONE |
-| Checkpoint Snapshots | Documentation | ✅ DONE |
-| Export Clarity Verification | Testing | ✅ DONE |
+### CLI AGENT
+Task: Commit Uncommitted Work
+File: output/agents/cli/inbox/20251225-0200-P1-task-commit-uncommitted-work.txt
+Launch: Read and execute the task in output/agents/cli/inbox/20251225-0200-P1-task-commit-uncommitted-work.txt
 
----
-
-## 🔴 Priority 2 (Launch Now - All Parallel)
-
-### Documentation Agent - CODING_STANDARDS.md + Deployment Guides
-```
-Read and execute the tasks in:
-- output/documentation-agent/inbox/20251224-1800-P2-task-coding-standards.txt
-- output/documentation-agent/inbox/20251224-1800-P2-task-deployment-guides.txt
-```
-**Effort**: ~90 min | **Status**: Ready | **Quality**: 9.4/10 + 9.2/10
+### TESTING AGENT (after CLI completes)
+Task: Complete Accordion UI Tests
+File: output/agents/testing/inbox/20251225-0200-P1-task-accordion-ui-tests.txt
+Launch: Read and execute the task in output/agents/testing/inbox/20251225-0200-P1-task-accordion-ui-tests.txt
 
 ---
 
-### Testing Agent - Configurator UI Tests
-```
-Read and execute the task in output/testing-agent/inbox/20251224-1800-P2-task-configurator-ui-tests.txt
-```
-**Effort**: ~1 hour | **Status**: Ready | **Quality**: 9.2/10
+## Priority 2 (Can Execute in Parallel)
+
+### WEBSITE AGENT
+Task: Connected Services UI
+File: output/agents/website/inbox/20251225-0200-P2-task-connected-services-ui.txt
+Launch: Read and execute the task in output/agents/website/inbox/20251225-0200-P2-task-connected-services-ui.txt
+
+### TESTING AGENT (after Website completes T3)
+Task: Test Supabase OAuth E2E
+File: output/agents/testing/inbox/20251225-0200-P2-task-supabase-oauth-e2e.txt
+Launch: Read and execute the task in output/agents/testing/inbox/20251225-0200-P2-task-supabase-oauth-e2e.txt
 
 ---
 
-### CLI Agent - Export Without Env Vars
-```
-Read and execute the task in output/cli-agent/inbox/20251224-1800-P2-task-scaffold-without-env.txt
-```
-**Effort**: ~45 min | **Status**: Ready | **Quality**: 9.2/10
+## Priority 3 (Background/Documentation)
+
+### DOCUMENTATION AGENT
+Task: Create CODING_STANDARDS.md
+File: output/agents/documentation/inbox/20251225-0200-P3-task-coding-standards.txt
+Launch: Read and execute the task in output/agents/documentation/inbox/20251225-0200-P3-task-coding-standards.txt
+
+### DOCUMENTATION AGENT
+Task: Create Deployment Guides
+File: output/agents/documentation/inbox/20251225-0200-P3-task-deployment-guides.txt
+Launch: Read and execute the task in output/agents/documentation/inbox/20251225-0200-P3-task-deployment-guides.txt
 
 ---
 
-## 🟢 Priority 3 (Backlog)
+## Execution Order Recommendation
 
-### Quality Agent - SOP Review
-```
-Read and execute the task in output/quality-agent/inbox/20251224-1800-P3-task-sop-review.txt
-```
-**Effort**: ~30 min | **Status**: Ready | **Quality**: 8.6/10
-
----
-
-### Platform Agent - Chunked Code Generation
-```
-Read and execute output/platform-agent/inbox/20251223-1900-P1-task-chunked-code-generation.txt
-```
-**Effort**: ~2 hours | Complex task, defer until after consolidation
+1. **First**: CLI Agent (T1) - 10 minutes, clears uncommitted work
+2. **Parallel**: Website Agent (T3) + Documentation Agent (T5, T6)
+3. **After T1**: Testing Agent (T2) - accordion UI tests
+4. **After T3**: Testing Agent (T4) - OAuth E2E tests
 
 ---
 
-## Execution Order
-
-```
-PARALLEL LAUNCH (All Independent):
-├── Documentation Agent → CODING_STANDARDS + Deployment Guides
-├── Testing Agent → Configurator UI Tests
-├── CLI Agent → Export Without Env Vars
-└── Quality Agent → SOP Review (optional, P3)
-
-HUMAN ACTION (Async):
-└── Vercel Dashboard → Set Root Dir=website
-
-BACKLOG:
-└── Platform Agent → Chunked Code Generation
-```
+## Total Active Tasks: 6
+## Agents with Tasks: 4 (CLI, Testing, Website, Documentation)
 
 ---
 
-## Stats
-
-| Metric | Value |
-|--------|-------|
-| Active Tasks | 5 |
-| Completed (Cycle 10) | 6 |
-| P2 Tasks | 4 |
-| P3 Tasks | 1 |
-| Cycle | 10 |
-| Avg Quality Score | 9.1/10 |
-
----
-
-## Blocker Alert
-
-**Vercel Primary Domain** requires human action:
-1. Go to Vercel Dashboard → Project Settings
-2. Set Root Directory = `website`
-3. Redeploy
-
-Alt domain works; primary domain pending this config.
-
----
-
-*All 5 tasks can launch in PARALLEL - no dependencies between them.*
+Generated by CURATOR Agent - Cycle 11

@@ -1,0 +1,54 @@
+# Task: Create Deployment Guides
+
+Priority: P3
+Assigned To: Documentation Agent
+Depends On: None
+Estimated Effort: Medium (1 hour)
+Quality Score: 8.0/10
+
+## Context
+Auditor identified missing deployment guides: vercel.md, netlify.md, railway.md are referenced but don't exist.
+
+## Objectives
+1. Create docs/deploy/vercel.md
+2. Create docs/deploy/netlify.md
+3. Create docs/deploy/railway.md
+4. Document env vars required for each platform
+
+## Success Criteria
+- [ ] All 3 deployment guides created
+- [ ] Each guide has step-by-step instructions
+- [ ] Required env vars documented per platform
+- [ ] Links from other docs work
+
+## Files to Modify
+- docs/deploy/vercel.md (new)
+- docs/deploy/netlify.md (new)
+- docs/deploy/railway.md (new)
+
+## Content Template for Each Guide
+1. Prerequisites
+2. Quick Start (30-second deploy)
+3. Environment Variables Required
+   - ANTHROPIC_API_KEY
+   - SUPABASE_URL, SUPABASE_ANON_KEY
+   - REDIS_* (if applicable)
+4. Build Configuration
+5. Domain Setup
+6. Troubleshooting Common Issues
+
+## Reference Files
+- docs/deploy/README.md (existing deploy docs index)
+- docs/deploy/supabase.md (existing guide pattern to follow)
+- SUPABASE_SETUP.md (env var examples)
+
+## Handoff
+1. Move task to done/
+2. Update DOCUMENTATION_MEMORY.md
+3. Update any referencing docs if needed
+
+---
+Curated by: CURATOR Agent
+Cycle: 11
+Date: 2025-12-25 02:00
+
