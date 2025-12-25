@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 08992b0 2025-12-24 feat(website): add GuidedSetup wizard (Task 3.1-3.4, 3.6)
 - 347f5a3 2025-12-24 feat(website): add ProjectSaveIndicator component (Task 1.4)
 - 4fa5147 2025-12-24 feat(website): add FeedbackToggle component (Task 2.5)
 - f9e7488 2025-12-24 docs(memory): update CLI_MEMORY with feature-assembler session
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - a7655ec 2025-12-24 docs(memory): update CLI_MEMORY.md with export without env session
 - 0c524e0 2025-12-24 feat(cli): allow export without env vars
 - 5f4f505 2025-12-24 chore(quality): complete SOP registry audit - 17 SOPs verified
-- ca547cf 2025-12-24 test(integration): validate UploadThing storage integration
 
 ## Agent Governance Structure
 
