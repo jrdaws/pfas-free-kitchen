@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- ba99064 2025-12-24 chore: minor page.tsx cleanup
 - 83d87c3 2025-12-24 feat(supabase): implement Supabase OAuth integration for 5DS clone
 - 76ebbdf 2025-12-24 docs(memory): update CLI_MEMORY with feature-assembler enhancements
 - 64adc9b 2025-12-24 feat(cli): enhance clone command with feature-assembler integration
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 1af6bd8 2025-12-24 feat(website): add ExportWizard component (Task 5.4)
 - 0cb6670 2025-12-24 feat(website): add marketing landing page at /platform (Task 6.1)
 - e081c72 2025-12-24 feat(website): add FileTreeView component (Task 5.2)
-- 8156acc 2025-12-24 docs(memory): update CLI_MEMORY with clone command session
 
 ## Agent Governance Structure
 

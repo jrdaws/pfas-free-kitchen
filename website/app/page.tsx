@@ -61,15 +61,15 @@ const heroStats = [
 const features = [
   {
     icon: '/images/redesign/icons/icon-templates.svg',
-    title: 'Template Registry',
-    description: 'Production-ready templates for SaaS, directories, and more. Searchable, versioned, and extensible.',
-    code: 'framework templates list',
+    title: 'Feature Assembler',
+    description: 'Pick features from 20+ modules. Dependencies auto-resolved. Your custom stack in minutes.',
+    code: 'framework clone <token> --features auth,billing',
   },
   {
     icon: '/images/redesign/icons/icon-plugins.svg',
-    title: 'Plugin System',
-    description: 'Hook into export, health checks, and more. Extend functionality without forking.',
-    code: 'framework plugin add',
+    title: 'Visual Configurator',
+    description: 'Configure your project visually. Select features, integrations, and tools. Get a unique token.',
+    code: 'dawson.does/configure',
   },
   {
     icon: '/images/redesign/icons/icon-providers.svg',
@@ -85,9 +85,9 @@ const features = [
   },
   {
     icon: '/images/redesign/icons/icon-cli.svg',
-    title: 'Powerful CLI',
-    description: 'Intuitive commands for export, health checks, doctor, and more. Built for developer experience.',
-    code: 'framework export saas ./app',
+    title: 'Clone Command',
+    description: 'One command to generate your configured project. Opens in Cursor automatically.',
+    code: 'framework clone swift-eagle-1234 --open',
   },
   {
     icon: '/images/redesign/icons/icon-extensible.svg',
