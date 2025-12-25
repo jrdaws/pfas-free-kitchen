@@ -220,3 +220,34 @@ test("CLI: help shows token usage", () => {
   assert.ok(result.stdout.includes("Pull by full UUID"), "Help should show UUID example");
   assert.ok(result.stdout.includes("Pull by short token"), "Help should show short token example");
 });
+
+// Clone command tests
+test("CLI: clone command shows help", () => {
+  const result = runFramework(["clone", "--help"]);
+  assert.equal(result.status, 0, "clone --help should exit with 0");
+  assert.ok(result.stdout.includes("Usage: framework clone"), "Should show clone usage");
+  assert.ok(result.stdout.includes("Clone a project from the configurator"), "Should describe clone");
+});
+
+test("CLI: clone without token shows usage", () => {
+  const result = runFramework(["clone"]);
+  // Clone without token should show usage (exit 1)
+  assert.ok(result.stdout.includes("Usage") || result.stdout.includes("clone"), "Should show usage");
+});
+
+test("CLI: clone with token routes to pull", () => {
+  // This test just verifies the command is recognized and attempts to pull
+  const result = runFramework(["clone", "test-token-1234", "--dry-run"]);
+  const output = result.stdout + result.stderr;
+  // Should attempt to fetch or show cloning message
+  assert.ok(
+    output.includes("Cloning project") || output.includes("Fetching project") || output.includes("Failed to fetch"),
+    "Clone should attempt to pull the project"
+  );
+});
+
+test("CLI: help shows clone command", () => {
+  const result = runFramework(["--help"]);
+  assert.ok(result.stdout.includes("framework clone"), "Help should show clone command");
+  assert.ok(result.stdout.includes("Clone Options"), "Help should show Clone Options section");
+});

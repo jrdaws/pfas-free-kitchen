@@ -1166,6 +1166,7 @@ async function cmdHelp() {
   framework plugin <add|remove|list|hooks|info>
   framework templates <list|search|info|categories|tags>
   framework export <templateId> <projectDir> [options]
+  framework clone <token> [output-dir] [options]         # Clone from configurator (recommended)
   framework pull <token> [output-dir] [options]
   framework <token> [options]                           # Pull project by token
   framework <templateId> <projectDir>
@@ -1177,6 +1178,12 @@ Export Options:
   --branch <branch>    Branch name (default: main)
   --dry-run            Show what would happen without making changes
   --force              Overwrite existing directory
+
+Clone Options (recommended for configurator projects):
+  --open               Open the project in Cursor after generation
+  --dry-run            Show what would happen without making changes
+  --force              Overwrite existing directory
+  --dev                Use localhost API instead of production
 
 Pull Options:
   --cursor             Generate .cursorrules and START_PROMPT.md for AI
@@ -1206,9 +1213,11 @@ Examples:
   framework doctor .
   framework export seo-directory ~/Documents/Cursor/my-app
   framework export saas ~/Documents/Cursor/my-saas --remote https://github.com/me/my-saas.git --push
+  framework clone swift-eagle-1234                   # Clone from configurator (recommended)
+  framework clone swift-eagle-1234 --open            # Clone and open in Cursor
+  framework clone swift-eagle-1234 ./my-app          # Clone to specific directory
   framework pull fast-lion-1234                      # Pull project from web platform
   framework pull fast-lion-1234 --cursor --open      # Pull with Cursor AI files and open
-  framework pull fast-lion-1234 ./my-app --dry-run   # Preview without making changes
   framework d9d8c242-19af-4b6d-92d8-6d6a79094abc     # Pull by full UUID token
   framework swift-eagle-1234                         # Pull by short token
   framework generate -d "A fitness app" -n fittrack  # AI-generate a project
@@ -1968,6 +1977,72 @@ function isProjectToken(str) {
 }
 
 /**
+ * Clone command - Generate a project from configurator features
+ * This is the primary command for 5DaySprint-style project generation
+ * Usage: framework clone <token> [output-dir] [options]
+ */
+async function cmdClone(token, extraArgs = []) {
+  // Handle help
+  if (!token || token === "--help" || token === "-h" || token === "help") {
+    console.log(`Usage: framework clone <token> [output-dir] [options]
+
+Clone a project from the configurator and generate it locally with all selected features.
+
+This command:
+1. Fetches your project configuration from the platform
+2. Scaffolds the base template with integrations
+3. Assembles all selected features into the project
+4. Generates CLAUDE.md for AI-assisted development
+5. Creates .cursorrules and START_PROMPT.md
+
+Arguments:
+  token         Project token from the configurator (e.g., swift-eagle-1234)
+  output-dir    Output directory (default: ./<project-name>)
+
+Options:
+  --open        Open the project in Cursor after generation
+  --dry-run     Preview what would happen without making changes
+  --force       Overwrite existing directory
+  --dev         Use localhost API instead of production
+
+Examples:
+  framework clone swift-eagle-1234
+  framework clone d9d8c242-19af-4b6d-92d8-6d6a79094abc ./my-project
+  framework clone swift-eagle-1234 --open
+  framework clone swift-eagle-1234 --dry-run
+  
+  # Or use npx directly:
+  npx @jrdaws/framework clone swift-eagle-1234
+`)
+    if (!token) process.exit(1)
+    return
+  }
+
+  // Clone always enables --cursor for AI-ready projects
+  // Parse args and ensure cursor is enabled
+  let outputDir = null
+  let flagArgs = extraArgs
+
+  if (extraArgs[0] && !extraArgs[0].startsWith("--")) {
+    outputDir = extraArgs[0]
+    flagArgs = extraArgs.slice(1)
+  }
+
+  // Add --cursor if not already present
+  if (!flagArgs.includes("--cursor")) {
+    flagArgs = ["--cursor", ...flagArgs]
+  }
+
+  // Reconstruct args for cmdPull
+  const pullArgs = outputDir ? [outputDir, ...flagArgs] : flagArgs
+
+  logger.log("🚀 Cloning project from configurator...\n")
+
+  // Delegate to pull command with cursor enabled
+  await cmdPull(token, pullArgs)
+}
+
+/**
  * Unified dispatcher (single source of truth)
  */
 const selfPath = realpathSync(fileURLToPath(import.meta.url));
@@ -2021,6 +2096,11 @@ if (isEntrypoint) {
     const pullArgs = process.argv.slice(4); // Everything after "framework pull <token>"
     await cmdPull(b, pullArgs); 
     process.exit(0); 
+  }
+  if (a === "clone") {
+    const cloneArgs = process.argv.slice(4); // Everything after "framework clone <token>"
+    await cmdClone(b, cloneArgs);
+    process.exit(0);
   }
   if (a === "demo") {
     const restArgs = process.argv.slice(3); // Everything after "demo" (includes templateId)
