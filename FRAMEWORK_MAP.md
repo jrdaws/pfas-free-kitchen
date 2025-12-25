@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 1c0272e 2025-12-25 feat(website): implement Warm Neutral design system
 - efc8838 2025-12-25 docs(audit): checkpoint efficiency analysis - tiered system proposal
 - 2303165 2025-12-25 docs(mindframe): add Next Agent Prompt generation rule
 - 9108402 2025-12-25 docs(governance): clarify Next Agent Prompt generation rule
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - ea06b9b 2025-12-25 chore(archive): recover original governance files from git history
 - 6b726e5 2025-12-25 docs(governance): add Clean Command Block rule - no comments in fenced commands
 - fa2d288 2025-12-25 docs(efficiency): recreate token optimization task with backup instructions
-- 6ac53d1 2025-12-25 feat(design): select Warm Neutral (Scheme C) as official color scheme
 
 ## Agent Governance Structure
 
