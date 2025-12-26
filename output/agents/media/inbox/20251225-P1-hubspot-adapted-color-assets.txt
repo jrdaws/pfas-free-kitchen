@@ -1,0 +1,133 @@
+TASK: Create HubSpot-Adapted Color Scheme Assets
+PRIORITY: P1 (Design Cycle - User Requested)
+TYPE: Color System + Asset Creation
+REQUESTED_BY: User (direct request via Research Agent)
+
+---
+
+## Objective
+
+Create all necessary visual assets and CSS for a HubSpot-adapted color scheme that keeps our current orange (#F97316) but follows HubSpot's successful design patterns.
+
+## Color Palette to Implement
+
+```css
+:root {
+  /* PRIMARY - Our Orange (Keep It!) */
+  --primary: #F97316;           /* Orange-500 */
+  --primary-hover: #EA580C;     /* Orange-600 */
+  --primary-light: #FFF7ED;     /* Orange-50 */
+  
+  /* SECONDARY - Navy for Depth (HubSpot-inspired) */
+  --secondary: #1E3A5F;         /* Deep navy blue */
+  --secondary-hover: #2C4A73;   /* Lighter navy */
+  --secondary-light: #F0F4F8;   /* Blue-gray tint */
+  
+  /* NEUTRALS - Clean & Professional */
+  --bg: #FFFFFF;                /* Pure white */
+  --bg-alt: #F8FAFC;            /* Light gray sections */
+  --surface: #FFFFFF;           /* Card backgrounds */
+  --text-primary: #1C1917;      /* Near-black */
+  --text-secondary: #64748B;    /* Slate gray */
+  --border: #E2E8F0;            /* Light border */
+  
+  /* SUCCESS - Use sparingly */
+  --success: #10B981;
+  --success-light: #ECFDF5;
+  
+  /* TERMINAL (Dark areas) */
+  --terminal-bg: #1E293B;       /* Slate-800 */
+  --terminal-header: #334155;   /* Slate-700 */
+  --terminal-text: #94A3B8;     /* Slate-400 */
+}
+```
+
+---
+
+## Assets to Create
+
+### 1. Color Tokens File
+**Output**: `output/shared/design/hubspot-adapted-colors.tokens.json`
+
+Create a JSON token file with all colors for easy import.
+
+### 2. Updated globals.css
+**Output**: `output/shared/design/hubspot-adapted/globals.css`
+
+Full CSS file ready to replace current globals.css for testing.
+
+### 3. Color Swatch Image
+**Output**: `output/shared/media/approved/color-schemes/hubspot-adapted-swatches.svg`
+
+Visual reference showing all colors in the palette with hex codes.
+
+### 4. Button States Preview
+**Output**: `output/shared/media/approved/color-schemes/hubspot-adapted-buttons.svg`
+
+Show primary (orange) and secondary (navy) buttons in all states:
+- Default
+- Hover
+- Active
+- Disabled
+
+### 5. Component Preview Mock
+**Output**: `output/shared/design/hubspot-adapted/preview.html`
+
+Single HTML file showing key components with new colors:
+- Navigation bar
+- Hero section with CTA buttons
+- Feature card
+- Terminal window
+- Footer
+
+---
+
+## Design Principles to Follow
+
+1. **Orange is the star** - Use for CTAs, links, and primary actions only
+2. **Navy adds depth** - Use for secondary buttons, headers, footer
+3. **White backgrounds** - Clean, professional, content-focused
+4. **Green only for success** - Checkmarks, success messages, ready badges
+5. **No competing accents** - Remove teal, purple, or other attention-grabbing colors
+
+---
+
+## After Completion
+
+**CRITICAL**: After creating all assets, create a task for Quality Agent review:
+
+```
+Next Agent: Quality Agent
+```
+Confirm you are the Quality Agent.
+Read and execute: output/agents/quality/inbox/20251225-P2-hubspot-color-review.txt
+```
+```
+
+Create the Quality Agent task file with:
+- Link to all created assets
+- Review checklist:
+  - [ ] Color contrast meets WCAG AA (4.5:1 for text)
+  - [ ] Orange and navy don't clash
+  - [ ] Buttons are distinguishable
+  - [ ] Terminal readability preserved
+  - [ ] Overall cohesion achieved
+- Request approval or revision notes
+
+---
+
+## Success Criteria
+
+- [ ] All 5 asset files created
+- [ ] Colors match specification exactly
+- [ ] Preview HTML renders correctly in browser
+- [ ] Quality Agent task created and ready
+- [ ] No HubSpot branding used (only inspired by structure)
+
+---
+
+## Reference
+
+Research analysis from: Research Agent session 2025-12-25
+HubSpot inspiration: Clean professional design with warm orange primary, navy depth, white backgrounds
+
