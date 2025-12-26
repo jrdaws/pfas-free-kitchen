@@ -288,7 +288,7 @@ function CollaborativeVisualEditorContent({
         </div>
 
         {/* Center - Preview with Overlay */}
-        <div className="flex-1 relative overflow-auto bg-gray-100">
+        <div className="flex-1 relative overflow-auto bg-stone-100">
           <div className="flex justify-center min-h-full p-4">
             <div
               className="relative transition-all duration-300"

@@ -168,7 +168,7 @@ function VisualEditorContent({ html, onHtmlChange, className, viewport = 'deskto
         </div>
 
         {/* Preview */}
-        <div className="flex-1 relative overflow-auto bg-gray-100">
+        <div className="flex-1 relative overflow-auto bg-stone-100">
           <div className="flex justify-center min-h-full p-4">
             <div
               className="relative transition-all duration-300"

@@ -507,7 +507,7 @@ export function AIPreview({
                     >
                       <iframe
                         srcDoc={localPreviewHtml}
-                        className="w-full border border-gray-200 rounded"
+                        className="w-full border border-stone-200 rounded"
                         style={{ height: "600px" }}
                         sandbox="allow-scripts allow-same-origin"
                         title="AI Generated Preview"

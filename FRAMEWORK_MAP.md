@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- ca6e0bd 2025-12-25 feat(governance): implement tiered checkpoint system
 - 97120ba 2025-12-25 docs(task): add mandatory backup step to checkpoint implementation task
 - e9c1917 2025-12-25 docs(task): create tiered checkpoint implementation task - approved by Auditor
 - 1c0272e 2025-12-25 feat(website): implement Warm Neutral design system
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 02cda18 2025-12-25 docs(task): complete governance optimization Phase 2
 - 1548915 2025-12-25 feat(governance): implement Phase 2 token optimization
 - 1c392f5 2025-12-25 docs(efficiency): create Phase 2 governance optimization task - 7 recommendations
-- ea06b9b 2025-12-25 chore(archive): recover original governance files from git history
 
 ## Agent Governance Structure
 

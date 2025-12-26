@@ -159,7 +159,7 @@ export default function SignupPage() {
                 id="terms"
                 checked={acceptTerms}
                 onChange={(e) => setAcceptTerms(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300 text-[#F97316] focus:ring-[#F97316]"
+                className="mt-1 h-4 w-4 rounded border-stone-300 text-[#F97316] focus:ring-[#F97316]"
                 disabled={loading}
               />
               <Label htmlFor="terms" className="text-sm text-muted-foreground leading-tight">
