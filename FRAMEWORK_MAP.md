@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 2ca0457 2025-12-25 docs(design): add comprehensive website cohesion analysis
 - c610af1 2025-12-25 chore(media): complete P1 HubSpot-adapted color assets task
 - 942f309 2025-12-25 feat(design): create HubSpot-adapted color scheme assets
 - dd46fea 2025-12-25 docs(media): add HubSpot-adapted color scheme task for Media Agent
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 4377555 2025-12-25 docs(governance): enforce Quick Actions + Handoff on EVERY response
 - 97176dc 2025-12-25 chore: add Quality Agent review task for dark mode fix
 - 0159112 2025-12-25 chore: update SVG comments to reflect orange color scheme
-- 46a638e 2025-12-25 docs(sop): add Governance Maintenance SOP - prevents re-bloating
 
 ## Agent Governance Structure
 

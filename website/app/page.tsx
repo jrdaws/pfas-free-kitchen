@@ -179,8 +179,10 @@ export default function Home() {
   }, []);
 
   return (
-    <main className="min-h-screen relative overflow-hidden" style={{ background: 'var(--bg)' }}>
-      {/* Hero Section */}
+    <main className="min-h-screen bg-white">
+      {/* ============================================
+          HERO SECTION - Dark with gradient fade to white
+          ============================================ */}
       <section className="hero relative min-h-screen flex items-center justify-center px-4 py-20 overflow-hidden">
         {/* Background with warm stone gradient */}
         <div
@@ -188,7 +190,7 @@ export default function Home() {
           style={{ background: 'linear-gradient(to bottom right, #0C0A09, #1C1917, #0C0A09)' }}
         />
         
-        {/* Warm accent glow orbs - matches mockup */}
+        {/* Warm accent glow orbs */}
         <div className="absolute top-[-40%] right-[-20%] w-[80%] h-full rounded-full pointer-events-none" 
           style={{ background: 'linear-gradient(135deg, rgba(249, 115, 22, 0.1) 0%, rgba(251, 146, 60, 0.05) 100%)' }} 
         />
@@ -197,55 +199,70 @@ export default function Home() {
         <div className="mesh-overlay" />
 
         {/* Gradient overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/30 via-transparent to-stone-950" />
+        <div className="absolute inset-0 bg-gradient-to-b from-stone-950/30 via-transparent to-transparent" />
+
+        {/* GRADIENT FADE TO WHITE - Hero transition */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-48 pointer-events-none z-20"
+          style={{
+            background: 'linear-gradient(to bottom, transparent, #FFFFFF)'
+          }}
+        />
 
         <div className="max-w-7xl mx-auto relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left side - Text content */}
             <div className="text-center lg:text-left">
-              {/* Hero badge - matches mockup exactly */}
+              {/* Hero badge */}
               <div className="hero-badge inline-flex items-center gap-2 mb-7">
                 <span>✦</span>
                 <span>Export-First Framework · v0.3.1</span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight" style={{ color: 'var(--text-primary)' }}>
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight tracking-tight text-white">
                 Build SaaS apps
                 <br />
-                <span style={{ color: 'var(--primary)' }}>in days, not months</span>
+                <span className="text-orange-500">in days, not months</span>
               </h1>
 
-              <p className="text-xl mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed" style={{ color: 'var(--text-secondary)' }}>
+              <p className="text-xl mb-10 max-w-xl mx-auto lg:mx-0 leading-relaxed text-stone-300">
                 Configure your app in a beautiful visual builder, then export to full local ownership. No vendor lock-in, ever.
               </p>
 
-              {/* CTA Buttons - matches mockup */}
+              {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-3.5 justify-center lg:justify-start mb-10">
-                <a href="/configure" className="btn btn-primary text-center">
+                <a href="/configure" className="btn-primary text-center">
                   Start Building →
                 </a>
                 <a
                   href="https://github.com/jrdaws/dawson-does-framework"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="btn btn-secondary text-center"
+                  className="btn-secondary text-center"
                 >
                   Watch Demo
                 </a>
               </div>
 
-              {/* Features strip - matches mockup */}
-              <div className="features-strip flex flex-wrap gap-8 lg:gap-12 justify-center lg:justify-start">
-                <div className="feature-item">Zero lock-in</div>
-                <div className="feature-item">AI-powered</div>
-                <div className="feature-item">Full ownership</div>
-                <div className="feature-item">Deploy anywhere</div>
+              {/* Features strip */}
+              <div className="flex flex-wrap gap-8 lg:gap-12 justify-center lg:justify-start">
+                <div className="flex items-center gap-2 text-stone-400 text-sm font-medium">
+                  <span className="text-orange-500">✓</span> Zero lock-in
+                </div>
+                <div className="flex items-center gap-2 text-stone-400 text-sm font-medium">
+                  <span className="text-orange-500">✓</span> AI-powered
+                </div>
+                <div className="flex items-center gap-2 text-stone-400 text-sm font-medium">
+                  <span className="text-orange-500">✓</span> Full ownership
+                </div>
+                <div className="flex items-center gap-2 text-stone-400 text-sm font-medium">
+                  <span className="text-orange-500">✓</span> Deploy anywhere
+                </div>
               </div>
             </div>
 
-            {/* Right side - Terminal matching mockup */}
+            {/* Right side - Terminal */}
             <div className="relative mt-14 lg:mt-0">
-              {/* Terminal - matches mockup exactly */}
               <div className="terminal relative z-10 max-w-[600px] w-full">
                 <div className="terminal-header">
                   <div className="terminal-dot red" />
@@ -274,177 +291,184 @@ export default function Home() {
                     </div>
                   )}
                 </div>
-            </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
-
-      {/* Features Grid */}
-      <section className="relative py-24 px-4">
+      {/* ============================================
+          FEATURES GRID - White background
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Built for <span className="gradient-text">Speed, Trust & Scale</span>
-          </h2>
-            <p className="text-xl text-stone-400 max-w-2xl mx-auto">
-            Everything you need to ship production-ready applications, from templates to providers
-          </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-stone-900">
+              Built for <span className="text-orange-500">Speed, Trust & Scale</span>
+            </h2>
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+              Everything you need to ship production-ready applications, from templates to providers
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature, index) => (
               <div
                 key={feature.title}
-                className="feature-card"
+                className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-orange-200 hover:-translate-y-1 transition-all duration-200"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
-                <Image
-                  src={feature.icon}
-                  alt={feature.title}
-                  width={48}
-                  height={48}
-                  className="feature-icon"
-                />
-                <h3 className="text-xl font-semibold mb-2 text-white">{feature.title}</h3>
-                <p className="text-stone-400 mb-4">{feature.description}</p>
-                <code className="text-sm text-brand-primary font-mono">{feature.code}</code>
-            </div>
+                <div className="w-12 h-12 rounded-lg bg-orange-50 flex items-center justify-center mb-4">
+                  <Image
+                    src={feature.icon}
+                    alt={feature.title}
+                    width={28}
+                    height={28}
+                  />
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-stone-900">{feature.title}</h3>
+                <p className="text-stone-600 mb-4">{feature.description}</p>
+                <code className="text-sm text-orange-600 font-mono bg-orange-50 px-2 py-1 rounded">{feature.code}</code>
+              </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Demo Section with Toggle */}
-      <section className="relative py-24 px-4 bg-stone-900/50">
+      {/* ============================================
+          SEE IT IN ACTION - White background (not dark!)
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              See It <span className="gradient-text">In Action</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-stone-900">
+              See It <span className="text-orange-500">In Action</span>
             </h2>
 
             {/* Beginner/Advanced Toggle */}
-            <div className="toggle-group">
+            <div className="inline-flex rounded-lg border border-stone-200 p-1 bg-stone-50">
               <button
                 onClick={() => setLevel('beginner')}
-                className={`toggle-btn ${level === 'beginner' ? 'active' : ''}`}
+                className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                  level === 'beginner' 
+                    ? 'bg-orange-500 text-white' 
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
               >
                 Beginner
               </button>
               <button
                 onClick={() => setLevel('advanced')}
-                className={`toggle-btn ${level === 'advanced' ? 'active' : ''}`}
+                className={`px-6 py-2 rounded-md font-medium transition-all duration-200 ${
+                  level === 'advanced' 
+                    ? 'bg-orange-500 text-white' 
+                    : 'text-stone-600 hover:text-stone-900'
+                }`}
               >
                 Advanced
               </button>
             </div>
           </div>
 
+          {/* Terminal mockup - stands out on white */}
           {level === 'beginner' ? (
-              <div className="terminal-window">
-                <div className="terminal-header-modern">
-                  <span className="terminal-title">Quick Start with Clone</span>
-                  <div className="flex gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                  </div>
-                </div>
-                <div className="terminal-content">
+            <div className="terminal">
+              <div className="terminal-header">
+                <div className="terminal-dot red" />
+                <div className="terminal-dot yellow" />
+                <div className="terminal-dot green" />
+                <span className="flex-1 text-center text-xs text-slate-400 font-mono">Quick Start with Clone</span>
+              </div>
+              <div className="terminal-body">
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">1.</span>
-                      <div>
-                      <div className="text-stone-200">Configure your project at <span className="text-brand-primary">dawson.does/configure</span></div>
-                      <div className="text-stone-500 text-xs mt-1">Select features, integrations, and tools</div>
+                    <span className="text-orange-500">1.</span>
+                    <div>
+                      <div className="text-slate-200">Configure your project at <span className="text-orange-500">dawson.does/configure</span></div>
+                      <div className="text-slate-500 text-xs mt-1">Select features, integrations, and tools</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">2.</span>
-                      <div>
-                      <div className="text-stone-200">Get your project token: <span className="text-brand-secondary">swift-eagle-1234</span></div>
-                      <div className="text-stone-500 text-xs mt-1">Unique token for your configuration</div>
+                    <span className="text-orange-500">2.</span>
+                    <div>
+                      <div className="text-slate-200">Get your project token: <span className="text-orange-400">swift-eagle-1234</span></div>
+                      <div className="text-slate-500 text-xs mt-1">Unique token for your configuration</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">npx @jrdaws/framework clone swift-eagle-1234</div>
-                      <div className="text-stone-500 text-xs mt-1">Clone with all your selected features</div>
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">npx @jrdaws/framework clone swift-eagle-1234</div>
+                      <div className="text-slate-500 text-xs mt-1">Clone with all your selected features</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">cd swift-eagle-1234 && npm run dev</div>
-                      <div className="text-stone-500 text-xs mt-1">Start development server</div>
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">cd swift-eagle-1234 && npm run dev</div>
+                      <div className="text-slate-500 text-xs mt-1">Start development server</div>
                     </div>
                   </div>
-                  <div className="border-l-2 border-brand-success pl-4 mt-6">
-                    <div className="text-stone-200">
-                      <span className="text-brand-success">✓</span> Your custom app is running at{' '}
-                      <span className="text-brand-primary">http://localhost:3000</span>
+                  <div className="border-l-2 border-emerald-500 pl-4 mt-6">
+                    <div className="text-slate-200">
+                      <span className="text-emerald-400">✓</span> Your custom app is running at{' '}
+                      <span className="text-orange-500">http://localhost:3000</span>
                     </div>
-                    <div className="text-stone-500 text-xs mt-1">All selected features assembled and ready</div>
+                    <div className="text-slate-500 text-xs mt-1">All selected features assembled and ready</div>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-              <div className="terminal-window">
-                <div className="terminal-header-modern">
-                  <span className="terminal-title">Advanced: Clone with Features</span>
-                  <div className="flex gap-1.5">
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                    <div className="w-2 h-2 rounded-full bg-stone-600" />
-                  </div>
-                </div>
-                <div className="terminal-content">
+            <div className="terminal">
+              <div className="terminal-header">
+                <div className="terminal-dot red" />
+                <div className="terminal-dot yellow" />
+                <div className="terminal-dot green" />
+                <span className="flex-1 text-center text-xs text-slate-400 font-mono">Advanced: Clone with Features</span>
+              </div>
+              <div className="terminal-body">
                 <div className="space-y-4">
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">framework features</div>
-                      <div className="text-stone-500 text-xs mt-1">List available features (20+ options)</div>
-                    </div>
-                      </div>
-                  <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
+                    <span className="text-orange-500">$</span>
                     <div>
-                      <div className="text-stone-200">framework clone swift-eagle-1234 --features auth,billing,analytics</div>
-                      <div className="text-stone-500 text-xs mt-1">Clone with additional features</div>
+                      <div className="text-slate-200">framework features</div>
+                      <div className="text-slate-500 text-xs mt-1">List available features (20+ options)</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">cd swift-eagle-1234 && framework doctor</div>
-                      <div className="text-stone-500 text-xs mt-1">Run project health checks</div>
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">framework clone swift-eagle-1234 --features auth,billing,analytics</div>
+                      <div className="text-slate-500 text-xs mt-1">Clone with additional features</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">framework drift</div>
-                      <div className="text-stone-500 text-xs mt-1">Check for configuration drift</div>
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">cd swift-eagle-1234 && framework doctor</div>
+                      <div className="text-slate-500 text-xs mt-1">Run project health checks</div>
                     </div>
                   </div>
                   <div className="flex items-start gap-3">
-                    <span className="text-brand-primary">$</span>
-                      <div>
-                      <div className="text-stone-200">framework clone swift-eagle-1234 --open</div>
-                      <div className="text-stone-500 text-xs mt-1">Clone and open in Cursor automatically</div>
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">framework drift</div>
+                      <div className="text-slate-500 text-xs mt-1">Check for configuration drift</div>
                     </div>
-                      </div>
-                  <div className="border-l-2 border-brand-secondary pl-4 mt-6">
-                    <div className="text-stone-200">
-                      <span className="text-brand-secondary">✓</span> Feature-based project generation
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <span className="text-orange-500">$</span>
+                    <div>
+                      <div className="text-slate-200">framework clone swift-eagle-1234 --open</div>
+                      <div className="text-slate-500 text-xs mt-1">Clone and open in Cursor automatically</div>
                     </div>
-                    <div className="text-stone-500 text-xs mt-1">
+                  </div>
+                  <div className="border-l-2 border-orange-500 pl-4 mt-6">
+                    <div className="text-slate-200">
+                      <span className="text-orange-500">✓</span> Feature-based project generation
+                    </div>
+                    <div className="text-slate-500 text-xs mt-1">
                       Modular features assembled with dependency resolution
                     </div>
                   </div>
@@ -455,72 +479,74 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Value Comparison Section - Task 6.2 */}
-      <section className="relative py-24 px-4">
+      {/* ============================================
+          WHY CHOOSE - Stone-50 background
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-stone-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Why Choose <span className="gradient-text">This Framework?</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-stone-900">
+              Why Choose <span className="text-orange-500">This Framework?</span>
             </h2>
-            <p className="text-xl text-stone-400 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
               Compare your options. We think the choice is clear.
             </p>
           </div>
 
           {/* Comparison Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto bg-white rounded-xl border border-stone-200 shadow-sm">
             <table className="w-full border-collapse">
               <thead>
-                <tr className="border-b border-stone-800">
-                  <th className="text-left py-4 px-4 text-stone-400 font-medium">Approach</th>
-                  <th className="text-center py-4 px-4 text-stone-400 font-medium">Setup Time</th>
-                  <th className="text-center py-4 px-4 text-stone-400 font-medium">Integrations</th>
-                  <th className="text-center py-4 px-4 text-stone-400 font-medium">Updates</th>
-                  <th className="text-center py-4 px-4 text-stone-400 font-medium">Support</th>
+                <tr className="border-b border-stone-200">
+                  <th className="text-left py-4 px-6 text-stone-600 font-medium">Approach</th>
+                  <th className="text-center py-4 px-4 text-stone-600 font-medium">Setup Time</th>
+                  <th className="text-center py-4 px-4 text-stone-600 font-medium">Integrations</th>
+                  <th className="text-center py-4 px-4 text-stone-600 font-medium">Updates</th>
+                  <th className="text-center py-4 px-4 text-stone-600 font-medium">Support</th>
                 </tr>
               </thead>
               <tbody>
                 {comparisonData.map((row) => (
                   <tr
                     key={row.approach}
-                    className={`border-b border-stone-800/50 transition-colors ${
+                    className={`border-b border-stone-100 transition-colors ${
                       row.verdict === 'best'
-                        ? 'bg-brand-primary/5 border-brand-primary/20'
-                        : 'hover:bg-stone-800/30'
+                        ? 'bg-orange-50'
+                        : 'hover:bg-stone-50'
                     }`}
                   >
-                    <td className="py-4 px-4">
+                    <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
                         {row.verdict === 'best' && (
-                          <span className="w-2 h-2 rounded-full bg-brand-success animate-pulse" />
+                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
                         )}
-                        <span className={row.verdict === 'best' ? 'font-semibold text-white' : 'text-stone-300'}>
+                        <span className={row.verdict === 'best' ? 'font-semibold text-stone-900' : 'text-stone-700'}>
                           {row.approach}
                         </span>
                         {row.verdict === 'best' && (
-                          <span className="text-xs px-2 py-0.5 rounded-full bg-brand-success/20 text-brand-success font-medium">
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-medium">
                             RECOMMENDED
                           </span>
                         )}
                       </div>
                     </td>
                     <td className="text-center py-4 px-4">
-                      <span className={row.verdict === 'best' ? 'text-brand-success font-semibold' : 'text-stone-400'}>
+                      <span className={row.verdict === 'best' ? 'text-emerald-600 font-semibold' : 'text-stone-500'}>
                         {row.time}
                       </span>
                     </td>
                     <td className="text-center py-4 px-4">
-                      <span className={row.verdict === 'best' ? 'text-brand-success font-semibold' : 'text-stone-400'}>
+                      <span className={row.verdict === 'best' ? 'text-emerald-600 font-semibold' : 'text-stone-500'}>
                         {row.integrations}
                       </span>
                     </td>
                     <td className="text-center py-4 px-4">
-                      <span className={row.verdict === 'best' ? 'text-brand-success font-semibold' : 'text-stone-400'}>
+                      <span className={row.verdict === 'best' ? 'text-emerald-600 font-semibold' : 'text-stone-500'}>
                         {row.updates}
                       </span>
                     </td>
                     <td className="text-center py-4 px-4">
-                      <span className={row.verdict === 'best' ? 'text-brand-success font-semibold' : 'text-stone-400'}>
+                      <span className={row.verdict === 'best' ? 'text-emerald-600 font-semibold' : 'text-stone-500'}>
                         {row.support}
                       </span>
                     </td>
@@ -530,26 +556,26 @@ export default function Home() {
             </table>
           </div>
 
-          {/* Key Differentiators */}
+          {/* Key Differentiators - Consistent cards */}
           <div className="grid md:grid-cols-3 gap-6 mt-16">
-            <div className="p-6 rounded-xl bg-stone-900/50 border border-stone-800">
-              <div className="text-3xl mb-3">🔓</div>
-              <h3 className="text-lg font-semibold text-white mb-2">Zero Lock-In</h3>
-              <p className="text-stone-400 text-sm">
+            <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-200">
+              <div className="w-12 h-12 rounded-lg bg-orange-50 text-2xl flex items-center justify-center mb-4">🔓</div>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Zero Lock-In</h3>
+              <p className="text-stone-600 text-sm">
                 Export once and you own everything. No subscriptions, no runtime dependencies, no vendor tie-in.
               </p>
             </div>
-            <div className="p-6 rounded-xl bg-stone-900/50 border border-stone-800">
-              <div className="text-3xl mb-3">🔍</div>
-              <h3 className="text-lg font-semibold text-white mb-2">Drift Detection</h3>
-              <p className="text-stone-400 text-sm">
+            <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-200">
+              <div className="w-12 h-12 rounded-lg bg-orange-50 text-2xl flex items-center justify-center mb-4">🔍</div>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Drift Detection</h3>
+              <p className="text-stone-600 text-sm">
                 Know when your config drifts from the template. Catch issues before they become incidents.
               </p>
             </div>
-            <div className="p-6 rounded-xl bg-stone-900/50 border border-stone-800">
-              <div className="text-3xl mb-3">🧩</div>
-              <h3 className="text-lg font-semibold text-white mb-2">Plugin System</h3>
-              <p className="text-stone-400 text-sm">
+            <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-200">
+              <div className="w-12 h-12 rounded-lg bg-orange-50 text-2xl flex items-center justify-center mb-4">🧩</div>
+              <h3 className="text-lg font-semibold text-stone-900 mb-2">Plugin System</h3>
+              <p className="text-stone-600 text-sm">
                 Extend without forking. Hook into export, health checks, and more with a simple plugin API.
               </p>
             </div>
@@ -557,19 +583,18 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Divider */}
-      <div className="section-divider" />
-
-      {/* Code Comparison */}
-      <section className="relative py-24 px-4">
+      {/* ============================================
+          BEFORE & AFTER - Stone-50 background
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-stone-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              The <span className="gradient-text">Before & After</span>
-          </h2>
-            <p className="text-xl text-stone-400 max-w-2xl mx-auto">
-            Stop copy-pasting boilerplate. Start with battle-tested foundations.
-          </p>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-stone-900">
+              The <span className="text-orange-500">Before & After</span>
+            </h2>
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+              Stop copy-pasting boilerplate. Start with battle-tested foundations.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 gap-8">
@@ -577,10 +602,11 @@ export default function Home() {
             <div>
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-red-500 text-xl">✗</span>
-                <span className="font-semibold text-stone-300">Without Framework</span>
+                <span className="font-semibold text-stone-900">Without Framework</span>
               </div>
-              <div className="code-block h-80 overflow-auto">
-                <pre className="text-sm leading-relaxed text-stone-500">
+              <div className="terminal h-80 overflow-auto">
+                <div className="terminal-body">
+                  <pre className="text-sm leading-relaxed text-slate-500">
 {`// Hours of setup...
 mkdir my-app && cd my-app
 npm init -y
@@ -598,117 +624,97 @@ mkdir src app components lib
 // Configure environment variables
 // Set up deployment
 // ...still not production-ready`}
-                </pre>
+                  </pre>
+                </div>
               </div>
             </div>
 
             {/* After */}
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <span className="text-brand-success text-xl">✓</span>
-                <span className="font-semibold text-stone-300">With Framework</span>
+                <span className="text-emerald-500 text-xl">✓</span>
+                <span className="font-semibold text-stone-900">With Framework</span>
               </div>
-              <div className="code-block h-80 overflow-auto">
-                <pre className="text-sm leading-relaxed text-stone-200">
+              <div className="terminal h-80 overflow-auto">
+                <div className="terminal-body">
+                  <pre className="text-sm leading-relaxed text-slate-200">
 {`// 1 command, minutes of work
 framework export saas ./my-app
 
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Next.js 15 + App Router
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` TypeScript configured
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Supabase auth integrated
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Stripe billing connected
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` shadcn/ui components
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Environment variables templated
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Health checks built-in
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Drift detection enabled
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Error handling included
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Types generated
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Tests ready
-`}
-                  <span className="text-brand-success">✓</span>
-                  {` Production-ready from day 1
+`}<span className="text-emerald-400">✓</span>{` Next.js 15 + App Router
+`}<span className="text-emerald-400">✓</span>{` TypeScript configured
+`}<span className="text-emerald-400">✓</span>{` Supabase auth integrated
+`}<span className="text-emerald-400">✓</span>{` Stripe billing connected
+`}<span className="text-emerald-400">✓</span>{` shadcn/ui components
+`}<span className="text-emerald-400">✓</span>{` Environment variables templated
+`}<span className="text-emerald-400">✓</span>{` Health checks built-in
+`}<span className="text-emerald-400">✓</span>{` Drift detection enabled
+`}<span className="text-emerald-400">✓</span>{` Error handling included
+`}<span className="text-emerald-400">✓</span>{` Types generated
+`}<span className="text-emerald-400">✓</span>{` Tests ready
+`}<span className="text-emerald-400">✓</span>{` Production-ready from day 1
 
 cd my-app && npm run dev
-`}
-                  <span className="text-brand-primary">// Ship it 🚀</span>
-                </pre>
+`}<span className="text-orange-500">// Ship it 🚀</span>
+                  </pre>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Social Proof Section - Task 6.3 */}
-      <section className="relative py-24 px-4 bg-stone-900/50">
+      {/* ============================================
+          TRUSTED BY DEVELOPERS - White background (NOT dark!)
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           {/* Trust Stats Banner */}
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-4">
-              Trusted by <span className="gradient-text">Developers Worldwide</span>
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 text-stone-900">
+              Trusted by <span className="text-orange-500">Developers Worldwide</span>
             </h2>
-            <p className="text-xl text-stone-400 max-w-2xl mx-auto mb-12">
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-12">
               Join the community of developers shipping faster with battle-tested foundations
             </p>
 
             {/* Trust Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto mb-16">
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">732</div>
+                <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">732</div>
                 <div className="text-sm text-stone-500">Tests Passing</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">20+</div>
+                <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">20+</div>
                 <div className="text-sm text-stone-500">Features</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">MIT</div>
+                <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">MIT</div>
                 <div className="text-sm text-stone-500">License</div>
               </div>
               <div className="text-center">
-                <div className="text-4xl md:text-5xl font-bold gradient-text mb-2">0</div>
+                <div className="text-4xl md:text-5xl font-bold text-orange-500 mb-2">0</div>
                 <div className="text-sm text-stone-500">Lock-In</div>
               </div>
             </div>
           </div>
 
-          {/* Testimonials Grid - Enhanced */}
+          {/* Testimonials Grid - Consistent cards */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {testimonials.map((testimonial, index) => (
               <div
                 key={testimonial.name}
-                className="testimonial-card group hover:border-brand-primary/30 transition-all duration-300"
+                className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm hover:shadow-md hover:border-orange-200 transition-all duration-200"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 {/* Star Rating */}
                 <div className="flex gap-1 mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <span key={i} className="text-yellow-500">★</span>
+                    <span key={i} className="text-amber-400">★</span>
                   ))}
                 </div>
 
-                <p className="text-stone-300 mb-6 leading-relaxed text-sm">"{testimonial.quote}"</p>
+                <p className="text-stone-600 mb-6 leading-relaxed text-sm">"{testimonial.quote}"</p>
 
                 <div className="flex items-center gap-3 mt-auto">
                   <Image
@@ -716,12 +722,12 @@ cd my-app && npm run dev
                     alt={testimonial.name}
                     width={40}
                     height={40}
-                    className="avatar w-10 h-10"
+                    className="w-10 h-10 rounded-full border-2 border-orange-100"
                   />
                   <div>
-                    <div className="font-semibold text-white text-sm">{testimonial.name}</div>
+                    <div className="font-semibold text-stone-900 text-sm">{testimonial.name}</div>
                     <div className="text-xs text-stone-500">
-                      {testimonial.role} · <span className="text-brand-primary">{testimonial.company}</span>
+                      {testimonial.role} · <span className="text-orange-500">{testimonial.company}</span>
                     </div>
                   </div>
                 </div>
@@ -730,52 +736,59 @@ cd my-app && npm run dev
           </div>
 
           {/* Trust Badges */}
-          <div className="mt-16 pt-16 border-t border-stone-800">
+          <div className="mt-16 pt-16 border-t border-stone-200">
             <p className="text-center text-sm text-stone-500 mb-8">Why developers trust this framework</p>
-            <div className="flex flex-wrap justify-center gap-6">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-800/50 border border-stone-700/50">
-                <span className="text-brand-success">✓</span>
-                <span className="text-sm text-stone-300">No Telemetry</span>
+            <div className="flex flex-wrap justify-center gap-4">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-50 border border-stone-200">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-sm text-stone-700">No Telemetry</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-800/50 border border-stone-700/50">
-                <span className="text-brand-success">✓</span>
-                <span className="text-sm text-stone-300">TypeScript First</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-50 border border-stone-200">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-sm text-stone-700">TypeScript First</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-800/50 border border-stone-700/50">
-                <span className="text-brand-success">✓</span>
-                <span className="text-sm text-stone-300">Active Development</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-50 border border-stone-200">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-sm text-stone-700">Active Development</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-800/50 border border-stone-700/50">
-                <span className="text-brand-success">✓</span>
-                <span className="text-sm text-stone-300">Production Ready</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-50 border border-stone-200">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-sm text-stone-700">Production Ready</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-800/50 border border-stone-700/50">
-                <span className="text-brand-success">✓</span>
-                <span className="text-sm text-stone-300">Secure by Default</span>
+              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-stone-50 border border-stone-200">
+                <span className="text-emerald-500">✓</span>
+                <span className="text-sm text-stone-700">Secure by Default</span>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="relative py-24 px-4">
+      {/* ============================================
+          CTA SECTION - Stone-900 (dark, before footer)
+          ============================================ */}
+      <section className="relative py-24 px-4 bg-stone-900">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-6xl font-bold mb-6">
-            Ready to <span className="gradient-text">Ship Faster?</span>
+          <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            Ready to <span className="text-orange-500">Ship Faster?</span>
           </h2>
           <p className="text-xl text-stone-400 mb-12">
             Join developers who are building production apps in minutes, not days
           </p>
 
-          <div className="terminal-window max-w-2xl mx-auto mb-10">
-            <div className="terminal-content text-left py-4">
+          <div className="terminal max-w-2xl mx-auto mb-10">
+            <div className="terminal-header">
+              <div className="terminal-dot red" />
+              <div className="terminal-dot yellow" />
+              <div className="terminal-dot green" />
+            </div>
+            <div className="terminal-body text-left py-4">
               <div className="flex items-center gap-2 mb-2">
-                <span className="text-stone-500"># Configure at /configure, then:</span>
+                <span className="text-slate-500"># Configure at /configure, then:</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-brand-primary">$</span>
-                <span className="text-stone-200">npx @jrdaws/framework clone your-project-token</span>
+                <span className="text-orange-500">$</span>
+                <span className="text-slate-200">npx @jrdaws/framework clone your-project-token</span>
               </div>
             </div>
           </div>
@@ -786,8 +799,8 @@ cd my-app && npm run dev
             </a>
             <a
               href="https://www.npmjs.com/package/@jrdaws/framework"
-               target="_blank"
-               rel="noopener noreferrer"
+              target="_blank"
+              rel="noopener noreferrer"
               className="btn-secondary text-lg"
             >
               View on npm
@@ -796,8 +809,10 @@ cd my-app && npm run dev
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="relative border-t border-stone-800 py-16 px-4">
+      {/* ============================================
+          FOOTER - Navy background
+          ============================================ */}
+      <footer className="relative bg-[#1E3A5F] py-16 px-4">
         {/* Footer pattern background */}
         <div
           className="absolute inset-0 opacity-5 pointer-events-none"
@@ -811,17 +826,17 @@ cd my-app && npm run dev
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div>
               <h3 className="font-bold text-white mb-4">Framework</h3>
-              <p className="text-sm text-stone-400">
+              <p className="text-sm text-white/70">
                 A CLI scaffolding system for shipping production-ready applications faster.
               </p>
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Resources</h4>
-              <ul className="space-y-3 text-sm text-stone-400">
+              <ul className="space-y-3 text-sm text-white/70">
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Documentation
                   </a>
@@ -829,7 +844,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/tree/main/templates"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Templates
                   </a>
@@ -837,7 +852,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/blob/main/docs/PLUGIN_API.md"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Plugin API
                   </a>
@@ -845,7 +860,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/blob/main/docs/TEMPLATE_REGISTRY.md"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Registry
                   </a>
@@ -854,11 +869,11 @@ cd my-app && npm run dev
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Community</h4>
-              <ul className="space-y-3 text-sm text-stone-400">
+              <ul className="space-y-3 text-sm text-white/70">
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     GitHub
                   </a>
@@ -866,7 +881,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://www.npmjs.com/package/@jrdaws/framework"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     npm
                   </a>
@@ -874,7 +889,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/issues"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Issues
                   </a>
@@ -882,7 +897,7 @@ cd my-app && npm run dev
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/blob/main/CHANGELOG.md"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     Changelog
                   </a>
@@ -891,22 +906,22 @@ cd my-app && npm run dev
             </div>
             <div>
               <h4 className="font-semibold text-white mb-4">Legal</h4>
-              <ul className="space-y-3 text-sm text-stone-400">
+              <ul className="space-y-3 text-sm text-white/70">
                 <li>
                   <a
                     href="https://github.com/jrdaws/dawson-does-framework/blob/main/LICENSE"
-                    className="hover:text-white transition-colors"
+                    className="hover:text-orange-400 transition-colors"
                   >
                     License
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-orange-400 transition-colors">
                     Privacy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a href="#" className="hover:text-orange-400 transition-colors">
                     Terms
                   </a>
                 </li>
@@ -914,13 +929,13 @@ cd my-app && npm run dev
             </div>
           </div>
 
-          <div className="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-stone-500">
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-white/50">
               © 2024 @jrdaws/framework. Built with ❤️ by developers, for developers.
             </p>
-            <div className="flex items-center gap-4 text-sm text-stone-500">
-              <span className="font-mono text-brand-primary">v0.3.1</span>
-              <span className="text-brand-success">732 tests passing</span>
+            <div className="flex items-center gap-4 text-sm text-white/50">
+              <span className="font-mono text-orange-400">v0.3.1</span>
+              <span className="text-emerald-400">732 tests passing</span>
               <span>MIT License</span>
             </div>
           </div>

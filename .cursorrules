@@ -10,9 +10,10 @@
 **SLIM MODE (Default)**: Fast, efficient - skip heavy reads
 **FULL MODE**: Use `[full]` prefix for complex/multi-step tasks
 
-### Slim Bootstrap (Runs Automatically)
+### Slim Bootstrap (Once Per Chat Session)
 
-Your FIRST response should:
+**Runs once** at the START of a new chat only (not every response):
+
 
 1. **Quick Sync** (1 command):
    ```bash
