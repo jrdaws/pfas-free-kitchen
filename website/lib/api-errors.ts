@@ -20,6 +20,7 @@ export enum ErrorCodes {
   DATABASE_ERROR = 'DATABASE_ERROR',
   INTERNAL_ERROR = 'INTERNAL_ERROR',
   SERVICE_UNAVAILABLE = 'SERVICE_UNAVAILABLE',
+  TEMPLATE_NOT_FOUND = 'TEMPLATE_NOT_FOUND',
 }
 
 interface ApiErrorResponse {
@@ -48,6 +49,7 @@ const ERROR_STATUS_CODES: Record<ErrorCodes, number> = {
   [ErrorCodes.DATABASE_ERROR]: 500,
   [ErrorCodes.INTERNAL_ERROR]: 500,
   [ErrorCodes.SERVICE_UNAVAILABLE]: 503,
+  [ErrorCodes.TEMPLATE_NOT_FOUND]: 503,
 };
 
 /**
@@ -110,6 +112,7 @@ function getDefaultRecovery(code: ErrorCodes): string {
     [ErrorCodes.DATABASE_ERROR]: 'Try again in a few moments. If the issue persists, contact support.',
     [ErrorCodes.INTERNAL_ERROR]: 'Try again in a few moments. If the issue persists, contact support.',
     [ErrorCodes.SERVICE_UNAVAILABLE]: 'The service is temporarily unavailable. Please try again in a few minutes.',
+    [ErrorCodes.TEMPLATE_NOT_FOUND]: 'Use the CLI command instead: npx @jrdaws/framework create <template> <project-name>',
   };
 
   return recoveryMessages[code] || 'An error occurred. Please try again.';

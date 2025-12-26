@@ -36,6 +36,7 @@ export function ExportView({
   const [isSaving, setIsSaving] = useState(false);
   const [projectToken, setProjectToken] = useState<string | null>(null);
   const [showPostDownloadModal, setShowPostDownloadModal] = useState(false);
+  const [zipError, setZipError] = useState<{ message: string; cliCommand?: string } | null>(null);
 
   const command = buildCommand({ template, projectName, outputDir, integrations });
   const singleLineCommand = buildCommandSingleLine({ template, projectName, outputDir, integrations });
@@ -50,6 +51,7 @@ export function ExportView({
 
   const handleDownloadZip = async () => {
     setIsDownloading(true);
+    setZipError(null);
     try {
       await generateProjectZip({
           template,
@@ -64,7 +66,13 @@ export function ExportView({
       setShowPostDownloadModal(true);
     } catch (error) {
       console.error("Download failed:", error);
-      alert("Failed to generate ZIP. Please try the CLI command instead.");
+      const errorMessage = error instanceof Error ? error.message : "Download failed";
+      // Check if it's a template not found error - suggest CLI
+      const cliCommand = `npx @jrdaws/framework create ${template} ${projectName}`;
+      setZipError({
+        message: errorMessage,
+        cliCommand,
+      });
     } finally {
       setIsDownloading(false);
     }
@@ -364,23 +372,69 @@ export function ExportView({
                 </div>
               </div>
 
-              <Button
-                onClick={handleDownloadZip}
-                disabled={isDownloading}
-                className="w-full font-mono"
-              >
-                {isDownloading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating ZIP...
-                  </>
-                ) : (
-                  <>
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Project ZIP
-                  </>
-                )}
-              </Button>
+              {zipError ? (
+                <div className="space-y-4">
+                  <div className="bg-amber-500/10 border border-amber-500/30 rounded p-4">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="h-5 w-5 text-amber-500 shrink-0 mt-0.5" />
+                      <div>
+                        <p className="text-sm font-medium text-foreground mb-2">
+                          ZIP download not available
+                        </p>
+                        <p className="text-xs text-muted-foreground mb-3">
+                          {zipError.message}
+                        </p>
+                        <p className="text-xs text-foreground font-medium">
+                          Use the CLI command instead:
+                        </p>
+                        <pre className="mt-2 text-xs bg-muted p-2 rounded font-mono overflow-x-auto">
+                          {zipError.cliCommand}
+                        </pre>
+                      </div>
+                    </div>
+                  </div>
+                  <Button
+                    onClick={() => {
+                      if (zipError.cliCommand) {
+                        navigator.clipboard.writeText(zipError.cliCommand);
+                        setCopied(true);
+                        setTimeout(() => setCopied(false), 2000);
+                      }
+                    }}
+                    className="w-full font-mono"
+                  >
+                    {copied ? (
+                      <>
+                        <Check className="mr-2 h-4 w-4" />
+                        Copied CLI Command!
+                      </>
+                    ) : (
+                      <>
+                        <Copy className="mr-2 h-4 w-4" />
+                        Copy CLI Command
+                      </>
+                    )}
+                  </Button>
+                </div>
+              ) : (
+                <Button
+                  onClick={handleDownloadZip}
+                  disabled={isDownloading}
+                  className="w-full font-mono"
+                >
+                  {isDownloading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating ZIP...
+                    </>
+                  ) : (
+                    <>
+                      <Download className="mr-2 h-4 w-4" />
+                      Download Project ZIP
+                    </>
+                  )}
+                </Button>
+              )}
 
               <div className="border-t border-border pt-4">
                 <p className="text-sm text-muted-foreground mb-2">After downloading:</p>

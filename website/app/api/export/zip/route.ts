@@ -375,13 +375,33 @@ export async function POST(request: NextRequest) {
     const templatesPath = getTemplatesPath();
     const templatePath = path.join(templatesPath, template === "ecommerce" ? "saas" : template);
 
-    // Check if template exists, fall back to saas for ecommerce
-    if (!fs.existsSync(templatePath)) {
-      console.warn(`Template path not found: ${templatePath}, using saas as fallback`);
-    }
-
     // Get template component manifest
     const templateManifest = TEMPLATE_COMPONENTS[template] || TEMPLATE_COMPONENTS.saas;
+
+    // Verify template files are accessible - check a few key files
+    const keyFiles = [
+      path.join(templatePath, "app/page.tsx"),
+      path.join(templatePath, "app/layout.tsx"),
+    ];
+    
+    const templateFilesAccessible = keyFiles.some(f => fs.existsSync(f));
+    
+    if (!templateFilesAccessible) {
+      console.warn(`Template path not accessible: ${templatePath}`);
+      // In production (Vercel), templates folder may not be bundled
+      // Return a helpful error directing users to CLI
+      return apiError(
+        ErrorCodes.TEMPLATE_NOT_FOUND,
+        "ZIP export not available - use CLI instead",
+        503,
+        { 
+          template,
+          suggestion: "cli",
+          cliCommand: `npx @jrdaws/framework create ${template} ${projectName}`,
+        },
+        "ZIP export requires local templates. Use the CLI command for full template export: npx @jrdaws/framework create " + template + " " + projectName
+      );
+    }
 
     // 1. Add .dd/ directory with project context
     const ddFolder = zip.folder(".dd")!;
