@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 218326e 2025-12-25 feat(ui): update form components for Navy theme
 - f4d92bd 2025-12-25 docs(cursorrules): clarify bootstrap runs once per chat session
 - 2ca0457 2025-12-25 docs(design): add comprehensive website cohesion analysis
 - c610af1 2025-12-25 chore(media): complete P1 HubSpot-adapted color assets task
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 73b2216 2025-12-25 chore(media): complete P2 orange palette migration task
 - 762bfc5 2025-12-25 fix(media): update all SVG assets from Indigo to Orange palette
 - 4377555 2025-12-25 docs(governance): enforce Quick Actions + Handoff on EVERY response
-- 97176dc 2025-12-25 chore: add Quality Agent review task for dark mode fix
 
 ## Agent Governance Structure
 

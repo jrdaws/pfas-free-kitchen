@@ -5,22 +5,30 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "@/lib/utils"
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0",
   {
     variants: {
       variant: {
+        // Primary: Orange background, white text
         default:
-          "bg-orange-500 text-white shadow-[0_4px_14px_rgba(249,115,22,0.25)] hover:bg-orange-600 hover:-translate-y-0.5 hover:shadow-[0_6px_20px_rgba(249,115,22,0.35)]",
-        destructive:
-          "bg-destructive text-destructive-foreground shadow-sm hover:bg-destructive/90",
-        outline:
-          "border-2 border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] hover:border-orange-500 hover:text-orange-500",
+          "bg-primary text-primary-foreground shadow-[0_4px_14px_hsl(var(--primary)/0.25)] hover:bg-primary-hover hover:-translate-y-0.5 hover:shadow-[0_6px_20px_hsl(var(--primary)/0.35)]",
+        // Secondary: Card background with border
         secondary:
-          "border-2 border-[var(--border)] bg-[var(--surface)] text-[var(--text-primary)] hover:border-orange-500 hover:text-orange-500",
+          "bg-card text-foreground border border-border hover:border-primary hover:text-primary",
+        // Outline: Transparent with border
+        outline:
+          "border border-border bg-transparent text-foreground hover:bg-card hover:border-primary hover:text-primary",
+        // Ghost: No background, subtle hover
+        ghost: 
+          "text-foreground-secondary hover:bg-card hover:text-foreground",
+        // Destructive: Red background
+        destructive:
+          "bg-destructive text-white shadow-sm hover:bg-destructive/90",
+        // Success: Green background
         success:
-          "bg-emerald-500 text-white shadow-[0_4px_14px_rgba(16,185,129,0.25)] hover:bg-emerald-600 hover:-translate-y-0.5",
-        ghost: "hover:bg-orange-500/10 hover:text-orange-500",
-        link: "text-orange-500 underline-offset-4 hover:underline",
+          "bg-success text-white shadow-[0_4px_14px_hsl(var(--success)/0.25)] hover:opacity-90 hover:-translate-y-0.5",
+        // Link: Text only with underline
+        link: "text-primary underline-offset-4 hover:underline",
       },
       size: {
         default: "h-11 px-6 py-2",
