@@ -27,9 +27,9 @@ export function Testimonials({
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-[#0A0A0A]">
+    <section className="w-full px-6 py-16 bg-background">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-white mb-12 text-center">
+        <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
           {title}
         </h2>
 
@@ -44,23 +44,23 @@ export function Testimonials({
             <div
               key={i}
               className={cn(
-                "bg-[#111111] rounded-xl p-6 border border-white/5",
+                "bg-card rounded-xl p-6 border border-border shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-1 transition-all",
                 layout === "carousel" && "min-w-[350px] snap-center"
               )}
             >
               {/* Quote */}
               <div className="mb-6">
-                <svg className="w-8 h-8 text-orange-500/50 mb-4" fill="currentColor" viewBox="0 0 24 24">
+                <svg className="w-8 h-8 text-primary/50 mb-4" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
                 </svg>
-                <p className="text-stone-300 italic">
+                <p className="text-foreground-secondary italic">
                   &ldquo;{testimonial.quote}&rdquo;
                 </p>
               </div>
 
               {/* Author */}
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
                   {testimonial.avatarIndex ? (
                     <Image
                       src={`/images/redesign/avatars/avatar-placeholder-${testimonial.avatarIndex}.webp`}
@@ -70,13 +70,13 @@ export function Testimonials({
                       className="object-cover"
                     />
                   ) : (
-                    <span className="text-white font-medium text-sm">
+                    <span className="text-primary-foreground font-medium text-sm">
                       {testimonial.author.charAt(0)}
                     </span>
                   )}
                 </div>
                 <div>
-                  <p className="text-white font-medium text-sm">
+                  <p className="text-foreground font-medium text-sm">
                     {testimonial.author}
                   </p>
                   {(testimonial.role || testimonial.company) && (

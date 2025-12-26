@@ -69,10 +69,10 @@ export function FeatureCards({
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-[#0A0A0A]">
+    <section className="w-full px-6 py-16 bg-background">
       <div className="max-w-7xl mx-auto">
         {title && (
-          <h2 className="text-3xl font-bold text-white mb-12 text-center">
+          <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
             {title}
           </h2>
         )}
@@ -89,30 +89,30 @@ export function FeatureCards({
               key={i}
               className={cn(
                 variant === "cards" &&
-                  "bg-[#111111] rounded-xl p-6 border border-white/5 hover:border-orange-500/30 transition-all",
+                  "bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-1",
                 variant === "minimal" && "p-4",
                 variant === "icons-left" && "flex gap-4 p-4"
               )}
             >
               {variant === "icons-left" ? (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-400/20 flex items-center justify-center text-orange-400 shrink-0">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
                     {getIcon(feature.iconName)}
                   </div>
                   <div>
-                    <h3 className="text-white font-semibold mb-2">
+                    <h3 className="text-foreground font-semibold mb-2">
                       {feature.title}
                     </h3>
-                    <p className="text-stone-400 text-sm">{feature.description}</p>
+                    <p className="text-foreground-secondary text-sm">{feature.description}</p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-400/20 flex items-center justify-center text-orange-400 mb-4">
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4">
                     {getIcon(feature.iconName)}
                   </div>
-                  <h3 className="text-white font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-stone-400 text-sm">{feature.description}</p>
+                  <h3 className="text-foreground font-semibold mb-2">{feature.title}</h3>
+                  <p className="text-foreground-secondary text-sm">{feature.description}</p>
                 </>
               )}
             </div>

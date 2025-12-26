@@ -28,20 +28,20 @@ export function PricingTable({
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-[#0A0A0A]">
+    <section className="w-full px-6 py-16 bg-background">
       <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-white mb-4 text-center">
+        <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
           {title}
         </h2>
         
         {showToggle && (
           <div className="flex justify-center mb-10">
-            <div className="inline-flex bg-[#111111] rounded-lg p-1">
-              <button className="px-4 py-2 text-sm font-medium text-white bg-orange-500 rounded-md">
+            <div className="inline-flex bg-card rounded-lg p-1 border border-border">
+              <button className="px-4 py-2 text-sm font-medium text-primary-foreground bg-primary rounded-md">
                 Monthly
               </button>
-              <button className="px-4 py-2 text-sm font-medium text-stone-400 hover:text-white">
-                Yearly <span className="text-emerald-400 text-xs">Save 20%</span>
+              <button className="px-4 py-2 text-sm font-medium text-foreground-muted hover:text-foreground transition-colors">
+                Yearly <span className="text-success text-xs">Save 20%</span>
               </button>
             </div>
           </div>
@@ -55,33 +55,33 @@ export function PricingTable({
               <div
                 key={i}
                 className={cn(
-                  "relative rounded-2xl p-6 transition-all",
+                  "relative rounded-2xl p-6 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-1",
                   isHighlighted
-                    ? "bg-gradient-to-b from-orange-500/20 to-orange-400/10 border-2 border-orange-500"
-                    : "bg-[#111111] border border-white/5"
+                    ? "bg-gradient-to-b from-primary/20 to-primary/5 border-2 border-primary"
+                    : "bg-card border border-border"
                 )}
               >
                 {isHighlighted && (
-                  <div className="absolute -top-3 left-1/2 -transtone-x-1/2 px-3 py-1 bg-orange-500 text-white text-xs font-medium rounded-full">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
                     Most Popular
                   </div>
                 )}
 
-                <h3 className="text-xl font-semibold text-white mb-2">
+                <h3 className="text-xl font-semibold text-foreground mb-2">
                   {plan.name}
                 </h3>
                 
                 <div className="flex items-baseline gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">
+                  <span className="text-4xl font-bold text-foreground">
                     ${plan.price}
                   </span>
-                  <span className="text-stone-400">/{plan.period || "month"}</span>
+                  <span className="text-foreground-muted">/{plan.period || "month"}</span>
                 </div>
 
                 <ul className="space-y-3 mb-8">
                   {(plan.features || []).map((feature, j) => (
-                    <li key={j} className="flex items-center gap-3 text-stone-300">
-                      <svg className="w-5 h-5 text-emerald-400 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <li key={j} className="flex items-center gap-3 text-foreground-secondary">
+                      <svg className="w-5 h-5 text-success shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                       </svg>
                       <span className="text-sm">{feature}</span>
@@ -93,8 +93,8 @@ export function PricingTable({
                   className={cn(
                     "w-full py-3 rounded-xl font-medium transition-all",
                     isHighlighted
-                      ? "bg-orange-500 hover:bg-orange-600 text-white"
-                      : "bg-stone-50/5 hover:bg-stone-50/10 text-white"
+                      ? "bg-primary hover:bg-primary-hover text-primary-foreground"
+                      : "bg-border hover:bg-border/80 text-foreground"
                   )}
                 >
                   {plan.price === 0 ? "Get Started Free" : "Start Free Trial"}
