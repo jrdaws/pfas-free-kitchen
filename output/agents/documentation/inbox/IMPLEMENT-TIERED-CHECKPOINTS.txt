@@ -11,6 +11,46 @@
 
 Implement a 3-tier checkpoint system to reduce token overhead by 67-99% while preserving quality for significant work.
 
+---
+
+## ⚠️ MANDATORY FIRST STEP: Create Backup
+
+**Before modifying ANY files**, archive originals:
+
+```bash
+# Create backup directory
+mkdir -p docs/archive/checkpoint-v1-backup
+
+# Copy original files
+cp docs/sops/CHECKPOINT_SOP.md docs/archive/checkpoint-v1-backup/
+cp output/shared/MINDFRAME.md docs/archive/checkpoint-v1-backup/
+cp scripts/checkpoint.sh docs/archive/checkpoint-v1-backup/
+
+# Create manifest
+cat > docs/archive/checkpoint-v1-backup/MANIFEST.md << 'EOF'
+# Checkpoint v1 Backup
+**Date**: $(date +%Y-%m-%d)
+**Reason**: Pre-tiered-checkpoint-optimization backup
+
+## Files Backed Up
+- CHECKPOINT_SOP.md (494 lines)
+- MINDFRAME.md (full file)
+- checkpoint.sh (original script)
+
+## Restore Command
+```bash
+cp docs/archive/checkpoint-v1-backup/CHECKPOINT_SOP.md docs/sops/
+cp docs/archive/checkpoint-v1-backup/MINDFRAME.md output/shared/
+cp docs/archive/checkpoint-v1-backup/checkpoint.sh scripts/
+```
+EOF
+
+# Verify backups exist
+ls -la docs/archive/checkpoint-v1-backup/
+```
+
+**DO NOT proceed with Task 1 until backups are confirmed.**
+
 | Tier | Trigger | Token Cost | Use Case |
 |------|---------|------------|----------|
 | Light | `cp light` | ~100 | Quick fixes < 15 min |
