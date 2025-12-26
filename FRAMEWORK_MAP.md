@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 6a43c2c 2025-12-26 fix(test): update progress indicator test to match new sidebar design
 - 65c1d05 2025-12-26 chore: commit Cycle 20 governance work, demos, and reports
 - 6043641 2025-12-25 fix(auth): update ProtectedRoute for Navy theme
 - de5e64b 2025-12-25 feat(marketing): update LandingPage for Navy theme (60-30-10)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 9108402 2025-12-25 docs(governance): clarify Next Agent Prompt generation rule
 - b61f58b 2025-12-25 chore(media): complete P1 WebP regeneration task
 - 77aea0a 2025-12-25 feat(media): regenerate 5 WebP images with Orange/Stone palette
-- 6fb471d 2025-12-25 docs: update color references for Warm Neutral scheme
 
 ## Agent Governance Structure
 
