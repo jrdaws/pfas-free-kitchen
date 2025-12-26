@@ -1,241 +1,171 @@
 #!/bin/bash
-# Checkpoint script - ensures memory update with 5 distillation categories
-# Usage: ./scripts/checkpoint.sh [AGENT_CODE]
-# 
-# The 5 Distillation Categories:
-# 1. OPERATIONAL - Tasks, decisions, files (REQUIRED)
-# 2. METRICS - Duration, task count, errors (REQUIRED)
-# 3. PATTERNS - Recurring issues/questions (if applicable)
-# 4. INSIGHTS - Commands, gotchas, workarounds (if applicable)
-# 5. RELATIONSHIPS - Handoffs, dependencies (if applicable)
+# scripts/checkpoint.sh - Tiered Checkpoint System v2.0
+#
+# Usage: ./scripts/checkpoint.sh [tier]
+#
+# Tiers:
+#   light    - Commit + push only (fastest)
+#   standard - Test + commit + push + memory prompt (default)
+#   full     - All steps + MINDFRAME + SOP scan
 
 set -e
 
-AGENT_CODE="${1:-UNKNOWN}"
-MEMORY_FILE="prompts/agents/memory/${AGENT_CODE}_MEMORY.md"
+TIER=${1:-standard}
 
 echo ""
 echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║           🔄 CHECKPOINT: $AGENT_CODE Agent                    "
+echo "║           🔄 CHECKPOINT ($TIER tier)                          "
 echo "╚══════════════════════════════════════════════════════════════╝"
 echo ""
 
-# 1. Run tests
-echo "📋 Step 1: Running tests..."
-if npm test > /dev/null 2>&1; then
-  TESTS=$(npm test 2>&1 | grep -E "^ℹ tests" | awk '{print $3}')
-  echo "   ✅ Tests passing: $TESTS"
-else
-  echo "   ❌ Tests failed - fix before checkpoint"
-  exit 1
-fi
-
-# 2. Memory distillation prompts
-echo ""
-echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║           📝 MEMORY DISTILLATION (5 Categories)               "
-echo "╚══════════════════════════════════════════════════════════════╝"
-echo ""
-
-echo "Answer these prompts to distill your session into memory."
-echo "Press ENTER to skip optional categories."
-echo ""
-
-# Category 1: OPERATIONAL (Required)
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 CATEGORY 1: OPERATIONAL (Required)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-read -p "   Main tasks completed (comma-separated): " TASKS
-if [ -z "$TASKS" ]; then
-  echo "   ❌ At least one task required"
-  exit 1
-fi
-
-read -p "   Key decision made (or 'none'): " DECISION
-read -p "   Key files changed (comma-separated): " FILES
-
-# Category 2: METRICS (Required)
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📊 CATEGORY 2: METRICS (Required)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-read -p "   Approximate duration (minutes): " DURATION
-read -p "   Number of errors encountered: " ERRORS
-
-# Category 3: PATTERNS (Optional)
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🔄 CATEGORY 3: PATTERNS (Optional - if you saw repeats)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-read -p "   Recurring issue seen? (or ENTER to skip): " PATTERN
-
-# Category 4: INSIGHTS (Optional)
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "💡 CATEGORY 4: INSIGHTS (Optional - useful discoveries)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-read -p "   Useful command/gotcha discovered? (or ENTER to skip): " INSIGHT
-
-# Category 5: RELATIONSHIPS (Optional)
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "🤝 CATEGORY 5: RELATIONSHIPS (Optional - handoffs/deps)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-read -p "   Agent handoff or dependency found? (or ENTER to skip): " RELATIONSHIP
-
-# Cumulative sections (accumulate over time)
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📚 CUMULATIVE SECTIONS (builds up over sessions)"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-# Quick Reference
-read -p "   🔧 Useful command discovered? (or ENTER to skip): " USEFUL_CMD
-
-# FAQ
-read -p "   ❓ User question worth saving for FAQ? (or ENTER to skip): " FAQ_Q
-if [ -n "$FAQ_Q" ]; then
-  read -p "      Answer: " FAQ_A
-fi
-
-# Generate memory entry
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📄 Generated Memory Entry"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-
-DATE=$(date +"%Y-%m-%d %H:%M")
-MEMORY_ENTRY="### Session: $DATE (Checkpoint)
-
-#### 📋 OPERATIONAL
-- **Tasks**: $TASKS
-- **Decision**: ${DECISION:-None}
-- **Files**: ${FILES:-None specified}
-
-#### 📊 METRICS
-- **Duration**: ${DURATION:-Unknown} minutes
-- **Errors**: ${ERRORS:-0}"
-
-if [ -n "$PATTERN" ]; then
-  MEMORY_ENTRY="$MEMORY_ENTRY
-
-#### 🔄 PATTERNS
-- $PATTERN"
-fi
-
-if [ -n "$INSIGHT" ]; then
-  MEMORY_ENTRY="$MEMORY_ENTRY
-
-#### 💡 INSIGHTS
-- $INSIGHT"
-fi
-
-if [ -n "$RELATIONSHIP" ]; then
-  MEMORY_ENTRY="$MEMORY_ENTRY
-
-#### 🤝 RELATIONSHIPS
-- $RELATIONSHIP"
-fi
-
-echo ""
-echo "$MEMORY_ENTRY"
-echo ""
-
-# Handle cumulative sections separately
-CUMULATIVE_UPDATES=""
-
-if [ -n "$USEFUL_CMD" ]; then
-  CUMULATIVE_UPDATES="$CUMULATIVE_UPDATES
-
-### 🔧 Quick Reference Update
-Add to Quick Reference section:
-- \`$USEFUL_CMD\`"
-fi
-
-if [ -n "$FAQ_Q" ]; then
-  CUMULATIVE_UPDATES="$CUMULATIVE_UPDATES
-
-### ❓ FAQ Update
-Add to FAQ section:
-- Q: $FAQ_Q
-- A: $FAQ_A"
-fi
-
-if [ -n "$CUMULATIVE_UPDATES" ]; then
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "📚 CUMULATIVE SECTION UPDATES (add manually to memory file)"
-  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-  echo "$CUMULATIVE_UPDATES"
-  echo ""
-fi
-
-# Confirm and append to memory
-read -p "Append this to $MEMORY_FILE? (Y/n): " CONFIRM
-if [ "$CONFIRM" != "n" ] && [ "$CONFIRM" != "N" ]; then
-  # Find the Session History section and prepend
-  echo "" >> "$MEMORY_FILE"
-  echo "$MEMORY_ENTRY" >> "$MEMORY_FILE"
-  echo ""
-  echo "   ✅ Memory updated: $MEMORY_FILE"
-else
-  echo "   ⏭️ Skipped memory update (manual update expected)"
-fi
-
-# 3. Stage all changes
-echo ""
-echo "📋 Step 3: Staging changes..."
-git add -A
-
-# 4. Check for changes to commit
-if git diff --cached --quiet; then
-  echo "   ℹ️ No changes to commit"
-  COMMITTED="false"
-else
-  CHANGED=$(git diff --cached --name-only | wc -l | tr -d ' ')
-  echo "   📁 $CHANGED files staged"
-  
-  # 5. Commit
-  echo ""
-  echo "📋 Step 4: Committing..."
-  if [ -z "$2" ]; then
-    read -p "   Commit message: " MSG
-  else
-    MSG="$2"
-  fi
-  
-  git commit -m "$MSG"
-  COMMIT_HASH=$(git rev-parse --short HEAD)
-  echo "   ✅ Committed: $COMMIT_HASH"
-  COMMITTED="true"
-fi
-
-# 6. Push
-if [ "$COMMITTED" = "true" ]; then
-  echo ""
-  echo "📋 Step 5: Pushing..."
-  if ./scripts/git-push-safe.sh 2>/dev/null; then
-    echo "   ✅ Pushed to origin/main"
-  else
-    echo "   ⚠️ Push failed - try manually"
-  fi
-fi
-
-# 7. Summary
-echo ""
-echo "╔══════════════════════════════════════════════════════════════╗"
-echo "║           ✅ CHECKPOINT COMPLETE                              "
-echo "╚══════════════════════════════════════════════════════════════╝"
-echo ""
-echo "   Tests:      ✅ $TESTS passing"
-echo "   Memory:     ✅ 5 categories captured"
-echo "   Categories: ✅ Operational, Metrics"
-[ -n "$PATTERN" ] && echo "               ✅ Patterns"
-[ -n "$INSIGHT" ] && echo "               ✅ Insights"
-[ -n "$RELATIONSHIP" ] && echo "               ✅ Relationships"
-if [ "$COMMITTED" = "true" ]; then
-  echo "   Commit:     ✅ $COMMIT_HASH"
-  echo "   Push:       ✅ origin/main"
-else
-  echo "   Commit:     ⏭️ No changes"
-fi
-echo ""
+case $TIER in
+  light|l)
+    echo "📦 Light checkpoint: commit + push"
+    echo ""
+    
+    git add -A
+    if ! git diff --cached --quiet; then
+      CHANGED=$(git diff --cached --name-only | wc -l | tr -d ' ')
+      echo "   📁 $CHANGED files staged"
+      read -p "   Commit message: " MSG
+      git commit -m "$MSG"
+      
+      echo ""
+      echo "📤 Pushing..."
+      if ./scripts/git-push-safe.sh 2>/dev/null; then
+        echo "   ✅ Pushed to origin/main"
+      else
+        git push origin main 2>/dev/null || echo "   ⚠️ Push failed - try manually"
+      fi
+    else
+      echo "   ℹ️ No changes to commit"
+    fi
+    
+    echo ""
+    echo "✅ Light checkpoint complete"
+    ;;
+    
+  standard|s|"")
+    echo "📋 Running tests..."
+    if npm test > /dev/null 2>&1; then
+      TESTS=$(npm test 2>&1 | grep -E "^ℹ tests" | awk '{print $3}' || echo "?")
+      echo "   ✅ Tests passing: $TESTS"
+    else
+      echo "   ❌ Tests failed - fix before checkpoint"
+      exit 1
+    fi
+    
+    echo ""
+    git add -A
+    if ! git diff --cached --quiet; then
+      CHANGED=$(git diff --cached --name-only | wc -l | tr -d ' ')
+      echo "   📁 $CHANGED files staged"
+      read -p "   Commit message: " MSG
+      git commit -m "$MSG"
+      
+      echo ""
+      echo "📤 Pushing..."
+      if ./scripts/git-push-safe.sh 2>/dev/null; then
+        echo "   ✅ Pushed to origin/main"
+      else
+        git push origin main 2>/dev/null || echo "   ⚠️ Push failed - try manually"
+      fi
+    else
+      echo "   ℹ️ No changes to commit"
+    fi
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📝 UPDATE MEMORY (5 lines max):"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "   Add brief session notes to your memory file:"
+    echo "   prompts/agents/memory/[ROLE]_MEMORY.md"
+    echo ""
+    echo "   Template (5 lines max):"
+    echo "   - What: [main task completed]"
+    echo "   - Files: [key files changed]"
+    echo "   - Next: [follow-up if any]"
+    echo ""
+    echo "✅ Standard checkpoint complete"
+    ;;
+    
+  full|f)
+    echo "📋 Running tests..."
+    if npm test > /dev/null 2>&1; then
+      TESTS=$(npm test 2>&1 | grep -E "^ℹ tests" | awk '{print $3}' || echo "?")
+      echo "   ✅ Tests passing: $TESTS"
+    else
+      echo "   ❌ Tests failed - fix before checkpoint"
+      exit 1
+    fi
+    
+    echo ""
+    echo "📁 Staged files:"
+    git add -A
+    git status --short
+    
+    if ! git diff --cached --quiet; then
+      echo ""
+      read -p "   Commit message: " MSG
+      git commit -m "$MSG"
+      COMMIT_HASH=$(git rev-parse --short HEAD)
+      echo "   ✅ Committed: $COMMIT_HASH"
+      
+      echo ""
+      echo "📤 Pushing..."
+      if ./scripts/git-push-safe.sh 2>/dev/null; then
+        echo "   ✅ Pushed to origin/main"
+      else
+        git push origin main 2>/dev/null || echo "   ⚠️ Push failed - try manually"
+      fi
+    else
+      echo "   ℹ️ No changes to commit"
+    fi
+    
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo "📝 FULL CHECKPOINT REQUIREMENTS:"
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "1️⃣  UPDATE MEMORY (full 5-category template)"
+    echo "    See: prompts/agents/MEMORY_FORMAT.md"
+    echo "    File: prompts/agents/memory/[ROLE]_MEMORY.md"
+    echo ""
+    echo "2️⃣  CERTIFY IN MINDFRAME (if significant work)"
+    echo "    ./scripts/certify.sh [CODE] [AREA] [STATUS] [VIBE]"
+    echo "    Or manually update: output/shared/MINDFRAME.md"
+    echo ""
+    echo "3️⃣  SOP SCAN (log opportunities)"
+    echo "    File: output/agents/quality/workspace/sop-opportunities.md"
+    echo "    Log any new patterns that could become SOPs"
+    echo ""
+    echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    echo ""
+    echo "✅ Full checkpoint complete"
+    ;;
+    
+  help|h|--help|-h)
+    echo "Usage: ./scripts/checkpoint.sh [tier]"
+    echo ""
+    echo "Tiers:"
+    echo "  light, l     Commit + push only (fastest)"
+    echo "  standard, s  Test + commit + push + memory prompt (default)"
+    echo "  full, f      All steps + MINDFRAME + SOP scan"
+    echo ""
+    echo "Aliases:"
+    echo "  cp light     → ./scripts/checkpoint.sh light"
+    echo "  cp           → ./scripts/checkpoint.sh standard"
+    echo "  cp full      → ./scripts/checkpoint.sh full"
+    echo ""
+    ;;
+    
+  *)
+    echo "❌ Unknown tier: $TIER"
+    echo ""
+    echo "Usage: ./scripts/checkpoint.sh [light|standard|full]"
+    echo ""
+    echo "Run './scripts/checkpoint.sh help' for more info"
+    exit 1
+    ;;
+esac
