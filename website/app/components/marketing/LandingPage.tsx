@@ -29,30 +29,30 @@ import {
   ExternalLink,
 } from "lucide-react";
 
-// Hero Section
+// Hero Section - Navy gradient with orange glow (60% dark)
 function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-stone-950 via-stone-900 to-stone-950 text-white">
+    <section className="hero-section relative overflow-hidden text-foreground">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-20" />
-      <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-[url('/grid.svg')] bg-center opacity-10" />
+      <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
       
-      {/* Glowing orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl" />
-      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
+      {/* Glowing orbs - Orange accent (10%) */}
+      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/15 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-32">
         <div className="text-center max-w-4xl mx-auto">
           {/* Badge */}
-          <Badge className="mb-6 px-4 py-2 text-sm bg-orange-500/20 text-orange-300 border-orange-500/30 hover:bg-orange-500/30">
+          <Badge className="hero-badge mb-6 px-4 py-2 text-sm">
             <Sparkles className="h-3 w-3 mr-2" />
             AI-Powered Project Generator
           </Badge>
 
           {/* Headline */}
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6">
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-6 text-foreground">
             Build Your{" "}
-            <span className="bg-gradient-to-r from-orange-400 via-amber-400 to-orange-300 bg-clip-text text-transparent">
+            <span className="text-primary">
               Dream App
             </span>
             <br />
@@ -60,20 +60,20 @@ function HeroSection() {
           </h1>
 
           {/* Subheadline */}
-          <p className="text-xl md:text-2xl text-stone-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-foreground-secondary mb-10 max-w-2xl mx-auto leading-relaxed">
             Configure your project visually, export with one click, and get a 
             production-ready codebase optimized for AI-assisted development.
           </p>
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-orange-600 hover:bg-orange-500" asChild>
+            <Button size="lg" className="h-14 px-8 text-lg gap-2" asChild>
               <Link href="/configure">
                 Start Building
                 <ArrowRight className="h-5 w-5" />
               </Link>
             </Button>
-            <Button size="lg" variant="outline" className="h-14 px-8 text-lg gap-2 border-stone-700 text-stone-300 hover:bg-stone-800" asChild>
+            <Button size="lg" variant="outline" className="h-14 px-8 text-lg gap-2" asChild>
               <a href="https://github.com/jrdaws/dawson-does-framework" target="_blank" rel="noopener noreferrer">
                 <Github className="h-5 w-5" />
                 View on GitHub
@@ -82,46 +82,46 @@ function HeroSection() {
           </div>
 
           {/* Social Proof */}
-          <div className="flex items-center justify-center gap-8 text-sm text-stone-500">
+          <div className="flex items-center justify-center gap-8 text-sm text-foreground-muted">
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2">
                 {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-stone-600 to-stone-700 border-2 border-stone-900" />
+                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-primary-hover border-2 border-background" />
                 ))}
               </div>
               <span>500+ developers</span>
             </div>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((i) => (
-                <Star key={i} className="h-4 w-4 fill-yellow-500 text-yellow-500" />
+                <Star key={i} className="h-4 w-4 fill-warning text-warning" />
               ))}
               <span className="ml-1">4.9/5 rating</span>
             </div>
           </div>
         </div>
 
-        {/* Hero Visual */}
+        {/* Hero Visual - Terminal mockup */}
         <div className="mt-16 relative max-w-5xl mx-auto">
-          <div className="absolute -inset-4 bg-gradient-to-r from-orange-500/20 via-amber-500/20 to-orange-400/20 rounded-2xl blur-xl" />
-          <div className="relative bg-stone-900 border border-stone-800 rounded-xl overflow-hidden shadow-2xl">
+          <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 via-primary/10 to-primary/20 rounded-2xl blur-xl" />
+          <div className="terminal relative">
             {/* Browser Chrome */}
-            <div className="flex items-center gap-2 px-4 py-3 bg-stone-800/50 border-b border-stone-700">
+            <div className="terminal-header">
               <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
+                <div className="terminal-dot red" />
+                <div className="terminal-dot yellow" />
+                <div className="terminal-dot green" />
               </div>
               <div className="flex-1 flex justify-center">
-                <div className="px-4 py-1 bg-stone-900 rounded-md text-xs text-stone-500">
+                <div className="terminal-title">
                   dawson.does/configure
                 </div>
               </div>
             </div>
             {/* Screenshot placeholder */}
-            <div className="aspect-video bg-gradient-to-br from-stone-800 via-stone-900 to-stone-800 flex items-center justify-center">
+            <div className="aspect-video bg-background flex items-center justify-center">
               <div className="text-center">
-                <Layers className="h-16 w-16 text-stone-700 mx-auto mb-4" />
-                <p className="text-stone-600">Visual Project Configurator</p>
+                <Layers className="h-16 w-16 text-foreground-muted mx-auto mb-4" />
+                <p className="text-foreground-secondary">Visual Project Configurator</p>
               </div>
             </div>
           </div>
@@ -131,44 +131,44 @@ function HeroSection() {
   );
 }
 
-// Value Props Section
+// Value Props Section - Dark cards with orange accents (30% slate)
 function ValuePropsSection() {
   const props = [
     {
       icon: <Clock className="h-6 w-6" />,
       title: "5-Day Sprint",
       description: "Go from idea to deployed app in just 5 days with our guided workflow.",
-      color: "text-orange-400",
-      bgColor: "bg-orange-500/10",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       icon: <Sparkles className="h-6 w-6" />,
       title: "AI-Optimized",
       description: "Generated code is structured for Cursor AI and Claude Code workflows.",
-      color: "text-amber-400",
-      bgColor: "bg-amber-500/10",
+      color: "text-primary",
+      bgColor: "bg-primary/10",
     },
     {
       icon: <Download className="h-6 w-6" />,
       title: "Full Ownership",
       description: "Export everything. No lock-in. Your code, your infrastructure, forever.",
-      color: "text-emerald-400",
-      bgColor: "bg-emerald-500/10",
+      color: "text-success",
+      bgColor: "bg-success/10",
     },
   ];
 
   return (
-    <section className="py-24 bg-stone-50">
+    <section className="section-alt py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-3 gap-8">
           {props.map((prop, i) => (
-            <Card key={i} className="border-0 shadow-lg shadow-stone-200/50 hover:shadow-xl transition-shadow">
+            <Card key={i} className="card-elevated">
               <CardContent className="pt-8 pb-6">
                 <div className={cn("w-14 h-14 rounded-xl flex items-center justify-center mb-6", prop.bgColor, prop.color)}>
                   {prop.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-2">{prop.title}</h3>
-                <p className="text-stone-600">{prop.description}</p>
+                <h3 className="text-xl font-bold mb-2 text-foreground">{prop.title}</h3>
+                <p className="text-foreground-secondary">{prop.description}</p>
               </CardContent>
             </Card>
           ))}
@@ -178,7 +178,7 @@ function ValuePropsSection() {
   );
 }
 
-// Features Section
+// Features Section - Dark background (60% dark)
 function FeaturesSection() {
   const features = [
     {
@@ -208,12 +208,12 @@ function FeaturesSection() {
   ];
 
   return (
-    <section className="py-24 bg-stone-50">
+    <section className="section-default py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 px-3 py-1">Features</Badge>
-          <h2 className="text-4xl font-bold mb-4">Everything You Need</h2>
-          <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+          <Badge className="hero-badge mb-4 px-3 py-1">Features</Badge>
+          <h2 className="text-4xl font-bold mb-4 text-foreground">Everything You Need</h2>
+          <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
             A complete toolkit for building production-ready applications with AI assistance.
           </p>
         </div>
@@ -221,14 +221,14 @@ function FeaturesSection() {
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((section, i) => (
             <div key={i} className="space-y-6">
-              <h3 className="text-lg font-semibold text-stone-900">{section.category}</h3>
+              <h3 className="text-lg font-semibold text-foreground">{section.category}</h3>
               <div className="space-y-4">
                 {section.items.map((item, j) => (
                   <div key={j} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-stone-50 shadow-sm flex items-center justify-center text-orange-600">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
                       {item.icon}
                     </div>
-                    <span className="text-stone-700">{item.text}</span>
+                    <span className="text-foreground-secondary">{item.text}</span>
                   </div>
                 ))}
               </div>
@@ -240,7 +240,7 @@ function FeaturesSection() {
   );
 }
 
-// How It Works Section
+// How It Works Section - Slate background (30% slate)
 function HowItWorksSection() {
   const steps = [
     {
@@ -270,12 +270,12 @@ function HowItWorksSection() {
   ];
 
   return (
-    <section className="py-24 bg-stone-50">
+    <section className="section-alt py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 px-3 py-1">How It Works</Badge>
-          <h2 className="text-4xl font-bold mb-4">Four Steps to Launch</h2>
-          <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+          <Badge className="hero-badge mb-4 px-3 py-1">How It Works</Badge>
+          <h2 className="text-4xl font-bold mb-4 text-foreground">Four Steps to Launch</h2>
+          <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
             From idea to deployed application in record time.
           </p>
         </div>
@@ -285,16 +285,16 @@ function HowItWorksSection() {
             <div key={i} className="relative">
               {/* Connector line */}
               {i < steps.length - 1 && (
-                <div className="hidden md:block absolute top-14 left-1/2 w-full h-0.5 bg-gradient-to-r from-orange-200 to-orange-100" />
+                <div className="hidden md:block absolute top-14 left-1/2 w-full h-0.5 bg-gradient-to-r from-primary/30 to-primary/10" />
               )}
               
               <div className="relative text-center">
-                <div className="w-28 h-28 rounded-2xl bg-gradient-to-br from-orange-50 to-amber-50 border border-orange-100 flex items-center justify-center mx-auto mb-6 text-orange-600">
+                <div className="w-28 h-28 rounded-2xl bg-card border border-border flex items-center justify-center mx-auto mb-6 text-primary shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
                   {step.icon}
                 </div>
-                <div className="text-xs font-bold text-orange-600 mb-2">{step.number}</div>
-                <h3 className="text-xl font-bold mb-2">{step.title}</h3>
-                <p className="text-stone-600 text-sm">{step.description}</p>
+                <div className="text-xs font-bold text-primary mb-2">{step.number}</div>
+                <h3 className="text-xl font-bold mb-2 text-foreground">{step.title}</h3>
+                <p className="text-foreground-secondary text-sm">{step.description}</p>
               </div>
             </div>
           ))}
@@ -304,7 +304,7 @@ function HowItWorksSection() {
   );
 }
 
-// Tech Stack Section
+// Tech Stack Section - Navy background (60% dark)
 function TechStackSection() {
   const stacks = [
     { name: "Next.js", category: "Framework" },
@@ -318,21 +318,21 @@ function TechStackSection() {
   ];
 
   return (
-    <section className="py-24 bg-stone-900 text-white">
+    <section className="hero-section py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 px-3 py-1 bg-stone-800 text-stone-300 border-stone-700">Tech Stack</Badge>
-          <h2 className="text-4xl font-bold mb-4">Best-in-Class Technologies</h2>
-          <p className="text-xl text-stone-400 max-w-2xl mx-auto">
+          <Badge className="hero-badge mb-4 px-3 py-1">Tech Stack</Badge>
+          <h2 className="text-4xl font-bold mb-4 text-foreground">Best-in-Class Technologies</h2>
+          <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
             Built with the modern stack that top developers love.
           </p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {stacks.map((tech, i) => (
-            <div key={i} className="p-6 bg-stone-800/50 rounded-xl border border-stone-700 hover:border-stone-600 transition-colors text-center">
-              <div className="text-2xl font-bold mb-1">{tech.name}</div>
-              <div className="text-sm text-stone-500">{tech.category}</div>
+            <div key={i} className="p-6 bg-card rounded-xl border border-border hover:border-primary/50 transition-colors text-center shadow-[0_4px_20px_rgba(0,0,0,0.3)]">
+              <div className="text-2xl font-bold mb-1 text-foreground">{tech.name}</div>
+              <div className="text-sm text-foreground-muted">{tech.category}</div>
             </div>
           ))}
         </div>
@@ -341,15 +341,15 @@ function TechStackSection() {
   );
 }
 
-// Pricing Preview Section
+// Pricing Preview Section - Dark with slate cards (60% dark, 30% slate)
 function PricingPreviewSection() {
   return (
-    <section className="py-24 bg-gradient-to-b from-white to-stone-50">
+    <section className="section-default py-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <Badge className="mb-4 px-3 py-1">Pricing</Badge>
-          <h2 className="text-4xl font-bold mb-4">Start Free, Scale When Ready</h2>
-          <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+          <Badge className="hero-badge mb-4 px-3 py-1">Pricing</Badge>
+          <h2 className="text-4xl font-bold mb-4 text-foreground">Start Free, Scale When Ready</h2>
+          <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
             The configurator is free. You only pay for the services you choose to use.
           </p>
         </div>
@@ -361,16 +361,16 @@ function PricingPreviewSection() {
               <CardTitle className="text-2xl">Free</CardTitle>
               <CardDescription>Perfect for getting started</CardDescription>
               <div className="pt-4">
-                <span className="text-4xl font-bold">$0</span>
-                <span className="text-stone-500">/forever</span>
+                <span className="text-4xl font-bold text-foreground">$0</span>
+                <span className="text-foreground-muted">/forever</span>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {["Visual configurator", "All templates", "NPX export", "Community support"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-emerald-500" />
-                    <span className="text-sm">{item}</span>
+                    <Check className="h-4 w-4 text-success" />
+                    <span className="text-sm text-foreground-secondary">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -380,29 +380,29 @@ function PricingPreviewSection() {
             </CardContent>
           </Card>
 
-          {/* Pro Tier */}
-          <Card className="relative border-orange-200 shadow-lg shadow-orange-100/50">
-            <div className="absolute -top-3 left-1/2 -transtone-x-1/2">
-              <Badge className="bg-orange-600">Most Popular</Badge>
+          {/* Pro Tier - Highlighted with orange border */}
+          <Card className="relative border-primary shadow-[0_8px_32px_rgba(249,115,22,0.15)]">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2">
+              <Badge className="bg-primary text-primary-foreground">Most Popular</Badge>
             </div>
             <CardHeader>
               <CardTitle className="text-2xl">Pro</CardTitle>
               <CardDescription>For serious builders</CardDescription>
               <div className="pt-4">
-                <span className="text-4xl font-bold">$29</span>
-                <span className="text-stone-500">/month</span>
+                <span className="text-4xl font-bold text-foreground">$29</span>
+                <span className="text-foreground-muted">/month</span>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {["Everything in Free", "Cloud project sync", "Team collaboration", "Priority support", "Custom templates"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-emerald-500" />
-                    <span className="text-sm">{item}</span>
+                    <Check className="h-4 w-4 text-success" />
+                    <span className="text-sm text-foreground-secondary">{item}</span>
                   </li>
                 ))}
               </ul>
-              <Button className="w-full mt-6 bg-orange-600 hover:bg-orange-500" asChild>
+              <Button className="w-full mt-6" asChild>
                 <Link href="/configure">Start Free Trial</Link>
               </Button>
             </CardContent>
@@ -414,15 +414,15 @@ function PricingPreviewSection() {
               <CardTitle className="text-2xl">Enterprise</CardTitle>
               <CardDescription>For organizations</CardDescription>
               <div className="pt-4">
-                <span className="text-4xl font-bold">Custom</span>
+                <span className="text-4xl font-bold text-foreground">Custom</span>
               </div>
             </CardHeader>
             <CardContent>
               <ul className="space-y-3">
                 {["Everything in Pro", "SSO integration", "Custom integrations", "Dedicated support", "SLA guarantee"].map((item) => (
                   <li key={item} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-emerald-500" />
-                    <span className="text-sm">{item}</span>
+                    <Check className="h-4 w-4 text-success" />
+                    <span className="text-sm text-foreground-secondary">{item}</span>
                   </li>
                 ))}
               </ul>
@@ -437,25 +437,25 @@ function PricingPreviewSection() {
   );
 }
 
-// CTA Section
+// CTA Section - Orange accent (10% orange)
 function CTASection() {
   return (
-    <section className="py-24 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 text-white">
+    <section className="cta-section py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <h2 className="text-4xl md:text-5xl font-bold mb-6">
+        <h2 className="text-4xl md:text-5xl font-bold mb-6 text-primary-foreground">
           Ready to Build Something Amazing?
         </h2>
-        <p className="text-xl text-white/80 mb-10 max-w-2xl mx-auto">
+        <p className="text-xl text-primary-foreground/80 mb-10 max-w-2xl mx-auto">
           Join hundreds of developers who ship faster with Dawson Does Framework.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-stone-50 text-orange-600 hover:bg-stone-100" asChild>
+          <Button size="lg" className="h-14 px-8 text-lg gap-2 bg-background text-primary hover:bg-card" asChild>
             <Link href="/configure">
               Start Building Free
               <ArrowRight className="h-5 w-5" />
             </Link>
           </Button>
-          <Button size="lg" variant="outline" className="h-14 px-8 text-lg gap-2 border-white/30 text-white hover:bg-stone-50/10" asChild>
+          <Button size="lg" variant="outline" className="h-14 px-8 text-lg gap-2 border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10" asChild>
             <a href="https://dawson.does/docs" target="_blank" rel="noopener noreferrer">
               Read the Docs
               <ExternalLink className="h-5 w-5" />
@@ -467,7 +467,7 @@ function CTASection() {
   );
 }
 
-// Footer
+// Footer - Navy background (60% dark)
 function Footer() {
   const links = {
     Product: ["Features", "Pricing", "Templates", "Changelog"],
@@ -477,13 +477,13 @@ function Footer() {
   };
 
   return (
-    <footer className="bg-stone-950 text-stone-400 py-16">
+    <footer className="hero-section py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="md:col-span-1">
-            <div className="text-2xl font-bold text-white mb-4">Dawson Does</div>
-            <p className="text-sm">
+            <div className="text-2xl font-bold text-foreground mb-4">Dawson Does</div>
+            <p className="text-sm text-foreground-muted">
               Build production-ready apps with AI-assisted development.
             </p>
           </div>
@@ -491,11 +491,11 @@ function Footer() {
           {/* Links */}
           {Object.entries(links).map(([category, items]) => (
             <div key={category}>
-              <h4 className="text-white font-semibold mb-4">{category}</h4>
+              <h4 className="text-foreground font-semibold mb-4">{category}</h4>
               <ul className="space-y-2">
                 {items.map((item) => (
                   <li key={item}>
-                    <a href="#" className="text-sm hover:text-white transition-colors">
+                    <a href="#" className="text-sm text-foreground-muted hover:text-foreground transition-colors">
                       {item}
                     </a>
                   </li>
@@ -506,14 +506,14 @@ function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-sm">
+        <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="text-sm text-foreground-muted">
             © {new Date().getFullYear()} Dawson Does. All rights reserved.
           </div>
           <div className="flex items-center gap-6">
-            <a href="#" className="text-sm hover:text-white">Privacy</a>
-            <a href="#" className="text-sm hover:text-white">Terms</a>
-            <a href="#" className="text-sm hover:text-white">Cookies</a>
+            <a href="#" className="text-sm text-foreground-muted hover:text-foreground transition-colors">Privacy</a>
+            <a href="#" className="text-sm text-foreground-muted hover:text-foreground transition-colors">Terms</a>
+            <a href="#" className="text-sm text-foreground-muted hover:text-foreground transition-colors">Cookies</a>
           </div>
         </div>
       </div>
