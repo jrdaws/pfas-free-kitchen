@@ -197,8 +197,8 @@ test.describe('Configurator - Feature Selection', () => {
 
   test('progress indicator is visible', async ({ page }) => {
     const sidebar = page.locator('aside');
-    // Progress section exists in sidebar
-    await expect(sidebar.getByText(/Progress/i)).toBeVisible({ timeout: 5000 });
+    // Progress indicator shows step count (0/8 format)
+    await expect(sidebar.getByText(/0\/8/)).toBeVisible({ timeout: 5000 });
   });
 });
 

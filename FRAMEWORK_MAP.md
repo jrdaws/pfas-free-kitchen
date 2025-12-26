@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 65c1d05 2025-12-26 chore: commit Cycle 20 governance work, demos, and reports
 - 6043641 2025-12-25 fix(auth): update ProtectedRoute for Navy theme
 - de5e64b 2025-12-25 feat(marketing): update LandingPage for Navy theme (60-30-10)
 - b387547 2025-12-25 feat(ui): update card components for Navy theme
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - b61f58b 2025-12-25 chore(media): complete P1 WebP regeneration task
 - 77aea0a 2025-12-25 feat(media): regenerate 5 WebP images with Orange/Stone palette
 - 6fb471d 2025-12-25 docs: update color references for Warm Neutral scheme
-- 6d675c0 2025-12-25 test(website): verify accordion UI tests complete - 732 tests pass
 
 ## Agent Governance Structure
 
