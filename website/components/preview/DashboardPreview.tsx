@@ -141,7 +141,7 @@ export function DashboardPreview({
                       )}
                       style={{ height: `${height * 100}%` }}
                     />
-                    <span className="text-xs text-stone-600">
+                    <span className="text-xs text-foreground-secondary">
                       {["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][i]}
                     </span>
                   </div>

@@ -288,7 +288,7 @@ function CollaborativeVisualEditorContent({
         </div>
 
         {/* Center - Preview with Overlay */}
-        <div className="flex-1 relative overflow-auto bg-stone-100">
+        <div className="flex-1 relative overflow-auto bg-background-alt">
           <div className="flex justify-center min-h-full p-4">
             <div
               className="relative transition-all duration-300"
@@ -302,7 +302,7 @@ function CollaborativeVisualEditorContent({
                   if (iframe) registerIframe(iframe);
                 }}
                 srcDoc={enhancedHtml}
-                className="w-full border-0 bg-stone-50 shadow-lg"
+                className="w-full border-0 bg-card shadow-lg"
                 style={{ minHeight: "600px", height: "100%" }}
                 sandbox="allow-scripts allow-same-origin"
                 title="Collaborative Visual Editor"

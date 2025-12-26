@@ -28,7 +28,7 @@ export function Footer({
               <span className="text-white font-semibold">{projectName || "Project"}</span>
             </div>
             {description && (
-              <p className="text-stone-500 text-sm">{description}</p>
+              <p className="text-foreground-muted text-sm">{description}</p>
             )}
           </div>
 
@@ -73,7 +73,7 @@ export function Footer({
 
         {/* Copyright */}
         <div className="mt-12 pt-8 border-t border-white/5">
-          <p className="text-stone-600 text-sm text-center">
+          <p className="text-foreground-secondary text-sm text-center">
             © {new Date().getFullYear()} {projectName || "Project"}. All rights reserved.
           </p>
         </div>

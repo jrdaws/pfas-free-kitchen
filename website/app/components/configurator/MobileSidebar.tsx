@@ -176,11 +176,11 @@ export function MobileSidebar({
           <span className="sr-only">Open navigation</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 p-0 bg-stone-50 flex flex-col">
-        <SheetHeader className="p-4 border-b border-stone-200 shrink-0">
+      <SheetContent side="left" className="w-80 p-0 bg-card flex flex-col border-r border-border">
+        <SheetHeader className="p-4 border-b border-border shrink-0">
           <SheetTitle className="flex items-center justify-between">
-            <span className="text-[#F97316] font-bold text-lg">Dawson Does</span>
-            <span className="text-xs text-stone-500">
+            <span className="text-primary font-bold text-lg">Dawson Does</span>
+            <span className="text-xs text-foreground-muted">
               {completedSteps.size}/{NAV_SECTIONS.length} complete
             </span>
           </SheetTitle>
@@ -202,18 +202,18 @@ export function MobileSidebar({
                 <AccordionItem
                   key={section.id}
                   value={section.id}
-                  className="border-b border-stone-100"
+                  className="border-b border-border"
                 >
                   <AccordionTrigger
                     onClick={() => handleSectionClick(section)}
                     className={cn(
-                      "relative px-4 py-3 hover:bg-stone-50 hover:no-underline",
-                      isActive && "bg-[#F97316]/5"
+                      "relative px-4 py-3 hover:bg-background-alt hover:no-underline",
+                      isActive && "bg-primary/10"
                     )}
                   >
                     {/* Active indicator bar */}
                     {isActive && (
-                      <span className="absolute left-0 top-2 bottom-2 w-1 bg-[#F97316] rounded-r" />
+                      <span className="absolute left-0 top-2 bottom-2 w-1 bg-primary rounded-r" />
                     )}
 
                     <div className="flex items-center gap-3 flex-1">
@@ -221,9 +221,9 @@ export function MobileSidebar({
                       <div
                         className={cn(
                           "flex items-center justify-center w-7 h-7 rounded-lg transition-colors",
-                          state === "completed" && "bg-emerald-100 text-emerald-600",
-                          state === "current" && "bg-[#F97316]/10 text-[#F97316]",
-                          state === "pending" && "bg-stone-100 text-stone-400"
+                          state === "completed" && "bg-success/20 text-success",
+                          state === "current" && "bg-primary/10 text-primary",
+                          state === "pending" && "bg-background-alt text-foreground-muted"
                         )}
                       >
                         {state === "completed" ? (
@@ -239,9 +239,9 @@ export function MobileSidebar({
                           <span
                             className={cn(
                               "font-medium text-sm",
-                              state === "completed" && "text-emerald-600",
-                              state === "current" && "text-[#F97316]",
-                              state === "pending" && "text-stone-600"
+                              state === "completed" && "text-success",
+                              state === "current" && "text-primary",
+                              state === "pending" && "text-foreground-secondary"
                             )}
                           >
                             {section.label}
@@ -260,7 +260,7 @@ export function MobileSidebar({
                             </Badge>
                           )}
                         </div>
-                        <div className="text-xs text-stone-500 truncate max-w-[180px]">
+                        <div className="text-xs text-foreground-muted truncate max-w-[180px]">
                           {section.description}
                         </div>
                       </div>
@@ -268,9 +268,9 @@ export function MobileSidebar({
                   </AccordionTrigger>
 
                   <AccordionContent className="px-4 pb-4 pt-0">
-                    <div className="pl-10 text-sm text-stone-600">
+                    <div className="pl-10 text-sm text-foreground-secondary">
                       {children ? children(section.id) : (
-                        <p className="text-stone-500 italic text-xs">
+                        <p className="text-foreground-muted italic text-xs">
                           Tap to configure {section.label.toLowerCase()}
                         </p>
                       )}
@@ -283,16 +283,16 @@ export function MobileSidebar({
         </ScrollArea>
 
         {/* Footer with progress */}
-        <div className="p-4 border-t border-stone-200 bg-stone-50 shrink-0">
+        <div className="p-4 border-t border-border bg-card shrink-0">
           <div className="flex items-center justify-between text-sm mb-2">
-            <span className="text-stone-600">Progress</span>
-            <span className="font-medium text-[#F97316]">
+            <span className="text-foreground-secondary">Progress</span>
+            <span className="font-medium text-primary">
               {Math.round(progress)}%
             </span>
           </div>
-          <div className="h-2 bg-stone-200 rounded-full overflow-hidden">
+          <div className="h-2 bg-border rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#F97316] transition-all duration-300 rounded-full"
+              className="h-full bg-primary transition-all duration-300 rounded-full"
               style={{ width: `${progress}%` }}
             />
           </div>

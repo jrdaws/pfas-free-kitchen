@@ -85,13 +85,13 @@ export function ProjectOverviewBox({
 
   if (compact) {
     return (
-      <Card className={cn("border-stone-200", className)}>
+      <Card className={cn("border-border", className)}>
         <CardContent className="p-4">
           <div className="flex items-center justify-between gap-4">
             {/* Project Name */}
             <div className="flex items-center gap-2 min-w-0">
               <Folder className="h-4 w-4 text-[#F97316] flex-shrink-0" />
-              <span className="font-medium text-stone-800 truncate">
+              <span className="font-medium text-foreground truncate">
                 {projectName || "Untitled Project"}
               </span>
             </div>
@@ -124,10 +124,10 @@ export function ProjectOverviewBox({
   }
 
   return (
-    <Card className={cn("border-stone-200", className)}>
+    <Card className={cn("border-border", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-stone-900 flex items-center gap-2">
+          <CardTitle className="text-lg font-bold text-foreground flex items-center gap-2">
             <Sparkles className="h-5 w-5 text-[#F97316]" />
             Project Overview
           </CardTitle>
@@ -149,17 +149,17 @@ export function ProjectOverviewBox({
               <Folder className="h-5 w-5 text-[#F97316]" />
             </div>
             <div className="flex-1 min-w-0">
-              <h3 className="font-semibold text-stone-900 truncate">
+              <h3 className="font-semibold text-foreground truncate">
                 {projectName || "Untitled Project"}
               </h3>
-              <p className="text-xs text-stone-500 truncate">
+              <p className="text-xs text-foreground-muted truncate">
                 {outputDir || "./my-app"}
               </p>
             </div>
           </div>
 
           {description && (
-            <p className="text-sm text-stone-600 line-clamp-2 bg-stone-50 p-2 rounded-md">
+            <p className="text-sm text-foreground-secondary line-clamp-2 bg-card p-2 rounded-md">
               {description}
             </p>
           )}
@@ -168,21 +168,21 @@ export function ProjectOverviewBox({
         {/* Stats Grid */}
         <div className="grid grid-cols-2 gap-3">
           {/* Template */}
-          <div className="bg-stone-50 rounded-lg p-3 border border-stone-100">
+          <div className="bg-card rounded-lg p-3 border border-stone-100">
             <div className="flex items-center gap-2 mb-1">
-              <FileCode className="h-4 w-4 text-stone-500" />
-              <span className="text-xs text-stone-500">Template</span>
+              <FileCode className="h-4 w-4 text-foreground-muted" />
+              <span className="text-xs text-foreground-muted">Template</span>
             </div>
-            <p className="font-medium text-stone-800 capitalize">{template}</p>
+            <p className="font-medium text-foreground capitalize">{template}</p>
           </div>
 
           {/* Estimated Time */}
-          <div className="bg-stone-50 rounded-lg p-3 border border-stone-100">
+          <div className="bg-card rounded-lg p-3 border border-stone-100">
             <div className="flex items-center gap-2 mb-1">
-              <Clock className="h-4 w-4 text-stone-500" />
-              <span className="text-xs text-stone-500">Est. Setup</span>
+              <Clock className="h-4 w-4 text-foreground-muted" />
+              <span className="text-xs text-foreground-muted">Est. Setup</span>
             </div>
-            <p className="font-medium text-stone-800">
+            <p className="font-medium text-foreground">
               {complexity.estimatedHours > 0
                 ? `~${complexity.estimatedHours}h`
                 : "Minimal"}
@@ -190,23 +190,23 @@ export function ProjectOverviewBox({
           </div>
 
           {/* Features */}
-          <div className="bg-stone-50 rounded-lg p-3 border border-stone-100">
+          <div className="bg-card rounded-lg p-3 border border-stone-100">
             <div className="flex items-center gap-2 mb-1">
-              <Layers className="h-4 w-4 text-stone-500" />
-              <span className="text-xs text-stone-500">Features</span>
+              <Layers className="h-4 w-4 text-foreground-muted" />
+              <span className="text-xs text-foreground-muted">Features</span>
             </div>
-            <p className="font-medium text-stone-800">
+            <p className="font-medium text-foreground">
               {featureCount} selected
             </p>
           </div>
 
           {/* Integrations */}
-          <div className="bg-stone-50 rounded-lg p-3 border border-stone-100">
+          <div className="bg-card rounded-lg p-3 border border-stone-100">
             <div className="flex items-center gap-2 mb-1">
-              <Plug className="h-4 w-4 text-stone-500" />
-              <span className="text-xs text-stone-500">Integrations</span>
+              <Plug className="h-4 w-4 text-foreground-muted" />
+              <span className="text-xs text-foreground-muted">Integrations</span>
             </div>
-            <p className="font-medium text-stone-800">
+            <p className="font-medium text-foreground">
               {integrationCount} configured
             </p>
           </div>
@@ -215,7 +215,7 @@ export function ProjectOverviewBox({
         {/* Features Preview */}
         {topFeatures.length > 0 && (
           <div>
-            <h4 className="text-xs text-stone-500 mb-2">Selected Features</h4>
+            <h4 className="text-xs text-foreground-muted mb-2">Selected Features</h4>
             <div className="flex flex-wrap gap-1">
               {topFeatures.map((label) => (
                 <Badge
@@ -227,7 +227,7 @@ export function ProjectOverviewBox({
                 </Badge>
               ))}
               {featureCount > 3 && (
-                <Badge variant="outline" className="text-xs text-stone-500">
+                <Badge variant="outline" className="text-xs text-foreground-muted">
                   +{featureCount - 3} more
                 </Badge>
               )}
@@ -238,7 +238,7 @@ export function ProjectOverviewBox({
         {/* Integrations Preview */}
         {activeIntegrations.length > 0 && (
           <div>
-            <h4 className="text-xs text-stone-500 mb-2">Active Integrations</h4>
+            <h4 className="text-xs text-foreground-muted mb-2">Active Integrations</h4>
             <div className="flex flex-wrap gap-1">
               {activeIntegrations.map(({ type, provider }) => (
                 <Badge
@@ -250,7 +250,7 @@ export function ProjectOverviewBox({
                 </Badge>
               ))}
               {integrationCount > 3 && (
-                <Badge variant="outline" className="text-xs text-stone-500">
+                <Badge variant="outline" className="text-xs text-foreground-muted">
                   +{integrationCount - 3} more
                 </Badge>
               )}
@@ -261,7 +261,7 @@ export function ProjectOverviewBox({
         {/* Progress */}
         <div className="pt-2 border-t border-stone-100">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-xs text-stone-500">Configuration Progress</span>
+            <span className="text-xs text-foreground-muted">Configuration Progress</span>
             <span className="text-xs font-medium text-[#F97316]">
               {completionPercentage}%
             </span>

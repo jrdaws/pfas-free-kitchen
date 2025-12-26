@@ -80,7 +80,7 @@ export function Testimonials({
                     {testimonial.author}
                   </p>
                   {(testimonial.role || testimonial.company) && (
-                    <p className="text-stone-500 text-xs">
+                    <p className="text-foreground-muted text-xs">
                       {testimonial.role}
                       {testimonial.role && testimonial.company && " at "}
                       {testimonial.company}

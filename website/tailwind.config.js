@@ -87,7 +87,15 @@ module.exports = {
   			card: {
   				DEFAULT: 'hsl(var(--card))',
   				foreground: 'hsl(var(--card-foreground))'
-  			}
+  			},
+  			// Extended foreground colors for theme system
+  			'foreground-secondary': 'hsl(var(--foreground-secondary))',
+  			'foreground-muted': 'hsl(var(--foreground-muted))',
+  			// Success/Warning/Destructive
+  			success: 'hsl(var(--success))',
+  			warning: 'hsl(var(--warning))',
+  			// Primary hover
+  			'primary-hover': 'hsl(var(--primary-hover))'
   		},
   		borderRadius: {
   			lg: 'var(--radius)',

@@ -302,8 +302,8 @@ export default function ConfigurePage() {
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-bold text-stone-900 mb-2">Define Your Project</h2>
-              <p className="text-stone-600">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Define Your Project</h2>
+              <p className="text-foreground-secondary">
                 Start by describing your project domain and adding inspiration websites. 
                 This helps us understand what you&apos;re building.
               </p>
@@ -322,16 +322,16 @@ export default function ConfigurePage() {
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-bold text-stone-900 mb-2">Select Features</h2>
-              <p className="text-stone-600">
+              <h2 className="text-2xl font-bold text-foreground mb-2">Select Features</h2>
+              <p className="text-foreground-secondary">
                 Choose the features you want in your project. You can always add more later.
               </p>
             </div>
             {/* Show feature preview or template info */}
             {selectedTemplate && (
-              <div className="bg-stone-50 rounded-xl p-6 border border-stone-200">
-                <h3 className="font-semibold text-stone-900 mb-2">{selectedTemplate.name}</h3>
-                <p className="text-sm text-stone-600">{selectedTemplate.description}</p>
+              <div className="bg-card rounded-xl p-6 border border-border">
+                <h3 className="font-semibold text-foreground mb-2">{selectedTemplate.name}</h3>
+                <p className="text-sm text-foreground-secondary">{selectedTemplate.description}</p>
               </div>
             )}
           </div>
@@ -341,8 +341,8 @@ export default function ConfigurePage() {
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-bold text-stone-900 mb-2">AI Integration</h2>
-              <p className="text-stone-600">
+              <h2 className="text-2xl font-bold text-foreground mb-2">AI Integration</h2>
+              <p className="text-foreground-secondary">
                 Configure your AI provider for intelligent features in your app.
               </p>
             </div>
@@ -363,10 +363,10 @@ export default function ConfigurePage() {
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
-              <h2 className="text-2xl font-bold text-stone-900 mb-2">
+              <h2 className="text-2xl font-bold text-foreground mb-2">
                 {STEP_TITLES[currentStep]}
               </h2>
-              <p className="text-stone-600">
+              <p className="text-foreground-secondary">
                 Follow the steps in the sidebar to set up {STEP_TITLES[currentStep]}.
               </p>
             </div>
@@ -377,19 +377,19 @@ export default function ConfigurePage() {
             )}
             
             {/* Show progress overview for tool setup steps */}
-            <div className="bg-stone-50 rounded-xl p-6 border border-stone-200">
-              <h3 className="font-semibold text-stone-900 mb-4">Setup Progress</h3>
+            <div className="bg-card rounded-xl p-6 border border-border">
+              <h3 className="font-semibold text-foreground mb-4">Setup Progress</h3>
               <div className="grid grid-cols-2 gap-4">
                 {Object.entries(toolStatus).map(([tool, isComplete]) => (
                   <div
                     key={tool}
                     className={`flex items-center gap-2 p-3 rounded-lg ${
-                      isComplete ? "bg-emerald-50 text-emerald-700" : "bg-stone-50 text-stone-600"
+                      isComplete ? "bg-success/10 text-success" : "bg-background-alt text-foreground-secondary"
                     }`}
                   >
                     <div
                       className={`w-6 h-6 rounded-full flex items-center justify-center ${
-                        isComplete ? "bg-emerald-500 text-white" : "bg-stone-200"
+                        isComplete ? "bg-success text-white" : "bg-border"
                       }`}
                     >
                       {isComplete ? "✓" : ""}
@@ -408,7 +408,7 @@ export default function ConfigurePage() {
   };
 
   return (
-    <div className="flex h-screen bg-stone-50 overflow-hidden">
+    <div className="flex h-screen bg-background overflow-hidden">
       {/* Accordion Sidebar with inline section content */}
       <AccordionSidebar
         currentStep={currentStep}
@@ -422,7 +422,7 @@ export default function ConfigurePage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="flex items-center gap-4 px-6 py-4 border-b border-stone-200 bg-stone-50">
+        <header className="flex items-center gap-4 px-6 py-4 border-b border-border bg-background-alt">
           {/* Mobile menu */}
           <MobileSidebar
             currentStep={currentStep}
@@ -435,10 +435,10 @@ export default function ConfigurePage() {
 
           {/* Breadcrumb */}
           <div className="flex-1">
-            <div className="text-sm text-stone-500">
+            <div className="text-sm text-foreground-muted">
               {getPhaseForStep(currentStep)} › {STEP_TITLES[currentStep]}
             </div>
-            <h1 className="text-lg font-semibold text-stone-900">
+            <h1 className="text-lg font-semibold text-foreground">
               {STEP_TITLES[currentStep]}
             </h1>
           </div>
@@ -466,11 +466,11 @@ export default function ConfigurePage() {
         </main>
 
         {/* Footer with Navigation */}
-        <footer className="flex items-center gap-4 px-6 py-4 border-t border-stone-200 bg-stone-50">
+        <footer className="flex items-center gap-4 px-6 py-4 border-t border-border bg-background-alt">
           {/* Progress */}
           <div className="flex-1 flex items-center gap-4">
             <Progress value={progress} className="flex-1 h-2 max-w-xs" />
-            <span className="text-sm text-stone-500">
+            <span className="text-sm text-foreground-muted">
               {completedSteps.size}/8 complete
             </span>
           </div>

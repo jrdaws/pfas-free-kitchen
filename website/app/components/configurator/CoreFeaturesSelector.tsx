@@ -80,8 +80,8 @@ function FeatureCheckbox({
             className={cn(
               "relative flex items-start gap-3 p-3 rounded-lg border transition-all cursor-pointer",
               isSelected && "bg-[#F97316]/5 border-[#F97316]",
-              !isSelected && canSelect && "hover:bg-stone-50 border-stone-200",
-              !canSelect && "opacity-50 cursor-not-allowed bg-stone-50 border-stone-200"
+              !isSelected && canSelect && "hover:bg-card border-border",
+              !canSelect && "opacity-50 cursor-not-allowed bg-card border-border"
             )}
           >
             {/* Checkbox */}
@@ -89,12 +89,12 @@ function FeatureCheckbox({
               className={cn(
                 "flex-shrink-0 w-5 h-5 rounded border-2 flex items-center justify-center mt-0.5 transition-colors",
                 isSelected && "bg-[#F97316] border-[#F97316]",
-                !isSelected && canSelect && "border-stone-300",
-                !canSelect && "border-stone-200 bg-stone-100"
+                !isSelected && canSelect && "border-border",
+                !canSelect && "border-border bg-stone-100"
               )}
             >
               {isSelected && <Check className="h-3 w-3 text-white" />}
-              {!canSelect && hasUnmetDeps && <Lock className="h-3 w-3 text-stone-400" />}
+              {!canSelect && hasUnmetDeps && <Lock className="h-3 w-3 text-foreground-muted" />}
             </div>
 
             {/* Content */}
@@ -104,7 +104,7 @@ function FeatureCheckbox({
                   className={cn(
                     "font-medium text-sm",
                     isSelected && "text-[#F97316]",
-                    !isSelected && "text-stone-700"
+                    !isSelected && "text-foreground"
                   )}
                 >
                   {feature.label}
@@ -116,7 +116,7 @@ function FeatureCheckbox({
                   {feature.complexity}
                 </Badge>
               </div>
-              <p className="text-xs text-stone-500 mt-1">{feature.description}</p>
+              <p className="text-xs text-foreground-muted mt-1">{feature.description}</p>
               
               {/* Dependencies warning */}
               {hasUnmetDeps && (
@@ -208,10 +208,10 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
   };
 
   return (
-    <Card className={cn("border-stone-200", className)}>
+    <Card className={cn("border-border", className)}>
       <CardHeader className="pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-stone-900">
+          <CardTitle className="text-lg font-bold text-foreground">
             Core Features
           </CardTitle>
           <div className="flex items-center gap-2">
@@ -220,14 +220,14 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
                 variant="ghost"
                 size="sm"
                 onClick={clearFeatures}
-                className="text-xs text-stone-500 hover:text-stone-700"
+                className="text-xs text-foreground-muted hover:text-foreground"
               >
                 Clear all
               </Button>
             )}
           </div>
         </div>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-foreground-muted">
           Select the features your project needs. Dependencies will be
           auto-selected.
         </p>
@@ -241,7 +241,7 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
                 AI Recommendations
               </span>
             </div>
-            <p className="text-xs text-stone-600 mb-2">
+            <p className="text-xs text-foreground-secondary mb-2">
               Based on your project description, we recommend:
             </p>
             <div className="flex flex-wrap gap-1 mb-2">
@@ -251,7 +251,7 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
                   <Badge
                     key={id}
                     variant="outline"
-                    className="text-xs bg-stone-50 border-[#F97316]/30 text-[#F97316]"
+                    className="text-xs bg-card border-[#F97316]/30 text-[#F97316]"
                   >
                     {feature.label}
                   </Badge>
@@ -273,9 +273,9 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
       <CardContent className="pt-0">
         {/* Complexity Summary */}
         {allSelectedIds.length > 0 && (
-          <div className="mb-4 p-3 bg-stone-50 rounded-lg border border-stone-200">
+          <div className="mb-4 p-3 bg-card rounded-lg border border-border">
             <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-stone-700">
+              <span className="text-sm font-medium text-foreground">
                 {allSelectedIds.length} feature{allSelectedIds.length !== 1 ? "s" : ""} selected
               </span>
               <div className="flex items-center gap-2">
@@ -290,7 +290,7 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
                 >
                   {complexity.level} complexity
                 </Badge>
-                <span className="text-xs text-stone-500">
+                <span className="text-xs text-foreground-muted">
                   ~{complexity.estimatedHours}h setup
                 </span>
               </div>
@@ -313,16 +313,16 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
               <AccordionItem
                 key={category.id}
                 value={category.id}
-                className="border border-stone-200 rounded-lg overflow-hidden"
+                className="border border-border rounded-lg overflow-hidden"
               >
-                <AccordionTrigger className="px-4 py-3 hover:bg-stone-50 hover:no-underline">
+                <AccordionTrigger className="px-4 py-3 hover:bg-card hover:no-underline">
                   <div className="flex items-center gap-3 flex-1">
-                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-100 text-stone-600">
+                    <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-stone-100 text-foreground-secondary">
                       {CATEGORY_ICONS[category.icon] || <Database className="h-5 w-5" />}
                     </div>
                     <div className="text-left flex-1">
                       <div className="flex items-center gap-2">
-                        <span className="font-medium text-stone-800">
+                        <span className="font-medium text-foreground">
                           {category.label}
                         </span>
                         {selectedInCategory > 0 && (
@@ -331,7 +331,7 @@ export function CoreFeaturesSelector({ className }: CoreFeaturesSelectorProps) {
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs text-stone-500">{category.description}</p>
+                      <p className="text-xs text-foreground-muted">{category.description}</p>
                     </div>
                   </div>
                 </AccordionTrigger>

@@ -56,10 +56,10 @@ export default function LoginPage() {
 
   if (!isConfigured) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-stone-50 p-4">
-        <Card className="w-full max-w-md">
+      <div className="min-h-screen flex items-center justify-center bg-background p-4">
+        <Card className="w-full max-w-md bg-card border-border">
           <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-[#F97316]">Authentication Not Configured</CardTitle>
+            <CardTitle className="text-2xl font-bold text-primary">Authentication Not Configured</CardTitle>
             <CardDescription>
               Supabase authentication is not set up. Please configure your environment variables.
             </CardDescription>
@@ -75,11 +75,11 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-stone-50 p-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md bg-card border-border">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-[#F97316]">Welcome Back</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl font-bold text-primary">Welcome Back</CardTitle>
+          <CardDescription className="text-foreground-secondary">
             Sign in to continue to your projects
           </CardDescription>
         </CardHeader>
@@ -138,10 +138,10 @@ export default function LoginPage() {
           {/* Divider */}
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
+              <span className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-stone-50 px-2 text-muted-foreground">
+              <span className="bg-card px-2 text-foreground-muted">
                 Or continue with email
               </span>
             </div>
@@ -176,14 +176,14 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <div className="text-sm text-red-500 bg-red-50 p-3 rounded-md">
+              <div className="text-sm text-destructive bg-destructive/10 p-3 rounded-md">
                 {error}
               </div>
             )}
 
             <Button
               type="submit"
-              className="w-full h-11 bg-[#F97316] hover:bg-[#F97316]/90"
+              className="w-full h-11 bg-primary hover:bg-primary-hover text-primary-foreground"
               disabled={loading}
             >
               {loading ? (
@@ -199,9 +199,9 @@ export default function LoginPage() {
         </CardContent>
 
         <CardFooter className="justify-center">
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-foreground-muted">
             Don&apos;t have an account?{" "}
-            <Link href="/signup" className="text-[#F97316] hover:underline font-medium">
+            <Link href="/signup" className="text-primary hover:underline font-medium">
               Create one
             </Link>
           </p>

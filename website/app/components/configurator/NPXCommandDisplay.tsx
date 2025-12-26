@@ -114,10 +114,10 @@ export function NPXCommandDisplay({
   }, [integrations]);
 
   return (
-    <Card className={cn("border-stone-200", className)}>
+    <Card className={cn("border-border", className)}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-lg font-bold text-stone-900 flex items-center gap-2">
+          <CardTitle className="text-lg font-bold text-foreground flex items-center gap-2">
             <Terminal className="h-5 w-5 text-[#F97316]" />
             Your NPX Command
           </CardTitle>
@@ -134,7 +134,7 @@ export function NPXCommandDisplay({
             )}
           </div>
         </div>
-        <p className="text-sm text-stone-500">
+        <p className="text-sm text-foreground-muted">
           Run this command to scaffold your project locally
         </p>
       </CardHeader>
@@ -172,7 +172,7 @@ export function NPXCommandDisplay({
           {Object.keys(integrations).filter((k) => integrations[k]).length > 2 && (
             <button
               onClick={() => setShowFullCommand(!showFullCommand)}
-              className="flex items-center gap-1 mt-2 text-xs text-stone-500 hover:text-stone-700"
+              className="flex items-center gap-1 mt-2 text-xs text-foreground-muted hover:text-foreground"
             >
               {showFullCommand ? (
                 <>
@@ -190,14 +190,14 @@ export function NPXCommandDisplay({
         </div>
 
         {/* Quick Steps */}
-        <div className="bg-stone-50 rounded-lg p-4 border border-stone-200">
-          <h4 className="font-medium text-stone-800 text-sm mb-3">Quick Start</h4>
+        <div className="bg-card rounded-lg p-4 border border-border">
+          <h4 className="font-medium text-foreground text-sm mb-3">Quick Start</h4>
           <ol className="space-y-2">
             <li className="flex items-start gap-2 text-sm">
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[#F97316] text-white text-xs flex items-center justify-center font-medium">
                 1
               </span>
-              <span className="text-stone-600">
+              <span className="text-foreground-secondary">
                 Copy and run the command above in your terminal
               </span>
             </li>
@@ -205,7 +205,7 @@ export function NPXCommandDisplay({
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[#F97316] text-white text-xs flex items-center justify-center font-medium">
                 2
               </span>
-              <span className="text-stone-600">
+              <span className="text-foreground-secondary">
                 Navigate to <code className="text-[#F97316] bg-stone-100 px-1 rounded">{outputDir || "./my-app"}</code>
               </span>
             </li>
@@ -213,7 +213,7 @@ export function NPXCommandDisplay({
               <span className="flex-shrink-0 w-5 h-5 rounded-full bg-[#F97316] text-white text-xs flex items-center justify-center font-medium">
                 3
               </span>
-              <span className="text-stone-600">
+              <span className="text-foreground-secondary">
                 Run <code className="text-[#F97316] bg-stone-100 px-1 rounded">npm install</code> then{" "}
                 <code className="text-[#F97316] bg-stone-100 px-1 rounded">npm run dev</code>
               </span>
@@ -223,11 +223,11 @@ export function NPXCommandDisplay({
 
         {/* Environment Variables */}
         {showEnvVars && envVars.length > 0 && (
-          <div className="border-t border-stone-200 pt-4">
+          <div className="border-t border-border pt-4">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
                 <Key className="h-4 w-4 text-amber-500" />
-                <h4 className="font-medium text-stone-800 text-sm">
+                <h4 className="font-medium text-foreground text-sm">
                   Required Environment Variables
                 </h4>
                 <Badge variant="outline" className="text-xs text-amber-600 border-amber-200 bg-amber-50">
@@ -253,16 +253,16 @@ export function NPXCommandDisplay({
               <pre className="text-stone-300">
                 {envVars.map((v, i) => (
                   <div key={v} className="flex">
-                    <span className="text-stone-500 select-none mr-2">{i + 1}</span>
+                    <span className="text-foreground-muted select-none mr-2">{i + 1}</span>
                     <span className="text-amber-400">{v}</span>
-                    <span className="text-stone-500">=</span>
-                    <span className="text-stone-600">your_value_here</span>
+                    <span className="text-foreground-muted">=</span>
+                    <span className="text-foreground-secondary">your_value_here</span>
                   </div>
                 ))}
               </pre>
             </div>
 
-            <p className="text-xs text-stone-500 mt-2">
+            <p className="text-xs text-foreground-muted mt-2">
               Create a <code className="text-[#F97316]">.env.local</code> file in your project
               root and add these variables.
             </p>
@@ -270,35 +270,35 @@ export function NPXCommandDisplay({
         )}
 
         {/* What's Included Summary */}
-        <div className="border-t border-stone-200 pt-4">
-          <h4 className="font-medium text-stone-800 text-sm mb-3 flex items-center gap-2">
+        <div className="border-t border-border pt-4">
+          <h4 className="font-medium text-foreground text-sm mb-3 flex items-center gap-2">
             <FileCode className="h-4 w-4 text-[#F97316]" />
             What&apos;s Included
           </h4>
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <Check className="h-3 w-3 text-emerald-500" />
               {template.charAt(0).toUpperCase() + template.slice(1)} template
             </div>
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <Check className="h-3 w-3 text-emerald-500" />
               Next.js 15 + React 19
             </div>
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <Check className="h-3 w-3 text-emerald-500" />
               TypeScript configured
             </div>
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <Check className="h-3 w-3 text-emerald-500" />
               Tailwind CSS styling
             </div>
             {integrationCount > 0 && (
-              <div className="flex items-center gap-2 text-stone-600">
+              <div className="flex items-center gap-2 text-foreground-secondary">
                 <Check className="h-3 w-3 text-emerald-500" />
                 {integrationCount} integration{integrationCount !== 1 ? "s" : ""} ready
               </div>
             )}
-            <div className="flex items-center gap-2 text-stone-600">
+            <div className="flex items-center gap-2 text-foreground-secondary">
               <Check className="h-3 w-3 text-emerald-500" />
               .dd/ context files
             </div>

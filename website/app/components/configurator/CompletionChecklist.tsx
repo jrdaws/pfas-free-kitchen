@@ -269,11 +269,11 @@ export function CompletionChecklist({
         {/* Progress Bar */}
         <div className="mt-4 space-y-2">
           <div className="flex items-center justify-between text-sm">
-            <span className="text-stone-600">Overall Progress</span>
+            <span className="text-foreground-secondary">Overall Progress</span>
             <span className="font-medium">{stats.progress}%</span>
           </div>
           <Progress value={stats.progress} className="h-2" />
-          <div className="flex items-center gap-4 text-xs text-stone-500">
+          <div className="flex items-center gap-4 text-xs text-foreground-muted">
             <span className="flex items-center gap-1">
               <Check className="h-3 w-3 text-emerald-500" />
               {stats.complete} complete
@@ -343,7 +343,7 @@ export function CompletionChecklist({
                         categoryStatus === "complete" && "bg-emerald-100 text-emerald-600",
                         categoryStatus === "error" && "bg-red-100 text-red-600",
                         categoryStatus === "warning" && "bg-amber-100 text-amber-600",
-                        categoryStatus === "incomplete" && "bg-stone-100 text-stone-600"
+                        categoryStatus === "incomplete" && "bg-stone-100 text-foreground-secondary"
                       )}
                     >
                       {categoryStatus === "complete" ? (
@@ -355,7 +355,7 @@ export function CompletionChecklist({
 
                     <div className="flex-1 text-left">
                       <div className="font-medium">{category.label}</div>
-                      <div className="text-xs text-stone-500">
+                      <div className="text-xs text-foreground-muted">
                         {completeCount}/{categoryItems.length} complete
                       </div>
                     </div>
@@ -379,7 +379,7 @@ export function CompletionChecklist({
                           item.status === "complete" && "bg-emerald-50/50",
                           item.status === "error" && "bg-red-50",
                           item.status === "warning" && "bg-amber-50",
-                          item.status === "incomplete" && "bg-stone-50"
+                          item.status === "incomplete" && "bg-card"
                         )}
                       >
                         {getStatusIcon(item.status)}
@@ -389,9 +389,9 @@ export function CompletionChecklist({
                             <span className="font-medium text-sm">{item.label}</span>
                             {getSeverityBadge(item.severity)}
                           </div>
-                          <p className="text-xs text-stone-500 mt-0.5">{item.description}</p>
+                          <p className="text-xs text-foreground-muted mt-0.5">{item.description}</p>
                           {item.details && (
-                            <p className="text-xs text-stone-400 mt-1 italic">{item.details}</p>
+                            <p className="text-xs text-foreground-muted mt-1 italic">{item.details}</p>
                           )}
                         </div>
 
@@ -443,7 +443,7 @@ export function CompletionChecklist({
                       <span className="font-medium text-sm">{suggestion.title}</span>
                       {getImpactBadge(suggestion.impact)}
                     </div>
-                    <p className="text-xs text-stone-500 mt-0.5">{suggestion.description}</p>
+                    <p className="text-xs text-foreground-muted mt-0.5">{suggestion.description}</p>
                   </div>
 
                   {suggestion.action && (
@@ -469,14 +469,14 @@ export function CompletionChecklist({
         {/* Export Button */}
         <div className="pt-4 border-t">
           <div className="flex items-center justify-between">
-            <div className="text-sm text-stone-500">
+            <div className="text-sm text-foreground-muted">
               {stats.isReady ? (
                 <span className="text-emerald-600 flex items-center gap-1">
                   <Check className="h-4 w-4" />
                   All required items complete
                 </span>
               ) : (
-                <span className="text-stone-500">
+                <span className="text-foreground-muted">
                   Complete {stats.requiredTotal - stats.requiredComplete} more required item
                   {stats.requiredTotal - stats.requiredComplete > 1 ? "s" : ""} to export
                 </span>

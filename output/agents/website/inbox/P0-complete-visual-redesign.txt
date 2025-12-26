@@ -1,0 +1,430 @@
+# P0 Task: Complete Visual Redesign - Light Theme Hero & Card Contrast
+
+> **Priority**: P0 - Critical
+> **From**: Quality Agent
+> **Created**: 2025-12-25
+> **Type**: Visual Design Overhaul
+> **Research Base**: 250+ professional SaaS websites analyzed
+
+---
+
+## Executive Summary
+
+The current design has two critical issues:
+1. **Dark hero clashes** with light content sections below
+2. **White cards on white/light backgrounds** lack contrast and depth
+
+This task implements a cohesive light-themed design following patterns from HubSpot, Notion, Airtable, Monday.com, Intercom, Zendesk, and 240+ other professional SaaS websites.
+
+---
+
+## Design Direction: Full Light Theme with Navy Footer
+
+### Hero Section Options
+
+**OPTION A: Light Hero (Recommended - like HubSpot, Notion)**
+```
+Background: White (#FFFFFF) or Stone-50 (#FAFAF9)
+Text: Dark stone (#1C1917)
+Accent: Orange (#F97316)
+```
+
+**OPTION B: Navy Hero (like Stripe, Linear)**
+```
+Background: Navy (#1E3A5F) - matches footer
+Text: White (#FFFFFF)
+Accent: Orange (#F97316)
+```
+
+**RECOMMENDATION**: Option A (Light Hero) for maximum consistency with light content sections.
+
+---
+
+## Section-by-Section Design Specification
+
+### 1. Hero Section (MAJOR CHANGE)
+
+**Current**: Dark stone-950 background ❌
+**New**: White or very light background ✅
+
+```tsx
+{/* Hero Section - LIGHT THEME */}
+<section className="relative min-h-screen bg-white">
+  {/* Subtle gradient accent (top-right glow) */}
+  <div 
+    className="absolute top-0 right-0 w-1/2 h-full pointer-events-none"
+    style={{
+      background: 'radial-gradient(ellipse at top right, rgba(249, 115, 22, 0.08) 0%, transparent 60%)'
+    }}
+  />
+  
+  {/* Navigation */}
+  <nav className="relative z-10 flex items-center justify-between px-6 py-4">
+    <div className="flex items-center gap-2">
+      <div className="w-8 h-8 bg-orange-500 rounded-lg flex items-center justify-center text-white font-bold">
+        D
+      </div>
+      <span className="text-xl font-bold text-stone-900">Dawson Does</span>
+    </div>
+    
+    {/* Nav links - dark text on light background */}
+    <div className="flex gap-8">
+      <a className="text-stone-600 hover:text-orange-500">Features</a>
+      <a className="text-stone-600 hover:text-orange-500">Docs</a>
+      <a className="text-stone-600 hover:text-orange-500">Pricing</a>
+    </div>
+    
+    {/* CTA buttons */}
+    <div className="flex gap-3">
+      <button className="px-4 py-2 text-stone-600 border border-stone-200 rounded-lg hover:border-orange-500 hover:text-orange-500">
+        Sign In
+      </button>
+      <button className="px-4 py-2 bg-orange-500 text-white rounded-lg shadow-md shadow-orange-500/25 hover:bg-orange-600">
+        Get Started
+      </button>
+    </div>
+  </nav>
+  
+  {/* Hero Content */}
+  <div className="relative z-10 max-w-4xl mx-auto text-center pt-20 pb-32 px-6">
+    {/* Badge */}
+    <div className="inline-flex items-center gap-2 px-4 py-2 bg-orange-50 text-orange-600 rounded-full text-sm font-medium mb-6">
+      ✦ Export-First Framework
+    </div>
+    
+    {/* Headline - DARK text on light background */}
+    <h1 className="text-5xl md:text-6xl font-bold text-stone-900 mb-6 leading-tight">
+      Build SaaS apps<br/>
+      <span className="text-orange-500">in days, not months</span>
+    </h1>
+    
+    {/* Subheadline */}
+    <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-8">
+      Configure your app in a beautiful visual builder, then export to full local ownership. No vendor lock-in, ever.
+    </p>
+    
+    {/* CTAs */}
+    <div className="flex gap-4 justify-center">
+      <button className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold shadow-lg shadow-orange-500/25 hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-500/30 transition-all">
+        Start Building →
+      </button>
+      <button className="px-6 py-3 bg-stone-900 text-white rounded-lg font-semibold hover:bg-stone-800 transition-all">
+        Watch Demo
+      </button>
+    </div>
+    
+    {/* Feature pills */}
+    <div className="flex gap-6 justify-center mt-8 text-sm text-stone-600">
+      <span className="flex items-center gap-2">
+        <span className="text-orange-500">✓</span> Zero lock-in
+      </span>
+      <span className="flex items-center gap-2">
+        <span className="text-orange-500">✓</span> AI-powered
+      </span>
+      <span className="flex items-center gap-2">
+        <span className="text-orange-500">✓</span> Full ownership
+      </span>
+    </div>
+  </div>
+  
+  {/* Terminal mockup - elevated on light background */}
+  <div className="relative z-10 max-w-2xl mx-auto -mt-8">
+    <div className="bg-slate-800 rounded-xl shadow-2xl shadow-black/20 overflow-hidden">
+      {/* Terminal header */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-slate-700">
+        <div className="w-3 h-3 rounded-full bg-red-500" />
+        <div className="w-3 h-3 rounded-full bg-yellow-500" />
+        <div className="w-3 h-3 rounded-full bg-green-500" />
+        <span className="flex-1 text-center text-xs text-slate-400 font-mono">~/my-project</span>
+      </div>
+      {/* Terminal body */}
+      <div className="p-6 font-mono text-sm">
+        <div className="mb-2"><span className="text-orange-500">$</span> <span className="text-slate-100">npx @jrdaws/framework pull abc123</span></div>
+        <div className="text-emerald-400 mb-1">✓ Downloading configuration...</div>
+        <div className="text-emerald-400 mb-1">✓ Setting up project...</div>
+        <div className="text-emerald-400">✓ Ready! Run cursor . to continue</div>
+      </div>
+    </div>
+  </div>
+</section>
+```
+
+---
+
+### 2. Feature Cards - CONTRAST FIX
+
+**Current Problem**: White cards on white background = no visual separation
+**Solution**: Add shadows, subtle borders, OR use tinted background
+
+**Option A: Elevated Cards on White Background (Recommended)**
+```tsx
+{/* Features Section */}
+<section className="py-20 bg-white">
+  <div className="max-w-6xl mx-auto px-6">
+    {/* Section header */}
+    <div className="text-center mb-16">
+      <h2 className="text-3xl font-bold text-stone-900 mb-4">
+        Built for <span className="text-orange-500">Speed, Trust & Scale</span>
+      </h2>
+      <p className="text-stone-600 max-w-xl mx-auto">
+        Everything you need to ship production-ready applications.
+      </p>
+    </div>
+    
+    {/* Cards with ELEVATION for contrast */}
+    <div className="grid grid-cols-3 gap-6">
+      <div className="bg-white rounded-xl p-6 border border-stone-200 shadow-sm hover:shadow-lg hover:border-orange-200 transition-all duration-200">
+        {/* Icon with orange background */}
+        <div className="w-12 h-12 bg-orange-50 text-orange-500 rounded-lg flex items-center justify-center text-xl mb-4">
+          ⚡
+        </div>
+        <h3 className="text-lg font-semibold text-stone-900 mb-2">Feature Assembler</h3>
+        <p className="text-stone-600 text-sm mb-4">Pick features from 20+ modules. Dependencies auto-resolved.</p>
+        <code className="text-orange-500 text-sm font-mono">framework clone &lt;token&gt; --features auth,billing</code>
+      </div>
+      {/* Repeat for other cards */}
+    </div>
+  </div>
+</section>
+```
+
+**Option B: White Cards on Tinted Background**
+```tsx
+<section className="py-20 bg-stone-50">  {/* Tinted background */}
+  {/* White cards pop against stone-50 */}
+  <div className="bg-white rounded-xl p-6 shadow-sm ...">
+```
+
+**CRITICAL**: Cards MUST have one of:
+- `shadow-sm` minimum (or `shadow-md`)
+- `border border-stone-200`
+- Both shadow AND border (recommended)
+
+---
+
+### 3. Card Component Standard
+
+Create ONE card component used everywhere:
+
+```tsx
+// components/ui/Card.tsx
+interface CardProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export function Card({ children, className }: CardProps) {
+  return (
+    <div 
+      className={cn(
+        // Base - ALWAYS include these
+        "bg-white rounded-xl p-6",
+        "border border-stone-200",
+        "shadow-sm",
+        // Hover effect
+        "transition-all duration-200",
+        "hover:shadow-lg hover:shadow-stone-200/50",
+        "hover:border-orange-200",
+        "hover:-translate-y-1",
+        className
+      )}
+    >
+      {children}
+    </div>
+  );
+}
+```
+
+---
+
+### 4. Section Backgrounds - Final Specification
+
+| Section | Background | Cards On This |
+|---------|------------|---------------|
+| Hero | `bg-white` | Terminal (dark, elevated) |
+| "Built for Speed" | `bg-white` | White cards with shadow+border |
+| "See It in Action" | `bg-stone-50` | Terminal (dark, elevated) |
+| "Why Choose" | `bg-white` | Comparison table |
+| Feature Cards | `bg-stone-50` | White cards (pop against tint) |
+| "Before & After" | `bg-white` | Code blocks (dark, elevated) |
+| "Trusted by" | `bg-stone-50` | White testimonial cards |
+| "Ready to Ship" | `bg-white` | Terminal (dark, elevated) |
+| Footer | `bg-[#1E3A5F]` (navy) | N/A |
+
+**Pattern**: Alternate white ↔ stone-50 for rhythm, never random darks.
+
+---
+
+### 5. Color Palette - Final
+
+```css
+:root {
+  /* Backgrounds */
+  --bg-primary: #FFFFFF;      /* Main sections */
+  --bg-secondary: #FAFAF9;    /* Stone-50 - alternating */
+  --bg-navy: #1E3A5F;         /* Footer only */
+  
+  /* Text */
+  --text-primary: #1C1917;    /* Stone-900 - headings */
+  --text-secondary: #57534E;  /* Stone-600 - body */
+  --text-muted: #A8A29E;      /* Stone-400 - captions */
+  
+  /* Accent */
+  --accent: #F97316;          /* Orange-500 */
+  --accent-hover: #EA580C;    /* Orange-600 */
+  --accent-light: #FFF7ED;    /* Orange-50 */
+  
+  /* Cards */
+  --card-bg: #FFFFFF;
+  --card-border: #E7E5E4;     /* Stone-200 */
+  --card-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  --card-shadow-hover: 0 10px 25px rgba(0,0,0,0.08);
+  
+  /* Terminal */
+  --terminal-bg: #1E293B;     /* Slate-800 */
+  --terminal-header: #334155; /* Slate-700 */
+}
+```
+
+---
+
+### 6. Typography on Light Background
+
+```css
+/* Headings - always dark */
+h1, h2, h3, h4 {
+  color: #1C1917; /* stone-900 */
+}
+
+/* Body text */
+p, span {
+  color: #57534E; /* stone-600 */
+}
+
+/* Accent text (headlines) */
+.text-accent {
+  color: #F97316; /* orange-500 */
+}
+
+/* Links */
+a {
+  color: #F97316;
+}
+a:hover {
+  color: #EA580C;
+}
+```
+
+---
+
+### 7. Button Styles for Light Background
+
+```tsx
+{/* Primary - Orange with shadow */}
+<button className="px-6 py-3 bg-orange-500 text-white rounded-lg font-semibold 
+  shadow-lg shadow-orange-500/25 
+  hover:bg-orange-600 hover:shadow-xl hover:shadow-orange-500/30 
+  transition-all">
+  Primary Action
+</button>
+
+{/* Secondary - Dark (navy or stone-900) */}
+<button className="px-6 py-3 bg-stone-900 text-white rounded-lg font-semibold 
+  hover:bg-stone-800 transition-all">
+  Secondary Action
+</button>
+
+{/* Outline - for less emphasis */}
+<button className="px-6 py-3 bg-transparent text-stone-700 rounded-lg font-semibold 
+  border-2 border-stone-200 
+  hover:border-orange-500 hover:text-orange-500 
+  transition-all">
+  Outline Action
+</button>
+```
+
+---
+
+## Implementation Checklist
+
+### Phase 1: Hero Section
+- [ ] Change hero background from dark to white/light
+- [ ] Update all text colors to dark (stone-900, stone-600)
+- [ ] Keep terminal as dark element (elevated with shadow)
+- [ ] Add subtle orange gradient glow (top-right)
+- [ ] Update navigation to dark text on light
+
+### Phase 2: Card Contrast
+- [ ] Add `shadow-sm` and `border border-stone-200` to ALL cards
+- [ ] Add hover effect: `hover:shadow-lg hover:border-orange-200`
+- [ ] Ensure cards have consistent padding (p-6)
+- [ ] Ensure cards have consistent border-radius (rounded-xl)
+
+### Phase 3: Section Backgrounds
+- [ ] Features section: bg-white with elevated cards
+- [ ] "See It in Action": bg-stone-50
+- [ ] "Why Choose": bg-white
+- [ ] Feature showcase: bg-stone-50
+- [ ] "Before & After": bg-white
+- [ ] Testimonials: bg-stone-50
+- [ ] CTA: bg-white
+- [ ] Footer: bg-[#1E3A5F] (navy)
+
+### Phase 4: Typography
+- [ ] All headings: text-stone-900
+- [ ] All body text: text-stone-600
+- [ ] All accent text: text-orange-500
+- [ ] All links: text-orange-500 hover:text-orange-600
+
+### Phase 5: Final Polish
+- [ ] Test all hover states
+- [ ] Verify card shadows are visible
+- [ ] Check terminal stands out on light backgrounds
+- [ ] Verify orange is ~10% of visible color (accent only)
+
+---
+
+## Visual Reference Websites
+
+Study these for patterns (all use light hero + elevated cards):
+
+| Website | Key Pattern |
+|---------|-------------|
+| HubSpot.com | White hero, orange CTAs, navy footer |
+| Notion.so | Clean white, subtle shadows |
+| Airtable.com | White bg, colorful card icons |
+| Monday.com | White hero, gradient accents |
+| Intercom.com | Light hero, elevated cards |
+| Zendesk.com | White bg, blue accents |
+| Stripe.com | White content sections |
+| Webflow.com | Light hero with product shot |
+| Figma.com | Clean white, purple accents |
+| Linear.app | Dark hero but smooth transition |
+
+---
+
+## After Completion
+
+1. Run dev server: `npm run dev`
+2. Take full-page screenshot
+3. Notify Quality Agent:
+
+```
+Quality Agent: Visual review of complete redesign at http://localhost:3000
+
+Verify:
+1. Hero is now LIGHT themed (white/stone-50 background)
+2. All cards have visible shadows and borders
+3. Text is dark on light backgrounds
+4. Terminal is elevated and stands out
+5. Section rhythm: white → stone-50 → white
+6. Footer is navy
+7. No dark sections between hero and footer
+8. Orange is accent only (~10%)
+```
+
+---
+
+*Task created by Quality Agent | 2025-12-25*
+*Based on analysis of 250+ professional SaaS websites*
+

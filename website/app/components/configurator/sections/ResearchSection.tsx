@@ -45,7 +45,7 @@ export function ResearchSection({
     <div className="space-y-4">
       {/* Domain Input */}
       <div className="space-y-2">
-        <Label htmlFor="domain" className="text-sm font-medium text-stone-700">
+        <Label htmlFor="domain" className="text-sm font-medium text-foreground-secondary">
           What domain is your project in?
         </Label>
         <Input
@@ -53,15 +53,15 @@ export function ResearchSection({
           value={domain}
           onChange={(e) => onDomainChange(e.target.value)}
           placeholder="e.g., E-commerce, SaaS, Education..."
-          className="h-10"
+          className="h-10 bg-background-alt border-border text-foreground placeholder:text-foreground-muted"
         />
       </div>
 
       {/* Inspiration Toggle */}
       <div className="flex items-center justify-between py-2">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-stone-500" />
-          <Label htmlFor="inspiration-toggle" className="text-sm text-stone-600 cursor-pointer">
+          <Sparkles className="h-4 w-4 text-foreground-muted" />
+          <Label htmlFor="inspiration-toggle" className="text-sm text-foreground-secondary cursor-pointer">
             Add inspiration websites
           </Label>
         </div>
@@ -81,7 +81,7 @@ export function ResearchSection({
               <Input
                 value={url}
                 readOnly
-                className="h-9 text-sm bg-stone-50"
+                className="h-9 text-sm bg-background-alt border-border text-foreground"
               />
               <Button
                 variant="ghost"
@@ -89,7 +89,7 @@ export function ResearchSection({
                 className="h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity"
                 onClick={() => removeUrl(url)}
               >
-                <X className="h-4 w-4 text-stone-400" />
+                <X className="h-4 w-4 text-foreground-muted" />
               </Button>
             </div>
           ))}
@@ -100,13 +100,13 @@ export function ResearchSection({
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
               placeholder="https://example.com"
-              className="h-9 text-sm"
+              className="h-9 text-sm bg-background-alt border-border text-foreground placeholder:text-foreground-muted"
               onKeyDown={(e) => e.key === "Enter" && addUrl()}
             />
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9"
+              className="h-9 w-9 border-border hover:bg-background-alt"
               onClick={addUrl}
               disabled={!newUrl.trim()}
             >
@@ -114,7 +114,7 @@ export function ResearchSection({
             </Button>
           </div>
 
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-foreground-muted">
             Add websites that inspire your project&apos;s design or features
           </p>
         </div>
@@ -125,7 +125,7 @@ export function ResearchSection({
         <Button
           variant="outline"
           size="sm"
-          className="text-sm"
+          className="text-sm border-border hover:bg-background-alt"
           onClick={onShowMe}
         >
           Show Me
@@ -133,7 +133,7 @@ export function ResearchSection({
         </Button>
         <Button
           size="sm"
-          className="text-sm bg-[#F97316] hover:bg-[#EA580C]"
+          className="text-sm bg-primary hover:bg-primary-hover text-primary-foreground"
           onClick={onStartResearch}
           disabled={isLoading || !domain.trim()}
         >

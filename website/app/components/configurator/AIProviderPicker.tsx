@@ -337,11 +337,11 @@ export function AIProviderPicker({
                           </Badge>
                         )}
                       </div>
-                      <p className="text-sm text-stone-500">{provider.description}</p>
+                      <p className="text-sm text-foreground-muted">{provider.description}</p>
                     </div>
 
                     <div className="text-right">
-                      <div className="text-sm text-stone-500">
+                      <div className="text-sm text-foreground-muted">
                         {provider.pricing.free ? (
                           <span className="text-emerald-600 font-medium">Free tier available</span>
                         ) : (
@@ -401,7 +401,7 @@ export function AIProviderPicker({
                                 {validating === provider.id ? "Validating..." : "Save Key"}
                               </Button>
                             </div>
-                            <p className="text-xs text-stone-500">
+                            <p className="text-xs text-foreground-muted">
                               Get your API key from{" "}
                               <a
                                 href={provider.signupUrl}
@@ -424,16 +424,16 @@ export function AIProviderPicker({
                           Pricing
                         </Label>
                         <div className="grid grid-cols-3 gap-4 text-sm">
-                          <div className="bg-stone-50 rounded-lg p-3">
-                            <p className="text-stone-500 text-xs">Input tokens</p>
+                          <div className="bg-card rounded-lg p-3">
+                            <p className="text-foreground-muted text-xs">Input tokens</p>
                             <p className="font-semibold">{provider.pricing.inputPer1M}/1M</p>
                           </div>
-                          <div className="bg-stone-50 rounded-lg p-3">
-                            <p className="text-stone-500 text-xs">Output tokens</p>
+                          <div className="bg-card rounded-lg p-3">
+                            <p className="text-foreground-muted text-xs">Output tokens</p>
                             <p className="font-semibold">{provider.pricing.outputPer1M}/1M</p>
                           </div>
-                          <div className="bg-stone-50 rounded-lg p-3">
-                            <p className="text-stone-500 text-xs">Free credits</p>
+                          <div className="bg-card rounded-lg p-3">
+                            <p className="text-foreground-muted text-xs">Free credits</p>
                             <p className="font-semibold text-emerald-600">
                               {provider.pricing.freeCredits || "None"}
                             </p>
@@ -451,20 +451,20 @@ export function AIProviderPicker({
                           {provider.models.map((model) => (
                             <div
                               key={model.id}
-                              className="flex items-center justify-between p-3 bg-stone-50 rounded-lg"
+                              className="flex items-center justify-between p-3 bg-card rounded-lg"
                             >
                               <div>
                                 <div className="flex items-center gap-2">
                                   <span className="font-medium text-sm">{model.name}</span>
                                   {getTierBadge(model.tier)}
                                 </div>
-                                <p className="text-xs text-stone-500">{model.description}</p>
+                                <p className="text-xs text-foreground-muted">{model.description}</p>
                               </div>
                               <TooltipProvider>
                                 <Tooltip>
                                   <TooltipTrigger asChild>
                                     <div className="text-right">
-                                      <p className="text-xs text-stone-400">Context</p>
+                                      <p className="text-xs text-foreground-muted">Context</p>
                                       <p className="font-mono text-sm">{model.contextWindow}</p>
                                     </div>
                                   </TooltipTrigger>
@@ -520,21 +520,21 @@ export function AIProviderPicker({
                 </thead>
                 <tbody>
                   {/* Free Tier */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Free Tier</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
                         {p.pricing.free ? (
                           <Check className="h-5 w-5 text-emerald-500 mx-auto" />
                         ) : (
-                          <span className="text-stone-400">—</span>
+                          <span className="text-foreground-muted">—</span>
                         )}
                       </td>
                     ))}
                   </tr>
                   
                   {/* Input Pricing */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Input (per 1M tokens)</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3 font-mono">
@@ -544,7 +544,7 @@ export function AIProviderPicker({
                   </tr>
 
                   {/* Output Pricing */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Output (per 1M tokens)</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3 font-mono">
@@ -554,7 +554,7 @@ export function AIProviderPicker({
                   </tr>
 
                   {/* Max Context */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Max Context Window</td>
                     {AI_PROVIDERS.map((p) => {
                       const maxContext = p.models.reduce((max, m) => {
@@ -570,7 +570,7 @@ export function AIProviderPicker({
                   </tr>
 
                   {/* Model Count */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Available Models</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
@@ -580,7 +580,7 @@ export function AIProviderPicker({
                   </tr>
 
                   {/* Code Generation */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Code Generation</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
@@ -596,7 +596,7 @@ export function AIProviderPicker({
                   </tr>
 
                   {/* Multimodal */}
-                  <tr className="border-b hover:bg-stone-50">
+                  <tr className="border-b hover:bg-card">
                     <td className="p-3 font-medium">Multimodal (Vision)</td>
                     {AI_PROVIDERS.map((p) => (
                       <td key={p.id} className="text-center p-3">
@@ -612,7 +612,7 @@ export function AIProviderPicker({
             <Alert className="mt-6 bg-primary/5 border-primary/20">
               <Info className="h-4 w-4 text-primary" />
               <AlertTitle className="text-primary">Our Recommendation</AlertTitle>
-              <AlertDescription className="text-stone-600">
+              <AlertDescription className="text-foreground-secondary">
                 For the Dawson Does Framework, we recommend <strong>Anthropic Claude</strong> for 
                 its superior code generation capabilities and extended thinking features. 
                 <strong>Google Gemini</strong> is a great budget-friendly option with a generous free tier.

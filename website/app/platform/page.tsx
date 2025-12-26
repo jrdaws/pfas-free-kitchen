@@ -203,22 +203,22 @@ export default function PlatformPage() {
   const [activeStep, setActiveStep] = useState(0);
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-stone-50/80 backdrop-blur-md border-b border-stone-100">
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#F97316] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <Code2 className="h-5 w-5 text-white" />
             </div>
-            <span className="font-bold text-stone-900">Framework</span>
+            <span className="font-bold text-foreground">Framework</span>
           </Link>
           
           <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-stone-600 hover:text-stone-900 transition">Features</a>
-            <a href="#how-it-works" className="text-sm text-stone-600 hover:text-stone-900 transition">How it Works</a>
-            <a href="#testimonials" className="text-sm text-stone-600 hover:text-stone-900 transition">Testimonials</a>
-            <Link href="/projects" className="text-sm text-stone-600 hover:text-stone-900 transition">My Projects</Link>
+            <a href="#features" className="text-sm text-foreground-secondary hover:text-foreground transition">Features</a>
+            <a href="#how-it-works" className="text-sm text-foreground-secondary hover:text-foreground transition">How it Works</a>
+            <a href="#testimonials" className="text-sm text-foreground-secondary hover:text-foreground transition">Testimonials</a>
+            <Link href="/projects" className="text-sm text-foreground-secondary hover:text-foreground transition">My Projects</Link>
           </div>
 
           <div className="flex items-center gap-3">
@@ -226,7 +226,7 @@ export default function PlatformPage() {
               <Button variant="ghost" size="sm">Sign In</Button>
             </Link>
             <Link href="/configure">
-              <Button size="sm" className="bg-[#F97316] hover:bg-[#F97316]/90">
+              <Button size="sm" className="bg-primary hover:bg-primary-hover text-primary-foreground">
                 Start Building
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
@@ -238,37 +238,37 @@ export default function PlatformPage() {
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 relative overflow-hidden">
         {/* Background gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-50/50 to-white pointer-events-none" />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#F97316]/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-orange-400/5 rounded-full blur-3xl" />
+        <div className="absolute inset-0 bg-gradient-to-b from-[hsl(var(--hero-bg))] to-background pointer-events-none" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-3xl" />
 
         <div className="max-w-6xl mx-auto relative z-10">
           <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-[#F97316]/10 text-[#F97316] hover:bg-[#F97316]/20 border-0">
+            <Badge className="mb-6 bg-primary/10 text-primary hover:bg-primary/20 border-0">
               <Sparkles className="mr-1 h-3 w-3" />
               Now with AI Context Generation
             </Badge>
 
-            <h1 className="text-5xl md:text-7xl font-extrabold text-stone-900 mb-6 leading-tight tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-extrabold text-foreground mb-6 leading-tight tracking-tight">
               Build Production Apps
               <br />
-              <span className="text-[#F97316]">In Minutes, Not Months</span>
+              <span className="text-primary">In Minutes, Not Months</span>
             </h1>
 
-            <p className="text-xl text-stone-600 mb-10 max-w-2xl mx-auto">
+            <p className="text-xl text-foreground-secondary mb-10 max-w-2xl mx-auto">
               Visual project configurator with battle-tested integrations. 
               Export complete ownership via NPX. Zero vendor lock-in.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12">
               <Link href="/configure">
-                <Button size="lg" className="bg-[#F97316] hover:bg-[#F97316]/90 h-14 px-8 text-lg">
+                <Button size="lg" className="bg-primary hover:bg-primary-hover text-primary-foreground h-14 px-8 text-lg">
                   Start Building Free
                   <ArrowRight className="ml-2 h-5 w-5" />
                 </Button>
               </Link>
-              <Button size="lg" variant="outline" className="h-14 px-8 text-lg group">
-                <Play className="mr-2 h-5 w-5 group-hover:text-[#F97316] transition" />
+              <Button size="lg" variant="outline" className="h-14 px-8 text-lg group border-border">
+                <Play className="mr-2 h-5 w-5 group-hover:text-primary transition" />
                 Watch Demo
               </Button>
             </div>
@@ -277,8 +277,8 @@ export default function PlatformPage() {
             <div className="flex flex-wrap justify-center gap-8 md:gap-16">
               {stats.map((stat) => (
                 <div key={stat.label} className="text-center">
-                  <div className="text-3xl font-bold text-stone-900">{stat.value}</div>
-                  <div className="text-sm text-stone-500">{stat.label}</div>
+                  <div className="text-3xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-sm text-foreground-muted">{stat.label}</div>
                 </div>
               ))}
             </div>
@@ -289,11 +289,11 @@ export default function PlatformPage() {
                 href="https://github.com/jrdaws/dawson-does-framework"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-stone-900 text-white rounded-full text-sm font-medium hover:bg-stone-800 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-card text-foreground rounded-full text-sm font-medium hover:bg-background-alt transition-colors border border-border"
               >
                 <Github className="h-4 w-4" />
                 <span>Star on GitHub</span>
-                <span className="px-2 py-0.5 bg-stone-50/20 rounded-full text-xs">⭐ 128+</span>
+                <span className="px-2 py-0.5 bg-primary/20 rounded-full text-xs">⭐ 128+</span>
               </a>
               <a
                 href="https://www.npmjs.com/package/@jrdaws/framework"
@@ -303,7 +303,7 @@ export default function PlatformPage() {
               >
                 <Package className="h-4 w-4" />
                 <span>npm</span>
-                <span className="px-2 py-0.5 bg-stone-50/20 rounded-full text-xs">
+                <span className="px-2 py-0.5 bg-white/20 rounded-full text-xs">
                   <Download className="inline h-3 w-3 mr-1" />
                   1.2k/week
                 </span>
@@ -313,53 +313,53 @@ export default function PlatformPage() {
 
           {/* Hero Visual */}
           <div className="mt-16 relative">
-            <div className="bg-stone-900 rounded-2xl shadow-2xl overflow-hidden border border-stone-800">
+            <div className="bg-card rounded-2xl shadow-2xl overflow-hidden border border-border">
               {/* Browser chrome */}
-              <div className="flex items-center gap-2 px-4 py-3 bg-stone-800 border-b border-stone-700">
+              <div className="flex items-center gap-2 px-4 py-3 bg-background-alt border-b border-border">
                 <div className="flex gap-1.5">
                   <div className="w-3 h-3 rounded-full bg-red-500" />
                   <div className="w-3 h-3 rounded-full bg-yellow-500" />
                   <div className="w-3 h-3 rounded-full bg-green-500" />
                 </div>
                 <div className="flex-1 mx-4">
-                  <div className="bg-stone-700 rounded-md px-3 py-1.5 text-xs text-stone-400 text-center">
+                  <div className="bg-border rounded-md px-3 py-1.5 text-xs text-foreground-muted text-center">
                     framework.dawson.dev/configure
                   </div>
                 </div>
               </div>
               
               {/* Screenshot placeholder */}
-              <div className="aspect-[16/9] bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 flex items-center justify-center">
+              <div className="aspect-[16/9] bg-gradient-to-br from-background via-card to-background flex items-center justify-center">
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-2xl bg-[#F97316]/20 flex items-center justify-center mx-auto mb-4">
-                    <Sparkles className="h-8 w-8 text-[#F97316]" />
+                  <div className="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
+                    <Sparkles className="h-8 w-8 text-primary" />
                   </div>
-                  <p className="text-stone-400 text-sm">Visual Configurator Preview</p>
+                  <p className="text-foreground-muted text-sm">Visual Configurator Preview</p>
                 </div>
               </div>
             </div>
             
             {/* Floating badges */}
-            <div className="absolute -left-4 top-1/4 bg-stone-50 rounded-xl shadow-xl p-4 border border-stone-200 hidden lg:block">
+            <div className="absolute -left-4 top-1/4 bg-card rounded-xl shadow-xl p-4 border border-border hidden lg:block">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-                  <Check className="h-5 w-5 text-emerald-500" />
+                <div className="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
+                  <Check className="h-5 w-5 text-success" />
                 </div>
                 <div>
-                  <div className="font-semibold text-stone-900">Auth Ready</div>
-                  <div className="text-xs text-stone-500">Supabase configured</div>
+                  <div className="font-semibold text-foreground">Auth Ready</div>
+                  <div className="text-xs text-foreground-muted">Supabase configured</div>
                 </div>
               </div>
             </div>
             
-            <div className="absolute -right-4 top-1/3 bg-stone-50 rounded-xl shadow-xl p-4 border border-stone-200 hidden lg:block">
+            <div className="absolute -right-4 top-1/3 bg-card rounded-xl shadow-xl p-4 border border-border hidden lg:block">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-lg bg-orange-400/10 flex items-center justify-center">
-                  <Zap className="h-5 w-5 text-orange-400" />
+                <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <div>
-                  <div className="font-semibold text-stone-900">Payments Ready</div>
-                  <div className="text-xs text-stone-500">Stripe integrated</div>
+                  <div className="font-semibold text-foreground">Payments Ready</div>
+                  <div className="text-xs text-foreground-muted">Stripe integrated</div>
                 </div>
               </div>
             </div>
@@ -368,10 +368,10 @@ export default function PlatformPage() {
       </section>
 
       {/* Trusted By Section */}
-      <section className="py-16 px-4 border-b border-stone-100">
+      <section className="py-16 px-4 border-b border-border">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-10">
-            <p className="text-sm font-medium text-stone-500 uppercase tracking-wider">
+            <p className="text-sm font-medium text-foreground-muted uppercase tracking-wider">
               Built with technologies trusted by millions of developers
             </p>
           </div>
@@ -383,8 +383,8 @@ export default function PlatformPage() {
                 className="flex items-center justify-center h-10 grayscale hover:grayscale-0 transition-all duration-300"
               >
                 {/* Logo placeholder - will use actual SVGs when available */}
-                <div className="flex items-center gap-2 text-stone-600 font-semibold">
-                  <div className="w-8 h-8 bg-stone-200 rounded-lg flex items-center justify-center">
+                <div className="flex items-center gap-2 text-foreground-secondary font-semibold">
+                  <div className="w-8 h-8 bg-border rounded-lg flex items-center justify-center">
                     {company.name === "GitHub" && <Github className="h-5 w-5" />}
                     {company.name === "Vercel" && <span className="text-xs font-bold">▲</span>}
                     {company.name === "Supabase" && <span className="text-xs font-bold">⚡</span>}
@@ -400,19 +400,19 @@ export default function PlatformPage() {
 
           {/* Developer Count Badge */}
           <div className="mt-10 flex justify-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 bg-stone-50 rounded-full border border-stone-200">
+            <div className="inline-flex items-center gap-3 px-6 py-3 bg-card rounded-full border border-border">
               <div className="flex -space-x-2">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-white" />
-                <div className="w-8 h-8 rounded-full bg-stone-200 border-2 border-white flex items-center justify-center text-xs font-medium text-stone-600">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-400 to-blue-600 border-2 border-card" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-emerald-400 to-emerald-600 border-2 border-card" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-orange-300 to-orange-600 border-2 border-card" />
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-amber-400 to-amber-600 border-2 border-card" />
+                <div className="w-8 h-8 rounded-full bg-border border-2 border-card flex items-center justify-center text-xs font-medium text-foreground-secondary">
                   +42
                 </div>
               </div>
               <div className="text-sm">
-                <span className="font-semibold text-stone-900">500+</span>
-                <span className="text-stone-600"> developers building with Framework</span>
+                <span className="font-semibold text-foreground">500+</span>
+                <span className="text-foreground-secondary"> developers building with Framework</span>
               </div>
             </div>
           </div>
@@ -420,27 +420,27 @@ export default function PlatformPage() {
       </section>
 
       {/* Features Section */}
-      <section id="features" className="py-24 px-4 bg-stone-50">
+      <section id="features" className="py-24 px-4 bg-background-alt">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">Features</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
+            <Badge className="mb-4 bg-primary/10 text-primary border-0">Features</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Everything You Need to Ship Fast
             </h2>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+            <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
               From visual configuration to production deployment, we've got you covered.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((feature) => (
-              <Card key={feature.title} className="border-0 shadow-sm hover:shadow-lg transition-shadow">
+              <Card key={feature.title} className="border-border bg-card shadow-sm hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className={`w-12 h-12 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4`}>
                     <feature.icon className={`h-6 w-6 ${feature.color}`} />
                   </div>
-                  <h3 className="text-lg font-semibold text-stone-900 mb-2">{feature.title}</h3>
-                  <p className="text-stone-600">{feature.description}</p>
+                  <h3 className="text-lg font-semibold text-foreground mb-2">{feature.title}</h3>
+                  <p className="text-foreground-secondary">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -449,11 +449,11 @@ export default function PlatformPage() {
       </section>
 
       {/* How It Works */}
-      <section id="how-it-works" className="py-24 px-4">
+      <section id="how-it-works" className="py-24 px-4 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">How It Works</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
+            <Badge className="mb-4 bg-primary/10 text-primary border-0">How It Works</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               From Idea to Production in 4 Steps
             </h2>
           </div>
@@ -467,20 +467,20 @@ export default function PlatformPage() {
               >
                 {/* Connector line */}
                 {index < steps.length - 1 && (
-                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-stone-200" />
+                  <div className="hidden md:block absolute top-8 left-1/2 w-full h-0.5 bg-border" />
                 )}
                 
                 <div className={`relative z-10 w-16 h-16 rounded-2xl mx-auto mb-6 flex items-center justify-center transition-all ${
                   activeStep === index 
-                    ? 'bg-[#F97316] shadow-lg shadow-[#F97316]/25' 
-                    : 'bg-stone-100'
+                    ? 'bg-primary shadow-lg shadow-primary/25' 
+                    : 'bg-card border border-border'
                 }`}>
-                  <step.icon className={`h-7 w-7 ${activeStep === index ? 'text-white' : 'text-stone-500'}`} />
+                  <step.icon className={`h-7 w-7 ${activeStep === index ? 'text-white' : 'text-foreground-muted'}`} />
                 </div>
                 
-                <div className="text-sm font-bold text-[#F97316] mb-2">{step.number}</div>
-                <h3 className="text-xl font-bold text-stone-900 mb-2">{step.title}</h3>
-                <p className="text-stone-600 text-sm">{step.description}</p>
+                <div className="text-sm font-bold text-primary mb-2">{step.number}</div>
+                <h3 className="text-xl font-bold text-foreground mb-2">{step.title}</h3>
+                <p className="text-foreground-secondary text-sm">{step.description}</p>
               </div>
             ))}
           </div>
@@ -488,17 +488,17 @@ export default function PlatformPage() {
       </section>
 
       {/* Value Comparison Section */}
-      <section id="value" className="py-24 px-4 bg-gradient-to-b from-stone-50 to-white">
+      <section id="value" className="py-24 px-4 bg-gradient-to-b from-background-alt to-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-emerald-500/10 text-emerald-600 border-0">
+            <Badge className="mb-4 bg-success/10 text-success border-0">
               <TrendingDown className="mr-1 h-3 w-3" />
               Value Comparison
             </Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Save Weeks of Development Time
             </h2>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+            <p className="text-xl text-foreground-secondary max-w-2xl mx-auto">
               See exactly how much time, money, and effort you save compared to building from scratch.
             </p>
           </div>
@@ -506,7 +506,7 @@ export default function PlatformPage() {
           {/* Savings Metrics */}
           <div className="grid md:grid-cols-3 gap-8 mb-16">
             {valueMetrics.map((metric) => (
-              <Card key={metric.title} className="border-0 shadow-lg overflow-hidden">
+              <Card key={metric.title} className="border-border shadow-lg overflow-hidden bg-card">
                 <CardContent className="p-0">
                   <div className={`${metric.bgColor} p-6 text-white`}>
                     <metric.icon className="h-8 w-8 mb-3" />
@@ -514,15 +514,15 @@ export default function PlatformPage() {
                     <div className="text-white/80">Time/Cost Savings</div>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-bold text-stone-900 mb-4">{metric.title}</h3>
+                    <h3 className="font-bold text-foreground mb-4">{metric.title}</h3>
                     <div className="space-y-3">
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-stone-500">With Framework</span>
-                        <span className="font-semibold text-emerald-600">{metric.withFramework}</span>
+                        <span className="text-sm text-foreground-muted">With Framework</span>
+                        <span className="font-semibold text-success">{metric.withFramework}</span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <span className="text-sm text-stone-500">From Scratch</span>
-                        <span className="font-semibold text-red-500 line-through">{metric.withoutFramework}</span>
+                        <span className="text-sm text-foreground-muted">From Scratch</span>
+                        <span className="font-semibold text-destructive line-through">{metric.withoutFramework}</span>
                       </div>
                     </div>
                   </div>
@@ -534,60 +534,60 @@ export default function PlatformPage() {
           {/* Side by Side Comparison */}
           <div className="grid lg:grid-cols-2 gap-8">
             {/* With Framework */}
-            <Card className="border-2 border-[#F97316] shadow-lg shadow-[#F97316]/10">
+            <Card className="border-2 border-primary shadow-lg shadow-primary/10 bg-card">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-[#F97316] flex items-center justify-center">
+                  <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center">
                     <Zap className="h-5 w-5 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900">With Framework</h3>
-                    <p className="text-sm text-emerald-600 font-medium">~ 5 minutes total</p>
+                    <h3 className="font-bold text-foreground">With Framework</h3>
+                    <p className="text-sm text-success font-medium">~ 5 minutes total</p>
                   </div>
                 </div>
                 
                 <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                    <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-stone-700">Run one NPX command</span>
-                    <span className="ml-auto text-xs text-emerald-600 font-medium">1 min</span>
+                  <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
+                    <Check className="h-5 w-5 text-success flex-shrink-0" />
+                    <span className="text-foreground">Run one NPX command</span>
+                    <span className="ml-auto text-xs text-success font-medium">1 min</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                    <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-stone-700">All integrations pre-configured</span>
-                    <span className="ml-auto text-xs text-emerald-600 font-medium">0 min</span>
+                  <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
+                    <Check className="h-5 w-5 text-success flex-shrink-0" />
+                    <span className="text-foreground">All integrations pre-configured</span>
+                    <span className="ml-auto text-xs text-success font-medium">0 min</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                    <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-stone-700">Add your API keys</span>
-                    <span className="ml-auto text-xs text-emerald-600 font-medium">2 min</span>
+                  <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
+                    <Check className="h-5 w-5 text-success flex-shrink-0" />
+                    <span className="text-foreground">Add your API keys</span>
+                    <span className="ml-auto text-xs text-success font-medium">2 min</span>
                   </div>
-                  <div className="flex items-center gap-3 p-3 bg-emerald-50 rounded-lg">
-                    <Check className="h-5 w-5 text-emerald-500 flex-shrink-0" />
-                    <span className="text-stone-700">Deploy to Vercel</span>
-                    <span className="ml-auto text-xs text-emerald-600 font-medium">2 min</span>
+                  <div className="flex items-center gap-3 p-3 bg-success/10 rounded-lg">
+                    <Check className="h-5 w-5 text-success flex-shrink-0" />
+                    <span className="text-foreground">Deploy to Vercel</span>
+                    <span className="ml-auto text-xs text-success font-medium">2 min</span>
                   </div>
                 </div>
 
-                <div className="mt-6 p-4 bg-[#F97316]/5 rounded-lg border border-[#F97316]/20">
+                <div className="mt-6 p-4 bg-primary/10 rounded-lg border border-primary/20">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-stone-900">Total Time</span>
-                    <span className="text-2xl font-bold text-[#F97316]">~5 min</span>
+                    <span className="font-medium text-foreground">Total Time</span>
+                    <span className="text-2xl font-bold text-primary">~5 min</span>
                   </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Without Framework */}
-            <Card className="border border-stone-200">
+            <Card className="border border-border bg-card">
               <CardContent className="p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-lg bg-stone-200 flex items-center justify-center">
-                    <Clock className="h-5 w-5 text-stone-500" />
+                  <div className="w-10 h-10 rounded-lg bg-border flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-foreground-muted" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-stone-900">Building From Scratch</h3>
-                    <p className="text-sm text-red-500 font-medium">~ 40-80 hours total</p>
+                    <h3 className="font-bold text-foreground">Building From Scratch</h3>
+                    <p className="text-sm text-destructive font-medium">~ 40-80 hours total</p>
                   </div>
                 </div>
                 
@@ -596,19 +596,19 @@ export default function PlatformPage() {
                     <div 
                       key={index}
                       className={`flex items-center gap-3 p-2.5 rounded-lg ${
-                        item.done ? 'bg-stone-50' : 'bg-red-50'
+                        item.done ? 'bg-background-alt' : 'bg-destructive/10'
                       }`}
                     >
                       {item.done ? (
-                        <Check className="h-4 w-4 text-stone-400 flex-shrink-0" />
+                        <Check className="h-4 w-4 text-foreground-muted flex-shrink-0" />
                       ) : (
-                        <X className="h-4 w-4 text-red-400 flex-shrink-0" />
+                        <X className="h-4 w-4 text-destructive flex-shrink-0" />
                       )}
-                      <span className={`text-sm ${item.done ? 'text-stone-500' : 'text-stone-700'}`}>
+                      <span className={`text-sm ${item.done ? 'text-foreground-muted' : 'text-foreground'}`}>
                         {item.task}
                       </span>
                       <span className={`ml-auto text-xs font-medium ${
-                        item.done ? 'text-stone-400' : 'text-red-500'
+                        item.done ? 'text-foreground-muted' : 'text-destructive'
                       }`}>
                         {item.time}
                       </span>
@@ -616,10 +616,10 @@ export default function PlatformPage() {
                   ))}
                 </div>
 
-                <div className="mt-6 p-4 bg-red-50 rounded-lg border border-red-100">
+                <div className="mt-6 p-4 bg-destructive/10 rounded-lg border border-destructive/20">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-stone-900">Total Time</span>
-                    <span className="text-2xl font-bold text-red-500">40-80 hrs</span>
+                    <span className="font-medium text-foreground">Total Time</span>
+                    <span className="text-2xl font-bold text-destructive">40-80 hrs</span>
                   </div>
                 </div>
               </CardContent>
@@ -628,11 +628,11 @@ export default function PlatformPage() {
 
           {/* Bottom CTA */}
           <div className="text-center mt-12">
-            <p className="text-stone-600 mb-4">
-              That's <span className="font-bold text-[#F97316]">480x faster</span> than building from scratch.
+            <p className="text-foreground-secondary mb-4">
+              That's <span className="font-bold text-primary">480x faster</span> than building from scratch.
             </p>
             <Link href="/configure">
-              <Button size="lg" className="bg-[#F97316] hover:bg-[#F97316]/90">
+              <Button size="lg" className="bg-primary hover:bg-primary-hover text-primary-foreground">
                 Start Saving Time Now
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
@@ -688,25 +688,25 @@ export default function PlatformPage() {
       </section>
 
       {/* Testimonials */}
-      <section id="testimonials" className="py-24 px-4">
+      <section id="testimonials" className="py-24 px-4 bg-background">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#F97316]/10 text-[#F97316] border-0">Testimonials</Badge>
-            <h2 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
+            <Badge className="mb-4 bg-primary/10 text-primary border-0">Testimonials</Badge>
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
               Loved by Developers
             </h2>
           </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial) => (
-              <Card key={testimonial.name} className="border-0 shadow-sm">
+              <Card key={testimonial.name} className="border-border shadow-sm bg-card">
                 <CardContent className="p-6">
                   <div className="flex gap-1 mb-4">
                     {[...Array(5)].map((_, i) => (
                       <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
                     ))}
                   </div>
-                  <p className="text-stone-600 mb-6">"{testimonial.quote}"</p>
+                  <p className="text-foreground-secondary mb-6">"{testimonial.quote}"</p>
                   <div className="flex items-center gap-3">
                     <Image
                       src={testimonial.avatar}
@@ -716,8 +716,8 @@ export default function PlatformPage() {
                       className="rounded-full"
                     />
                     <div>
-                      <div className="font-semibold text-stone-900">{testimonial.name}</div>
-                      <div className="text-sm text-stone-500">{testimonial.role}</div>
+                      <div className="font-semibold text-foreground">{testimonial.name}</div>
+                      <div className="text-sm text-foreground-muted">{testimonial.role}</div>
                     </div>
                   </div>
                 </CardContent>
@@ -728,7 +728,7 @@ export default function PlatformPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 px-4 bg-[#F97316]">
+      <section className="py-24 px-4 bg-primary">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Ready to Ship Your Next Project?
@@ -740,13 +740,13 @@ export default function PlatformPage() {
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/configure">
-              <Button size="lg" className="bg-stone-50 text-[#F97316] hover:bg-stone-50/90 h-14 px-8 text-lg">
+              <Button size="lg" className="bg-white text-primary hover:bg-white/90 h-14 px-8 text-lg">
                 Start Building Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
             </Link>
             <Link href="https://github.com/jrdaws/dawson-does-framework">
-              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-stone-50/10 h-14 px-8 text-lg">
+              <Button size="lg" variant="outline" className="border-white/30 text-white hover:bg-white/10 h-14 px-8 text-lg">
                 View on GitHub
                 <ChevronRight className="ml-2 h-5 w-5" />
               </Button>
@@ -756,24 +756,24 @@ export default function PlatformPage() {
       </section>
 
       {/* Footer */}
-      <footer className="py-16 px-4 bg-stone-900 text-white">
+      <footer className="py-16 px-4 bg-[hsl(var(--footer-bg))] text-white">
         <div className="max-w-6xl mx-auto">
           <div className="grid md:grid-cols-4 gap-12 mb-12">
             <div>
               <Link href="/" className="flex items-center gap-2 mb-4">
-                <div className="w-8 h-8 rounded-lg bg-[#F97316] flex items-center justify-center">
+                <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                   <Code2 className="h-5 w-5 text-white" />
                 </div>
                 <span className="font-bold">Framework</span>
               </Link>
-              <p className="text-stone-400 text-sm">
+              <p className="text-white/60 text-sm">
                 Build production apps in minutes with complete code ownership.
               </p>
             </div>
             
             <div>
               <h4 className="font-semibold mb-4">Product</h4>
-              <ul className="space-y-2 text-sm text-stone-400">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><Link href="/configure" className="hover:text-white transition">Configurator</Link></li>
                 <li><Link href="/projects" className="hover:text-white transition">My Projects</Link></li>
                 <li><a href="#features" className="hover:text-white transition">Features</a></li>
@@ -782,7 +782,7 @@ export default function PlatformPage() {
             
             <div>
               <h4 className="font-semibold mb-4">Resources</h4>
-              <ul className="space-y-2 text-sm text-stone-400">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="https://github.com/jrdaws/dawson-does-framework" className="hover:text-white transition">Documentation</a></li>
                 <li><a href="https://github.com/jrdaws/dawson-does-framework" className="hover:text-white transition">GitHub</a></li>
                 <li><a href="https://www.npmjs.com/package/@jrdaws/framework" className="hover:text-white transition">npm</a></li>
@@ -791,7 +791,7 @@ export default function PlatformPage() {
             
             <div>
               <h4 className="font-semibold mb-4">Legal</h4>
-              <ul className="space-y-2 text-sm text-stone-400">
+              <ul className="space-y-2 text-sm text-white/60">
                 <li><a href="#" className="hover:text-white transition">Privacy</a></li>
                 <li><a href="#" className="hover:text-white transition">Terms</a></li>
                 <li><a href="https://github.com/jrdaws/dawson-does-framework/blob/main/LICENSE" className="hover:text-white transition">License (MIT)</a></li>
@@ -799,13 +799,13 @@ export default function PlatformPage() {
             </div>
           </div>
           
-          <div className="border-t border-stone-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-stone-500">
+          <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-sm text-white/40">
               © 2024 Framework. Built with ❤️ for developers.
             </p>
-            <div className="flex items-center gap-6 text-sm text-stone-500">
+            <div className="flex items-center gap-6 text-sm text-white/40">
               <span>v0.3.1</span>
-              <span className="text-emerald-400">192 tests passing</span>
+              <span className="text-success">192 tests passing</span>
             </div>
           </div>
         </div>

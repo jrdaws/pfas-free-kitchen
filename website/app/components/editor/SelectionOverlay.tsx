@@ -38,7 +38,7 @@ export function SelectionOverlay() {
           </div>
 
           {/* Quick Actions */}
-          <div className="flex items-center gap-0.5 bg-stone-50 border border-blue-500 rounded shadow-sm pointer-events-auto">
+          <div className="flex items-center gap-0.5 bg-card border border-blue-500 rounded shadow-sm pointer-events-auto">
             <button
               onClick={() => setEditMode("text")}
               className="p-1 hover:bg-blue-50 transition-colors"

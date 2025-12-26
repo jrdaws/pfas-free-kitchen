@@ -143,7 +143,7 @@ function VisualEditorContent({ html, onHtmlChange, className, viewport = 'deskto
       </div>
 
       {/* Center - Preview with Toolbar and Overlay */}
-      <div className="flex-1 relative flex flex-col overflow-hidden bg-stone-50">
+      <div className="flex-1 relative flex flex-col overflow-hidden bg-card">
         {/* Toolbar */}
         <div className="flex items-center gap-1 px-3 py-2 border-b border-terminal-text/20 bg-terminal-bg/30">
           <button
@@ -168,7 +168,7 @@ function VisualEditorContent({ html, onHtmlChange, className, viewport = 'deskto
         </div>
 
         {/* Preview */}
-        <div className="flex-1 relative overflow-auto bg-stone-100">
+        <div className="flex-1 relative overflow-auto bg-background-alt">
           <div className="flex justify-center min-h-full p-4">
             <div
               className="relative transition-all duration-300"
@@ -182,7 +182,7 @@ function VisualEditorContent({ html, onHtmlChange, className, viewport = 'deskto
                   if (iframe) registerIframe(iframe);
                 }}
                 srcDoc={enhancedHtml}
-                className="w-full border-0 bg-stone-50 shadow-lg"
+                className="w-full border-0 bg-card shadow-lg"
                 style={{ minHeight: "600px", height: "100%" }}
                 sandbox="allow-scripts allow-same-origin"
                 title="Visual Editor Preview"

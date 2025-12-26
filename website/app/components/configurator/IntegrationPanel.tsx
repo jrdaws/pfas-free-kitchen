@@ -235,7 +235,7 @@ export function IntegrationPanel({
                       isSelected ? "border-primary bg-primary" : "border-muted-foreground/50"
                     )}>
                       {isSelected && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-stone-50" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-card" />
                       )}
                     </div>
                     

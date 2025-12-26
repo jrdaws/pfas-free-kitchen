@@ -74,8 +74,8 @@ export function LivePreviewPanel({
         <span class="font-bold text-lg">${projectName || "My Project"}</span>
       </div>
       <div class="flex items-center gap-4">
-        <a href="#" class="text-stone-400 hover:text-white text-sm">Features</a>
-        <a href="#" class="text-stone-400 hover:text-white text-sm">Pricing</a>
+        <a href="#" class="text-foreground-muted hover:text-white text-sm">Features</a>
+        <a href="#" class="text-foreground-muted hover:text-white text-sm">Pricing</a>
         ${integrations.auth ? `<button class="px-4 py-2 text-sm bg-orange-600 hover:bg-orange-500 rounded-lg">Sign In</button>` : ""}
       </div>
     </div>
@@ -91,7 +91,7 @@ export function LivePreviewPanel({
       <h1 class="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-stone-400 bg-clip-text text-transparent">
         ${description || "Build Something Amazing"}
       </h1>
-      <p class="text-xl text-stone-400 mb-8 max-w-2xl mx-auto">
+      <p class="text-xl text-foreground-muted mb-8 max-w-2xl mx-auto">
         ${configuredIntegrations > 0 
           ? `Powered by ${configuredIntegrations} integration${configuredIntegrations > 1 ? 's' : ''}: ${integrationsText || 'None configured'}`
           : 'Configure your integrations to see them reflected here.'}
@@ -116,47 +116,47 @@ export function LivePreviewPanel({
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">🔐</div>
           <h3 class="font-semibold mb-2">Authentication</h3>
-          <p class="text-stone-400 text-sm">Secure ${integrations.auth} authentication built-in</p>
+          <p class="text-foreground-muted text-sm">Secure ${integrations.auth} authentication built-in</p>
         </div>
         ` : ""}
         ${integrations.payments ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center mb-4">💳</div>
           <h3 class="font-semibold mb-2">Payments</h3>
-          <p class="text-stone-400 text-sm">${integrations.payments} integration for billing</p>
+          <p class="text-foreground-muted text-sm">${integrations.payments} integration for billing</p>
         </div>
         ` : ""}
         ${integrations.db ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-blue-500/20 flex items-center justify-center mb-4">🗄️</div>
           <h3 class="font-semibold mb-2">Database</h3>
-          <p class="text-stone-400 text-sm">${integrations.db} for data storage</p>
+          <p class="text-foreground-muted text-sm">${integrations.db} for data storage</p>
         </div>
         ` : ""}
         ${integrations.ai ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-orange-400/20 flex items-center justify-center mb-4">🤖</div>
           <h3 class="font-semibold mb-2">AI Powered</h3>
-          <p class="text-stone-400 text-sm">${integrations.ai} integration for AI features</p>
+          <p class="text-foreground-muted text-sm">${integrations.ai} integration for AI features</p>
         </div>
         ` : ""}
         ${integrations.email ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-amber-500/20 flex items-center justify-center mb-4">📧</div>
           <h3 class="font-semibold mb-2">Email</h3>
-          <p class="text-stone-400 text-sm">${integrations.email} for transactional emails</p>
+          <p class="text-foreground-muted text-sm">${integrations.email} for transactional emails</p>
         </div>
         ` : ""}
         ${integrations.analytics ? `
         <div class="p-6 rounded-xl bg-stone-900 border border-stone-800">
           <div class="w-10 h-10 rounded-lg bg-orange-500/20 flex items-center justify-center mb-4">📊</div>
           <h3 class="font-semibold mb-2">Analytics</h3>
-          <p class="text-stone-400 text-sm">${integrations.analytics} for insights</p>
+          <p class="text-foreground-muted text-sm">${integrations.analytics} for insights</p>
         </div>
         ` : ""}
         ${configuredIntegrations === 0 ? `
         <div class="p-6 rounded-xl bg-stone-900/50 border border-dashed border-stone-700 col-span-full text-center">
-          <p class="text-stone-500">Configure integrations to see feature cards here</p>
+          <p class="text-foreground-muted">Configure integrations to see feature cards here</p>
         </div>
         ` : ""}
       </div>
@@ -164,7 +164,7 @@ export function LivePreviewPanel({
   </section>
 
   <!-- Footer -->
-  <footer class="px-6 py-8 border-t border-stone-800 text-center text-stone-500 text-sm">
+  <footer class="px-6 py-8 border-t border-stone-800 text-center text-foreground-muted text-sm">
     <p>Built with Dawson-Does Framework • ${templateName}</p>
   </footer>
 </body>
@@ -263,7 +263,7 @@ export function LivePreviewPanel({
       <div className="flex-1 bg-stone-900 p-4 overflow-hidden">
         <div
           className={cn(
-            "h-full mx-auto bg-stone-50 rounded-lg overflow-hidden shadow-2xl transition-all duration-300",
+            "h-full mx-auto bg-card rounded-lg overflow-hidden shadow-2xl transition-all duration-300",
             viewport === "mobile" ? "w-[375px]" : "w-full"
           )}
         >

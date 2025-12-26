@@ -1,0 +1,275 @@
+# P0 Task: Create 3 Design Demo Websites for Comparison
+
+> **Priority**: P0 - Critical
+> **From**: Quality Agent
+> **Created**: 2025-12-25
+> **Type**: Design Exploration
+> **Output**: 3 standalone HTML demo files
+
+---
+
+## Objective
+
+Create 3 complete demo websites showcasing different hero/theme approaches. Each demo should be a **complete standalone HTML file** with inline CSS that can be opened directly in a browser for comparison.
+
+The user will review all 3 demos and select the best elements from each to create the final cohesive design.
+
+---
+
+## Demo 1: Light Hero (White/Cream)
+
+**File**: `output/shared/design/demos/demo-1-light-hero.html`
+
+### Design Spec
+- **Hero Background**: White (#FFFFFF) with subtle orange radial glow
+- **Hero Text**: Dark stone (#1C1917)
+- **Hero Accent**: Orange (#F97316)
+- **Content Sections**: Alternate white ↔ stone-50
+- **Cards**: White with shadow + border (elevated)
+- **Terminal**: Dark slate, elevated with shadow
+- **Footer**: Navy (#1E3A5F)
+
+### Color Palette
+```css
+:root {
+  --hero-bg: #FFFFFF;
+  --hero-text: #1C1917;
+  --section-bg-1: #FFFFFF;
+  --section-bg-2: #FAFAF9;
+  --accent: #F97316;
+  --accent-hover: #EA580C;
+  --footer-bg: #1E3A5F;
+}
+```
+
+### Key Characteristics
+- Clean, open, professional
+- Like HubSpot, Notion, Airtable
+- Orange pops on white background
+- Maximum readability
+- Terminal stands out as dark element
+
+---
+
+## Demo 2: Navy Hero (Matches Footer)
+
+**File**: `output/shared/design/demos/demo-2-navy-hero.html`
+
+### Design Spec
+- **Hero Background**: Navy (#1E3A5F) - same as footer
+- **Hero Text**: White (#FFFFFF)
+- **Hero Accent**: Orange (#F97316) - high contrast on navy
+- **Transition**: Navy hero fades to white content
+- **Content Sections**: White and stone-50
+- **Cards**: White with shadow
+- **Terminal**: Slate-800, elevated
+- **Footer**: Navy (#1E3A5F) - matches hero
+
+### Color Palette
+```css
+:root {
+  --hero-bg: #1E3A5F;
+  --hero-text: #FFFFFF;
+  --section-bg-1: #FFFFFF;
+  --section-bg-2: #FAFAF9;
+  --accent: #F97316;
+  --accent-light: #FB923C; /* Brighter orange on dark */
+  --footer-bg: #1E3A5F;
+}
+```
+
+### Key Characteristics
+- Bookended design (navy top and bottom)
+- Premium, corporate feel
+- Like Stripe, Linear (dark hero → light content)
+- Orange is extremely vibrant on navy
+- Creates visual "frame" around content
+- Gradient transition from navy to white
+
+### Hero Gradient Transition
+```css
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, #FFFFFF);
+}
+```
+
+---
+
+## Demo 3: Warm Sand/Cream Hero (Earthy Premium)
+
+**File**: `output/shared/design/demos/demo-3-warm-sand.html`
+
+### Design Spec
+- **Hero Background**: Warm cream (#FDF8F3) with soft amber glow
+- **Hero Text**: Warm brown (#44403C) - stone-700
+- **Hero Accent**: Deep orange (#EA580C) - orange-600
+- **Content Sections**: Cream (#FFFBF7) and white
+- **Cards**: White with warm shadow
+- **Terminal**: Warm slate, amber accents
+- **Footer**: Deep brown (#292524) - stone-800
+
+### Color Palette
+```css
+:root {
+  --hero-bg: #FDF8F3;         /* Warm cream */
+  --hero-text: #44403C;        /* Stone-700 */
+  --hero-accent-glow: rgba(251, 146, 60, 0.1); /* Amber glow */
+  --section-bg-1: #FFFBF7;     /* Warmer white */
+  --section-bg-2: #FDF8F3;     /* Cream */
+  --accent: #EA580C;           /* Deep orange */
+  --accent-hover: #C2410C;     /* Orange-700 */
+  --footer-bg: #292524;        /* Stone-800 */
+  --card-shadow: 0 4px 20px rgba(120, 113, 108, 0.08); /* Warm shadow */
+}
+```
+
+### Key Characteristics
+- Warm, inviting, premium
+- Like luxury/lifestyle brands
+- Softer than pure white
+- Feels handcrafted and personal
+- Orange feels more natural/earthy
+- Appeals to creative/indie developers
+
+---
+
+## Required Sections in Each Demo
+
+Each HTML file must include these sections with the specified theme applied:
+
+### 1. Navigation
+- Logo (D icon + "Dawson Does")
+- Nav links: Features, Docs, Pricing, Blog
+- CTAs: Sign In (outline), Get Started (primary)
+
+### 2. Hero Section
+- Badge: "✦ Export-First Framework"
+- Headline: "Build SaaS apps in days, not months"
+- Subheadline: Configuration → Export → Own
+- CTAs: Start Building (primary), Watch Demo (secondary)
+- Feature pills: Zero lock-in, AI-powered, Full ownership
+- Terminal mockup
+
+### 3. Features Section ("Built for Speed, Trust & Scale")
+- 6 feature cards in 3x2 grid
+- Each card: icon, title, description, code snippet
+- Cards: Feature Assembler, Visual Configurator, Provider Integrations, Trust Primitives, Clone Command, Fully Extensible
+
+### 4. "See It in Action" Section
+- Toggle: Register / Universal
+- Terminal with animation-style content
+
+### 5. Comparison Table ("Why Choose This Framework?")
+- Table comparing: Approach, Setup Time, Integrations, Updates, Support
+- Rows: Manual Setup, create-next-app, Other Scaffolding, @jrdaws/framework
+
+### 6. Feature Showcase
+- 3 cards: Zero Lock-in, Drift Detection, Plugin System
+
+### 7. Before & After
+- Side-by-side code comparison
+
+### 8. Testimonials ("Trusted by Developers Worldwide")
+- Stats: 732 Projects, 20+ Integrations, MIT License, 0 Lock-in
+- 6 testimonial cards (2 rows of 3)
+- Star ratings
+
+### 9. Final CTA ("Ready to Ship Faster?")
+- Terminal with npx command
+- Two CTAs: Get Started Free, View on npm
+
+### 10. Footer
+- Logo and description
+- Link columns: Framework, Resources, Policies, Contact
+- Copyright
+
+---
+
+## Technical Requirements
+
+### Each HTML File Must:
+1. Be **standalone** (no external dependencies except Google Fonts)
+2. Include **complete inline CSS** in `<style>` tags
+3. Be **responsive** (works on mobile)
+4. Include a **theme toggle button** (fixed bottom-right) if applicable
+5. Use **Inter font** from Google Fonts
+6. Be **~600-800 lines** of clean, readable code
+
+### File Structure
+```
+output/shared/design/demos/
+├── demo-1-light-hero.html      # White hero
+├── demo-2-navy-hero.html       # Navy hero (matches footer)
+├── demo-3-warm-sand.html       # Cream/sand hero
+└── README.md                   # Comparison notes
+```
+
+### README.md Content
+```markdown
+# Design Demo Comparison
+
+## Quick Open Commands
+\`\`\`bash
+open output/shared/design/demos/demo-1-light-hero.html
+open output/shared/design/demos/demo-2-navy-hero.html
+open output/shared/design/demos/demo-3-warm-sand.html
+\`\`\`
+
+## Comparison
+
+| Aspect | Demo 1 (Light) | Demo 2 (Navy) | Demo 3 (Warm) |
+|--------|---------------|---------------|---------------|
+| Hero BG | White | Navy | Cream |
+| Vibe | Clean/Professional | Premium/Corporate | Warm/Artisanal |
+| Similar To | HubSpot, Notion | Stripe, Linear | Luxury brands |
+| Best For | Maximum clarity | Visual impact | Unique identity |
+
+## Pick & Mix
+Review all 3 demos and note which elements work best:
+- Hero style from: Demo ___
+- Card styling from: Demo ___
+- Color warmth from: Demo ___
+- Footer from: Demo ___
+```
+
+---
+
+## Validation Checklist
+
+After creating all 3 demos:
+
+- [ ] All 3 HTML files open correctly in browser
+- [ ] Each demo has complete sections (all 10 listed above)
+- [ ] Demo 1: Light hero feels like HubSpot/Notion
+- [ ] Demo 2: Navy hero matches footer, smooth transition
+- [ ] Demo 3: Warm sand feels premium and unique
+- [ ] All cards have visible contrast (shadow + border)
+- [ ] Orange accent is consistent across all demos
+- [ ] Terminal styling is consistent (dark, elevated)
+- [ ] Responsive on mobile viewport
+
+---
+
+## After Completion
+
+Notify user with:
+
+```bash
+# Open all demos for comparison
+open output/shared/design/demos/demo-1-light-hero.html
+open output/shared/design/demos/demo-2-navy-hero.html
+open output/shared/design/demos/demo-3-warm-sand.html
+```
+
+Then Quality Agent will review all 3 and help user select best elements.
+
+---
+
+*Task created by Quality Agent | 2025-12-25*
+

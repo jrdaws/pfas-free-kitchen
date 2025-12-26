@@ -499,7 +499,7 @@ export function AIPreview({
                     )}
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="bg-stone-50 p-4">
+                <CardContent className="bg-card p-4">
                   <div className="flex justify-center">
                     <div
                       style={{ width: viewportWidths[viewport], maxWidth: "100%" }}
@@ -507,7 +507,7 @@ export function AIPreview({
                     >
                       <iframe
                         srcDoc={localPreviewHtml}
-                        className="w-full border border-stone-200 rounded"
+                        className="w-full border border-border rounded"
                         style={{ height: "600px" }}
                         sandbox="allow-scripts allow-same-origin"
                         title="AI Generated Preview"

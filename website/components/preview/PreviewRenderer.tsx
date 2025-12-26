@@ -141,12 +141,12 @@ export function PreviewFrame({
         </div>
         <div className="flex-1 mx-4">
           <div className="bg-[#1a1a1a] rounded-lg px-4 py-1.5 text-center">
-            <span className="text-stone-500 text-xs font-mono">
+            <span className="text-foreground-muted text-xs font-mono">
               localhost:3000
             </span>
           </div>
         </div>
-        <span className="text-stone-500 text-xs">{title}</span>
+        <span className="text-foreground-muted text-xs">{title}</span>
       </div>
 
       {/* Preview Content */}

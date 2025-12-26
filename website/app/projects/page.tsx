@@ -118,29 +118,29 @@ function ProjectsContent() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-[#F97316] mx-auto mb-4" />
-          <p className="text-muted-foreground">Loading projects...</p>
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
+          <p className="text-foreground-muted">Loading projects...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-stone-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-stone-50 border-b">
+      <header className="bg-background-alt border-b border-border">
         <div className="max-w-6xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-stone-900">My Projects</h1>
-              <p className="text-muted-foreground mt-1">
+              <h1 className="text-2xl font-bold text-foreground">My Projects</h1>
+              <p className="text-foreground-muted mt-1">
                 {user?.email ? `Signed in as ${user.email}` : "Your saved projects"}
               </p>
             </div>
             <Link href="/configure">
-              <Button className="gap-2 bg-[#F97316] hover:bg-[#F97316]/90">
+              <Button className="gap-2 bg-primary hover:bg-primary-hover text-primary-foreground">
                 <Plus className="h-4 w-4" />
                 New Project
               </Button>
@@ -152,22 +152,22 @@ function ProjectsContent() {
       {/* Content */}
       <main className="max-w-6xl mx-auto px-4 py-8">
         {error && (
-          <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg flex items-center gap-2">
+          <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-lg flex items-center gap-2">
             <AlertCircle className="h-5 w-5" />
             {error}
           </div>
         )}
 
         {projects.length === 0 ? (
-          <Card className="text-center py-16">
+          <Card className="text-center py-16 bg-card border-border">
             <CardContent>
-              <FolderOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h2 className="text-xl font-semibold mb-2">No projects yet</h2>
-              <p className="text-muted-foreground mb-6">
+              <FolderOpen className="h-12 w-12 text-foreground-muted mx-auto mb-4" />
+              <h2 className="text-xl font-semibold text-foreground mb-2">No projects yet</h2>
+              <p className="text-foreground-muted mb-6">
                 Create your first project to get started
               </p>
               <Link href="/configure">
-                <Button className="gap-2 bg-[#F97316] hover:bg-[#F97316]/90">
+                <Button className="gap-2 bg-primary hover:bg-primary-hover text-primary-foreground">
                   <Plus className="h-4 w-4" />
                   Create Project
                 </Button>
@@ -177,7 +177,7 @@ function ProjectsContent() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <Card key={project.id} className="hover:shadow-lg transition-shadow">
+              <Card key={project.id} className="hover:shadow-lg transition-shadow bg-card border-border">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 min-w-0">
@@ -221,16 +221,16 @@ function ProjectsContent() {
 
                   {/* NPX Token */}
                   {project.npx_token && (
-                    <div className="p-3 bg-stone-900 rounded-lg">
+                    <div className="p-3 bg-background rounded-lg border border-border">
                       <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 text-xs font-mono text-stone-300 truncate">
+                        <div className="flex items-center gap-2 text-xs font-mono text-foreground-secondary truncate">
                           <Terminal className="h-3 w-3 flex-shrink-0" />
                           <span className="truncate">{project.npx_token}</span>
                         </div>
                         <Button
                           variant="ghost"
                           size="sm"
-                          className="h-6 w-6 p-0 text-stone-400 hover:text-white"
+                          className="h-6 w-6 p-0 text-foreground-muted hover:text-foreground"
                           onClick={() => handleCopyToken(project.npx_token)}
                         >
                           {copiedToken === project.npx_token ? (
@@ -255,7 +255,7 @@ function ProjectsContent() {
                   <div className="flex gap-2 pt-2">
                     <Button
                       variant="default"
-                      className="flex-1 bg-[#F97316] hover:bg-[#F97316]/90"
+                      className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground"
                       onClick={() => handleOpen(project.id)}
                     >
                       <FolderOpen className="h-4 w-4 mr-2" />
@@ -264,7 +264,7 @@ function ProjectsContent() {
                     <Button
                       variant="outline"
                       size="icon"
-                      className="text-red-500 hover:text-red-600 hover:bg-red-50"
+                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
                       onClick={() => handleDelete(project.id, project.name)}
                       disabled={deletingId === project.id}
                     >
