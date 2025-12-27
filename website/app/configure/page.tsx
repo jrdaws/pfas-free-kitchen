@@ -26,6 +26,7 @@ const LivePreviewPanel = dynamic(() => import("@/app/components/configurator/Liv
 const PreviewToggleButton = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.PreviewToggleButton })), { ssr: false });
 const PreviewCard = dynamic(() => import("@/app/components/configurator/PreviewCard").then(mod => ({ default: mod.PreviewCard })), { ssr: false });
 const ProjectOverviewBox = dynamic(() => import("@/app/components/configurator/ProjectOverviewBox").then(mod => ({ default: mod.ProjectOverviewBox })), { ssr: false });
+const ThemeToggle = dynamic(() => import("@/components/ui/theme-toggle").then(mod => ({ default: mod.ThemeToggle })), { ssr: false });
 
 // Import section components for inline sidebar content
 const ResearchSection = dynamic(() => import("@/app/components/configurator/sections/ResearchSection").then(mod => ({ default: mod.ResearchSection })), { ssr: false });
@@ -515,6 +516,9 @@ export default function ConfigurePage() {
             isVisible={showLivePreview} 
             onToggle={() => setShowLivePreview(!showLivePreview)} 
           />
+
+          {/* Theme Toggle */}
+          <ThemeToggle />
 
           {/* Mode Toggle */}
           <ModeToggle mode={mode} onChange={setMode} />

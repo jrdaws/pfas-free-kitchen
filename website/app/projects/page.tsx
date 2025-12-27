@@ -23,6 +23,7 @@ import {
   Copy,
   Check,
 } from "lucide-react";
+import { TerminalProjectCard } from "@/components/ui/terminal-project-card";
 
 function ProjectsContent() {
   const router = useRouter();
@@ -177,106 +178,21 @@ function ProjectsContent() {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {projects.map((project) => (
-              <Card key={project.id} className="hover:shadow-lg transition-shadow bg-card border-border">
-                <CardHeader className="pb-3">
-                  <div className="flex items-start justify-between">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="text-lg truncate">
-                        {project.name}
-                      </CardTitle>
-                      <CardDescription className="mt-1 line-clamp-2">
-                        {project.description || "No description"}
-                      </CardDescription>
-                    </div>
-                    {getStatusBadge(project.status)}
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Template & Features */}
-                  <div className="space-y-2">
-                    {project.template && (
-                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                        <span className="font-medium">Template:</span>
-                        <Badge variant="outline" className="capitalize">
-                          {project.template}
-                        </Badge>
-                      </div>
-                    )}
-                    {project.features && project.features.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {project.features.slice(0, 3).map((feature) => (
-                          <Badge key={feature} variant="secondary" className="text-xs">
-                            {feature}
-                          </Badge>
-                        ))}
-                        {project.features.length > 3 && (
-                          <Badge variant="secondary" className="text-xs">
-                            +{project.features.length - 3}
-                          </Badge>
-                        )}
-                      </div>
-                    )}
-                  </div>
-
-                  {/* NPX Token */}
-                  {project.npx_token && (
-                    <div className="p-3 bg-background rounded-lg border border-border">
-                      <div className="flex items-center justify-between gap-2">
-                        <div className="flex items-center gap-2 text-xs font-mono text-foreground-secondary truncate">
-                          <Terminal className="h-3 w-3 flex-shrink-0" />
-                          <span className="truncate">{project.npx_token}</span>
-                        </div>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 w-6 p-0 text-foreground-muted hover:text-foreground"
-                          onClick={() => handleCopyToken(project.npx_token)}
-                        >
-                          {copiedToken === project.npx_token ? (
-                            <Check className="h-3 w-3" />
-                          ) : (
-                            <Copy className="h-3 w-3" />
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Meta */}
-                  <div className="text-xs text-muted-foreground">
-                    Created {formatDate(project.created_at)}
-                    {project.updated_at !== project.created_at && (
-                      <> · Updated {formatDate(project.updated_at)}</>
-                    )}
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      variant="default"
-                      className="flex-1 bg-primary hover:bg-primary-hover text-primary-foreground"
-                      onClick={() => handleOpen(project.id)}
-                    >
-                      <FolderOpen className="h-4 w-4 mr-2" />
-                      Open
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="icon"
-                      className="text-destructive hover:text-destructive hover:bg-destructive/10"
-                      onClick={() => handleDelete(project.id, project.name)}
-                      disabled={deletingId === project.id}
-                    >
-                      {deletingId === project.id ? (
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+              <TerminalProjectCard
+                key={project.id}
+                id={project.id}
+                name={project.name}
+                description={project.description || undefined}
+                template={project.template || undefined}
+                features={project.features || []}
+                status={project.status as "draft" | "active" | "archived"}
+                npxToken={project.npx_token || undefined}
+                createdAt={project.created_at}
+                updatedAt={project.updated_at}
+                onOpen={handleOpen}
+                onDelete={handleDelete}
+                isDeleting={deletingId === project.id}
+              />
             ))}
           </div>
         )}

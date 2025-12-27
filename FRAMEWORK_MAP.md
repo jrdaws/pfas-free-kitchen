@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- b4c98dc 2025-12-27 feat(configurator): add missing configuration steps
 - dafd8bc 2025-12-27 feat(sidebar): make service indicators dynamic based on step completion
 - 368addd 2025-12-27 feat(sidebar): add Connected Services UI panel and status indicators
 - 579de9f 2025-12-27 feat(configurator): add Connected Services UI component
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - ca6e0bd 2025-12-25 feat(governance): implement tiered checkpoint system
 - 97120ba 2025-12-25 docs(task): add mandatory backup step to checkpoint implementation task
 - e9c1917 2025-12-25 docs(task): create tiered checkpoint implementation task - approved by Auditor
-- 1c0272e 2025-12-25 feat(website): implement Warm Neutral design system
 
 ## Agent Governance Structure
 
