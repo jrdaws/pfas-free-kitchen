@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 603ff45 2026-01-03 fix(configurator): compact sidebar sections & dark theme main content
 - f299ea9 2026-01-03 feat(research): add AI-powered domain & URL analysis
 - b4e3eda 2025-12-27 feat(configurator): add P1/P2/P3 UI enhancements
 - b4c98dc 2025-12-27 feat(configurator): add missing configuration steps
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 43c05e1 2025-12-25 chore: move checkpoint task to done
 - 7ada972 2025-12-25 feat(scripts): add tiered checkpoint support
 - 2eea711 2025-12-25 fix(website): replace remaining gray colors with stone
-- ca6e0bd 2025-12-25 feat(governance): implement tiered checkpoint system
 
 ## Agent Governance Structure
 
