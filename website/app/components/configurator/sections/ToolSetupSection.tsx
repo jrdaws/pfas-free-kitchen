@@ -104,78 +104,73 @@ export function ToolSetupSection({
 
   if (isComplete) {
     return (
-      <div className="flex items-center gap-2 py-2">
-        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-success/20">
-          <Check className="h-4 w-4 text-success" />
+      <div className="flex items-center gap-1.5 py-1">
+        <div className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20">
+          <Check className="h-3 w-3 text-emerald-400" />
         </div>
-        <span className="text-sm text-success font-medium">
-          {config.name} is ready
+        <span className="text-xs text-emerald-400 font-medium">
+          {config.name} ready
         </span>
-        <Badge variant="success" className="ml-auto h-5 text-xs">
-          Ready
-        </Badge>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      {/* Description */}
-      <p className="text-sm text-foreground-secondary">{config.description}</p>
+    <div className="space-y-2">
+      {/* Description - Compact */}
+      <p className="text-[10px] text-white/50">{config.description}</p>
 
-      {/* Guided Steps */}
-      <div className="space-y-3">
+      {/* Guided Steps - Compact */}
+      <div className="space-y-1.5">
         {config.steps.map((step) => (
-          <div key={step.number} className="flex items-start gap-3">
-            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-semibold shrink-0">
+          <div key={step.number} className="flex items-start gap-2">
+            <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[var(--primary)] text-white text-[9px] font-semibold shrink-0 mt-0.5">
               {step.number}
             </div>
-            <div className="text-sm text-foreground-secondary pt-0.5">{step.content}</div>
+            <div className="text-[11px] text-white/70 leading-tight [&_a]:text-[var(--primary)] [&_a]:hover:underline [&_code]:bg-black/30 [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-[9px]">
+              {step.content}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Action Buttons */}
-      <div className="flex gap-2 pt-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="text-sm border-border hover:bg-background-alt"
-          onClick={onMarkComplete}
-        >
-          Show Me How
-          <ExternalLink className="h-3 w-3 ml-1.5" />
-        </Button>
-        
+      {/* Action Buttons - Compact */}
+      <div className="flex gap-1.5 pt-1">
         {config.showConnectButton ? (
           <Button
             size="sm"
-            className="text-sm bg-primary hover:bg-primary-hover text-primary-foreground"
+            className="h-6 text-[10px] px-2 bg-[var(--primary)] hover:bg-[var(--primary)]/80 text-white"
             onClick={onConnect}
             disabled={isLoading}
           >
             {isLoading ? (
-              <>
-                <Loader2 className="h-3 w-3 mr-1.5 animate-spin" />
-                Connecting...
-              </>
+              <Loader2 className="h-2.5 w-2.5 animate-spin" />
             ) : (
               <>
-                {config.primaryAction}
-                <ExternalLink className="h-3 w-3 ml-1.5" />
+                Connect
+                <ExternalLink className="h-2 w-2 ml-1" />
               </>
             )}
           </Button>
         ) : (
           <Button
             size="sm"
-            className="text-sm bg-primary hover:bg-primary-hover text-primary-foreground"
+            className="h-6 text-[10px] px-2 bg-[var(--primary)] hover:bg-[var(--primary)]/80 text-white"
             onClick={() => config.primaryUrl && window.open(config.primaryUrl, "_blank")}
           >
             {config.primaryAction}
-            <ExternalLink className="h-3 w-3 ml-1.5" />
+            <ExternalLink className="h-2 w-2 ml-1" />
           </Button>
         )}
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-6 text-[10px] px-2 border-white/20 text-white/70 hover:bg-white/10"
+          onClick={onMarkComplete}
+        >
+          Done
+          <Check className="h-2 w-2 ml-1" />
+        </Button>
       </div>
     </div>
   );

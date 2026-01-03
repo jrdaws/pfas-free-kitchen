@@ -37,31 +37,31 @@ export function CoreFeaturesSection({
   };
 
   return (
-    <div className="space-y-3">
-      {/* Summary */}
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-foreground-secondary">
-          {getTotalSelected()} features selected
+    <div className="space-y-2">
+      {/* Summary - Compact */}
+      <div className="flex items-center justify-between">
+        <span className="text-xs text-white/60">
+          {getTotalSelected()} selected
         </span>
         {getTotalSelected() > 0 && (
           <Button
             variant="ghost"
             size="sm"
-            className="h-7 text-xs text-foreground-muted hover:text-foreground"
+            className="h-5 text-[10px] px-1.5 text-white/40 hover:text-white"
             onClick={() => Object.keys(selectedFeatures).forEach(cat => onClearCategory?.(cat))}
           >
-            <RotateCcw className="h-3 w-3 mr-1" />
-            Clear all
+            <RotateCcw className="h-2.5 w-2.5 mr-0.5" />
+            Clear
           </Button>
         )}
       </div>
 
-      {/* Feature Categories */}
+      {/* Feature Categories - Compact */}
       <Accordion
         type="multiple"
         value={expandedCategories}
         onValueChange={setExpandedCategories}
-        className="space-y-2"
+        className="space-y-1"
       >
         {FEATURE_CATEGORIES.map((category) => {
           const features = getFeaturesByCategory(category.id);
@@ -72,28 +72,28 @@ export function CoreFeaturesSection({
             <AccordionItem
               key={category.id}
               value={category.id}
-              className="border border-border rounded-lg overflow-hidden bg-card"
+              className="border border-white/10 rounded-md overflow-hidden bg-black/20"
             >
-              <AccordionTrigger className="px-3 py-2.5 hover:bg-background-alt hover:no-underline">
-                <div className="flex items-center gap-2 flex-1">
-                  <span className="font-medium text-sm text-foreground">
+              <AccordionTrigger className="px-2 py-1.5 hover:bg-white/5 hover:no-underline">
+                <div className="flex items-center gap-1.5 flex-1">
+                  <span className="font-medium text-xs text-white/90">
                     {category.label}
                   </span>
                   {count > 0 && (
-                    <Badge variant="secondary" className="h-5 px-1.5 text-xs">
+                    <span className="bg-[var(--primary)] text-white text-[10px] px-1.5 py-0.5 rounded-full font-medium">
                       {count}
-                    </Badge>
+                    </span>
                   )}
                 </div>
                 <ChevronDown
                   className={cn(
-                    "h-4 w-4 text-foreground-muted transition-transform",
+                    "h-3 w-3 text-white/40 transition-transform",
                     isExpanded && "rotate-180"
                   )}
                 />
               </AccordionTrigger>
-              <AccordionContent className="px-3 pb-3 pt-1">
-                <div className="space-y-2">
+              <AccordionContent className="px-2 pb-2 pt-0.5">
+                <div className="space-y-1">
                   {features.map((feature) => {
                     const isSelected = selectedFeatures[category.id]?.includes(feature.id);
 
@@ -101,8 +101,8 @@ export function CoreFeaturesSection({
                       <div
                         key={feature.id}
                         className={cn(
-                          "flex items-start gap-2.5 p-2 rounded-md cursor-pointer transition-colors",
-                          isSelected ? "bg-primary/10" : "hover:bg-background-alt"
+                          "flex items-start gap-1.5 p-1.5 rounded cursor-pointer transition-colors",
+                          isSelected ? "bg-[var(--primary)]/15" : "hover:bg-white/5"
                         )}
                         onClick={() => onToggleFeature(category.id, feature.id)}
                       >
@@ -110,40 +110,22 @@ export function CoreFeaturesSection({
                           id={feature.id}
                           checked={isSelected}
                           onCheckedChange={() => onToggleFeature(category.id, feature.id)}
-                          className="mt-0.5"
+                          className="mt-0.5 h-3 w-3"
                         />
-                        <div className="flex-1">
+                        <div className="flex-1 min-w-0">
                           <Label
                             htmlFor={feature.id}
                             className={cn(
-                              "text-sm cursor-pointer",
-                              isSelected ? "text-primary font-medium" : "text-foreground"
+                              "text-[11px] cursor-pointer leading-tight block truncate",
+                              isSelected ? "text-[var(--primary)] font-medium" : "text-white/80"
                             )}
                           >
                             {feature.label}
                           </Label>
-                          <p className="text-xs text-foreground-muted mt-0.5">
-                            {feature.description}
-                          </p>
                         </div>
                       </div>
                     );
                   })}
-
-                  {count > 0 && (
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-7 text-xs text-foreground-muted hover:text-foreground w-full justify-start"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onClearCategory?.(category.id);
-                      }}
-                    >
-                      <RotateCcw className="h-3 w-3 mr-1" />
-                      Clear selection
-                    </Button>
-                  )}
                 </div>
               </AccordionContent>
             </AccordionItem>

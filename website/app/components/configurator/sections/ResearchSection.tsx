@@ -42,26 +42,26 @@ export function ResearchSection({
   };
 
   return (
-    <div className="space-y-4">
-      {/* Domain Input */}
-      <div className="space-y-2">
-        <Label htmlFor="domain" className="text-sm font-medium text-foreground-secondary">
+    <div className="space-y-2.5">
+      {/* Domain Input - Compact */}
+      <div className="space-y-1">
+        <Label htmlFor="domain" className="text-xs font-medium text-white/70">
           What domain is your project in?
         </Label>
         <Input
           id="domain"
           value={domain}
           onChange={(e) => onDomainChange(e.target.value)}
-          placeholder="e.g., E-commerce, SaaS, Education..."
-          className="h-10 bg-background-alt border-border text-foreground placeholder:text-foreground-muted"
+          placeholder="e.g., E-commerce, SaaS..."
+          className="h-8 text-xs bg-black/30 border-white/15 text-white placeholder:text-white/40"
         />
       </div>
 
-      {/* Inspiration Toggle */}
-      <div className="flex items-center justify-between py-2">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-foreground-muted" />
-          <Label htmlFor="inspiration-toggle" className="text-sm text-foreground-secondary cursor-pointer">
+      {/* Inspiration Toggle - Compact */}
+      <div className="flex items-center justify-between py-1">
+        <div className="flex items-center gap-1.5">
+          <Sparkles className="h-3 w-3 text-white/50" />
+          <Label htmlFor="inspiration-toggle" className="text-xs text-white/70 cursor-pointer">
             Add inspiration websites
           </Label>
         </div>
@@ -69,76 +69,77 @@ export function ResearchSection({
           id="inspiration-toggle"
           checked={showInspiration}
           onCheckedChange={setShowInspiration}
+          className="scale-75"
         />
       </div>
 
-      {/* Inspiration URLs */}
+      {/* Inspiration URLs - Compact */}
       {showInspiration && (
-        <div className="space-y-3 animate-in slide-in-from-top-2 duration-200">
+        <div className="space-y-1.5 animate-in slide-in-from-top-2 duration-200">
           {/* Existing URLs */}
           {inspirationUrls.map((url, index) => (
-            <div key={index} className="flex items-center gap-2 group">
+            <div key={index} className="flex items-center gap-1 group">
               <Input
                 value={url}
                 readOnly
-                className="h-9 text-sm bg-background-alt border-border text-foreground"
+                className="h-7 text-xs bg-black/30 border-white/15 text-white truncate"
               />
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
                 onClick={() => removeUrl(url)}
               >
-                <X className="h-4 w-4 text-foreground-muted" />
+                <X className="h-3 w-3 text-white/50" />
               </Button>
             </div>
           ))}
 
           {/* Add new URL */}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1">
             <Input
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
-              placeholder="https://example.com"
-              className="h-9 text-sm bg-background-alt border-border text-foreground placeholder:text-foreground-muted"
+              placeholder="https://..."
+              className="h-7 text-xs bg-black/30 border-white/15 text-white placeholder:text-white/40"
               onKeyDown={(e) => e.key === "Enter" && addUrl()}
             />
             <Button
               variant="outline"
               size="icon"
-              className="h-9 w-9 border-border hover:bg-background-alt"
+              className="h-7 w-7 border-white/15 hover:bg-white/10 shrink-0"
               onClick={addUrl}
               disabled={!newUrl.trim()}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="h-3 w-3" />
             </Button>
           </div>
 
-          <p className="text-xs text-foreground-muted">
-            Add websites that inspire your project&apos;s design or features
+          <p className="text-[10px] text-white/40 leading-tight">
+            Add websites that inspire your project
           </p>
         </div>
       )}
 
-      {/* Action Buttons */}
-      <div className="flex gap-2 pt-2">
+      {/* Action Buttons - Compact */}
+      <div className="flex gap-1.5 pt-1">
         <Button
           variant="outline"
           size="sm"
-          className="text-sm border-border hover:bg-background-alt"
+          className="h-7 text-xs px-2 border-white/20 text-white/80 hover:bg-white/10"
           onClick={onShowMe}
         >
           Show Me
-          <ExternalLink className="h-3 w-3 ml-1.5" />
+          <ExternalLink className="h-2.5 w-2.5 ml-1" />
         </Button>
         <Button
           size="sm"
-          className="text-sm bg-primary hover:bg-primary-hover text-primary-foreground"
+          className="h-7 text-xs px-2 bg-[var(--primary)] hover:bg-[var(--primary)]/80 text-white"
           onClick={onStartResearch}
           disabled={isLoading || !domain.trim()}
         >
-          {isLoading ? "Researching..." : "Start Research"}
-          <Sparkles className="h-3 w-3 ml-1.5" />
+          {isLoading ? "..." : "Start Research"}
+          <Sparkles className="h-2.5 w-2.5 ml-1" />
         </Button>
       </div>
     </div>

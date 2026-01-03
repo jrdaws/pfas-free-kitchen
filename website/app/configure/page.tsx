@@ -6,7 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TEMPLATES } from "@/lib/templates";
-import { useState, useEffect, useRef, useMemo } from "react";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { analyzeProject, type ResearchResult } from "@/lib/research-client";
 
 // Dynamically import components to avoid SSR issues
 const AccordionSidebar = dynamic(() => import("@/app/components/configurator/AccordionSidebar").then(mod => ({ default: mod.AccordionSidebar })), { ssr: false });
@@ -27,6 +28,7 @@ const PreviewToggleButton = dynamic(() => import("@/app/components/configurator/
 const PreviewCard = dynamic(() => import("@/app/components/configurator/PreviewCard").then(mod => ({ default: mod.PreviewCard })), { ssr: false });
 const ProjectOverviewBox = dynamic(() => import("@/app/components/configurator/ProjectOverviewBox").then(mod => ({ default: mod.ProjectOverviewBox })), { ssr: false });
 const ThemeToggle = dynamic(() => import("@/components/ui/theme-toggle").then(mod => ({ default: mod.ThemeToggle })), { ssr: false });
+const ResearchResults = dynamic(() => import("@/app/components/configurator/ResearchResults").then(mod => ({ default: mod.ResearchResults })), { ssr: false });
 
 // Import section components for inline sidebar content
 const ResearchSection = dynamic(() => import("@/app/components/configurator/sections/ResearchSection").then(mod => ({ default: mod.ResearchSection })), { ssr: false });
@@ -93,6 +95,11 @@ const TOTAL_STEPS = 10;
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"component" | "preview" | "generate">("component");
   const [showLivePreview, setShowLivePreview] = useState(false);
+  
+  // Research state
+  const [researchResult, setResearchResult] = useState<ResearchResult | null>(null);
+  const [isResearching, setIsResearching] = useState(false);
+  const [researchError, setResearchError] = useState<string | null>(null);
   
   // Track navigation direction for slide animations
   const [animationDirection, setAnimationDirection] = useState<"left" | "right">("right");
@@ -180,6 +187,74 @@ export default function ConfigurePage() {
   // Calculate progress
   const progress = (completedSteps.size / TOTAL_STEPS) * 100;
 
+  // Handle research API call
+  const handleStartResearch = useCallback(async () => {
+    if (!researchDomain.trim()) return;
+    
+    setIsResearching(true);
+    setResearchError(null);
+    
+    try {
+      const result = await analyzeProject({
+        domain: researchDomain,
+        inspirationUrls: inspirationUrls.length > 0 ? inspirationUrls : undefined,
+        vision: description || undefined,
+      });
+      
+      if (result.success) {
+        setResearchResult(result);
+        completeStep(2);
+      } else {
+        setResearchError(result.error || "Research failed");
+      }
+    } catch (error) {
+      setResearchError(error instanceof Error ? error.message : "Research failed");
+    } finally {
+      setIsResearching(false);
+    }
+  }, [researchDomain, inspirationUrls, description, completeStep]);
+
+  // Handle applying research recommendations
+  const handleApplyRecommendations = useCallback((recommendations: {
+    template: string;
+    features: Record<string, string[]>;
+    integrations: string[];
+  }) => {
+    // Apply template if valid
+    if (recommendations.template && TEMPLATES[recommendations.template as keyof typeof TEMPLATES]) {
+      setTemplate(recommendations.template);
+      completeStep(1);
+    }
+    
+    // Apply features
+    Object.entries(recommendations.features).forEach(([category, features]) => {
+      features.forEach(feature => {
+        // Only toggle if not already selected
+        if (!selectedFeatures[category]?.includes(feature)) {
+          toggleFeature(category, feature);
+        }
+      });
+    });
+    
+    // Apply integrations
+    recommendations.integrations.forEach(integration => {
+      // Map integration names to our integration keys
+      const integrationMap: Record<string, string> = {
+        "stripe": "payments",
+        "uploadthing": "storage",
+        "resend": "email",
+        "analytics": "analytics",
+        "sentry": "monitoring",
+      };
+      const key = integrationMap[integration.toLowerCase()];
+      if (key) {
+        setIntegration(key, integration);
+      }
+    });
+    
+    completeStep(3); // Core features step
+  }, [setTemplate, toggleFeature, setIntegration, completeStep, selectedFeatures]);
+
   // Validation for each step
   const canProceed = () => {
     switch (currentStep) {
@@ -253,13 +328,12 @@ export default function ConfigurePage() {
             onDomainChange={setResearchDomain}
             inspirationUrls={inspirationUrls}
             onInspirationUrlsChange={setInspirationUrls}
-            onStartResearch={() => {
-              completeStep(2);
-              setStep(3);
-            }}
+            onStartResearch={handleStartResearch}
             onShowMe={() => {
-              // Show documentation or tutorial
+              // Open docs in new tab
+              window.open("/docs/research", "_blank");
             }}
+            isLoading={isResearching}
           />
         );
       case "core-features":
@@ -376,6 +450,7 @@ export default function ConfigurePage() {
                 This helps us understand what you&apos;re building.
               </p>
             </div>
+            
             <InspirationUpload
               inspirations={inspirations}
               description={description}
@@ -383,6 +458,22 @@ export default function ConfigurePage() {
               onRemoveInspiration={removeInspiration}
               onDescriptionChange={setDescription}
             />
+
+            {/* Research Error */}
+            {researchError && (
+              <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm">
+                {researchError}
+              </div>
+            )}
+
+            {/* Research Results */}
+            {researchResult && researchResult.success && (
+              <ResearchResults
+                result={researchResult}
+                onApplyRecommendations={handleApplyRecommendations}
+                appliedFeatures={selectedFeatures}
+              />
+            )}
           </div>
         );
         

@@ -57,88 +57,88 @@ export function IntegrateAISection({
   const selectedProviderData = AI_PROVIDERS.find((p) => p.id === selectedProvider);
 
   return (
-    <div className="space-y-4">
-      {/* Provider Selection */}
-      <div className="space-y-2">
-        <Label className="text-sm font-medium text-foreground-secondary">
+    <div className="space-y-2.5">
+      {/* Provider Selection - Compact */}
+      <div className="space-y-1.5">
+        <Label className="text-xs font-medium text-white/70">
           Select AI Provider
         </Label>
         <RadioGroup
           value={selectedProvider}
           onValueChange={onProviderChange}
-          className="space-y-2"
+          className="space-y-1"
         >
           {AI_PROVIDERS.map((provider) => (
             <div
               key={provider.id}
               className={cn(
-                "flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-colors",
+                "flex items-center gap-2 p-2 rounded-md border cursor-pointer transition-colors",
                 selectedProvider === provider.id
-                  ? "border-primary bg-primary/10"
-                  : "border-border hover:border-foreground-muted"
+                  ? "border-[var(--primary)]/50 bg-[var(--primary)]/10"
+                  : "border-white/10 hover:border-white/20 bg-black/20"
               )}
               onClick={() => onProviderChange(provider.id)}
             >
-              <RadioGroupItem value={provider.id} id={provider.id} />
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
+              <RadioGroupItem value={provider.id} id={provider.id} className="h-3 w-3" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
                   <Label
                     htmlFor={provider.id}
                     className={cn(
-                      "text-sm cursor-pointer",
+                      "text-xs cursor-pointer",
                       selectedProvider === provider.id
-                        ? "text-primary font-medium"
-                        : "text-foreground"
+                        ? "text-[var(--primary)] font-medium"
+                        : "text-white/90"
                     )}
                   >
                     {provider.name}
                   </Label>
                   {selectedProvider === provider.id && isKeyValid && (
-                    <Badge variant="success" className="h-5 text-xs">
-                      <Check className="h-3 w-3 mr-0.5" />
+                    <span className="bg-emerald-500/20 text-emerald-400 text-[9px] px-1 py-0.5 rounded flex items-center">
+                      <Check className="h-2 w-2 mr-0.5" />
                       Ready
-                    </Badge>
+                    </span>
                   )}
                 </div>
-                <p className="text-xs text-foreground-muted">{provider.description}</p>
+                <p className="text-[10px] text-white/40 truncate">{provider.description}</p>
               </div>
             </div>
           ))}
         </RadioGroup>
       </div>
 
-      {/* API Key Input */}
+      {/* API Key Input - Compact */}
       {selectedProvider && (
-        <div className="space-y-2 animate-in slide-in-from-top-2 duration-200">
-          <Label htmlFor="api-key" className="text-sm font-medium text-foreground-secondary">
+        <div className="space-y-1 animate-in slide-in-from-top-2 duration-200">
+          <Label htmlFor="api-key" className="text-xs font-medium text-white/70">
             API Key
           </Label>
           <div className="relative">
-            <Key className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-foreground-muted" />
+            <Key className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-white/40" />
             <Input
               id="api-key"
               type={showKey ? "text" : "password"}
               value={apiKey}
               onChange={(e) => onApiKeyChange(e.target.value)}
-              placeholder={`Enter your ${selectedProviderData?.name} API key`}
-              className="h-10 pl-9 pr-10 font-mono text-sm bg-background-alt border-border text-foreground"
+              placeholder="Enter API key..."
+              className="h-7 pl-7 pr-7 font-mono text-xs bg-black/30 border-white/15 text-white placeholder:text-white/30"
             />
             <Button
               type="button"
               variant="ghost"
               size="icon"
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-8 w-8"
+              className="absolute right-0.5 top-1/2 -translate-y-1/2 h-6 w-6"
               onClick={() => setShowKey(!showKey)}
             >
               {showKey ? (
-                <EyeOff className="h-4 w-4 text-foreground-muted" />
+                <EyeOff className="h-3 w-3 text-white/40" />
               ) : (
-                <Eye className="h-4 w-4 text-foreground-muted" />
+                <Eye className="h-3 w-3 text-white/40" />
               )}
             </Button>
           </div>
-          <p className="text-xs text-foreground-muted">
-            Get your API key from{" "}
+          <p className="text-[10px] text-white/40">
+            Get key from{" "}
             <a
               href={
                 selectedProvider === "anthropic"
@@ -149,26 +149,11 @@ export function IntegrateAISection({
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="text-primary hover:underline inline-flex items-center gap-0.5"
+              className="text-[var(--primary)] hover:underline"
             >
               {selectedProviderData?.name}
-              <ExternalLink className="h-3 w-3" />
             </a>
           </p>
-        </div>
-      )}
-
-      {/* Available Models */}
-      {selectedProvider && selectedProviderData && (
-        <div className="space-y-2">
-          <Label className="text-xs text-foreground-muted">Available Models</Label>
-          <div className="flex flex-wrap gap-1.5">
-            {selectedProviderData.models.map((model) => (
-              <Badge key={model} variant="secondary" className="text-xs">
-                {model}
-              </Badge>
-            ))}
-          </div>
         </div>
       )}
     </div>

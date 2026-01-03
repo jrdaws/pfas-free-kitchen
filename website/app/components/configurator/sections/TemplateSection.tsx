@@ -31,12 +31,12 @@ export function TemplateSection({
   onTemplateChange,
 }: TemplateSectionProps) {
   return (
-    <div className="space-y-3">
-      <p className="text-xs text-[var(--sidebar-text-muted)]">
-        Choose a template to start with
+    <div className="space-y-1.5">
+      <p className="text-[10px] text-white/50">
+        Choose a template
       </p>
       
-      <div className="space-y-2">
+      <div className="space-y-1">
         {TEMPLATE_LIST.slice(0, 4).map((template) => {
           const isSelected = selectedTemplate === template.id;
           
@@ -45,38 +45,33 @@ export function TemplateSection({
               key={template.id}
               onClick={() => onTemplateChange(template.id)}
               className={cn(
-                "w-full text-left p-3 rounded-lg border transition-all",
+                "w-full text-left p-2 rounded-md border transition-all",
                 isSelected
-                  ? "bg-[var(--primary)]/10 border-[var(--primary)]/30"
+                  ? "bg-[var(--primary)]/15 border-[var(--primary)]/40"
                   : "bg-black/20 border-white/10 hover:border-white/20"
               )}
             >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <span className="text-lg">{template.icon}</span>
-                  <span className={cn(
-                    "font-medium text-sm",
-                    isSelected ? "text-[var(--primary)]" : "text-white"
-                  )}>
-                    {template.name}
-                  </span>
-                </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm">{template.icon}</span>
+                <span className={cn(
+                  "font-medium text-xs flex-1 truncate",
+                  isSelected ? "text-[var(--primary)]" : "text-white/90"
+                )}>
+                  {template.name}
+                </span>
                 {isSelected && (
-                  <Check className="h-4 w-4 text-[var(--primary)]" />
+                  <Check className="h-3 w-3 text-[var(--primary)] shrink-0" />
                 )}
               </div>
-              <p className="text-xs text-white/50 mt-1 ml-7">
-                {template.description.slice(0, 50)}...
-              </p>
             </button>
           );
         })}
       </div>
       
       {selectedTemplate && (
-        <div className="flex items-center gap-1.5 text-xs text-emerald-400 mt-2">
-          <Sparkles className="h-3 w-3" />
-          <span>Template selected</span>
+        <div className="flex items-center gap-1 text-[10px] text-emerald-400">
+          <Sparkles className="h-2.5 w-2.5" />
+          <span>Selected</span>
         </div>
       )}
     </div>
