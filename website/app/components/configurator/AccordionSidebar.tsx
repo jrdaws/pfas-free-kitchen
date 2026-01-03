@@ -12,7 +12,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Check, Github, Database, Rocket, HelpCircle } from "lucide-react";
+import { Check, Github, Database, Rocket, HelpCircle, CreditCard, Mail, BarChart3, Shield, Settings } from "lucide-react";
 
 // Custom SVG icon component
 interface SectionIconProps {

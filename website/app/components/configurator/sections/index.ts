@@ -7,3 +7,7 @@ export { TemplateSection } from "./TemplateSection";
 export { ProjectSetupSection } from "./ProjectSetupSection";
 export { ExportSection } from "./ExportSection";
 export { BrandingSection } from "./BrandingSection";
+export { PaymentsSection } from "./PaymentsSection";
+export { EmailSection } from "./EmailSection";
+export { AnalyticsSection } from "./AnalyticsSection";
+export { AuthProviderSection } from "./AuthProviderSection";

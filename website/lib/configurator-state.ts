@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export type Mode = 'beginner' | 'advanced';
 
-export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11;
+export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
 
 // Brand color scheme options
 export interface ColorScheme {
@@ -101,21 +101,21 @@ export const PHASES: readonly Phase[] = [
     label: 'Setup',
     description: 'Choose your foundation',
     icon: '/images/configurator/phases/phase-setup-icon.svg',
-    steps: [1, 2, 3], // Template, Inspiration, Project
+    steps: [1, 2, 3, 4], // Template, Research, Branding, Features
   },
   {
     id: 'configure',
     label: 'Configure',
     description: 'Set up integrations',
     icon: '/images/configurator/phases/phase-configure-icon.svg',
-    steps: [4, 5], // Integrations, Environment
+    steps: [5, 6, 7, 8, 9, 10], // AI, Payments, Email, Analytics, Auth, Project
   },
   {
     id: 'launch',
     label: 'Launch',
-    description: 'Preview and ship',
+    description: 'Connect tools and ship',
     icon: '/images/configurator/phases/phase-launch-icon.svg',
-    steps: [6, 7, 8], // Preview, Context, Export
+    steps: [11, 12, 13, 14, 15], // Cursor, GitHub, Supabase, Vercel, Export
   },
 ] as const;
 
@@ -127,14 +127,24 @@ export interface StepDef {
 }
 
 export const STEPS: readonly StepDef[] = [
+  // Setup Phase
   { number: 1, label: 'Template', phase: 'setup' },
-  { number: 2, label: 'Inspiration', phase: 'setup' },
-  { number: 3, label: 'Project', phase: 'setup' },
-  { number: 4, label: 'Integrations', phase: 'configure' },
-  { number: 5, label: 'Environment', phase: 'configure' },
-  { number: 6, label: 'Preview', phase: 'launch' },
-  { number: 7, label: 'Context', phase: 'launch' },
-  { number: 8, label: 'Export', phase: 'launch' },
+  { number: 2, label: 'Research', phase: 'setup' },
+  { number: 3, label: 'Branding', phase: 'setup' },
+  { number: 4, label: 'Features', phase: 'setup' },
+  // Configure Phase
+  { number: 5, label: 'AI', phase: 'configure' },
+  { number: 6, label: 'Payments', phase: 'configure' },
+  { number: 7, label: 'Email', phase: 'configure' },
+  { number: 8, label: 'Analytics', phase: 'configure' },
+  { number: 9, label: 'Auth', phase: 'configure' },
+  { number: 10, label: 'Project', phase: 'configure' },
+  // Launch Phase
+  { number: 11, label: 'Cursor', phase: 'launch' },
+  { number: 12, label: 'GitHub', phase: 'launch' },
+  { number: 13, label: 'Supabase', phase: 'launch' },
+  { number: 14, label: 'Vercel', phase: 'launch' },
+  { number: 15, label: 'Export', phase: 'launch' },
 ] as const;
 
 export interface Inspiration {
@@ -210,6 +220,12 @@ export interface ConfiguratorState {
     foreground: string;
   };
 
+  // Service provider selections
+  paymentProvider?: string;
+  emailProvider?: string;
+  analyticsProvider?: string;
+  authProvider?: string;
+
   // Actions
   setStep: (step: Step) => void;
   completeStep: (step: Step) => void;
@@ -259,6 +275,12 @@ export interface ConfiguratorState {
   setColorScheme: (schemeId: string) => void;
   setCustomColor: (colorKey: keyof ConfiguratorState['customColors'], value: string) => void;
   
+  // Service provider actions
+  setPaymentProvider: (provider: string | undefined) => void;
+  setEmailProvider: (provider: string | undefined) => void;
+  setAnalyticsProvider: (provider: string | undefined) => void;
+  setAuthProvider: (provider: string | undefined) => void;
+  
   reset: () => void;
 }
 
@@ -306,6 +328,10 @@ const initialState = {
     background: '#FFFFFF',
     foreground: '#1A1A1A',
   },
+  paymentProvider: undefined,
+  emailProvider: undefined,
+  analyticsProvider: undefined,
+  authProvider: undefined,
 };
 
 export const useConfiguratorStore = create<ConfiguratorState>()(
@@ -450,6 +476,11 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         },
       })),
 
+      setPaymentProvider: (provider) => set({ paymentProvider: provider }),
+      setEmailProvider: (provider) => set({ emailProvider: provider }),
+      setAnalyticsProvider: (provider) => set({ analyticsProvider: provider }),
+      setAuthProvider: (provider) => set({ authProvider: provider }),
+
       reset: () => set(initialState),
     }),
     {
@@ -477,6 +508,10 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         aiProvider: state.aiProvider,
         colorScheme: state.colorScheme,
         customColors: state.customColors,
+        paymentProvider: state.paymentProvider,
+        emailProvider: state.emailProvider,
+        analyticsProvider: state.analyticsProvider,
+        authProvider: state.authProvider,
         // Note: aiApiKey is NOT persisted for security
       }),
       onRehydrateStorage: () => (state) => {

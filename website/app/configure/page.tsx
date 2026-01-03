@@ -96,6 +96,17 @@ const getPhaseForStep = (step: number): string => {
 // Total number of steps
 const TOTAL_STEPS = 11;
 
+// Smart pre-fill prompts based on template selection (Option C UX improvement)
+const DOMAIN_PROMPTS: Record<string, string> = {
+  saas: "SaaS product for [describe your users and what problem you solve]",
+  ecommerce: "Online store selling [describe your products and target customers]",
+  blog: "Blog about [describe your topic and target audience]",
+  dashboard: "Dashboard for managing [describe what data or operations]",
+  "landing-page": "Landing page for [describe your product or service]",
+  "api-backend": "API backend for [describe what service it provides]",
+  "seo-directory": "Directory of [describe what you're listing and for whom]",
+};
+
 export default function ConfigurePage() {
   const [aiTab, setAiTab] = useState<"component" | "preview" | "generate">("component");
   const [showLivePreview, setShowLivePreview] = useState(false);
@@ -160,6 +171,19 @@ export default function ConfigurePage() {
   } = useConfiguratorStore();
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
+
+  // Smart pre-fill: When template changes, suggest a domain prompt (Option C)
+  useEffect(() => {
+    // Only pre-fill if:
+    // 1. A template is selected
+    // 2. Domain is empty OR domain matches an old pre-fill prompt
+    const currentPrompt = DOMAIN_PROMPTS[template];
+    const isOldPrefill = Object.values(DOMAIN_PROMPTS).includes(researchDomain);
+    
+    if (template && currentPrompt && (!researchDomain || isOldPrefill)) {
+      setResearchDomain(currentPrompt);
+    }
+  }, [template]); // Only trigger when template changes
 
   // Track step changes and set animation direction
   useEffect(() => {
