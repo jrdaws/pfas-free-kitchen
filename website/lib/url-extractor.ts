@@ -216,8 +216,10 @@ export async function extractMultipleUrls(urls: string[]): Promise<ExtractedCont
   });
 }
 
-// Helper functions
-function extractTitle(text: string): string {
+// Helper functions - all defensive against null/undefined
+function extractTitle(text: string | null | undefined): string {
+  if (!text || typeof text !== "string") return "";
+  
   // Try to find a title in markdown format
   const h1Match = text.match(/^#\s+(.+)$/m);
   if (h1Match) return h1Match[1].trim();
@@ -229,7 +231,9 @@ function extractTitle(text: string): string {
   return "";
 }
 
-function extractDescription(text: string): string {
+function extractDescription(text: string | null | undefined): string {
+  if (!text || typeof text !== "string") return "";
+  
   // Get first paragraph after title
   const paragraphs = text.split(/\n\n+/);
   for (const p of paragraphs) {
@@ -241,7 +245,9 @@ function extractDescription(text: string): string {
   return text.slice(0, 200).trim();
 }
 
-function extractLinks(text: string): string[] {
+function extractLinks(text: string | null | undefined): string[] {
+  if (!text || typeof text !== "string") return [];
+  
   const linkRegex = /https?:\/\/[^\s\)>\]]+/g;
   const matches = text.match(linkRegex) || [];
   return [...new Set(matches)].slice(0, 20);
