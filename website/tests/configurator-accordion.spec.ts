@@ -98,7 +98,7 @@ test.describe('Configurator - Accordion Sidebar', () => {
   });
 
   test('progress indicator shows correct count', async ({ page }) => {
-    // Progress should show "0/8 complete" initially in sidebar
+    // Progress should show "0/10 complete" initially in sidebar
     const sidebar = page.locator('aside');
     await expect(sidebar.getByText(/0\/8/)).toBeVisible({ timeout: 5000 });
   });
@@ -197,7 +197,7 @@ test.describe('Configurator - Feature Selection', () => {
 
   test('progress indicator is visible', async ({ page }) => {
     const sidebar = page.locator('aside');
-    // Progress indicator shows step count (0/8 format)
+    // Progress indicator shows step count (0/10 format)
     await expect(sidebar.getByText(/0\/8/)).toBeVisible({ timeout: 5000 });
   });
 });

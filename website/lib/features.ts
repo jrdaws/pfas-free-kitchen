@@ -22,7 +22,9 @@ export type FeatureCategory =
   | "product-database"
   | "search-filter"
   | "ecommerce"
-  | "analytics";
+  | "analytics"
+  | "billing"
+  | "enterprise";
 
 export interface FeatureCategoryDef {
   id: FeatureCategory;
@@ -62,6 +64,18 @@ export const FEATURE_CATEGORIES: FeatureCategoryDef[] = [
     label: "Analytics Features",
     description: "Tracking, metrics, and reporting",
     icon: "bar-chart",
+  },
+  {
+    id: "billing",
+    label: "Billing & Subscriptions",
+    description: "Payments, subscriptions, and invoicing",
+    icon: "credit-card",
+  },
+  {
+    id: "enterprise",
+    label: "Enterprise Features",
+    description: "Security, compliance, and administration",
+    icon: "shield",
   },
 ];
 
@@ -327,6 +341,163 @@ export const FEATURES: Feature[] = [
       "components/analytics/ReportChart.tsx",
     ],
   },
+  {
+    id: "charts-visualization",
+    label: "Charts & Visualization",
+    description: "Interactive charts, graphs, and data visualizations",
+    category: "analytics",
+    complexity: "medium",
+    dependencies: [],
+    codeTemplates: [
+      "components/charts/LineChart.tsx",
+      "components/charts/BarChart.tsx",
+      "components/charts/PieChart.tsx",
+      "lib/charts/chart-utils.ts",
+    ],
+  },
+
+  // Billing & Subscriptions
+  {
+    id: "subscription-billing",
+    label: "Subscription Billing",
+    description: "Recurring payments with Stripe subscriptions",
+    category: "billing",
+    complexity: "complex",
+    dependencies: ["email-registration"],
+    codeTemplates: [
+      "lib/billing/stripe-subscriptions.ts",
+      "app/billing/page.tsx",
+      "app/billing/plans/page.tsx",
+      "app/api/webhooks/stripe/route.ts",
+      "components/billing/PricingTable.tsx",
+      "components/billing/SubscriptionStatus.tsx",
+    ],
+  },
+  {
+    id: "one-time-payments",
+    label: "One-Time Payments",
+    description: "Single payment checkout with Stripe",
+    category: "billing",
+    complexity: "medium",
+    dependencies: [],
+    codeTemplates: [
+      "lib/billing/stripe-checkout.ts",
+      "app/api/checkout/session/route.ts",
+    ],
+  },
+  {
+    id: "invoicing",
+    label: "Invoicing",
+    description: "Generate and send invoices to customers",
+    category: "billing",
+    complexity: "medium",
+    dependencies: ["subscription-billing"],
+    codeTemplates: [
+      "lib/billing/invoices.ts",
+      "app/billing/invoices/page.tsx",
+      "components/billing/InvoiceCard.tsx",
+    ],
+  },
+
+  // E-commerce additions
+  {
+    id: "inventory-management",
+    label: "Inventory Management",
+    description: "Track stock levels, low stock alerts, and restocking",
+    category: "ecommerce",
+    complexity: "medium",
+    dependencies: ["stock-availability"],
+    codeTemplates: [
+      "lib/inventory/inventory-manager.ts",
+      "app/admin/inventory/page.tsx",
+      "components/inventory/StockLevelBar.tsx",
+      "components/inventory/LowStockAlert.tsx",
+    ],
+  },
+  {
+    id: "product-variants",
+    label: "Product Variants",
+    description: "Support sizes, colors, and other product options",
+    category: "ecommerce",
+    complexity: "medium",
+    dependencies: ["product-categories"],
+    codeTemplates: [
+      "lib/products/variants.ts",
+      "components/product/VariantSelector.tsx",
+      "components/product/SizeChart.tsx",
+      "components/product/ColorSwatches.tsx",
+    ],
+  },
+  {
+    id: "shipping-integration",
+    label: "Shipping Integration",
+    description: "Calculate shipping rates and track deliveries",
+    category: "ecommerce",
+    complexity: "complex",
+    dependencies: ["checkout-flow"],
+    codeTemplates: [
+      "lib/shipping/carriers.ts",
+      "lib/shipping/rate-calculator.ts",
+      "components/checkout/ShippingOptions.tsx",
+      "components/orders/TrackingInfo.tsx",
+      "app/api/shipping/rates/route.ts",
+    ],
+  },
+
+  // Enterprise Features
+  {
+    id: "rbac",
+    label: "Role-Based Access Control",
+    description: "Manage user roles and permissions",
+    category: "enterprise",
+    complexity: "complex",
+    dependencies: ["admin-dashboard"],
+    codeTemplates: [
+      "lib/auth/rbac.ts",
+      "lib/auth/permissions.ts",
+      "app/admin/roles/page.tsx",
+      "components/admin/RoleEditor.tsx",
+      "middleware.ts",
+    ],
+  },
+  {
+    id: "audit-logging",
+    label: "Audit Logging",
+    description: "Track all user actions for compliance",
+    category: "enterprise",
+    complexity: "medium",
+    dependencies: ["email-registration"],
+    codeTemplates: [
+      "lib/audit/audit-logger.ts",
+      "app/admin/audit-log/page.tsx",
+      "components/admin/AuditLogTable.tsx",
+    ],
+  },
+  {
+    id: "rate-limiting",
+    label: "Rate Limiting",
+    description: "Protect APIs from abuse with rate limits",
+    category: "enterprise",
+    complexity: "medium",
+    dependencies: [],
+    codeTemplates: [
+      "lib/security/rate-limiter.ts",
+      "middleware.ts",
+    ],
+  },
+  {
+    id: "multi-tenancy",
+    label: "Multi-Tenancy",
+    description: "Support multiple organizations/workspaces",
+    category: "enterprise",
+    complexity: "complex",
+    dependencies: ["rbac"],
+    codeTemplates: [
+      "lib/tenants/tenant-manager.ts",
+      "app/[tenant]/layout.tsx",
+      "components/tenant/TenantSwitcher.tsx",
+    ],
+  },
 ];
 
 // Get features by category
@@ -388,7 +559,7 @@ export function recommendFeatures(description: string): string[] {
   }
   
   if (desc.includes("shop") || desc.includes("buy") || desc.includes("cart") || desc.includes("ecommerce")) {
-    recommended.push("shopping-cart", "checkout-flow");
+    recommended.push("shopping-cart", "checkout-flow", "product-variants", "inventory-management");
   }
   
   if (desc.includes("analytics") || desc.includes("track") || desc.includes("metric")) {
@@ -396,7 +567,27 @@ export function recommendFeatures(description: string): string[] {
   }
   
   if (desc.includes("product") || desc.includes("catalog") || desc.includes("inventory")) {
-    recommended.push("product-categories", "stock-availability");
+    recommended.push("product-categories", "stock-availability", "inventory-management");
+  }
+  
+  // SaaS / Subscription keywords
+  if (desc.includes("saas") || desc.includes("subscription") || desc.includes("recurring") || desc.includes("billing") || desc.includes("plan")) {
+    recommended.push("subscription-billing", "email-registration");
+  }
+  
+  // Enterprise keywords
+  if (desc.includes("enterprise") || desc.includes("role") || desc.includes("permission") || desc.includes("security")) {
+    recommended.push("rbac", "audit-logging", "rate-limiting");
+  }
+  
+  // Dashboard / Charts keywords
+  if (desc.includes("dashboard") || desc.includes("chart") || desc.includes("report") || desc.includes("graph") || desc.includes("visualization")) {
+    recommended.push("charts-visualization", "reports", "admin-dashboard");
+  }
+  
+  // Shipping / Delivery keywords
+  if (desc.includes("ship") || desc.includes("delivery") || desc.includes("fulfillment")) {
+    recommended.push("shipping-integration", "order-history");
   }
 
   // Remove duplicates

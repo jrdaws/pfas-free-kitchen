@@ -11,7 +11,8 @@ import {
 } from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
-import { Check, Github, Database, Rocket } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Check, Github, Database, Rocket, HelpCircle } from "lucide-react";
 
 // Custom SVG icon component
 interface SectionIconProps {
@@ -62,6 +63,8 @@ export interface NavSection {
   description: string;
   stepNumber: number;
   badge?: string | number;
+  optional?: boolean;
+  tooltip?: string;
 }
 
 const NAV_SECTIONS: NavSection[] = [
@@ -74,8 +77,10 @@ const NAV_SECTIONS: NavSection[] = [
   {
     id: "research",
     label: "Research",
-    description: "Define your project vision",
+    description: "Industry & inspiration URLs",
     stepNumber: 2,
+    optional: true,
+    tooltip: "Describe your project domain (e.g., 'e-commerce', 'SaaS') and add competitor/inspiration websites for AI analysis",
   },
   {
     id: "core-features",
@@ -88,36 +93,44 @@ const NAV_SECTIONS: NavSection[] = [
     label: "Integrate AI",
     description: "Add AI capabilities",
     stepNumber: 4,
+    optional: true,
+    tooltip: "Connect to OpenAI, Anthropic, or Google AI for intelligent features in your app",
   },
   {
     id: "project-setup",
     label: "Project Setup",
-    description: "Name, directory & environment",
+    description: "Name & output directory",
     stepNumber: 5,
   },
   {
     id: "cursor",
     label: "Cursor",
-    description: "Download & Install Cursor",
+    description: "AI-powered code editor",
     stepNumber: 6,
+    tooltip: "Cursor is an AI code editor that helps you write code faster. Free to download.",
   },
   {
     id: "github",
     label: "GitHub",
-    description: "Create your repository",
+    description: "Code repository hosting",
     stepNumber: 7,
+    tooltip: "GitHub stores your code online and enables collaboration. Create a free account at github.com",
   },
   {
     id: "supabase",
     label: "Supabase",
-    description: "Connect your database",
+    description: "Database & authentication",
     stepNumber: 8,
+    optional: true,
+    tooltip: "Supabase is an open-source backend with PostgreSQL database, authentication, and storage. Free tier available.",
   },
   {
     id: "vercel",
     label: "Vercel",
-    description: "Deploy your app",
+    description: "Deploy & host your site",
     stepNumber: 9,
+    optional: true,
+    tooltip: "Vercel hosts your website with automatic deployments from GitHub. Free for personal projects.",
   },
   {
     id: "export",
@@ -303,6 +316,12 @@ export function AccordionSidebar({
                         >
                           {section.label}
                         </span>
+                        {/* Optional indicator */}
+                        {section.optional && state === "pending" && (
+                          <span className="text-[10px] px-1.5 py-0.5 rounded bg-white/5 text-white/40 font-medium">
+                            Optional
+                          </span>
+                        )}
                         {badge !== undefined && (
                           <span className={cn(
                             "sidebar-badge px-2.5 py-0.5 rounded-lg text-xs font-semibold",
@@ -319,6 +338,19 @@ export function AccordionSidebar({
                           <span className="sidebar-badge px-2.5 py-0.5 rounded-lg text-xs font-semibold bg-[rgba(16,185,129,0.15)] text-emerald-400">
                             Ready
                           </span>
+                        )}
+                        {/* Tooltip for technical terms */}
+                        {section.tooltip && (
+                          <TooltipProvider delayDuration={200}>
+                            <Tooltip>
+                              <TooltipTrigger asChild onClick={(e) => e.stopPropagation()}>
+                                <HelpCircle className="h-3.5 w-3.5 text-white/30 hover:text-white/60 cursor-help transition-colors" />
+                              </TooltipTrigger>
+                              <TooltipContent side="right" className="max-w-[200px] text-xs bg-slate-800 border-slate-600">
+                                {section.tooltip}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
                         )}
                       </div>
                       <div className="text-xs text-[var(--sidebar-text-muted)] mt-0.5">

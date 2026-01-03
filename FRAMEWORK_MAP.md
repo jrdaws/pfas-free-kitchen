@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 5c25b2e 2026-01-03 feat(research): add Firecrawl integration with Jina fallback
 - 44bd8a7 2026-01-03 docs(audit): comprehensive configurator workflow audit with 16 use cases
 - 603ff45 2026-01-03 fix(configurator): compact sidebar sections & dark theme main content
 - f299ea9 2026-01-03 feat(research): add AI-powered domain & URL analysis
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - dd46fea 2025-12-25 docs(media): add HubSpot-adapted color scheme task for Media Agent
 - 2a5c91d 2025-12-25 fix(export): add template validation and graceful error handling
 - 43c05e1 2025-12-25 chore: move checkpoint task to done
-- 7ada972 2025-12-25 feat(scripts): add tiered checkpoint support
 
 ## Agent Governance Structure
 

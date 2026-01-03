@@ -101,7 +101,7 @@ test.describe('Configurator - Step Navigation', () => {
     await expect(page.locator('h1:has-text("Template Selection")').first()).toBeVisible({ timeout: 10000 });
     
     // Check for progress indicator
-    await expect(page.locator('text=0/8 complete').first()).toBeVisible();
+    await expect(page.locator('text=0/10 complete').first()).toBeVisible();
   });
 
   test('step 1: template selection displays available templates', async ({ page }) => {

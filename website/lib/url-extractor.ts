@@ -70,36 +70,40 @@ async function extractWithFirecrawl(url: string): Promise<ExtractedContent | nul
   try {
     const firecrawl = new FirecrawlApp({ apiKey });
 
-    const result = await firecrawl.scrapeUrl(url, {
-      formats: ["markdown", "extract"],
-      extract: {
-        schema: EXTRACTION_SCHEMA,
-      },
-    });
+    // Use any to handle varying API responses
+    const result = await firecrawl.scrape(url, {
+      formats: ["markdown"],
+    }) as Record<string, unknown>;
 
-    if (!result.success) {
+    // Handle both old and new API response formats
+    const isSuccess = result.success !== false && !result.error;
+    if (!isSuccess) {
       console.warn(`[Firecrawl] Failed for ${url}:`, result.error);
       return null;
     }
 
-    const extractData = result.extract as {
+    const markdown = (result.markdown || result.content || "") as string;
+    const metadata = (result.metadata || {}) as Record<string, unknown>;
+    const links = (result.links || []) as string[];
+    
+    const extractData = (result.extract || {}) as {
       features?: string[];
       designPatterns?: string[];
       targetAudience?: string;
       techStack?: string[];
       pricing?: string;
-    } | undefined;
+    };
 
     return {
       url,
-      title: result.metadata?.title || extractTitle(result.markdown || "") || url,
-      description: result.metadata?.description || extractDescription(result.markdown || ""),
-      content: (result.markdown || "").slice(0, 5000),
-      links: result.links || [],
-      images: result.metadata?.ogImage ? [result.metadata.ogImage] : [],
+      title: (metadata.title as string) || extractTitle(markdown) || url,
+      description: (metadata.description as string) || extractDescription(markdown),
+      content: markdown.slice(0, 5000),
+      links,
+      images: metadata.ogImage ? [metadata.ogImage as string] : [],
       success: true,
       source: "firecrawl",
-      structured: extractData ? {
+      structured: extractData.features ? {
         features: extractData.features || [],
         designPatterns: extractData.designPatterns || [],
         targetAudience: extractData.targetAudience,

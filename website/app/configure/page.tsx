@@ -264,8 +264,8 @@ export default function ConfigurePage() {
         return researchDomain.length > 0 || description.length > 0;
       case 3: // Core Features
         return Object.values(selectedFeatures).flat().length > 0;
-      case 4: // Integrate AI
-        return aiProvider !== "";
+      case 4: // Integrate AI (optional - can skip)
+        return true;
       case 5: // Project Setup
         return projectName.length > 0 && outputDir.length > 0;
       case 6: // Cursor
