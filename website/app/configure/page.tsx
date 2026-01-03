@@ -2,9 +2,6 @@
 
 import dynamic from "next/dynamic";
 import { useConfiguratorStore, Step, ModelTier } from "@/lib/configurator-state";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { ChevronLeft, ChevronRight } from "lucide-react";
 import { TEMPLATES } from "@/lib/templates";
 import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { analyzeProject, type ResearchResult } from "@/lib/research-client";
@@ -547,8 +544,9 @@ export default function ConfigurePage() {
             isReady={completedSteps.size >= 5}
             onExport={(method) => {
               console.log("Export with method:", method);
-              completeStep(15);
+              completeStep(TOTAL_STEPS as Step);
             }}
+            onShowPreview={() => setShowLivePreview(true)}
           />
         );
       default:
@@ -626,12 +624,13 @@ export default function ConfigurePage() {
                 Configure your AI provider for intelligent features in your app.
               </p>
             </div>
-            <ComponentAwarePreview
-              template={template}
-              integrations={integrations}
-              inspirations={inspirations}
-              description={description}
-            />
+            {/* Show configured AI provider info */}
+            {aiProvider && (
+              <div className="bg-card rounded-xl p-6 border border-border">
+                <h3 className="font-semibold text-foreground mb-2">Selected Provider</h3>
+                <p className="text-sm text-foreground-secondary capitalize">{aiProvider}</p>
+              </div>
+            )}
           </div>
         );
         
@@ -803,56 +802,6 @@ export default function ConfigurePage() {
           </div>
         </main>
 
-        {/* Footer with Navigation */}
-        <footer className="flex items-center gap-4 px-6 py-4 border-t border-border bg-background-alt">
-          {/* Progress */}
-          <div className="flex-1 flex items-center gap-4">
-            <Progress value={progress} className="flex-1 h-2 max-w-xs" />
-            <span className="text-sm text-foreground-muted">
-              {completedSteps.size}/{TOTAL_STEPS} complete
-            </span>
-          </div>
-
-          {/* Validation message */}
-          {!canProceed() && currentStep !== 8 && (
-            <p className="text-red-600 text-sm font-medium">
-              Complete this step to continue
-            </p>
-          )}
-
-          {/* Navigation buttons */}
-          <div className="flex gap-2">
-            <Button
-              onClick={handlePrevious}
-              disabled={isFirstStep}
-              variant="outline"
-              className="disabled:opacity-50"
-            >
-              <ChevronLeft className="mr-2 h-4 w-4" />
-              Previous
-            </Button>
-
-            {!isLastStep ? (
-              <Button
-                onClick={handleNext}
-                disabled={!canProceed()}
-                className="disabled:opacity-50 bg-[#F97316] hover:bg-[#EA580C]"
-              >
-                Next
-                <ChevronRight className="ml-2 h-4 w-4" />
-              </Button>
-            ) : (
-              <Button
-                onClick={() => {
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                variant="secondary"
-              >
-                Start Over
-              </Button>
-            )}
-          </div>
-        </footer>
       </div>
 
       {/* Live Preview Panel */}

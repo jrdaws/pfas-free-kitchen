@@ -92,6 +92,7 @@ export function ToolSetupSection({
   onConnect,
 }: ToolSetupSectionProps) {
   const [copied, setCopied] = useState(false);
+  const [showSteps, setShowSteps] = useState(false);
   const config = TOOL_CONFIGS[toolId];
 
   const copyCommand = useCallback((command: string) => {
@@ -102,15 +103,25 @@ export function ToolSetupSection({
 
   if (!config) return null;
 
-  if (isComplete) {
+  if (isComplete && !showSteps) {
     return (
-      <div className="flex items-center gap-1.5 py-1">
-        <div className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20">
-          <Check className="h-3 w-3 text-emerald-400" />
+      <div className="space-y-1.5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5">
+            <div className="flex items-center justify-center w-5 h-5 rounded-full bg-emerald-500/20">
+              <Check className="h-3 w-3 text-emerald-400" />
+            </div>
+            <span className="text-xs text-emerald-400 font-medium">
+              {config.name} ready
+            </span>
+          </div>
+          <button
+            onClick={() => setShowSteps(true)}
+            className="text-[10px] text-white/40 hover:text-white/70 underline"
+          >
+            Show steps
+          </button>
         </div>
-        <span className="text-xs text-emerald-400 font-medium">
-          {config.name} ready
-        </span>
       </div>
     );
   }
@@ -162,15 +173,26 @@ export function ToolSetupSection({
             <ExternalLink className="h-2 w-2 ml-1" />
           </Button>
         )}
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-6 text-[10px] px-2 border-white/20 text-white/70 hover:bg-white/10"
-          onClick={onMarkComplete}
-        >
-          Done
-          <Check className="h-2 w-2 ml-1" />
-        </Button>
+        {isComplete ? (
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 text-[10px] px-2 border-white/20 text-white/70 hover:bg-white/10"
+            onClick={() => setShowSteps(false)}
+          >
+            Hide
+          </Button>
+        ) : (
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-6 text-[10px] px-2 border-white/20 text-white/70 hover:bg-white/10"
+            onClick={onMarkComplete}
+          >
+            Done
+            <Check className="h-2 w-2 ml-1" />
+          </Button>
+        )}
       </div>
     </div>
   );

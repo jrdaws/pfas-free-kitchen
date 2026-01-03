@@ -39,6 +39,14 @@ export function LivePreviewPanel({
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isExpanded, setIsExpanded] = useState(false);
   const [previewKey, setPreviewKey] = useState(0);
+  const [hasPendingChanges, setHasPendingChanges] = useState(false);
+  
+  // Track last rendered values to detect changes
+  const [lastRendered, setLastRendered] = useState({
+    template: "",
+    integrations: {} as Record<string, string>,
+    projectName: "",
+  });
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
   
@@ -172,10 +180,31 @@ export function LivePreviewPanel({
     `.trim();
   }, [template, integrations, projectName, description, selectedTemplate, configuredIntegrations]);
 
-  // Refresh preview when config changes
+  // Detect when config changes (don't auto-update, let user trigger it)
   useEffect(() => {
+    const hasChanges = 
+      template !== lastRendered.template ||
+      projectName !== lastRendered.projectName ||
+      JSON.stringify(integrations) !== JSON.stringify(lastRendered.integrations);
+    
+    if (hasChanges && lastRendered.template !== "") {
+      setHasPendingChanges(true);
+    }
+  }, [template, integrations, projectName, lastRendered]);
+
+  // Handle update preview
+  const handleUpdatePreview = () => {
     setPreviewKey(k => k + 1);
-  }, [template, integrations, projectName]);
+    setLastRendered({ template, integrations, projectName });
+    setHasPendingChanges(false);
+  };
+
+  // Initial render - set lastRendered
+  useEffect(() => {
+    if (isVisible && lastRendered.template === "") {
+      setLastRendered({ template, integrations, projectName });
+    }
+  }, [isVisible, template, integrations, projectName, lastRendered.template]);
 
   if (!isVisible) {
     return (
@@ -237,12 +266,21 @@ export function LivePreviewPanel({
             </button>
           </div>
 
-          {/* Refresh */}
+          {/* Update Preview */}
           <button
-            onClick={() => setPreviewKey(k => k + 1)}
-            className="p-1.5 rounded hover:bg-muted transition-colors"
+            onClick={handleUpdatePreview}
+            className={cn(
+              "p-1.5 rounded transition-colors relative",
+              hasPendingChanges 
+                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                : "hover:bg-muted"
+            )}
+            title={hasPendingChanges ? "Update preview with latest changes" : "Refresh preview"}
           >
             <RefreshCw className="h-4 w-4" />
+            {hasPendingChanges && (
+              <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
+            )}
           </button>
 
           {/* Expand/Collapse */}
@@ -285,8 +323,23 @@ export function LivePreviewPanel({
           <span>Project: {projectName || "Untitled"}</span>
         </div>
         <div className="flex items-center gap-2">
-          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span>Live</span>
+          {hasPendingChanges ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-amber-500" />
+              <span className="text-amber-500">Changes pending</span>
+              <button 
+                onClick={handleUpdatePreview}
+                className="text-primary hover:underline"
+              >
+                Update
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="w-2 h-2 rounded-full bg-emerald-500" />
+              <span>Up to date</span>
+            </>
+          )}
         </div>
       </div>
     </div>
