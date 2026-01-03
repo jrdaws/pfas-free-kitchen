@@ -12,8 +12,8 @@ interface ProjectOverviewBoxProps {
 }
 
 /**
- * ProjectOverviewBox - Blue-bordered summary box showing project details
- * Reference: 5DaySprint project description box
+ * ProjectOverviewBox - Summary box showing project details
+ * Uses theme colors (navy/orange) for consistency
  */
 export function ProjectOverviewBox({
   className,
@@ -47,12 +47,12 @@ export function ProjectOverviewBox({
     return (
       <div
         className={cn(
-          "bg-[#0052FF]/5 border-2 border-dashed border-[#0052FF]/30 rounded-xl p-6 text-center",
+          "bg-[var(--sidebar-bg)] border-2 border-dashed border-[var(--primary)]/30 rounded-xl p-6 text-center",
           className
         )}
       >
-        <Sparkles className="h-8 w-8 text-[#0052FF]/40 mx-auto mb-3" />
-        <p className="text-sm text-[#0052FF]/60 font-medium">
+        <Sparkles className="h-8 w-8 text-[var(--primary)]/40 mx-auto mb-3" />
+        <p className="text-sm text-[var(--primary)]/60 font-medium">
           Complete the Research step to see your project overview
         </p>
       </div>
@@ -62,23 +62,23 @@ export function ProjectOverviewBox({
   return (
     <div
       className={cn(
-        "bg-[#0052FF]/5 border-2 border-[#0052FF] rounded-xl overflow-hidden",
+        "bg-[var(--sidebar-bg)] border-2 border-[var(--primary)] rounded-xl overflow-hidden",
         className
       )}
     >
       {/* Header */}
-      <div className="bg-[#0052FF]/10 px-4 py-3 border-b border-[#0052FF]/20">
+      <div className="bg-[var(--primary)]/10 px-4 py-3 border-b border-[var(--primary)]/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-[#0052FF]" />
-            <span className="font-semibold text-[#0052FF] text-sm">
+            <Sparkles className="h-4 w-4 text-[var(--primary)]" />
+            <span className="font-semibold text-[var(--primary)] text-sm">
               Project Overview
             </span>
           </div>
           {aiProvider && (
             <Badge
               variant="outline"
-              className="text-[10px] border-[#0052FF]/30 text-[#0052FF]"
+              className="text-[10px] border-[var(--primary)]/30 text-[var(--primary)]"
             >
               <Zap className="h-3 w-3 mr-1" />
               AI Enhanced
@@ -92,10 +92,10 @@ export function ProjectOverviewBox({
         {/* Project Name */}
         {projectName && (
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="text-xs font-medium text-[var(--sidebar-text-muted)] uppercase tracking-wider">
               Project
             </label>
-            <h3 className="text-lg font-semibold text-slate-900 mt-0.5">
+            <h3 className="text-lg font-semibold text-[var(--sidebar-text)] mt-0.5">
               {projectName}
             </h3>
           </div>
@@ -104,10 +104,10 @@ export function ProjectOverviewBox({
         {/* Description */}
         {(description || vision) && (
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="text-xs font-medium text-[var(--sidebar-text-muted)] uppercase tracking-wider">
               Description
             </label>
-            <p className="text-sm text-slate-600 mt-0.5 leading-relaxed">
+            <p className="text-sm text-[var(--sidebar-text-muted)] mt-0.5 leading-relaxed">
               {description || vision}
             </p>
           </div>
@@ -116,24 +116,24 @@ export function ProjectOverviewBox({
         {/* Domain */}
         {researchDomain && (
           <div>
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider">
+            <label className="text-xs font-medium text-[var(--sidebar-text-muted)] uppercase tracking-wider">
               Domain
             </label>
-            <p className="text-sm text-slate-700 mt-0.5 font-medium">
+            <p className="text-sm text-[var(--sidebar-text)] mt-0.5 font-medium">
               {researchDomain}
             </p>
           </div>
         )}
 
         {/* Template & Features */}
-        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-200">
+        <div className="grid grid-cols-2 gap-3 pt-2 border-t border-[var(--sidebar-border)]">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#0052FF]/10 flex items-center justify-center">
-              <Package className="h-4 w-4 text-[#0052FF]" />
+            <div className="w-8 h-8 rounded-lg bg-[var(--primary)]/10 flex items-center justify-center">
+              <Package className="h-4 w-4 text-[var(--primary)]" />
             </div>
             <div>
-              <div className="text-xs text-slate-500">Template</div>
-              <div className="text-sm font-medium text-slate-900 capitalize">
+              <div className="text-xs text-[var(--sidebar-text-muted)]">Template</div>
+              <div className="text-sm font-medium text-[var(--sidebar-text)] capitalize">
                 {template}
               </div>
             </div>
@@ -141,11 +141,11 @@ export function ProjectOverviewBox({
 
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
-              <FileCode className="h-4 w-4 text-emerald-600" />
+              <FileCode className="h-4 w-4 text-emerald-400" />
             </div>
             <div>
-              <div className="text-xs text-slate-500">Features</div>
-              <div className="text-sm font-medium text-slate-900">
+              <div className="text-xs text-[var(--sidebar-text-muted)]">Features</div>
+              <div className="text-sm font-medium text-[var(--sidebar-text)]">
                 {totalFeatures} selected
               </div>
             </div>
@@ -154,8 +154,8 @@ export function ProjectOverviewBox({
 
         {/* Feature Categories */}
         {showAnalysis && Object.keys(featureCounts).length > 0 && (
-          <div className="pt-3 border-t border-slate-200">
-            <label className="text-xs font-medium text-slate-500 uppercase tracking-wider mb-2 block">
+          <div className="pt-3 border-t border-[var(--sidebar-border)]">
+            <label className="text-xs font-medium text-[var(--sidebar-text-muted)] uppercase tracking-wider mb-2 block">
               Selected Categories
             </label>
             <div className="flex flex-wrap gap-1.5">
@@ -163,7 +163,7 @@ export function ProjectOverviewBox({
                 <Badge
                   key={category}
                   variant="secondary"
-                  className="text-xs capitalize bg-slate-100 text-slate-700"
+                  className="text-xs capitalize bg-[var(--sidebar-hover)] text-[var(--sidebar-text)]"
                 >
                   {category.replace(/-/g, " ")} ({count})
                 </Badge>

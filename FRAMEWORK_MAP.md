@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- a8e0ee0 2026-01-03 fix(configurator): address 8 UX issues
 - d9aac9a 2026-01-03 feat(configurator): add 4 new service provider sections
 - f17632d 2026-01-03 feat(ux): smart pre-fill Research field based on template (Option C)
 - e3ae726 2026-01-03 fix(ux): improve Research section clarity - Option A
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 6043641 2025-12-25 fix(auth): update ProtectedRoute for Navy theme
 - de5e64b 2025-12-25 feat(marketing): update LandingPage for Navy theme (60-30-10)
 - b387547 2025-12-25 feat(ui): update card components for Navy theme
-- 1914f0b 2025-12-25 feat(ui): update button variants for Navy theme
 
 ## Agent Governance Structure
 

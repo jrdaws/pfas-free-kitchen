@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Plus, X, ExternalLink, Sparkles } from "lucide-react";
+import { Plus, X, ExternalLink, Sparkles, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface ResearchSectionProps {
@@ -124,27 +124,58 @@ export function ResearchSection({
         </div>
       )}
 
+      {/* Loading State - Show when researching */}
+      {isLoading && (
+        <div className="bg-[var(--primary)]/10 border border-[var(--primary)]/30 rounded-lg p-3 animate-in fade-in duration-200">
+          <div className="flex items-center gap-2 mb-2">
+            <Loader2 className="h-4 w-4 text-[var(--primary)] animate-spin" />
+            <span className="text-xs font-medium text-[var(--primary)]">Researching...</span>
+          </div>
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-[10px] text-white/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              Analyzing domain: {domain}
+            </div>
+            {inspirationUrls.length > 0 && (
+              <div className="flex items-center gap-2 text-[10px] text-white/50">
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--primary)] animate-pulse" />
+                Extracting content from {inspirationUrls.length} URL(s)...
+              </div>
+            )}
+            <div className="flex items-center gap-2 text-[10px] text-white/50">
+              <span className="w-1.5 h-1.5 rounded-full bg-white/30" />
+              AI generating recommendations...
+            </div>
+          </div>
+          <p className="text-[10px] text-white/40 mt-2 italic">
+            This may take 10-30 seconds depending on URLs
+          </p>
+        </div>
+      )}
+
       {/* Action Buttons - Compact */}
-      <div className="flex gap-1.5 pt-1">
-        <Button
-          variant="outline"
-          size="sm"
-          className="h-7 text-xs px-2 border-white/20 text-white/80 hover:bg-white/10"
-          onClick={onShowMe}
-        >
-          Show Me
-          <ExternalLink className="h-2.5 w-2.5 ml-1" />
-        </Button>
-        <Button
-          size="sm"
-          className="h-7 text-xs px-2 bg-[var(--primary)] hover:bg-[var(--primary)]/80 text-white"
-          onClick={onStartResearch}
-          disabled={isLoading || !domain.trim()}
-        >
-          {isLoading ? "..." : "Start Research"}
-          <Sparkles className="h-2.5 w-2.5 ml-1" />
-        </Button>
-      </div>
+      {!isLoading && (
+        <div className="flex gap-1.5 pt-1">
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-7 text-xs px-2 border-white/20 text-white/80 hover:bg-white/10"
+            onClick={onShowMe}
+          >
+            Show Me
+            <ExternalLink className="h-2.5 w-2.5 ml-1" />
+          </Button>
+          <Button
+            size="sm"
+            className="h-7 text-xs px-2 bg-[var(--primary)] hover:bg-[var(--primary)]/80 text-white"
+            onClick={onStartResearch}
+            disabled={!domain.trim()}
+          >
+            Start Research
+            <Sparkles className="h-2.5 w-2.5 ml-1" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

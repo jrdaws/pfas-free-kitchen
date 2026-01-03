@@ -15,7 +15,7 @@ interface PreviewCardProps {
 
 /**
  * PreviewCard - Right-side panel showing NPX command and project status
- * Reference: 5DaySprint blue terminal-style card
+ * Uses theme colors (navy/orange) instead of hardcoded blue
  */
 export function PreviewCard({ className, compact = false }: PreviewCardProps) {
   const {
@@ -78,14 +78,15 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
   return (
     <div
       className={cn(
-        "bg-[#0052FF] rounded-xl overflow-hidden shadow-lg",
+        // Use theme colors: navy background with orange accents
+        "bg-[var(--sidebar-bg)] rounded-xl overflow-hidden shadow-lg border border-[var(--sidebar-border)]",
         className
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-2 text-white">
-          <Zap className="h-4 w-4" />
+      <div className="flex items-center justify-between px-4 py-3 border-b border-[var(--sidebar-border)]">
+        <div className="flex items-center gap-2 text-[var(--sidebar-text)]">
+          <Zap className="h-4 w-4 text-[var(--primary)]" />
           <span className="font-semibold text-sm">@jrdaws/framework</span>
         </div>
         <Badge
@@ -93,30 +94,30 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
             "text-[10px] font-medium",
             isReady
               ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/30"
-              : "bg-white/20 text-white/80 border-white/30"
+              : "bg-[var(--primary)]/20 text-[var(--primary)] border-[var(--primary)]/30"
           )}
           variant="outline"
         >
           <span className={cn(
             "w-1.5 h-1.5 rounded-full mr-1.5",
-            isReady ? "bg-emerald-400" : "bg-white/60"
+            isReady ? "bg-emerald-400" : "bg-[var(--primary)]"
           )} />
           {isReady ? "Ready" : "Setup in progress"}
         </Badge>
       </div>
 
       {/* Command Box */}
-      <div className="mx-3 mb-3">
-        <div className="bg-white/15 rounded-lg px-3 py-2.5 flex items-center gap-2">
-          <Terminal className="h-4 w-4 text-white/70 shrink-0" />
-          <code className="flex-1 text-white text-sm font-mono truncate">
+      <div className="mx-3 my-3">
+        <div className="bg-black/30 rounded-lg px-3 py-2.5 flex items-center gap-2 border border-[var(--sidebar-border)]">
+          <Terminal className="h-4 w-4 text-[var(--sidebar-text-muted)] shrink-0" />
+          <code className="flex-1 text-[var(--primary)] text-sm font-mono truncate">
             {npxCommand}
           </code>
           <Button
             size="sm"
             variant="ghost"
             onClick={copyCommand}
-            className="h-7 w-7 p-0 text-white/70 hover:text-white hover:bg-white/10"
+            className="h-7 w-7 p-0 text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] hover:bg-white/10"
           >
             {copied ? (
               <Check className="h-4 w-4 text-emerald-400" />
@@ -131,7 +132,7 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
       {compact && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="w-full flex items-center justify-center gap-1 py-2 text-white/70 hover:text-white text-xs transition-colors border-t border-white/10"
+          className="w-full flex items-center justify-center gap-1 py-2 text-[var(--sidebar-text-muted)] hover:text-[var(--sidebar-text)] text-xs transition-colors border-t border-[var(--sidebar-border)]"
         >
           {expanded ? (
             <>
@@ -149,14 +150,14 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
 
       {/* Expanded Content */}
       {expanded && (
-        <div className="px-4 pb-4 space-y-4 border-t border-white/10 pt-4">
+        <div className="px-4 pb-4 space-y-4 border-t border-[var(--sidebar-border)] pt-4">
           {/* Progress */}
           <div>
-            <div className="flex items-center justify-between text-xs text-white/70 mb-1.5">
+            <div className="flex items-center justify-between text-xs text-[var(--sidebar-text-muted)] mb-1.5">
               <span>Setup Progress</span>
-              <span className="font-medium text-white">{completedCount}/{totalSteps}</span>
+              <span className="font-medium text-[var(--sidebar-text)]">{completedCount}/{totalSteps}</span>
             </div>
-            <div className="h-1.5 bg-white/20 rounded-full overflow-hidden">
+            <div className="h-1.5 bg-black/30 rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-400 rounded-full transition-all duration-300"
                 style={{ width: `${(completedCount / totalSteps) * 100}%` }}
@@ -185,13 +186,13 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
 
           {/* Stats */}
           <div className="grid grid-cols-2 gap-2 text-xs">
-            <div className="bg-white/10 rounded-lg px-3 py-2">
-              <div className="text-white/60">Template</div>
-              <div className="font-medium text-white capitalize">{template}</div>
+            <div className="bg-black/20 rounded-lg px-3 py-2 border border-[var(--sidebar-border)]">
+              <div className="text-[var(--sidebar-text-muted)]">Template</div>
+              <div className="font-medium text-[var(--sidebar-text)] capitalize">{template}</div>
             </div>
-            <div className="bg-white/10 rounded-lg px-3 py-2">
-              <div className="text-white/60">Features</div>
-              <div className="font-medium text-white">{featureCount} selected</div>
+            <div className="bg-black/20 rounded-lg px-3 py-2 border border-[var(--sidebar-border)]">
+              <div className="text-[var(--sidebar-text-muted)]">Features</div>
+              <div className="font-medium text-[var(--sidebar-text)]">{featureCount} selected</div>
             </div>
           </div>
 
@@ -199,14 +200,14 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
           <div className="grid grid-cols-2 gap-2">
             <Button
               size="sm"
-              variant="secondary"
-              className="bg-white/15 text-white hover:bg-white/25 border-0 text-xs"
+              variant="outline"
+              className="bg-transparent text-[var(--sidebar-text)] hover:bg-white/10 border-[var(--sidebar-border)] text-xs"
             >
               View Docs
             </Button>
             <Button
               size="sm"
-              className="bg-white text-[#0052FF] hover:bg-white/90 text-xs"
+              className="bg-[var(--primary)] text-white hover:bg-[var(--primary-hover)] text-xs"
               disabled={!isReady}
             >
               Generate
@@ -230,19 +231,23 @@ function ServiceIndicator({
   return (
     <div
       className={cn(
-        "flex flex-col items-center gap-1 py-2 rounded-lg text-xs transition-colors",
-        connected ? "bg-emerald-500/20" : "bg-white/10"
+        "flex flex-col items-center gap-1 py-2 rounded-lg text-xs transition-colors border",
+        connected 
+          ? "bg-emerald-500/10 border-emerald-500/20" 
+          : "bg-black/20 border-[var(--sidebar-border)]"
       )}
     >
       <div
         className={cn(
           "transition-colors",
-          connected ? "text-emerald-400" : "text-white/50"
+          connected ? "text-emerald-400" : "text-[var(--sidebar-text-muted)]"
         )}
       >
         {icon}
       </div>
-      <span className={cn(connected ? "text-emerald-300" : "text-white/60")}>
+      <span className={cn(
+        connected ? "text-emerald-300" : "text-[var(--sidebar-text-muted)]"
+      )}>
         {name}
       </span>
     </div>
@@ -250,4 +255,3 @@ function ServiceIndicator({
 }
 
 export default PreviewCard;
-
