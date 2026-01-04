@@ -16,6 +16,12 @@ git add -A && git commit    # Save work
 git push origin main        # Share work
 ```
 
+## Shortcuts (User → Agent)
+| Cmd | Action |
+|-----|--------|
+| `cp` | Checkpoint - save work, commit, memory |
+| `rr` | Re-Read - reload .cursorrules, apply updates |
+
 ## Never Do
 - Delete protected files (.cursorrules, *_MEMORY.md, AGENT_CONTEXT.md)
 - Create feature branches

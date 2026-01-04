@@ -1,7 +1,7 @@
 {
   "template": "landing-page",
   "version": "1.0.0",
-  "generatedAt": "2026-01-04T05:21:30.977Z",
+  "generatedAt": "2026-01-04T06:53:05.123Z",
   "generatedBy": "dawson-does-framework-configurator",
   "integrations": {
     "analytics": "posthog"

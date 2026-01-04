@@ -72,6 +72,12 @@ npm test                    # Before committing
 ./scripts/rotate-memory.sh  # Keep memory lean
 ```
 
+### Shortcut Commands (User to Agent)
+| Command | Action |
+|---------|--------|
+| `cp` | Checkpoint - save work, commit, update memory |
+| `rr` | Re-Read rules - reload .cursorrules and apply updates |
+
 ### Protected Files (Never Delete)
 - AGENT_CONTEXT.md, .cursorrules
 - prompts/agents/memory/*.md
