@@ -1,9 +1,13 @@
-export default async function BlogPost({ params }: { params: Promise<{ slug: string }> }) {
-  // In Next.js 15, params is a Promise
-  const { slug } = await params;
-  // In a real app, fetch post data based on slug
-  const post = {
+import Link from "next/link";
+import { CommentSection } from "@/components/blog/CommentSection";
+import { RelatedPosts } from "@/components/blog/RelatedPosts";
+
+// Mock data - in a real app, fetch from database/CMS
+const allPosts = [
+  {
+    slug: "getting-started-nextjs",
     title: "Getting Started with Next.js 15",
+    excerpt: "Learn how to build modern web applications with the latest version of Next.js.",
     author: "Sarah Johnson",
     authorBio: "Full-stack developer and tech writer passionate about making complex topics accessible.",
     date: "December 20, 2024",
@@ -58,31 +62,116 @@ Here are some best practices when working with Next.js 15:
 ## Conclusion
 
 Next.js 15 is a significant step forward in web development. Its focus on performance and developer experience makes it an excellent choice for your next project.
-    `
-  };
+    `,
+  },
+  {
+    slug: "typescript-best-practices",
+    title: "TypeScript Best Practices for 2024",
+    excerpt: "Discover the most effective TypeScript patterns and practices.",
+    author: "Mike Chen",
+    authorBio: "Senior TypeScript engineer with 10+ years of experience.",
+    date: "December 18, 2024",
+    readTime: "8 min read",
+    category: "Development",
+    tags: ["typescript", "best-practices"],
+    content: "TypeScript content here...",
+  },
+  {
+    slug: "building-scalable-apis",
+    title: "Building Scalable REST APIs",
+    excerpt: "A comprehensive guide to designing REST APIs.",
+    author: "Emma Davis",
+    authorBio: "Backend architect specializing in distributed systems.",
+    date: "December 15, 2024",
+    readTime: "12 min read",
+    category: "Backend",
+    tags: ["api", "rest", "backend"],
+    content: "API content here...",
+  },
+  {
+    slug: "react-performance-tips",
+    title: "10 React Performance Tips",
+    excerpt: "Optimize your React applications.",
+    author: "Sarah Johnson",
+    authorBio: "Full-stack developer and tech writer.",
+    date: "December 12, 2024",
+    readTime: "6 min read",
+    category: "React",
+    tags: ["react", "performance"],
+    content: "React performance content here...",
+  },
+];
+
+// Mock comments
+const mockComments = [
+  {
+    id: "1",
+    author: { name: "John Developer" },
+    content: "Great article! This helped me understand Server Components much better.",
+    date: "2 days ago",
+  },
+  {
+    id: "2",
+    author: { name: "Alice Tech" },
+    content: "Thanks for the clear examples. Looking forward to more content like this!",
+    date: "3 days ago",
+  },
+];
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function BlogPost({ params }: PageProps) {
+  const { slug } = await params;
+  const post = allPosts.find((p) => p.slug === slug);
+
+  if (!post) {
+    return (
+      <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
+        <div className="text-center">
+          <h1 className="text-4xl font-bold mb-4 dark:text-white">Post Not Found</h1>
+          <p className="text-gray-600 dark:text-gray-400 mb-6">
+            The post you're looking for doesn't exist.
+          </p>
+          <Link href="/" className="text-blue-600 hover:underline">
+            ← Back to Blog
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Get related posts (same category, different post)
+  const relatedPosts = allPosts
+    .filter((p) => p.category === post.category && p.slug !== slug)
+    .slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
         <nav className="max-w-7xl mx-auto flex justify-between items-center">
-          <a href="/" className="text-xl font-bold text-gray-900 no-underline hover:text-gray-700">
+          <Link 
+            href="/" 
+            className="text-xl font-bold text-gray-900 dark:text-white no-underline hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+          >
             ← Back to Blog
-          </a>
+          </Link>
         </nav>
       </header>
 
       <article className="max-w-3xl mx-auto px-6 py-12">
         {/* Post Header */}
-        <div className="bg-white p-12 rounded-xl mb-8 border border-gray-200">
+        <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-xl mb-8 border border-gray-200 dark:border-gray-700">
           <div className="flex gap-2 mb-4">
-            <span className="px-3 py-1 rounded-xl bg-blue-50 text-blue-600 text-xs font-medium">
+            <span className="px-3 py-1 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-xs font-medium">
               {post.category}
             </span>
-            <span className="text-xs text-gray-400">{post.readTime}</span>
+            <span className="text-xs text-gray-400 dark:text-gray-500">{post.readTime}</span>
           </div>
 
-          <h1 className="text-4xl font-bold mb-4 leading-tight">
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 leading-tight dark:text-white">
             {post.title}
           </h1>
 
@@ -91,14 +180,17 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
               {post.author[0]}
             </div>
             <div>
-              <div className="text-base font-semibold">{post.author}</div>
-              <div className="text-sm text-gray-600">{post.date}</div>
+              <div className="text-base font-semibold dark:text-white">{post.author}</div>
+              <div className="text-sm text-gray-600 dark:text-gray-400">{post.date}</div>
             </div>
           </div>
 
           <div className="flex gap-2 flex-wrap">
-            {post.tags.map(tag => (
-              <span key={tag} className="px-3 py-1 rounded-xl bg-gray-100 text-gray-600 text-xs">
+            {post.tags.map((tag) => (
+              <span 
+                key={tag} 
+                className="px-3 py-1 rounded-xl bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-xs"
+              >
                 #{tag}
               </span>
             ))}
@@ -106,49 +198,49 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
         </div>
 
         {/* Post Content */}
-        <div className="bg-white p-12 rounded-xl mb-8 border border-gray-200">
-          <div className="text-lg leading-relaxed text-gray-800">
-            {post.content.split('\n\n').map((paragraph, i) => {
-              if (paragraph.startsWith('##')) {
+        <div className="bg-white dark:bg-gray-800 p-8 md:p-12 rounded-xl mb-8 border border-gray-200 dark:border-gray-700">
+          <div className="prose prose-lg dark:prose-invert max-w-none">
+            {post.content.split("\n\n").map((paragraph, i) => {
+              if (paragraph.startsWith("##")) {
                 return (
-                  <h2 key={i} className="text-3xl font-semibold mt-8 mb-4">
-                    {paragraph.replace('## ', '')}
+                  <h2 key={i} className="text-2xl font-semibold mt-8 mb-4 dark:text-white">
+                    {paragraph.replace("## ", "")}
                   </h2>
                 );
               }
-              if (paragraph.startsWith('```')) {
+              if (paragraph.startsWith("```")) {
                 return (
-                  <pre key={i} className="bg-gray-800 text-gray-50 p-6 rounded-lg overflow-auto text-sm my-6">
-                    <code>{paragraph.replace(/```\w*\n?/g, '')}</code>
+                  <pre key={i} className="bg-gray-900 text-gray-50 p-6 rounded-lg overflow-auto text-sm my-6">
+                    <code>{paragraph.replace(/```\w*\n?/g, "")}</code>
                   </pre>
                 );
               }
               if (paragraph.match(/^\d\./)) {
-                const items = paragraph.split('\n');
+                const items = paragraph.split("\n");
                 return (
-                  <ol key={i} className="my-4 pl-6">
+                  <ol key={i} className="my-4 pl-6 list-decimal dark:text-gray-300">
                     {items.map((item, j) => (
                       <li key={j} className="my-2">
-                        {item.replace(/^\d\.\s/, '')}
+                        {item.replace(/^\d\.\s/, "")}
                       </li>
                     ))}
                   </ol>
                 );
               }
-              if (paragraph.startsWith('-')) {
-                const items = paragraph.split('\n');
+              if (paragraph.startsWith("-")) {
+                const items = paragraph.split("\n");
                 return (
-                  <ul key={i} className="my-4 pl-6">
+                  <ul key={i} className="my-4 pl-6 list-disc dark:text-gray-300">
                     {items.map((item, j) => (
                       <li key={j} className="my-2">
-                        {item.replace(/^-\s/, '')}
+                        {item.replace(/^-\s/, "")}
                       </li>
                     ))}
                   </ul>
                 );
               }
               return (
-                <p key={i} className="my-4">
+                <p key={i} className="my-4 text-gray-700 dark:text-gray-300 leading-relaxed">
                   {paragraph}
                 </p>
               );
@@ -157,35 +249,37 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
         </div>
 
         {/* Author Bio */}
-        <div className="bg-white p-8 rounded-xl mb-8 border border-gray-200">
-          <h3 className="mb-4 text-lg font-semibold">
-            About the Author
-          </h3>
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl mb-8 border border-gray-200 dark:border-gray-700">
+          <h3 className="mb-4 text-lg font-semibold dark:text-white">About the Author</h3>
           <div className="flex gap-4 items-start">
             <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-white font-semibold text-2xl flex-shrink-0">
               {post.author[0]}
             </div>
             <div>
-              <div className="text-lg font-semibold mb-2">
-                {post.author}
-              </div>
-              <p className="m-0 text-gray-600 leading-relaxed">
-                {post.authorBio}
-              </p>
+              <div className="text-lg font-semibold mb-2 dark:text-white">{post.author}</div>
+              <p className="m-0 text-gray-600 dark:text-gray-400 leading-relaxed">{post.authorBio}</p>
             </div>
           </div>
         </div>
 
+        {/* Related Posts */}
+        {relatedPosts.length > 0 && (
+          <div className="mb-8">
+            <RelatedPosts posts={relatedPosts} currentPostSlug={slug} />
+          </div>
+        )}
+
+        {/* Comments Section */}
+        <CommentSection postId={slug} comments={mockComments} />
+
         {/* Share Section */}
-        <div className="bg-white p-8 rounded-xl border border-gray-200 text-center">
-          <h3 className="mb-4 text-lg font-semibold">
-            Share this article
-          </h3>
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl border border-gray-200 dark:border-gray-700 text-center mt-8">
+          <h3 className="mb-4 text-lg font-semibold dark:text-white">Share this article</h3>
           <div className="flex gap-3 justify-center">
-            {['Twitter', 'LinkedIn', 'Facebook'].map(platform => (
+            {["Twitter", "LinkedIn", "Facebook"].map((platform) => (
               <button
                 key={platform}
-                className="px-5 py-2.5 rounded-lg border border-gray-200 bg-white cursor-pointer text-sm font-medium hover:bg-gray-50"
+                className="px-5 py-2.5 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 cursor-pointer text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-600 transition-colors"
               >
                 {platform}
               </button>
@@ -195,4 +289,8 @@ Next.js 15 is a significant step forward in web development. Its focus on perfor
       </article>
     </div>
   );
+}
+
+export function generateStaticParams() {
+  return allPosts.map((post) => ({ slug: post.slug }));
 }

@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 1fbf216 2026-01-04 feat: Complete E-commerce template with cart, checkout, orders
 - 7db1a04 2026-01-04 test: Add E2E export tests for Phase 1-3 integrations
 - f2319cb 2026-01-04 fix: Remove duplicate integration paths and cases in export route
 - 499f523 2026-01-04 feat: Phase 3 templates - Contentful, Meilisearch, Cloudflare R2
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - bb25e33 2026-01-03 feat: wire 7 new integrations into export route
 - 41e08b7 2026-01-03 feat: add 7 new integration templates to templates/saas/integrations
 - 0f44540 2026-01-03 test(export): verify P0 fixes - export build PASSES
-- d727097 2026-01-03 docs(integrations): add Algolia, Sentry, and Sanity guides
 
 ## Agent Governance Structure
 

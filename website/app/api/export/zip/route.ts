@@ -119,8 +119,13 @@ const TEMPLATE_COMPONENTS: Record<string, {
   },
   blog: {
     pages: ["app/page.tsx", "app/layout.tsx", "app/blog/[slug]/page.tsx"],
-    components: [],
-    lib: [],
+    components: [
+      "components/blog/BlogCard.tsx",
+      "components/blog/CommentSection.tsx",
+      "components/blog/RelatedPosts.tsx",
+      "components/blog/index.ts",
+    ],
+    lib: ["lib/blog/types.ts"],
     styles: ["app/globals.css"],
     config: ["package.json", "tailwind.config.ts", "tsconfig.json", "next.config.js", "postcss.config.js"],
   },
