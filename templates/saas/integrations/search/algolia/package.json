@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "algoliasearch": "^4.23.0",
+    "react-instantsearch": "^7.6.0"
+  }
+}
+
