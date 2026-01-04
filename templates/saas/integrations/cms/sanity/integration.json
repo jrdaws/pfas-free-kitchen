@@ -1,0 +1,24 @@
+{
+  "provider": "sanity",
+  "type": "cms",
+  "version": "1.0.0",
+  "description": "Headless CMS with real-time collaboration and embedded studio",
+  "dependencies": {
+    "sanity": "^3.40.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.40.0",
+    "next-sanity": "^9.0.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_SANITY_PROJECT_ID",
+    "NEXT_PUBLIC_SANITY_DATASET",
+    "SANITY_API_TOKEN"
+  ],
+  "files": {
+    "lib": ["lib/sanity/**"],
+    "root": ["sanity.config.ts", "sanity/schemas/index.ts"],
+    "app": ["app/studio/[[...tool]]/page.tsx"]
+  },
+  "postInstallInstructions": "Create a Sanity account at https://www.sanity.io, create a new project, get your project ID, and access the embedded studio at /studio"
+}
+

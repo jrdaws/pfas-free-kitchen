@@ -7,12 +7,6 @@ export function createClient() {
   const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
   if (!url || !key) {
-    // During build time, return a dummy client to allow static generation
-    if (typeof window === "undefined") {
-      console.warn("Supabase env vars missing during build - using placeholder");
-      return createBrowserClient("https://placeholder.supabase.co", "placeholder-key");
-    }
-
     throw new Error(
       "Missing Supabase environment variables. " +
       "Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY in your .env.local file. " +

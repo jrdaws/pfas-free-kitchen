@@ -1,0 +1,22 @@
+{
+  "provider": "cloudinary",
+  "type": "images",
+  "version": "1.0.0",
+  "description": "Image and video optimization with Cloudinary",
+  "dependencies": {
+    "cloudinary": "^2.0.0",
+    "next-cloudinary": "^6.0.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+    "CLOUDINARY_API_KEY",
+    "CLOUDINARY_API_SECRET"
+  ],
+  "files": {
+    "lib": ["lib/cloudinary.ts", "lib/cloudinary-upload.ts"],
+    "components": ["components/media/**"],
+    "app": ["app/api/cloudinary/**"]
+  },
+  "postInstallInstructions": "Create a Cloudinary account at https://cloudinary.com and get your cloud name, API key, and secret from the dashboard"
+}
+

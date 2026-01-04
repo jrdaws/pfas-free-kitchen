@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 0f44540 2026-01-03 test(export): verify P0 fixes - export build PASSES
 - d727097 2026-01-03 docs(integrations): add Algolia, Sentry, and Sanity guides
 - 6b1c2b9 2026-01-03 test(export): prepare export validation tests for P0 fixes
 - 81c2afe 2026-01-03 fix(P0): export builds failing due to missing deps and lazy init
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 4196c20 2026-01-03 feat(templates): add Shopping Cart, User Registration, and Admin Dashboard feature templates
 - 87d964c 2026-01-03 fix(website): remove invalid SVG filter style in AccordionSidebar
 - e4c933e 2026-01-03 feat: add Uploadthing storage template + feature templates
-- 6962afa 2026-01-03 fix(progress): align progress bars and auto-complete provider steps
 
 ## Agent Governance Structure
 

@@ -1,0 +1,20 @@
+{
+  "provider": "posthog",
+  "type": "flags",
+  "version": "1.0.0",
+  "description": "Feature flags and A/B testing with PostHog",
+  "dependencies": {
+    "posthog-js": "^1.100.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_POSTHOG_KEY",
+    "NEXT_PUBLIC_POSTHOG_HOST"
+  ],
+  "files": {
+    "lib": ["lib/feature-flags/**"],
+    "hooks": ["hooks/useFeatureFlag.ts"],
+    "components": ["components/FeatureFlag.tsx"]
+  },
+  "postInstallInstructions": "Sign up at https://posthog.com, create a project, and create feature flags in the PostHog dashboard"
+}
+
