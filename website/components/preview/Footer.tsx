@@ -5,14 +5,37 @@ interface FooterProps {
   links?: string[];
   showSocial?: boolean;
   description?: string;
+  integrations?: Record<string, string>;
 }
+
+// Provider metadata for footer display
+const PROVIDER_INFO: Record<string, Record<string, { name: string; color: string; icon: string }>> = {
+  analytics: {
+    "posthog": { name: "PostHog", color: "#F54E00", icon: "🦔" },
+    "plausible": { name: "Plausible", color: "#5850EC", icon: "📊" },
+    "google-analytics": { name: "GA4", color: "#F9AB00", icon: "📈" },
+  },
+  monitoring: {
+    "sentry": { name: "Sentry", color: "#362D59", icon: "🐛" },
+    "logrocket": { name: "LogRocket", color: "#764ABC", icon: "🎬" },
+    "highlight": { name: "Highlight", color: "#6C4FF7", icon: "✨" },
+    "axiom": { name: "Axiom", color: "#0066FF", icon: "📋" },
+  },
+};
 
 export function Footer({
   projectName,
   links = [],
   showSocial = true,
   description,
+  integrations = {},
 }: FooterProps) {
+  // Get analytics and monitoring provider info
+  const analyticsProvider = integrations.analytics;
+  const monitoringProvider = integrations.monitoring;
+  const analyticsInfo = analyticsProvider ? PROVIDER_INFO.analytics[analyticsProvider] : null;
+  const monitoringInfo = monitoringProvider ? PROVIDER_INFO.monitoring[monitoringProvider] : null;
+
   return (
     <footer className="w-full px-6 py-12 bg-[#050505] border-t border-white/5">
       <div className="max-w-6xl mx-auto">
@@ -28,7 +51,28 @@ export function Footer({
               <span className="text-white font-semibold">{projectName || "Project"}</span>
             </div>
             {description && (
-              <p className="text-foreground-muted text-sm">{description}</p>
+              <p className="text-foreground-muted text-sm mb-3">{description}</p>
+            )}
+            {/* Integration badges */}
+            {(analyticsInfo || monitoringInfo) && (
+              <div className="flex flex-wrap gap-2">
+                {analyticsInfo && (
+                  <span 
+                    className="text-[9px] px-1.5 py-0.5 rounded"
+                    style={{ backgroundColor: `${analyticsInfo.color}20`, color: analyticsInfo.color }}
+                  >
+                    {analyticsInfo.icon} {analyticsInfo.name}
+                  </span>
+                )}
+                {monitoringInfo && (
+                  <span 
+                    className="text-[9px] px-1.5 py-0.5 rounded"
+                    style={{ backgroundColor: `${monitoringInfo.color}20`, color: monitoringInfo.color }}
+                  >
+                    {monitoringInfo.icon} {monitoringInfo.name}
+                  </span>
+                )}
+              </div>
             )}
           </div>
 
