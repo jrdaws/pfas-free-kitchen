@@ -289,10 +289,17 @@ mv output/shared/bugs/fixed/BUG-xxx.md output/shared/bugs/closed/$(date +%Y-%m)/
 
 ## Related Documents
 
+### Bug Prevention System
+- [CODE_QUALITY_SOP.md](./CODE_QUALITY_SOP.md) - Prevent bugs with quality gates
+- [REGRESSION_TESTING_SOP.md](./REGRESSION_TESTING_SOP.md) - Mandatory tests for fixes
+- [SENTRY_BUG_AUTOMATION_SOP.md](./SENTRY_BUG_AUTOMATION_SOP.md) - Auto-create reports from Sentry
+- [BUG_PREVENTION_CHECKLIST.md](../standards/BUG_PREVENTION_CHECKLIST.md) - Quick reference
+
+### Other
 - [Deployment SOP](./DEPLOYMENT_SOP.md) - For deployment-related bugs
 - [Documentation Sync SOP](./DOCUMENTATION_SYNC_SOP.md) - Update docs after fix
+- [Sentry Setup](../integrations/monitoring/sentry.md) - Error monitoring
 - [Testing Agent Role](../../prompts/agents/roles/TESTING_AGENT.md) - Verification process
-- [Agent Policies](../../prompts/agents/AGENT_POLICIES.md) - General agent rules
 
 ---
 

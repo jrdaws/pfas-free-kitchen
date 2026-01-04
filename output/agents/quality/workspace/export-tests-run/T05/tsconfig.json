@@ -19,16 +19,11 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
         "name": "test-t05"
-      },
-      {
-        "name": "next"
       }
     ]
   },

@@ -13,7 +13,8 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "clsx": "^2.1.1",
-    "tailwind-merge": "^2.6.0"
+    "tailwind-merge": "^2.6.0",
+    "posthog-js": "^1.100.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

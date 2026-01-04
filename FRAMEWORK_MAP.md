@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
 - 61543f4 2026-01-03 test(export): document 5 build failures from tier 1 tests
 - bb25e33 2026-01-03 feat: wire 7 new integrations into export route
 - 41e08b7 2026-01-03 feat: add 7 new integration templates to templates/saas/integrations
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 8b7925c 2026-01-03 feat: add export validation framework with 20 test configurations
 - 36948a9 2026-01-03 chore: move completed P0 supabase fix to done
 - 8dead2a 2026-01-03 fix(P0): split Supabase lib into client.ts and server.ts to fix build errors
-- 35a0542 2026-01-03 chore: move completed feature templates task to done
 
 ## Agent Governance Structure
 
