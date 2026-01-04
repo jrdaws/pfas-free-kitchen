@@ -12,7 +12,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { Check, Github, Database, Rocket, HelpCircle, CreditCard, Mail, BarChart3, Shield, Settings } from "lucide-react";
+import { Check, Github, Database, Rocket, HelpCircle, CreditCard, Mail, BarChart3, Shield, Settings, HardDrive, Search, FileText, Bug, Image as ImageIcon, Zap, Bell, Flag } from "lucide-react";
 
 // Custom SVG icon component
 interface SectionIconProps {
@@ -59,6 +59,22 @@ function SectionIcon({ sectionId, className }: SectionIconProps) {
       return <BarChart3 className={cn("h-5 w-5", className)} />;
     case "auth-provider":
       return <Shield className={cn("h-5 w-5", className)} />;
+    case "storage":
+      return <HardDrive className={cn("h-5 w-5", className)} />;
+    case "search":
+      return <Search className={cn("h-5 w-5", className)} />;
+    case "cms":
+      return <FileText className={cn("h-5 w-5", className)} />;
+    case "monitoring":
+      return <Bug className={cn("h-5 w-5", className)} />;
+    case "image-opt":
+      return <ImageIcon className={cn("h-5 w-5", className)} />;
+    case "background-jobs":
+      return <Zap className={cn("h-5 w-5", className)} />;
+    case "notifications":
+      return <Bell className={cn("h-5 w-5", className)} />;
+    case "feature-flags":
+      return <Flag className={cn("h-5 w-5", className)} />;
     case "project-setup":
       return <Settings className={cn("h-5 w-5", className)} />;
     default:
@@ -79,118 +95,31 @@ export interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   // Setup Phase (1-4)
-  {
-    id: "template",
-    label: "Template",
-    description: "Choose your starting template",
-    stepNumber: 1,
-  },
-  {
-    id: "research",
-    label: "Research",
-    description: "Industry & inspiration URLs",
-    stepNumber: 2,
-    optional: true,
-    tooltip: "Describe your project domain (e.g., 'e-commerce', 'SaaS') and add competitor/inspiration websites for AI analysis",
-  },
-  {
-    id: "branding",
-    label: "Branding",
-    description: "Colors & visual identity",
-    stepNumber: 3,
-    optional: true,
-    tooltip: "Choose a color scheme for your project or enter custom brand colors (hex codes)",
-  },
-  {
-    id: "core-features",
-    label: "Features",
-    description: "Select core features",
-    stepNumber: 4,
-  },
-  // Configure Phase (5-10)
-  {
-    id: "integrate-ai",
-    label: "AI",
-    description: "Add AI capabilities",
-    stepNumber: 5,
-    optional: true,
-    tooltip: "Connect to OpenAI, Anthropic, or Google AI for intelligent features in your app",
-  },
-  {
-    id: "payments",
-    label: "Payments",
-    description: "Accept payments",
-    stepNumber: 6,
-    optional: true,
-    tooltip: "Process payments with Stripe, Paddle, or LemonSqueezy. Required for selling products or subscriptions.",
-  },
-  {
-    id: "email",
-    label: "Email",
-    description: "Send transactional emails",
-    stepNumber: 7,
-    optional: true,
-    tooltip: "Send emails for signups, password resets, and notifications with Resend, SendGrid, or Postmark.",
-  },
-  {
-    id: "analytics",
-    label: "Analytics",
-    description: "Track user behavior",
-    stepNumber: 8,
-    optional: true,
-    tooltip: "Understand how users interact with your app using PostHog, Plausible, or Google Analytics.",
-  },
-  {
-    id: "auth-provider",
-    label: "Auth",
-    description: "User authentication",
-    stepNumber: 9,
-    optional: true,
-    tooltip: "Add login/signup with Clerk, Auth0, NextAuth, or use Supabase Auth from the Tools section.",
-  },
-  {
-    id: "project-setup",
-    label: "Project",
-    description: "Name & output directory",
-    stepNumber: 10,
-  },
-  // Launch Phase (11-15)
-  {
-    id: "cursor",
-    label: "Cursor",
-    description: "AI code editor",
-    stepNumber: 11,
-    tooltip: "Cursor is an AI code editor that helps you write code faster. Free to download.",
-  },
-  {
-    id: "github",
-    label: "GitHub",
-    description: "Code repository",
-    stepNumber: 12,
-    tooltip: "GitHub stores your code online and enables collaboration. Create a free account at github.com",
-  },
-  {
-    id: "supabase",
-    label: "Supabase",
-    description: "Database & storage",
-    stepNumber: 13,
-    optional: true,
-    tooltip: "Supabase is an open-source backend with PostgreSQL database, authentication, and storage. Free tier available.",
-  },
-  {
-    id: "vercel",
-    label: "Vercel",
-    description: "Deploy & host",
-    stepNumber: 14,
-    optional: true,
-    tooltip: "Vercel hosts your website with automatic deployments from GitHub. Free for personal projects.",
-  },
-  {
-    id: "export",
-    label: "Export",
-    description: "Generate & download",
-    stepNumber: 15,
-  },
+  { id: "template", label: "Template", description: "Choose template", stepNumber: 1 },
+  { id: "research", label: "Research", description: "Domain & inspiration", stepNumber: 2, optional: true, tooltip: "Describe your project domain and add inspiration URLs" },
+  { id: "branding", label: "Branding", description: "Colors & identity", stepNumber: 3, optional: true, tooltip: "Choose a color scheme or enter custom brand colors" },
+  { id: "core-features", label: "Features", description: "Core features", stepNumber: 4 },
+  // Configure Phase (5-18)
+  { id: "integrate-ai", label: "AI", description: "AI provider", stepNumber: 5, optional: true, tooltip: "Connect OpenAI, Anthropic, or Google AI" },
+  { id: "payments", label: "Payments", description: "Payment provider", stepNumber: 6, optional: true, tooltip: "Stripe, Paddle, or LemonSqueezy" },
+  { id: "email", label: "Email", description: "Email service", stepNumber: 7, optional: true, tooltip: "Resend, SendGrid, or Postmark" },
+  { id: "analytics", label: "Analytics", description: "User analytics", stepNumber: 8, optional: true, tooltip: "PostHog, Plausible, or GA" },
+  { id: "auth-provider", label: "Auth", description: "Authentication", stepNumber: 9, optional: true, tooltip: "Clerk, Auth0, or NextAuth" },
+  { id: "storage", label: "Storage", description: "File storage", stepNumber: 10, optional: true, tooltip: "UploadThing, R2, or S3" },
+  { id: "search", label: "Search", description: "Search engine", stepNumber: 11, optional: true, tooltip: "Algolia, Meilisearch, or Typesense" },
+  { id: "cms", label: "CMS", description: "Content management", stepNumber: 12, optional: true, tooltip: "Sanity, Contentful, or Payload" },
+  { id: "monitoring", label: "Monitoring", description: "Error tracking", stepNumber: 13, optional: true, tooltip: "Sentry, LogRocket, or Highlight" },
+  { id: "image-opt", label: "Images", description: "Image optimization", stepNumber: 14, optional: true, tooltip: "Cloudinary, ImageKit, or Vercel" },
+  { id: "background-jobs", label: "Jobs", description: "Background jobs", stepNumber: 15, optional: true, tooltip: "Inngest, Trigger.dev, or QStash" },
+  { id: "notifications", label: "Notifications", description: "Push/in-app", stepNumber: 16, optional: true, tooltip: "Novu, OneSignal, or Knock" },
+  { id: "feature-flags", label: "Flags", description: "Feature flags", stepNumber: 17, optional: true, tooltip: "PostHog, LaunchDarkly, or Flagsmith" },
+  { id: "project-setup", label: "Project", description: "Name & output", stepNumber: 18 },
+  // Launch Phase (19-23)
+  { id: "cursor", label: "Cursor", description: "AI code editor", stepNumber: 19, tooltip: "AI code editor - free to download" },
+  { id: "github", label: "GitHub", description: "Code repository", stepNumber: 20, tooltip: "Store code and collaborate" },
+  { id: "supabase", label: "Supabase", description: "Database", stepNumber: 21, optional: true, tooltip: "PostgreSQL, auth, and storage" },
+  { id: "vercel", label: "Vercel", description: "Deploy & host", stepNumber: 22, optional: true, tooltip: "Auto deployments from GitHub" },
+  { id: "export", label: "Export", description: "Generate", stepNumber: 23 },
 ];
 
 // Storage key for expanded state
@@ -433,49 +362,49 @@ export function AccordionSidebar({
         <div className="flex items-center justify-between">
           <span className="text-xs text-[var(--sidebar-text-muted)] font-medium">Services</span>
           <div className="flex items-center gap-1.5">
-            {/* GitHub indicator - step 12 */}
+            {/* GitHub indicator - step 20 */}
             <div 
               className={cn(
                 "w-5 h-5 rounded flex items-center justify-center transition-colors",
-                completedSteps.has(12) 
+                completedSteps.has(20) 
                   ? "bg-emerald-500/20" 
                   : "bg-white/10"
               )}
-              title={completedSteps.has(12) ? "GitHub: Connected" : "GitHub: Not connected"}
+              title={completedSteps.has(20) ? "GitHub: Connected" : "GitHub: Not connected"}
             >
               <Github className={cn(
                 "h-3 w-3",
-                completedSteps.has(12) ? "text-emerald-400" : "text-white/40"
+                completedSteps.has(20) ? "text-emerald-400" : "text-white/40"
               )} />
             </div>
-            {/* Supabase indicator - step 13 */}
+            {/* Supabase indicator - step 21 */}
             <div 
               className={cn(
                 "w-5 h-5 rounded flex items-center justify-center transition-colors",
-                completedSteps.has(13) 
+                completedSteps.has(21) 
                   ? "bg-emerald-500/20" 
                   : "bg-white/10"
               )}
-              title={completedSteps.has(13) ? "Supabase: Connected" : "Supabase: Not connected"}
+              title={completedSteps.has(21) ? "Supabase: Connected" : "Supabase: Not connected"}
             >
               <Database className={cn(
                 "h-3 w-3",
-                completedSteps.has(13) ? "text-emerald-400" : "text-white/40"
+                completedSteps.has(21) ? "text-emerald-400" : "text-white/40"
               )} />
             </div>
-            {/* Vercel indicator - step 14 */}
+            {/* Vercel indicator - step 22 */}
             <div 
               className={cn(
                 "w-5 h-5 rounded flex items-center justify-center transition-colors",
-                completedSteps.has(14) 
+                completedSteps.has(22) 
                   ? "bg-emerald-500/20" 
                   : "bg-white/10"
               )}
-              title={completedSteps.has(14) ? "Vercel: Connected" : "Vercel: Not connected"}
+              title={completedSteps.has(22) ? "Vercel: Connected" : "Vercel: Not connected"}
             >
               <Rocket className={cn(
                 "h-3 w-3",
-                completedSteps.has(14) ? "text-emerald-400" : "text-white/40"
+                completedSteps.has(22) ? "text-emerald-400" : "text-white/40"
               )} />
             </div>
           </div>

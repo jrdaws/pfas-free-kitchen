@@ -12,7 +12,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { Menu, Check, Github, Database, Rocket, CreditCard, Mail, BarChart3, Shield, Settings } from "lucide-react";
+import { Menu, Check, Github, Database, Rocket, CreditCard, Mail, BarChart3, Shield, Settings, HardDrive, Search, FileText, Bug, Image as ImageIcon, Zap, Bell, Flag } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Step } from "@/lib/configurator-state";
 
@@ -26,23 +26,31 @@ interface NavSection {
 
 const NAV_SECTIONS: NavSection[] = [
   // Setup Phase (1-4)
-  { id: "template", label: "Template", description: "Choose your starting template", stepNumber: 1 },
-  { id: "research", label: "Research", description: "Industry & inspiration", stepNumber: 2 },
-  { id: "branding", label: "Branding", description: "Colors & identity", stepNumber: 3 },
-  { id: "core-features", label: "Features", description: "Select core features", stepNumber: 4 },
-  // Configure Phase (5-10)
-  { id: "integrate-ai", label: "AI", description: "Add AI capabilities", stepNumber: 5 },
-  { id: "payments", label: "Payments", description: "Accept payments", stepNumber: 6 },
-  { id: "email", label: "Email", description: "Send emails", stepNumber: 7 },
-  { id: "analytics", label: "Analytics", description: "Track users", stepNumber: 8 },
-  { id: "auth-provider", label: "Auth", description: "User authentication", stepNumber: 9 },
-  { id: "project-setup", label: "Project", description: "Name & output", stepNumber: 10 },
-  // Launch Phase (11-15)
-  { id: "cursor", label: "Cursor", description: "AI code editor", stepNumber: 11 },
-  { id: "github", label: "GitHub", description: "Code repository", stepNumber: 12 },
-  { id: "supabase", label: "Supabase", description: "Database & storage", stepNumber: 13 },
-  { id: "vercel", label: "Vercel", description: "Deploy & host", stepNumber: 14 },
-  { id: "export", label: "Export", description: "Generate & download", stepNumber: 15 },
+  { id: "template", label: "Template", description: "Choose template", stepNumber: 1 },
+  { id: "research", label: "Research", description: "Domain & inspiration", stepNumber: 2 },
+  { id: "branding", label: "Branding", description: "Colors", stepNumber: 3 },
+  { id: "core-features", label: "Features", description: "Core features", stepNumber: 4 },
+  // Configure Phase (5-18)
+  { id: "integrate-ai", label: "AI", description: "AI provider", stepNumber: 5 },
+  { id: "payments", label: "Payments", description: "Payments", stepNumber: 6 },
+  { id: "email", label: "Email", description: "Email service", stepNumber: 7 },
+  { id: "analytics", label: "Analytics", description: "Analytics", stepNumber: 8 },
+  { id: "auth-provider", label: "Auth", description: "Authentication", stepNumber: 9 },
+  { id: "storage", label: "Storage", description: "File storage", stepNumber: 10 },
+  { id: "search", label: "Search", description: "Search", stepNumber: 11 },
+  { id: "cms", label: "CMS", description: "Content", stepNumber: 12 },
+  { id: "monitoring", label: "Monitoring", description: "Errors", stepNumber: 13 },
+  { id: "image-opt", label: "Images", description: "Optimization", stepNumber: 14 },
+  { id: "background-jobs", label: "Jobs", description: "Background", stepNumber: 15 },
+  { id: "notifications", label: "Notifications", description: "Push/in-app", stepNumber: 16 },
+  { id: "feature-flags", label: "Flags", description: "Feature flags", stepNumber: 17 },
+  { id: "project-setup", label: "Project", description: "Name & output", stepNumber: 18 },
+  // Launch Phase (19-23)
+  { id: "cursor", label: "Cursor", description: "Code editor", stepNumber: 19 },
+  { id: "github", label: "GitHub", description: "Repository", stepNumber: 20 },
+  { id: "supabase", label: "Supabase", description: "Database", stepNumber: 21 },
+  { id: "vercel", label: "Vercel", description: "Deploy", stepNumber: 22 },
+  { id: "export", label: "Export", description: "Generate", stepNumber: 23 },
 ];
 
 // Custom SVG icon component (matching AccordionSidebar)
@@ -83,6 +91,22 @@ function SectionIcon({ sectionId, className }: { sectionId: string; className?: 
       return <BarChart3 className={cn("h-[18px] w-[18px]", className)} />;
     case "auth-provider":
       return <Shield className={cn("h-[18px] w-[18px]", className)} />;
+    case "storage":
+      return <HardDrive className={cn("h-[18px] w-[18px]", className)} />;
+    case "search":
+      return <Search className={cn("h-[18px] w-[18px]", className)} />;
+    case "cms":
+      return <FileText className={cn("h-[18px] w-[18px]", className)} />;
+    case "monitoring":
+      return <Bug className={cn("h-[18px] w-[18px]", className)} />;
+    case "image-opt":
+      return <ImageIcon className={cn("h-[18px] w-[18px]", className)} />;
+    case "background-jobs":
+      return <Zap className={cn("h-[18px] w-[18px]", className)} />;
+    case "notifications":
+      return <Bell className={cn("h-[18px] w-[18px]", className)} />;
+    case "feature-flags":
+      return <Flag className={cn("h-[18px] w-[18px]", className)} />;
     case "project-setup":
       return <Settings className={cn("h-[18px] w-[18px]", className)} />;
     default:
@@ -100,7 +124,7 @@ const PHASE_GROUPS = [
   { 
     id: "configure", 
     label: "Configure", 
-    sections: ["integrate-ai", "payments", "email", "analytics", "auth-provider", "project-setup"] 
+    sections: ["integrate-ai", "payments", "email", "analytics", "auth-provider", "storage", "search", "cms", "monitoring", "image-opt", "background-jobs", "notifications", "feature-flags", "project-setup"] 
   },
   { 
     id: "launch", 

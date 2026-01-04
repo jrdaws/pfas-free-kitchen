@@ -3,7 +3,7 @@ import { persist } from 'zustand/middleware';
 
 export type Mode = 'beginner' | 'advanced';
 
-export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15;
+export type Step = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23;
 
 // Brand color scheme options
 export interface ColorScheme {
@@ -108,14 +108,14 @@ export const PHASES: readonly Phase[] = [
     label: 'Configure',
     description: 'Set up integrations',
     icon: '/images/configurator/phases/phase-configure-icon.svg',
-    steps: [5, 6, 7, 8, 9, 10], // AI, Payments, Email, Analytics, Auth, Project
+    steps: [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18], // AI through Project Setup
   },
   {
     id: 'launch',
     label: 'Launch',
     description: 'Connect tools and ship',
     icon: '/images/configurator/phases/phase-launch-icon.svg',
-    steps: [11, 12, 13, 14, 15], // Cursor, GitHub, Supabase, Vercel, Export
+    steps: [19, 20, 21, 22, 23], // Cursor, GitHub, Supabase, Vercel, Export
   },
 ] as const;
 
@@ -127,24 +127,32 @@ export interface StepDef {
 }
 
 export const STEPS: readonly StepDef[] = [
-  // Setup Phase
+  // Setup Phase (1-4)
   { number: 1, label: 'Template', phase: 'setup' },
   { number: 2, label: 'Research', phase: 'setup' },
   { number: 3, label: 'Branding', phase: 'setup' },
   { number: 4, label: 'Features', phase: 'setup' },
-  // Configure Phase
+  // Configure Phase (5-18)
   { number: 5, label: 'AI', phase: 'configure' },
   { number: 6, label: 'Payments', phase: 'configure' },
   { number: 7, label: 'Email', phase: 'configure' },
   { number: 8, label: 'Analytics', phase: 'configure' },
   { number: 9, label: 'Auth', phase: 'configure' },
-  { number: 10, label: 'Project', phase: 'configure' },
-  // Launch Phase
-  { number: 11, label: 'Cursor', phase: 'launch' },
-  { number: 12, label: 'GitHub', phase: 'launch' },
-  { number: 13, label: 'Supabase', phase: 'launch' },
-  { number: 14, label: 'Vercel', phase: 'launch' },
-  { number: 15, label: 'Export', phase: 'launch' },
+  { number: 10, label: 'Storage', phase: 'configure' },
+  { number: 11, label: 'Search', phase: 'configure' },
+  { number: 12, label: 'CMS', phase: 'configure' },
+  { number: 13, label: 'Monitoring', phase: 'configure' },
+  { number: 14, label: 'Images', phase: 'configure' },
+  { number: 15, label: 'Jobs', phase: 'configure' },
+  { number: 16, label: 'Notifications', phase: 'configure' },
+  { number: 17, label: 'Flags', phase: 'configure' },
+  { number: 18, label: 'Project', phase: 'configure' },
+  // Launch Phase (19-23)
+  { number: 19, label: 'Cursor', phase: 'launch' },
+  { number: 20, label: 'GitHub', phase: 'launch' },
+  { number: 21, label: 'Supabase', phase: 'launch' },
+  { number: 22, label: 'Vercel', phase: 'launch' },
+  { number: 23, label: 'Export', phase: 'launch' },
 ] as const;
 
 export interface Inspiration {
@@ -225,6 +233,14 @@ export interface ConfiguratorState {
   emailProvider?: string;
   analyticsProvider?: string;
   authProvider?: string;
+  storageProvider?: string;
+  searchProvider?: string;
+  cmsProvider?: string;
+  monitoringProvider?: string;
+  imageOptProvider?: string;
+  backgroundJobsProvider?: string;
+  notificationsProvider?: string;
+  featureFlagsProvider?: string;
 
   // Actions
   setStep: (step: Step) => void;
@@ -280,6 +296,14 @@ export interface ConfiguratorState {
   setEmailProvider: (provider: string | undefined) => void;
   setAnalyticsProvider: (provider: string | undefined) => void;
   setAuthProvider: (provider: string | undefined) => void;
+  setStorageProvider: (provider: string | undefined) => void;
+  setSearchProvider: (provider: string | undefined) => void;
+  setCmsProvider: (provider: string | undefined) => void;
+  setMonitoringProvider: (provider: string | undefined) => void;
+  setImageOptProvider: (provider: string | undefined) => void;
+  setBackgroundJobsProvider: (provider: string | undefined) => void;
+  setNotificationsProvider: (provider: string | undefined) => void;
+  setFeatureFlagsProvider: (provider: string | undefined) => void;
   
   reset: () => void;
 }
@@ -332,6 +356,14 @@ const initialState = {
   emailProvider: undefined,
   analyticsProvider: undefined,
   authProvider: undefined,
+  storageProvider: undefined,
+  searchProvider: undefined,
+  cmsProvider: undefined,
+  monitoringProvider: undefined,
+  imageOptProvider: undefined,
+  backgroundJobsProvider: undefined,
+  notificationsProvider: undefined,
+  featureFlagsProvider: undefined,
 };
 
 export const useConfiguratorStore = create<ConfiguratorState>()(
@@ -480,6 +512,14 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
       setEmailProvider: (provider) => set({ emailProvider: provider }),
       setAnalyticsProvider: (provider) => set({ analyticsProvider: provider }),
       setAuthProvider: (provider) => set({ authProvider: provider }),
+      setStorageProvider: (provider) => set({ storageProvider: provider }),
+      setSearchProvider: (provider) => set({ searchProvider: provider }),
+      setCmsProvider: (provider) => set({ cmsProvider: provider }),
+      setMonitoringProvider: (provider) => set({ monitoringProvider: provider }),
+      setImageOptProvider: (provider) => set({ imageOptProvider: provider }),
+      setBackgroundJobsProvider: (provider) => set({ backgroundJobsProvider: provider }),
+      setNotificationsProvider: (provider) => set({ notificationsProvider: provider }),
+      setFeatureFlagsProvider: (provider) => set({ featureFlagsProvider: provider }),
 
       reset: () => set(initialState),
     }),
@@ -512,6 +552,14 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         emailProvider: state.emailProvider,
         analyticsProvider: state.analyticsProvider,
         authProvider: state.authProvider,
+        storageProvider: state.storageProvider,
+        searchProvider: state.searchProvider,
+        cmsProvider: state.cmsProvider,
+        monitoringProvider: state.monitoringProvider,
+        imageOptProvider: state.imageOptProvider,
+        backgroundJobsProvider: state.backgroundJobsProvider,
+        notificationsProvider: state.notificationsProvider,
+        featureFlagsProvider: state.featureFlagsProvider,
         // Note: aiApiKey is NOT persisted for security
       }),
       onRehydrateStorage: () => (state) => {

@@ -42,27 +42,43 @@ const PaymentsSection = dynamic(() => import("@/app/components/configurator/sect
 const EmailSection = dynamic(() => import("@/app/components/configurator/sections/EmailSection").then(mod => ({ default: mod.EmailSection })), { ssr: false });
 const AnalyticsSection = dynamic(() => import("@/app/components/configurator/sections/AnalyticsSection").then(mod => ({ default: mod.AnalyticsSection })), { ssr: false });
 const AuthProviderSection = dynamic(() => import("@/app/components/configurator/sections/AuthProviderSection").then(mod => ({ default: mod.AuthProviderSection })), { ssr: false });
+const StorageSection = dynamic(() => import("@/app/components/configurator/sections/StorageSection").then(mod => ({ default: mod.StorageSection })), { ssr: false });
+const SearchSection = dynamic(() => import("@/app/components/configurator/sections/SearchSection").then(mod => ({ default: mod.SearchSection })), { ssr: false });
+const CMSSection = dynamic(() => import("@/app/components/configurator/sections/CMSSection").then(mod => ({ default: mod.CMSSection })), { ssr: false });
+const MonitoringSection = dynamic(() => import("@/app/components/configurator/sections/MonitoringSection").then(mod => ({ default: mod.MonitoringSection })), { ssr: false });
+const ImageOptSection = dynamic(() => import("@/app/components/configurator/sections/ImageOptSection").then(mod => ({ default: mod.ImageOptSection })), { ssr: false });
+const BackgroundJobsSection = dynamic(() => import("@/app/components/configurator/sections/BackgroundJobsSection").then(mod => ({ default: mod.BackgroundJobsSection })), { ssr: false });
+const NotificationsSection = dynamic(() => import("@/app/components/configurator/sections/NotificationsSection").then(mod => ({ default: mod.NotificationsSection })), { ssr: false });
+const FeatureFlagsSection = dynamic(() => import("@/app/components/configurator/sections/FeatureFlagsSection").then(mod => ({ default: mod.FeatureFlagsSection })), { ssr: false });
 
-// Map section IDs to step numbers (15-section layout with service providers)
+// Map section IDs to step numbers (23-section layout with all providers)
 const SECTION_TO_STEP: Record<string, number> = {
   // Setup Phase (1-4)
   "template": 1,
   "research": 2,
   "branding": 3,
   "core-features": 4,
-  // Configure Phase (5-10)
+  // Configure Phase (5-18)
   "integrate-ai": 5,
   "payments": 6,
   "email": 7,
   "analytics": 8,
   "auth-provider": 9,
-  "project-setup": 10,
-  // Launch Phase (11-15)
-  "cursor": 11,
-  "github": 12,
-  "supabase": 13,
-  "vercel": 14,
-  "export": 15,
+  "storage": 10,
+  "search": 11,
+  "cms": 12,
+  "monitoring": 13,
+  "image-opt": 14,
+  "background-jobs": 15,
+  "notifications": 16,
+  "feature-flags": 17,
+  "project-setup": 18,
+  // Launch Phase (19-23)
+  "cursor": 19,
+  "github": 20,
+  "supabase": 21,
+  "vercel": 22,
+  "export": 23,
 };
 
 const STEP_TO_SECTION: Record<number, string> = {
@@ -77,13 +93,21 @@ const STEP_TO_SECTION: Record<number, string> = {
   7: "email",
   8: "analytics",
   9: "auth-provider",
-  10: "project-setup",
+  10: "storage",
+  11: "search",
+  12: "cms",
+  13: "monitoring",
+  14: "image-opt",
+  15: "background-jobs",
+  16: "notifications",
+  17: "feature-flags",
+  18: "project-setup",
   // Launch Phase
-  11: "cursor",
-  12: "github",
-  13: "supabase",
-  14: "vercel",
-  15: "export",
+  19: "cursor",
+  20: "github",
+  21: "supabase",
+  22: "vercel",
+  23: "export",
 };
 
 // Step titles for breadcrumb
@@ -97,23 +121,31 @@ const STEP_TITLES: Record<number, string> = {
   7: "Email",
   8: "Analytics",
   9: "Auth",
-  10: "Project",
-  11: "Cursor",
-  12: "GitHub",
-  13: "Supabase",
-  14: "Vercel",
-  15: "Export",
+  10: "Storage",
+  11: "Search",
+  12: "CMS",
+  13: "Monitoring",
+  14: "Images",
+  15: "Jobs",
+  16: "Notifications",
+  17: "Flags",
+  18: "Project",
+  19: "Cursor",
+  20: "GitHub",
+  21: "Supabase",
+  22: "Vercel",
+  23: "Export",
 };
 
 // Phase names for breadcrumb
 const getPhaseForStep = (step: number): string => {
   if (step <= 4) return "Setup";
-  if (step <= 10) return "Configure";
+  if (step <= 18) return "Configure";
   return "Launch";
 };
 
 // Total number of steps
-const TOTAL_STEPS = 15;
+const TOTAL_STEPS = 23;
 
 // Smart pre-fill prompts based on template selection (Option C UX improvement)
 const DOMAIN_PROMPTS: Record<string, string> = {
@@ -168,6 +200,14 @@ export default function ConfigurePage() {
     emailProvider,
     analyticsProvider,
     authProvider,
+    storageProvider,
+    searchProvider,
+    cmsProvider,
+    monitoringProvider,
+    imageOptProvider,
+    backgroundJobsProvider,
+    notificationsProvider,
+    featureFlagsProvider,
     setStep,
     completeStep,
     setMode,
@@ -196,6 +236,14 @@ export default function ConfigurePage() {
     setEmailProvider,
     setAnalyticsProvider,
     setAuthProvider,
+    setStorageProvider,
+    setSearchProvider,
+    setCmsProvider,
+    setMonitoringProvider,
+    setImageOptProvider,
+    setBackgroundJobsProvider,
+    setNotificationsProvider,
+    setFeatureFlagsProvider,
   } = useConfiguratorStore();
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
@@ -242,6 +290,14 @@ export default function ConfigurePage() {
       "email": emailProvider ? "✓" : undefined,
       "analytics": analyticsProvider ? "✓" : undefined,
       "auth-provider": authProvider ? "✓" : undefined,
+      "storage": storageProvider ? "✓" : undefined,
+      "search": searchProvider ? "✓" : undefined,
+      "cms": cmsProvider ? "✓" : undefined,
+      "monitoring": monitoringProvider ? "✓" : undefined,
+      "image-opt": imageOptProvider ? "✓" : undefined,
+      "background-jobs": backgroundJobsProvider ? "✓" : undefined,
+      "notifications": notificationsProvider ? "✓" : undefined,
+      "feature-flags": featureFlagsProvider ? "✓" : undefined,
       // Tool sections - show "Ready" when complete
       "cursor": toolStatus.cursor ? "Ready" : undefined,
       "github": toolStatus.github ? "Ready" : undefined,
@@ -249,7 +305,7 @@ export default function ConfigurePage() {
       "supabase": toolStatus.supabase ? "Ready" : undefined,
       "vercel": toolStatus.vercel ? "Ready" : undefined,
     };
-  }, [selectedFeatures, integrations, toolStatus, researchDomain, aiProvider, colorScheme, paymentProvider, emailProvider, analyticsProvider, authProvider]);
+  }, [selectedFeatures, integrations, toolStatus, researchDomain, aiProvider, colorScheme, paymentProvider, emailProvider, analyticsProvider, authProvider, storageProvider, searchProvider, cmsProvider, monitoringProvider, imageOptProvider, backgroundJobsProvider, notificationsProvider, featureFlagsProvider]);
 
   // Calculate progress
   const progress = (completedSteps.size / TOTAL_STEPS) * 100;
@@ -351,41 +407,33 @@ export default function ConfigurePage() {
   // Validation for each step
   const canProceed = () => {
     switch (currentStep) {
-      // Setup Phase
-      case 1: // Template
-        return template !== "";
-      case 2: // Research (optional)
-        return true;
-      case 3: // Branding (optional)
-        return true;
-      case 4: // Core Features
-        return Object.values(selectedFeatures).flat().length > 0;
-      // Configure Phase
-      case 5: // Integrate AI (optional)
-        return true;
-      case 6: // Payments (optional)
-        return true;
-      case 7: // Email (optional)
-        return true;
-      case 8: // Analytics (optional)
-        return true;
-      case 9: // Auth Provider (optional)
-        return true;
-      case 10: // Project Setup
-        return projectName.length > 0 && outputDir.length > 0;
-      // Launch Phase
-      case 11: // Cursor
-        return toolStatus.cursor;
-      case 12: // GitHub
-        return toolStatus.github;
-      case 13: // Supabase (optional)
-        return true;
-      case 14: // Vercel (optional)
-        return true;
-      case 15: // Export
-        return true;
-      default:
-        return false;
+      // Setup Phase (1-4)
+      case 1: return template !== ""; // Template required
+      case 2: return true; // Research optional
+      case 3: return true; // Branding optional
+      case 4: return Object.values(selectedFeatures).flat().length > 0; // Features required
+      // Configure Phase (5-18) - all optional except Project Setup
+      case 5: return true; // AI optional
+      case 6: return true; // Payments optional
+      case 7: return true; // Email optional
+      case 8: return true; // Analytics optional
+      case 9: return true; // Auth optional
+      case 10: return true; // Storage optional
+      case 11: return true; // Search optional
+      case 12: return true; // CMS optional
+      case 13: return true; // Monitoring optional
+      case 14: return true; // Images optional
+      case 15: return true; // Jobs optional
+      case 16: return true; // Notifications optional
+      case 17: return true; // Flags optional
+      case 18: return projectName.length > 0 && outputDir.length > 0; // Project required
+      // Launch Phase (19-23)
+      case 19: return toolStatus.cursor; // Cursor required
+      case 20: return toolStatus.github; // GitHub required
+      case 21: return true; // Supabase optional
+      case 22: return true; // Vercel optional
+      case 23: return true; // Export
+      default: return false;
     }
   };
 
@@ -510,6 +558,62 @@ export default function ConfigurePage() {
           <AuthProviderSection
             selectedProvider={authProvider}
             onProviderChange={setAuthProvider}
+          />
+        );
+      case "storage":
+        return (
+          <StorageSection
+            selectedProvider={storageProvider}
+            onProviderChange={setStorageProvider}
+          />
+        );
+      case "search":
+        return (
+          <SearchSection
+            selectedProvider={searchProvider}
+            onProviderChange={setSearchProvider}
+          />
+        );
+      case "cms":
+        return (
+          <CMSSection
+            selectedProvider={cmsProvider}
+            onProviderChange={setCmsProvider}
+          />
+        );
+      case "monitoring":
+        return (
+          <MonitoringSection
+            selectedProvider={monitoringProvider}
+            onProviderChange={setMonitoringProvider}
+          />
+        );
+      case "image-opt":
+        return (
+          <ImageOptSection
+            selectedProvider={imageOptProvider}
+            onProviderChange={setImageOptProvider}
+          />
+        );
+      case "background-jobs":
+        return (
+          <BackgroundJobsSection
+            selectedProvider={backgroundJobsProvider}
+            onProviderChange={setBackgroundJobsProvider}
+          />
+        );
+      case "notifications":
+        return (
+          <NotificationsSection
+            selectedProvider={notificationsProvider}
+            onProviderChange={setNotificationsProvider}
+          />
+        );
+      case "feature-flags":
+        return (
+          <FeatureFlagsSection
+            selectedProvider={featureFlagsProvider}
+            onProviderChange={setFeatureFlagsProvider}
           />
         );
       case "cursor":
@@ -735,6 +839,14 @@ export default function ConfigurePage() {
       case "email":
       case "analytics":
       case "auth-provider":
+      case "storage":
+      case "search":
+      case "cms":
+      case "monitoring":
+      case "image-opt":
+      case "background-jobs":
+      case "notifications":
+      case "feature-flags":
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
@@ -742,35 +854,43 @@ export default function ConfigurePage() {
                 {STEP_TITLES[currentStep]} Integration
               </h2>
               <p className="text-foreground-secondary">
-                Choose a provider in the sidebar. All integrations are optional.
+                Choose a provider in the sidebar. All integrations are optional - skip what you don&apos;t need.
               </p>
             </div>
             
-            {/* Show configured providers */}
+            {/* Show configured providers summary */}
             <div className="bg-card rounded-xl p-6 border border-border">
               <h3 className="font-semibold text-foreground mb-4">Configured Services</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                 {[
-                  { label: "AI Provider", value: aiProvider },
+                  { label: "AI", value: aiProvider },
                   { label: "Payments", value: paymentProvider },
                   { label: "Email", value: emailProvider },
                   { label: "Analytics", value: analyticsProvider },
                   { label: "Auth", value: authProvider },
+                  { label: "Storage", value: storageProvider },
+                  { label: "Search", value: searchProvider },
+                  { label: "CMS", value: cmsProvider },
+                  { label: "Monitoring", value: monitoringProvider },
+                  { label: "Images", value: imageOptProvider },
+                  { label: "Jobs", value: backgroundJobsProvider },
+                  { label: "Notifications", value: notificationsProvider },
+                  { label: "Flags", value: featureFlagsProvider },
                 ].map(({ label, value }) => (
                   <div
                     key={label}
-                    className={`flex items-center gap-2 p-3 rounded-lg ${
+                    className={`flex items-center gap-2 p-2 rounded-lg text-sm ${
                       value ? "bg-success/10 text-success" : "bg-background-alt text-foreground-secondary"
                     }`}
                   >
                     <div
-                      className={`w-6 h-6 rounded-full flex items-center justify-center ${
+                      className={`w-5 h-5 rounded-full flex items-center justify-center text-xs ${
                         value ? "bg-success text-white" : "bg-border"
                       }`}
                     >
                       {value ? "✓" : ""}
                     </div>
-                    <span>{label}: {value || "Not set"}</span>
+                    <span>{label}</span>
                   </div>
                 ))}
               </div>
