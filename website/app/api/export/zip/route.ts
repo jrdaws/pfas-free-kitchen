@@ -305,6 +305,37 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/payments/lemonsqueezy/components/payments/PricingTable.tsx",
     "integrations/payments/lemonsqueezy/hooks/useSubscription.ts",
   ],
+  // Phase 2 new integrations
+  "analytics:plausible": [
+    "integrations/analytics/plausible/lib/plausible.ts",
+    "integrations/analytics/plausible/components/analytics/PlausibleProvider.tsx",
+    "integrations/analytics/plausible/components/analytics/PlausiblePageView.tsx",
+    "integrations/analytics/plausible/hooks/usePlausible.ts",
+  ],
+  "email:sendgrid": [
+    "integrations/email/sendgrid/lib/sendgrid.ts",
+    "integrations/email/sendgrid/lib/send-email.ts",
+    "integrations/email/sendgrid/app/api/email/send/route.ts",
+    "integrations/email/sendgrid/emails/WelcomeEmail.tsx",
+    "integrations/email/sendgrid/emails/PasswordResetEmail.tsx",
+    "integrations/email/sendgrid/emails/InvoiceEmail.tsx",
+  ],
+  "ai:anthropic": [
+    "integrations/ai/anthropic/lib/anthropic.ts",
+    "integrations/ai/anthropic/app/api/ai/chat/route.ts",
+    "integrations/ai/anthropic/app/api/ai/completion/route.ts",
+    "integrations/ai/anthropic/components/ai/ClaudeChat.tsx",
+    "integrations/ai/anthropic/components/ai/ClaudeMessage.tsx",
+    "integrations/ai/anthropic/hooks/useClaude.ts",
+  ],
+  "backgroundJobs:trigger": [
+    "integrations/backgroundJobs/trigger/lib/client.ts",
+    "integrations/backgroundJobs/trigger/lib/tasks.ts",
+    "integrations/backgroundJobs/trigger/app/api/trigger/route.ts",
+    "integrations/backgroundJobs/trigger/trigger.config.ts",
+    "integrations/backgroundJobs/trigger/jobs/example-job.ts",
+    "integrations/backgroundJobs/trigger/jobs/scheduled-job.ts",
+  ],
 };
 
 interface ExportRequest {
@@ -429,6 +460,19 @@ function getRequiredEnvVars(integrations: Record<string, string>): string[] {
       case "payments:lemonsqueezy":
         vars.push("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID", "LEMONSQUEEZY_WEBHOOK_SECRET");
         break;
+      // Phase 2 new integrations
+      case "analytics:plausible":
+        vars.push("NEXT_PUBLIC_PLAUSIBLE_DOMAIN");
+        break;
+      case "email:sendgrid":
+        vars.push("SENDGRID_API_KEY", "SENDGRID_FROM_EMAIL", "SENDGRID_FROM_NAME");
+        break;
+      case "ai:anthropic":
+        vars.push("ANTHROPIC_API_KEY");
+        break;
+      case "backgroundJobs:trigger":
+        vars.push("TRIGGER_API_KEY", "TRIGGER_API_URL");
+        break;
     }
   });
   
@@ -529,6 +573,23 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
         break;
       case "payments:lemonsqueezy":
         deps["@lemonsqueezy/lemonsqueezy.js"] = "^3.0.0";
+        break;
+      // Phase 2 new integrations
+      case "analytics:plausible":
+        deps["next-plausible"] = "^3.12.0";
+        break;
+      case "email:sendgrid":
+        deps["@sendgrid/mail"] = "^8.1.0";
+        deps["@react-email/components"] = "^0.0.12";
+        deps["react-email"] = "^2.0.0";
+        break;
+      case "ai:anthropic":
+        deps["@anthropic-ai/sdk"] = "^0.17.0";
+        deps["ai"] = "^3.0.0";
+        break;
+      case "backgroundJobs:trigger":
+        deps["@trigger.dev/sdk"] = "^3.0.0";
+        deps["@trigger.dev/nextjs"] = "^3.0.0";
         break;
     }
   });

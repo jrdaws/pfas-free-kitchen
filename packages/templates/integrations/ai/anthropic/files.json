@@ -1,0 +1,25 @@
+{
+  "id": "anthropic",
+  "name": "Anthropic Claude",
+  "category": "ai",
+  "description": "Claude AI integration for conversational AI and text generation",
+  "files": [
+    { "path": "lib/anthropic.ts", "template": "lib/anthropic.ts" },
+    { "path": "app/api/ai/chat/route.ts", "template": "app/api/ai/chat/route.ts" },
+    { "path": "app/api/ai/completion/route.ts", "template": "app/api/ai/completion/route.ts" },
+    { "path": "components/ai/ClaudeChat.tsx", "template": "components/ClaudeChat.tsx" },
+    { "path": "components/ai/ClaudeMessage.tsx", "template": "components/ClaudeMessage.tsx" },
+    { "path": "hooks/useClaude.ts", "template": "hooks/useClaude.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "@anthropic-ai/sdk": "^0.17.0",
+      "ai": "^3.0.0"
+    },
+    "env": [
+      "ANTHROPIC_API_KEY"
+    ]
+  },
+  "postInstall": "Get your API key at https://console.anthropic.com"
+}
+

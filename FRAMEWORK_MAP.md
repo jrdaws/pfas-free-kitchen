@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 14b92a6 2026-01-04 feat: Phase 1 templates - NextAuth, Paddle, LemonSqueezy, Checkout, Subscriptions
 - 109f07f 2026-01-04 chore: move completed tasks to done
 - 0edfa72 2026-01-04 test: all tier 1 export tests pass (12/12)
 - c64cbe1 2026-01-04 feat(website): add dashboard with connected services UI
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 81c2afe 2026-01-03 fix(P0): export builds failing due to missing deps and lazy init
 - f92d2ad 2026-01-03 test: add 8 new test cases for new integrations
 - 7b96e5b 2026-01-03 docs: add deprecation schedule for PreviewCard and ProjectOverviewBox
-- 853d3fc 2026-01-03 chore: mark P1 remaining integrations task as done
 
 ## Agent Governance Structure
 

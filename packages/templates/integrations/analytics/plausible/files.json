@@ -1,0 +1,22 @@
+{
+  "id": "plausible",
+  "name": "Plausible Analytics",
+  "category": "analytics",
+  "description": "Privacy-friendly, lightweight analytics",
+  "files": [
+    { "path": "lib/plausible.ts", "template": "lib/plausible.ts" },
+    { "path": "components/analytics/PlausibleProvider.tsx", "template": "components/PlausibleProvider.tsx" },
+    { "path": "components/analytics/PlausiblePageView.tsx", "template": "components/PlausiblePageView.tsx" },
+    { "path": "hooks/usePlausible.ts", "template": "hooks/usePlausible.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "next-plausible": "^3.12.0"
+    },
+    "env": [
+      "NEXT_PUBLIC_PLAUSIBLE_DOMAIN"
+    ]
+  },
+  "postInstall": "Add your domain to Plausible dashboard at https://plausible.io"
+}
+
