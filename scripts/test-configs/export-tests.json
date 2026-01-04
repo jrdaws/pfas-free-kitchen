@@ -448,6 +448,192 @@
       "expectedEnvVars": [
         "NEXT_PUBLIC_SUPABASE_URL"
       ]
+    },
+    {
+      "id": "T21",
+      "name": "SaaS + Sanity CMS",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t21",
+        "integrations": { "cms": "sanity" }
+      },
+      "expectedFiles": [
+        "lib/sanity/client.ts",
+        "lib/sanity/queries.ts",
+        "lib/sanity/image.ts",
+        "sanity.config.ts",
+        "sanity/schemas/index.ts",
+        "app/studio/[[...tool]]/page.tsx"
+      ],
+      "expectedEnvVars": [
+        "NEXT_PUBLIC_SANITY_PROJECT_ID",
+        "NEXT_PUBLIC_SANITY_DATASET"
+      ]
+    },
+    {
+      "id": "T22",
+      "name": "SaaS + Sentry Monitoring",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t22",
+        "integrations": { "monitoring": "sentry" }
+      },
+      "expectedFiles": [
+        "sentry.client.config.ts",
+        "sentry.server.config.ts",
+        "sentry.edge.config.ts",
+        "instrumentation.ts",
+        "app/global-error.tsx",
+        "lib/sentry.ts"
+      ],
+      "expectedEnvVars": [
+        "SENTRY_DSN"
+      ]
+    },
+    {
+      "id": "T23",
+      "name": "SaaS + Cloudinary Images",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t23",
+        "integrations": { "imageOpt": "cloudinary" }
+      },
+      "expectedFiles": [
+        "lib/cloudinary.ts",
+        "lib/cloudinary-upload.ts",
+        "components/media/CloudinaryImage.tsx",
+        "components/media/CloudinaryUpload.tsx",
+        "app/api/cloudinary/sign/route.ts"
+      ],
+      "expectedEnvVars": [
+        "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME",
+        "CLOUDINARY_API_KEY",
+        "CLOUDINARY_API_SECRET"
+      ]
+    },
+    {
+      "id": "T24",
+      "name": "SaaS + Inngest Background Jobs",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t24",
+        "integrations": { "backgroundJobs": "inngest" }
+      },
+      "expectedFiles": [
+        "lib/inngest/client.ts",
+        "lib/inngest/functions.ts",
+        "app/api/inngest/route.ts"
+      ],
+      "expectedEnvVars": [
+        "INNGEST_EVENT_KEY",
+        "INNGEST_SIGNING_KEY"
+      ]
+    },
+    {
+      "id": "T25",
+      "name": "SaaS + Novu Notifications",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t25",
+        "integrations": { "notifications": "novu" }
+      },
+      "expectedFiles": [
+        "lib/notifications/novu.ts",
+        "lib/notifications/novu-client.ts",
+        "components/notifications/NotificationBell.tsx",
+        "components/notifications/NotificationCenter.tsx",
+        "app/api/notifications/route.ts"
+      ],
+      "expectedEnvVars": [
+        "NOVU_API_KEY",
+        "NEXT_PUBLIC_NOVU_APP_ID"
+      ]
+    },
+    {
+      "id": "T26",
+      "name": "SaaS + PostHog Feature Flags",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t26",
+        "integrations": { "featureFlags": "posthog-flags" }
+      },
+      "expectedFiles": [
+        "lib/feature-flags/posthog.ts",
+        "hooks/useFeatureFlag.ts",
+        "components/FeatureFlag.tsx"
+      ],
+      "expectedEnvVars": [
+        "NEXT_PUBLIC_POSTHOG_KEY"
+      ]
+    },
+    {
+      "id": "T27",
+      "name": "SaaS + Algolia Search",
+      "tier": 1,
+      "priority": "P1",
+      "config": {
+        "template": "saas",
+        "projectName": "test-t27",
+        "integrations": { "search": "algolia" }
+      },
+      "expectedFiles": [
+        "lib/search/algolia.ts",
+        "lib/search/indexer.ts",
+        "components/search/SearchBox.tsx",
+        "components/search/SearchModal.tsx",
+        "hooks/useSearch.ts"
+      ],
+      "expectedEnvVars": [
+        "NEXT_PUBLIC_ALGOLIA_APP_ID",
+        "NEXT_PUBLIC_ALGOLIA_SEARCH_KEY",
+        "ALGOLIA_ADMIN_KEY"
+      ]
+    },
+    {
+      "id": "T28",
+      "name": "E-commerce + All New Integrations",
+      "tier": 3,
+      "priority": "P2",
+      "config": {
+        "template": "ecommerce",
+        "projectName": "test-t28",
+        "integrations": { 
+          "auth": "supabase",
+          "payments": "stripe",
+          "cms": "sanity",
+          "monitoring": "sentry",
+          "search": "algolia",
+          "imageOpt": "cloudinary"
+        }
+      },
+      "expectedFiles": [
+        "lib/supabase/client.ts",
+        "lib/stripe.ts",
+        "lib/sanity/client.ts",
+        "lib/sentry.ts",
+        "lib/search/algolia.ts",
+        "lib/cloudinary.ts"
+      ],
+      "expectedEnvVars": [
+        "NEXT_PUBLIC_SUPABASE_URL",
+        "STRIPE_SECRET_KEY",
+        "NEXT_PUBLIC_SANITY_PROJECT_ID",
+        "SENTRY_DSN",
+        "NEXT_PUBLIC_ALGOLIA_APP_ID",
+        "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME"
+      ]
     }
   ]
 }
