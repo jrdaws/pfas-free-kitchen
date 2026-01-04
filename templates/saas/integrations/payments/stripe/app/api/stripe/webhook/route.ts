@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "../../../../lib/stripe";
-import { createServerSupabaseClient } from "../../../../lib/supabase";
+import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
@@ -30,97 +29,45 @@ export async function POST(req: NextRequest) {
     }
 
     // Handle the event
-    const supabase = await createServerSupabaseClient();
-
     switch (event.type) {
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
-        const userId = session.metadata?.user_id;
-        const plan = session.metadata?.plan;
-
-        if (userId && plan) {
-          // Update user's subscription in database
-          await supabase
-            .from("users")
-            .update({
-              subscription_plan: plan,
-              subscription_status: "active",
-              stripe_customer_id: session.customer,
-              stripe_subscription_id: session.subscription,
-            })
-            .eq("id", userId);
-        }
+        console.log("Checkout session completed:", {
+          customer: session.customer,
+          subscription: session.subscription,
+          plan: session.metadata?.plan,
+          email: session.metadata?.email,
+        });
+        // TODO: Update your database here
         break;
       }
 
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
-
-        // Get user by customer ID
-        const { data: users } = await supabase
-          .from("users")
-          .select("id")
-          .eq("stripe_customer_id", customerId)
-          .single();
-
-        if (users) {
-          await supabase
-            .from("users")
-            .update({
-              subscription_status: subscription.status,
-              subscription_period_end: new Date(
-                subscription.current_period_end * 1000
-              ).toISOString(),
-            })
-            .eq("id", users.id);
-        }
+        console.log("Subscription updated:", {
+          customer: subscription.customer,
+          status: subscription.status,
+          current_period_end: subscription.current_period_end,
+        });
+        // TODO: Update your database here
         break;
       }
 
       case "customer.subscription.deleted": {
         const subscription = event.data.object as Stripe.Subscription;
-        const customerId = subscription.customer as string;
-
-        // Get user by customer ID
-        const { data: users } = await supabase
-          .from("users")
-          .select("id")
-          .eq("stripe_customer_id", customerId)
-          .single();
-
-        if (users) {
-          await supabase
-            .from("users")
-            .update({
-              subscription_plan: "free",
-              subscription_status: "canceled",
-              stripe_subscription_id: null,
-            })
-            .eq("id", users.id);
-        }
+        console.log("Subscription deleted:", {
+          customer: subscription.customer,
+        });
+        // TODO: Update your database here
         break;
       }
 
       case "invoice.payment_failed": {
         const invoice = event.data.object as Stripe.Invoice;
-        const customerId = invoice.customer as string;
-
-        // Get user by customer ID
-        const { data: users } = await supabase
-          .from("users")
-          .select("id")
-          .eq("stripe_customer_id", customerId)
-          .single();
-
-        if (users) {
-          await supabase
-            .from("users")
-            .update({
-              subscription_status: "past_due",
-            })
-            .eq("id", users.id);
-        }
+        console.log("Payment failed:", {
+          customer: invoice.customer,
+        });
+        // TODO: Update your database here
         break;
       }
 
