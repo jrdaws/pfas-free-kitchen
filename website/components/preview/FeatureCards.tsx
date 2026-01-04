@@ -57,6 +57,9 @@ function getIcon(iconName?: string) {
   return ICONS[iconName] || ICONS.star;
 }
 
+/**
+ * FeatureCards using CSS custom properties for branding
+ */
 export function FeatureCards({
   features = [],
   columns = 3,
@@ -69,10 +72,16 @@ export function FeatureCards({
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-background">
+    <section 
+      className="w-full px-6 py-16"
+      style={{ backgroundColor: 'var(--preview-background, #0A0A0A)' }}
+    >
       <div className="max-w-7xl mx-auto">
         {title && (
-          <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
+          <h2 
+            className="text-3xl font-bold mb-12 text-center"
+            style={{ color: 'var(--preview-foreground, #FFFFFF)' }}
+          >
             {title}
           </h2>
         )}
@@ -89,30 +98,65 @@ export function FeatureCards({
               key={i}
               className={cn(
                 variant === "cards" &&
-                  "bg-card rounded-xl p-6 border border-border hover:border-primary/50 transition-all shadow-[0_4px_20px_rgba(0,0,0,0.3)] hover:shadow-[0_12px_40px_rgba(0,0,0,0.4)] hover:-translate-y-1",
+                  "rounded-xl p-6 border transition-all hover:-translate-y-1",
                 variant === "minimal" && "p-4",
                 variant === "icons-left" && "flex gap-4 p-4"
               )}
+              style={variant === "cards" ? {
+                backgroundColor: 'var(--preview-card, #1A1A1A)',
+                borderColor: 'color-mix(in srgb, var(--preview-foreground, #FFF) 10%, transparent)',
+                boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+              } : undefined}
             >
               {variant === "icons-left" ? (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary shrink-0">
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ 
+                      backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
+                      color: 'var(--preview-primary, #F97316)'
+                    }}
+                  >
                     {getIcon(feature.iconName)}
                   </div>
                   <div>
-                    <h3 className="text-foreground font-semibold mb-2">
+                    <h3 
+                      className="font-semibold mb-2"
+                      style={{ color: 'var(--preview-foreground, #FFFFFF)' }}
+                    >
                       {feature.title}
                     </h3>
-                    <p className="text-foreground-secondary text-sm">{feature.description}</p>
+                    <p 
+                      className="text-sm"
+                      style={{ color: 'var(--preview-muted, #78716C)' }}
+                    >
+                      {feature.description}
+                    </p>
                   </div>
                 </>
               ) : (
                 <>
-                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary mb-4">
+                  <div 
+                    className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
+                    style={{ 
+                      backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
+                      color: 'var(--preview-primary, #F97316)'
+                    }}
+                  >
                     {getIcon(feature.iconName)}
                   </div>
-                  <h3 className="text-foreground font-semibold mb-2">{feature.title}</h3>
-                  <p className="text-foreground-secondary text-sm">{feature.description}</p>
+                  <h3 
+                    className="font-semibold mb-2"
+                    style={{ color: 'var(--preview-foreground, #FFFFFF)' }}
+                  >
+                    {feature.title}
+                  </h3>
+                  <p 
+                    className="text-sm"
+                    style={{ color: 'var(--preview-muted, #78716C)' }}
+                  >
+                    {feature.description}
+                  </p>
                 </>
               )}
             </div>

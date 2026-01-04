@@ -37,18 +37,34 @@ export function Footer({
   const monitoringInfo = monitoringProvider ? PROVIDER_INFO.monitoring[monitoringProvider] : null;
 
   return (
-    <footer className="w-full px-6 py-12 bg-[#050505] border-t border-white/5">
+    <footer 
+      className="w-full px-6 py-12"
+      style={{
+        backgroundColor: 'color-mix(in srgb, var(--preview-background, #0A0A0A) 80%, black)',
+        borderTop: '1px solid color-mix(in srgb, var(--preview-foreground, #FFF) 5%, transparent)',
+      }}
+    >
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between items-start gap-8">
-          {/* Brand */}
+          {/* Brand - uses branding primary */}
           <div className="max-w-xs">
             <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-orange-500 to-orange-400 flex items-center justify-center">
+              <div 
+                className="w-8 h-8 rounded-lg flex items-center justify-center"
+                style={{
+                  background: `linear-gradient(to bottom right, var(--preview-primary, #F97316), var(--preview-accent, #FB923C))`
+                }}
+              >
                 <span className="text-white font-bold text-sm">
                   {projectName?.charAt(0)?.toUpperCase() || "P"}
                 </span>
               </div>
-              <span className="text-white font-semibold">{projectName || "Project"}</span>
+              <span 
+                className="font-semibold"
+                style={{ color: 'var(--preview-foreground, #FFFFFF)' }}
+              >
+                {projectName || "Project"}
+              </span>
             </div>
             {description && (
               <p className="text-foreground-muted text-sm mb-3">{description}</p>
