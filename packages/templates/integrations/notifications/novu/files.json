@@ -1,0 +1,31 @@
+{
+  "id": "novu",
+  "name": "Novu",
+  "category": "notifications",
+  "version": "1.0.0",
+  "description": "Multi-channel notifications infrastructure",
+  "files": [
+    { "path": "lib/notifications/novu.ts", "template": "notifications/novu/lib/novu.ts" },
+    { "path": "lib/notifications/novu-client.ts", "template": "notifications/novu/lib/novu-client.ts" },
+    { "path": "components/notifications/NotificationBell.tsx", "template": "notifications/novu/components/NotificationBell.tsx" },
+    { "path": "components/notifications/NotificationCenter.tsx", "template": "notifications/novu/components/NotificationCenter.tsx" },
+    { "path": "app/api/notifications/route.ts", "template": "notifications/novu/app/api/notifications/route.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "@novu/node": "^0.24.0",
+      "@novu/notification-center": "^0.24.0"
+    },
+    "env": [
+      { "name": "NOVU_API_KEY", "description": "Novu API key", "required": true },
+      { "name": "NEXT_PUBLIC_NOVU_APP_ID", "description": "Novu application ID", "required": true, "public": true }
+    ]
+  },
+  "postInstall": [
+    "Create a Novu account at https://novu.co",
+    "Create an application and get your API key",
+    "Set up notification templates in the Novu dashboard",
+    "Configure notification channels (email, in-app, SMS, push)"
+  ]
+}
+

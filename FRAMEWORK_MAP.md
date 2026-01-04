@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- ec1ab3e 2026-01-03 feat(templates): add base UI components for all exports (P0)
 - 72b9cb9 2026-01-03 feat(preview): inject branding colors into preview components
 - b7595fa 2026-01-03 feat: add parallel agent prompts for export fixes
 - 7eca558 2026-01-03 docs: add export validation reports for testprojectnew03
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 0fde215 2026-01-03 feat: add integration templates and project generator
 - 45da8a0 2026-01-03 feat: connect sidebar integrations to existing preview system
 - 44bdce0 2026-01-03 feat(configurator): add 8 more service provider sections (23 total steps)
-- 71afda9 2026-01-03 feat(configurator): show features in preview + header counts
 
 ## Agent Governance Structure
 

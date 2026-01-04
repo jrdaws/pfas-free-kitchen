@@ -1,0 +1,28 @@
+{
+  "id": "posthog-flags",
+  "name": "PostHog Feature Flags",
+  "category": "featureFlags",
+  "version": "1.0.0",
+  "description": "Feature flags and A/B testing with PostHog",
+  "files": [
+    { "path": "lib/feature-flags/posthog.ts", "template": "featureFlags/posthog-flags/lib/posthog.ts" },
+    { "path": "hooks/useFeatureFlag.ts", "template": "featureFlags/posthog-flags/hooks/useFeatureFlag.ts" },
+    { "path": "components/FeatureFlag.tsx", "template": "featureFlags/posthog-flags/components/FeatureFlag.tsx" }
+  ],
+  "dependencies": {
+    "npm": {
+      "posthog-js": "^1.100.0"
+    },
+    "env": [
+      { "name": "NEXT_PUBLIC_POSTHOG_KEY", "description": "PostHog project API key", "required": true, "public": true },
+      { "name": "NEXT_PUBLIC_POSTHOG_HOST", "description": "PostHog host URL", "required": false, "example": "https://app.posthog.com", "public": true }
+    ]
+  },
+  "postInstall": [
+    "Sign up at https://posthog.com",
+    "Create a project and copy your API key",
+    "Create feature flags in the PostHog dashboard",
+    "Use the useFeatureFlag hook or FeatureFlag component"
+  ]
+}
+

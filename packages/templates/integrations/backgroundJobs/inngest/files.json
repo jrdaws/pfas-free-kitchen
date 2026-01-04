@@ -1,0 +1,27 @@
+{
+  "id": "inngest",
+  "name": "Inngest",
+  "category": "backgroundJobs",
+  "version": "1.0.0",
+  "description": "Event-driven background jobs and workflows",
+  "files": [
+    { "path": "lib/inngest/client.ts", "template": "backgroundJobs/inngest/lib/client.ts" },
+    { "path": "lib/inngest/functions.ts", "template": "backgroundJobs/inngest/lib/functions.ts" },
+    { "path": "app/api/inngest/route.ts", "template": "backgroundJobs/inngest/app/api/inngest/route.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "inngest": "^3.19.0"
+    },
+    "env": [
+      { "name": "INNGEST_EVENT_KEY", "description": "Inngest event key", "required": true },
+      { "name": "INNGEST_SIGNING_KEY", "description": "Inngest signing key", "required": true }
+    ]
+  },
+  "postInstall": [
+    "Create an Inngest account at https://www.inngest.com",
+    "Get your event key and signing key from the dashboard",
+    "Run 'npx inngest-cli@latest dev' for local development"
+  ]
+}
+

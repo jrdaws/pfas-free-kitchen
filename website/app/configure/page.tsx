@@ -22,8 +22,7 @@ const ContextFields = dynamic(() => import("@/app/components/configurator/Contex
 const GenerateFramework = dynamic(() => import("@/app/components/configurator/GenerateFramework").then(mod => ({ default: mod.GenerateFramework })), { ssr: false });
 const LivePreviewPanel = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.LivePreviewPanel })), { ssr: false });
 const PreviewToggleButton = dynamic(() => import("@/app/components/configurator/LivePreviewPanel").then(mod => ({ default: mod.PreviewToggleButton })), { ssr: false });
-const PreviewCard = dynamic(() => import("@/app/components/configurator/PreviewCard").then(mod => ({ default: mod.PreviewCard })), { ssr: false });
-const ProjectOverviewBox = dynamic(() => import("@/app/components/configurator/ProjectOverviewBox").then(mod => ({ default: mod.ProjectOverviewBox })), { ssr: false });
+const ProjectStatusCard = dynamic(() => import("@/app/components/configurator/ProjectStatusCard").then(mod => ({ default: mod.ProjectStatusCard })), { ssr: false });
 const ThemeToggle = dynamic(() => import("@/components/ui/theme-toggle").then(mod => ({ default: mod.ThemeToggle })), { ssr: false });
 const ResearchResults = dynamic(() => import("@/app/components/configurator/ResearchResults").then(mod => ({ default: mod.ResearchResults })), { ssr: false });
 
@@ -1046,10 +1045,9 @@ export default function ConfigurePage() {
               {renderMainContent()}
             </div>
 
-            {/* Right Panel - Preview Card & Overview (hidden on mobile) */}
+            {/* Right Panel - Consolidated Status Card (hidden on mobile) */}
             <div className="hidden xl:flex flex-col gap-4 w-80 shrink-0 sticky top-0 h-fit">
-              <PreviewCard />
-              <ProjectOverviewBox showAnalysis={currentStep > 2} />
+              <ProjectStatusCard showAnalysis={currentStep > 2} />
             </div>
           </div>
         </main>
