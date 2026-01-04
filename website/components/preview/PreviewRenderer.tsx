@@ -6,6 +6,10 @@ import { Loader2 } from "lucide-react";
 
 // Feature preview components - show selected integrations visually
 import { IntegrationStack } from "./features/IntegrationBadge";
+import { CartIcon } from "./features/CartIcon";
+import { SearchBar } from "./features/SearchBar";
+import { AIAssistant } from "./features/AIAssistant";
+import { SubscriptionBadge } from "./features/SubscriptionBadge";
 
 // Dynamically import components to reduce initial bundle
 const Nav = dynamic(() => import("./Nav").then(m => ({ default: m.Nav })), {
@@ -73,6 +77,11 @@ interface PreviewRendererProps {
   template: string;
   componentProps: Record<string, Record<string, unknown>>;
   integrations?: Record<string, string>;
+  selectedFeatures?: Record<string, string[]>;
+  branding?: {
+    colorScheme?: string;
+    customColors?: Record<string, string>;
+  };
   scale?: number;
   className?: string;
 }
@@ -83,10 +92,33 @@ interface PreviewRendererProps {
  * Renders a preview using polished components with AI-generated props.
  * This is the core component for the "Component-Aware Preview" architecture.
  */
+// Helper to check if a feature category has selected features
+function hasFeature(selectedFeatures: Record<string, string[]>, category: string): boolean {
+  return (selectedFeatures[category]?.length || 0) > 0;
+}
+
+// Helper to check if any e-commerce feature is selected
+function hasEcommerceFeatures(selectedFeatures: Record<string, string[]>): boolean {
+  const ecommerceCategories = ["ecommerce", "shopping-cart", "checkout", "product-catalog"];
+  return ecommerceCategories.some(cat => hasFeature(selectedFeatures, cat));
+}
+
+// Helper to check if search features are selected
+function hasSearchFeatures(selectedFeatures: Record<string, string[]>): boolean {
+  return hasFeature(selectedFeatures, "search-filter") || hasFeature(selectedFeatures, "search");
+}
+
+// Helper to check if billing/subscription features are selected
+function hasBillingFeatures(selectedFeatures: Record<string, string[]>): boolean {
+  return hasFeature(selectedFeatures, "billing") || hasFeature(selectedFeatures, "subscription");
+}
+
 export function PreviewRenderer({
   template,
   componentProps,
   integrations = {},
+  selectedFeatures = {},
+  branding,
   scale = 1,
   className = "",
 }: PreviewRendererProps) {
@@ -97,11 +129,33 @@ export function PreviewRenderer({
     Object.entries(integrations).filter(([_, v]) => v)
   );
   const hasIntegrations = Object.keys(activeIntegrations).length > 0;
+  
+  // Determine which feature indicators to show
+  const showCart = hasEcommerceFeatures(selectedFeatures);
+  const showSearch = hasSearchFeatures(selectedFeatures) || !!integrations.search;
+  const showAI = !!integrations.ai;
+  const showBilling = hasBillingFeatures(selectedFeatures) || !!integrations.payments;
+
+  // Apply branding colors if provided (using CSS custom properties)
+  const brandingStyles: Record<string, string> = {};
+  if (branding?.customColors?.primary) {
+    brandingStyles['--preview-primary'] = branding.customColors.primary;
+  }
+  if (branding?.customColors?.secondary) {
+    brandingStyles['--preview-secondary'] = branding.customColors.secondary;
+  }
+  if (branding?.customColors?.accent) {
+    brandingStyles['--preview-accent'] = branding.customColors.accent;
+  }
+  if (branding?.customColors?.background) {
+    brandingStyles['--preview-background'] = branding.customColors.background;
+  }
 
   return (
     <div 
       className={`w-full min-h-screen bg-[#0A0A0A] ${className}`}
       style={{
+        ...brandingStyles,
         transform: scale !== 1 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
         width: scale !== 1 ? `${100 / scale}%` : undefined,
@@ -121,6 +175,9 @@ export function PreviewRenderer({
           ...componentProps[section.component],
           // Pass integrations to components that can use them
           integrations: activeIntegrations,
+          // Pass feature flags
+          showCart,
+          showSearch,
         };
 
         // Skip optional sections without props
@@ -130,6 +187,28 @@ export function PreviewRenderer({
 
         return <Component key={`${section.component}-${index}`} {...props} />;
       })}
+      
+      {/* Feature Indicators - Floating UI elements based on selected features */}
+      <div className="fixed right-4 top-20 z-50 flex flex-col gap-2">
+        {/* Cart Icon - shows when e-commerce selected */}
+        {showCart && (
+          <CartIcon variant="floating" itemCount={3} />
+        )}
+      </div>
+
+      {/* AI Assistant FAB - shows when AI provider selected */}
+      {showAI && (
+        <div className="fixed right-4 bottom-20 z-50">
+          <AIAssistant provider={integrations.ai} variant="fab" />
+        </div>
+      )}
+
+      {/* Subscription badge - shows when billing features selected */}
+      {showBilling && (
+        <div className="fixed top-4 right-4 z-50">
+          <SubscriptionBadge plan="pro" variant="badge" />
+        </div>
+      )}
       
       {/* Integration Stack - Shows what services are configured */}
       {hasIntegrations && (
@@ -151,9 +230,12 @@ export function PreviewFrame({
   template,
   componentProps,
   integrations = {},
+  selectedFeatures = {},
+  branding,
   title = "Preview",
 }: PreviewRendererProps & { title?: string }) {
   const activeCount = Object.values(integrations).filter(Boolean).length;
+  const featureCount = Object.values(selectedFeatures).flat().length;
   
   return (
     <div className="rounded-xl overflow-hidden bg-[#111111] border border-white/10 shadow-2xl">
@@ -172,6 +254,11 @@ export function PreviewFrame({
           </div>
         </div>
         <div className="flex items-center gap-2">
+          {featureCount > 0 && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+              {featureCount} features
+            </span>
+          )}
           {activeCount > 0 && (
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
               {activeCount} services
@@ -187,6 +274,8 @@ export function PreviewFrame({
           template={template}
           componentProps={componentProps}
           integrations={integrations}
+          selectedFeatures={selectedFeatures}
+          branding={branding}
           scale={0.6}
         />
       </div>
@@ -203,6 +292,8 @@ export function MobilePreviewFrame({
   template,
   componentProps,
   integrations = {},
+  selectedFeatures = {},
+  branding,
 }: PreviewRendererProps) {
   return (
     <div className="w-[375px] mx-auto">
@@ -219,6 +310,8 @@ export function MobilePreviewFrame({
             template={template}
             componentProps={componentProps}
             integrations={integrations}
+            selectedFeatures={selectedFeatures}
+            branding={branding}
             scale={0.4}
           />
         </div>

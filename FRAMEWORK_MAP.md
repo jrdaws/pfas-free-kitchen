@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- d947dd0 2026-01-03 feat(preview): add feature preview components for WYSIWYG experience
 - 0fde215 2026-01-03 feat: add integration templates and project generator
 - 45da8a0 2026-01-03 feat: connect sidebar integrations to existing preview system
 - 44bdce0 2026-01-03 feat(configurator): add 8 more service provider sections (23 total steps)
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - b4e3eda 2025-12-27 feat(configurator): add P1/P2/P3 UI enhancements
 - b4c98dc 2025-12-27 feat(configurator): add missing configuration steps
 - dafd8bc 2025-12-27 feat(sidebar): make service indicators dynamic based on step completion
-- 368addd 2025-12-27 feat(sidebar): add Connected Services UI panel and status indicators
 
 ## Agent Governance Structure
 

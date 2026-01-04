@@ -1,165 +1,199 @@
-# SEO Brief: [Page Name]
+# SEO Brief: [Topic Title]
 
-> **Created By**: Research Agent
-> **Date**: YYYY-MM-DD
-> **Project**: [Project Name]
-> **Status**: Draft | Ready for Content | Approved
-
----
-
-## Page Overview
-
-| Field | Value |
-|-------|-------|
-| **URL** | /[slug] |
-| **Purpose** | [Primary purpose of page] |
-| **Target Audience** | [Who this page serves] |
-| **Search Intent** | Informational / Transactional / Navigational / Commercial |
+> **Created**: [YYYY-MM-DD]
+> **Author**: Research Agent
+> **Status**: Draft | Ready for Writing | In Progress | Published
 
 ---
 
-## Keywords
+## Primary Keyword
 
-### Primary Keyword
+| Attribute | Value |
+|-----------|-------|
+| **Keyword** | [exact search phrase] |
+| **Monthly Volume** | [number] |
+| **Difficulty** | [1-100] |
+| **Intent** | Informational / Transactional / Navigational / Commercial |
+| **Current Rank** | Not ranking / Position [X] |
 
-| Field | Value |
-|-------|-------|
-| **Keyword** | [exact phrase] |
-| **Search Volume** | [monthly searches] |
-| **Difficulty** | Low / Medium / High |
-| **Current Ranking** | [position or N/A] |
+---
 
-### Secondary Keywords
+## Secondary Keywords
 
-| Keyword | Volume | Difficulty | Intent | Priority |
-|---------|--------|------------|--------|----------|
-| [keyword 1] | [vol] | [diff] | [intent] | High |
-| [keyword 2] | [vol] | [diff] | [intent] | Medium |
-| [keyword 3] | [vol] | [diff] | [intent] | Low |
+| Keyword | Volume | Difficulty | Target Location |
+|---------|--------|------------|-----------------|
+| [keyword 1] | [vol] | [diff] | H2 heading |
+| [keyword 2] | [vol] | [diff] | Body text |
+| [keyword 3] | [vol] | [diff] | FAQ section |
+| [keyword 4] | [vol] | [diff] | Meta description |
 
-### Long-Tail Keywords
+---
 
-| Keyword | Volume | Opportunity |
-|---------|--------|-------------|
-| [long-tail 1] | [vol] | [why it's valuable] |
-| [long-tail 2] | [vol] | [why it's valuable] |
+## Search Intent Analysis
+
+### What the searcher wants:
+- [ ] Learn how to do something
+- [ ] Understand a concept
+- [ ] Compare options
+- [ ] Find a specific product/service
+- [ ] Solve a problem
+
+### Specific questions to answer:
+1. [Question from "People Also Ask"]
+2. [Question from "People Also Ask"]
+3. [Question from "People Also Ask"]
 
 ---
 
 ## Competitor Analysis
 
-### Top 3 Ranking Pages
+### Top 5 Ranking Pages
 
-| Rank | URL | Title | Strengths | Weaknesses |
-|------|-----|-------|-----------|------------|
-| 1 | [url] | [title] | [what works] | [gaps] |
-| 2 | [url] | [title] | [what works] | [gaps] |
-| 3 | [url] | [title] | [what works] | [gaps] |
+| Rank | Domain | Title | Word Count | Strengths | Gaps |
+|------|--------|-------|------------|-----------|------|
+| 1 | [domain] | [title] | [count] | [what they do well] | [what's missing] |
+| 2 | [domain] | [title] | [count] | [strengths] | [gaps] |
+| 3 | [domain] | [title] | [count] | [strengths] | [gaps] |
+| 4 | [domain] | [title] | [count] | [strengths] | [gaps] |
+| 5 | [domain] | [title] | [count] | [strengths] | [gaps] |
 
-### Content Gaps We Can Exploit
+### Common Content Patterns
+- [Pattern 1 - e.g., "All include step-by-step tutorials"]
+- [Pattern 2 - e.g., "Most have comparison tables"]
+- [Pattern 3 - e.g., "Video embeds common"]
 
-1. **[Gap 1]**: [Topic competitors miss or cover poorly]
-2. **[Gap 2]**: [Unique angle we can own]
-3. **[Gap 3]**: [User question not fully answered]
-
-### Competitor Structured Data
-
-| Competitor | Schema Types Used | Rich Results |
-|------------|-------------------|--------------|
-| [comp 1] | [types] | [yes/no] |
-| [comp 2] | [types] | [yes/no] |
+### Content Gaps We Can Fill
+1. [Gap 1 - e.g., "None cover [specific subtopic]"]
+2. [Gap 2 - e.g., "Outdated info on [topic]"]
+3. [Gap 3 - e.g., "Missing code examples for [framework]"]
 
 ---
 
-## Content Recommendations
+## Content Requirements
 
-### Heading Structure
+### Target Specifications
 
+| Attribute | Requirement |
+|-----------|-------------|
+| **Word Count** | [X] words (based on competitor avg + 20%) |
+| **Reading Level** | Grade 8-10 (Flesch 60+) |
+| **Tone** | [Professional / Casual / Technical / Friendly] |
+| **Format** | [Blog post / Guide / Tutorial / Comparison] |
+
+### Required Sections
+
+1. **Introduction** (100-150 words)
+   - Hook with problem/benefit
+   - Include primary keyword
+   - Preview what reader will learn
+
+2. **[H2: Section Title]** (~300 words)
+   - [Key points to cover]
+   - Include secondary keyword: [keyword]
+
+3. **[H2: Section Title]** (~300 words)
+   - [Key points to cover]
+   - Include secondary keyword: [keyword]
+
+4. **[H2: Section Title]** (~300 words)
+   - [Key points to cover]
+
+5. **FAQ Section** (3-5 questions)
+   - Target "People Also Ask" questions
+   - 40-60 word answers for featured snippets
+
+6. **Conclusion** (100-150 words)
+   - Summary of key points
+   - Clear CTA
+
+### Required Elements
+- [ ] Code examples (if technical)
+- [ ] Comparison table
+- [ ] Step-by-step instructions
+- [ ] Screenshots/diagrams
+- [ ] External citations (2-3)
+- [ ] Internal links (3-5)
+
+---
+
+## Featured Snippet Target
+
+**Question to answer:**
+> [Exact question from PAA or search suggestions]
+
+**Target answer (40-60 words):**
+> [Write the ideal featured snippet answer here]
+
+---
+
+## Unique Angle / Differentiator
+
+**What makes our content better than competitors:**
+
+1. [Unique insight #1 - e.g., "Original data from our user research"]
+2. [Unique insight #2 - e.g., "Code examples in [framework] not covered elsewhere"]
+3. [Unique insight #3 - e.g., "Expert quotes from [person]"]
+
+---
+
+## SEO Metadata
+
+### Title Tag (50-60 chars)
 ```
-H1: [Recommended H1 with primary keyword]
-  H2: [Section 1 - secondary keyword]
-    H3: [Subsection if needed]
-  H2: [Section 2 - secondary keyword]
-  H2: [Section 3 - secondary keyword]
-  H2: [FAQ section - long-tail keywords]
+[Primary Keyword]: [Benefit] | [Brand] (2025)
+```
+Character count: [X]
+
+### Meta Description (150-160 chars)
+```
+[Compelling description with primary keyword and CTA. Include a benefit and reason to click.]
+```
+Character count: [X]
+
+### URL Slug
+```
+/[category]/[short-keyword-slug]
 ```
 
-### Content Specifications
-
-| Spec | Recommendation |
-|------|----------------|
-| **Word Count** | [target length] words |
-| **Content Type** | Guide / List / Comparison / Tutorial / Landing |
-| **Reading Level** | [grade level or audience] |
-| **Tone** | Professional / Casual / Technical / Friendly |
-
-### Unique Value Proposition
-
-[What makes this page uniquely valuable for searchers? Why will Google rank us over competitors?]
-
-### Featured Snippet Opportunity
-
-| Snippet Type | Target Query | Content Format |
-|--------------|--------------|----------------|
-| [Paragraph/List/Table] | [query] | [how to format answer] |
-
 ---
 
-## Visual Content Requirements
+## Internal Linking Targets
 
-| Asset Type | Purpose | SEO Value |
-|------------|---------|-----------|
-| Hero Image | [purpose] | Alt text with keyword |
-| Infographic | [purpose] | Shareable, linkable |
-| Screenshots | [purpose] | Tutorial support |
-| Video | [purpose] | Engagement, time on page |
-
----
-
-## Technical SEO Notes
-
-| Field | Value |
-|-------|-------|
-| **Canonical URL** | https://[domain]/[slug] |
-| **Indexable** | Yes / No |
-| **Sitemap Priority** | 0.5 - 1.0 |
-| **Change Frequency** | daily / weekly / monthly |
-| **Mobile Priority** | [any mobile-specific notes] |
-
-### Internal Linking Strategy
-
-| Link To | Anchor Text | Purpose |
+| Link To | Anchor Text | Context |
 |---------|-------------|---------|
-| [/page-1] | [anchor text] | [why link here] |
-| [/page-2] | [anchor text] | [why link here] |
-
-### External Linking Opportunities
-
-| Link To | Anchor Text | Purpose |
-|---------|-------------|---------|
-| [external-url] | [anchor text] | [credibility/resource] |
+| [/existing-page-1] | [anchor text] | [where to place] |
+| [/existing-page-2] | [anchor text] | [where to place] |
+| [/existing-page-3] | [anchor text] | [where to place] |
 
 ---
 
-## Success Metrics
+## External Sources to Cite
 
-| Metric | Target | Timeframe |
-|--------|--------|-----------|
-| Organic Traffic | [number] | 3 months |
-| Keyword Ranking | Top 10 | 6 months |
-| Click-Through Rate | [%] | 3 months |
-| Bounce Rate | < [%] | 1 month |
+| Source | URL | What to Reference |
+|--------|-----|-------------------|
+| [Source 1] | [URL] | [Stat or quote] |
+| [Source 2] | [URL] | [Stat or quote] |
+
+---
+
+## Visual Assets Needed
+
+| Asset | Type | Description | Priority |
+|-------|------|-------------|----------|
+| [Hero image] | WebP | [Description] | P1 |
+| [Diagram] | SVG | [What it shows] | P1 |
+| [Screenshot] | WebP | [What to capture] | P2 |
 
 ---
 
 ## Handoff Notes
 
-[Any additional context for the Documentation Agent creating the meta content]
+**Ready for Documentation Agent when:**
+- [ ] All sections defined
+- [ ] Competitor analysis complete
+- [ ] Keywords mapped to sections
+- [ ] Unique angle identified
 
 ---
 
-Next Agent: Documentation Agent
-```
-Create meta content and structured data based on SEO brief at output/seo-pipeline/briefs/BRIEF-[page-name].md. Follow SEO_GENERATION_SOP.md standards. Output to output/seo-pipeline/content/META-[page-name].json.
-```
-
+*Brief created by Research Agent | [Date]*

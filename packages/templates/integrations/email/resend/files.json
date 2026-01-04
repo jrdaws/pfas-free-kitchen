@@ -1,0 +1,70 @@
+{
+  "id": "resend",
+  "name": "Resend",
+  "category": "email",
+  "version": "1.0.0",
+  "description": "Transactional email with Resend and React Email templates",
+  "files": [
+    {
+      "path": "lib/email/resend.ts",
+      "template": "lib/resend.ts",
+      "transform": "none"
+    },
+    {
+      "path": "lib/email/send.ts",
+      "template": "lib/send.ts",
+      "transform": "none"
+    },
+    {
+      "path": "emails/WelcomeEmail.tsx",
+      "template": "emails/WelcomeEmail.tsx",
+      "transform": "mustache"
+    },
+    {
+      "path": "emails/PasswordResetEmail.tsx",
+      "template": "emails/PasswordResetEmail.tsx",
+      "transform": "mustache"
+    },
+    {
+      "path": "emails/InvoiceEmail.tsx",
+      "template": "emails/InvoiceEmail.tsx",
+      "transform": "mustache"
+    },
+    {
+      "path": "app/api/email/send/route.ts",
+      "template": "app/api/send/route.ts",
+      "transform": "none"
+    }
+  ],
+  "dependencies": {
+    "npm": {
+      "resend": "^3.0.0",
+      "@react-email/components": "^0.0.15",
+      "react-email": "^2.0.0"
+    },
+    "npmDev": {},
+    "env": [
+      {
+        "name": "RESEND_API_KEY",
+        "description": "Your Resend API key",
+        "required": true,
+        "example": "re_...",
+        "public": false
+      },
+      {
+        "name": "EMAIL_FROM",
+        "description": "Default sender email address",
+        "required": true,
+        "example": "noreply@yourdomain.com",
+        "public": false
+      }
+    ]
+  },
+  "postInstall": [
+    "1. Sign up at https://resend.com",
+    "2. Get your API key from the dashboard",
+    "3. Add your domain for production emails",
+    "4. Update EMAIL_FROM with your verified domain"
+  ]
+}
+

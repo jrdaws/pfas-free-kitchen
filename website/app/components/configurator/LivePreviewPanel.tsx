@@ -29,6 +29,10 @@ interface LivePreviewPanelProps {
   vision?: string;
   mission?: string;
   inspirations?: Array<{ type: string; value: string; preview?: string }>;
+  branding?: {
+    colorScheme?: string;
+    customColors?: Record<string, string>;
+  };
   isVisible: boolean;
   onToggle: () => void;
 }
@@ -42,6 +46,7 @@ export function LivePreviewPanel({
   vision,
   mission,
   inspirations = [],
+  branding,
   isVisible,
   onToggle,
 }: LivePreviewPanelProps) {
@@ -253,6 +258,8 @@ export function LivePreviewPanel({
               template={template}
               componentProps={componentProps}
               integrations={integrations}
+              selectedFeatures={selectedFeatures}
+              branding={branding}
             />
           </div>
         ) : (
@@ -260,6 +267,8 @@ export function LivePreviewPanel({
             template={template}
             componentProps={componentProps}
             integrations={integrations}
+            selectedFeatures={selectedFeatures}
+            branding={branding}
           />
         )}
       </div>

@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/lib/auth-context";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, ShoppingCart, Search } from "lucide-react";
 
 interface NavProps {
   projectName: string;
@@ -15,6 +15,9 @@ interface NavProps {
   previewMode?: boolean;
   /** Selected integrations (passed from PreviewRenderer) */
   integrations?: Record<string, string>;
+  /** Feature flags from PreviewRenderer */
+  showCart?: boolean;
+  showSearch?: boolean;
 }
 
 // Auth provider metadata for styling
@@ -32,6 +35,8 @@ export function Nav({
   variant = "solid",
   previewMode = false,
   integrations = {},
+  showCart = false,
+  showSearch = false,
 }: NavProps) {
   // Only use auth hook when not in preview mode
   const auth = previewMode ? null : useAuth();
@@ -42,6 +47,9 @@ export function Nav({
   const authProvider = integrations.auth;
   const authInfo = authProvider ? AUTH_PROVIDERS[authProvider] : null;
   const buttonColor = authInfo?.color || "#F97316";
+  
+  // Get search provider for styling
+  const searchProvider = integrations.search;
 
   return (
     <nav
@@ -71,6 +79,32 @@ export function Nav({
             {link}
           </span>
         ))}
+      </div>
+
+      {/* Feature Icons - Search and Cart */}
+      <div className="flex items-center gap-3">
+        {/* Search - shows when search features/integrations selected */}
+        {showSearch && (
+          <div className="hidden sm:flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-lg border border-white/10 text-stone-400 text-sm">
+            <Search className="h-4 w-4" />
+            <span>Search</span>
+            {searchProvider && (
+              <span className="text-[8px] px-1 py-0.5 rounded bg-white/10 text-white/60">
+                {searchProvider === "algolia" ? "🔍" : searchProvider === "meilisearch" ? "⚡" : "🔎"}
+              </span>
+            )}
+          </div>
+        )}
+
+        {/* Cart - shows when e-commerce features selected */}
+        {showCart && (
+          <button className="relative p-2 hover:bg-white/5 rounded-lg transition-colors">
+            <ShoppingCart className="h-5 w-5 text-stone-400" />
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#F97316] text-white text-[10px] flex items-center justify-center font-medium">
+              3
+            </span>
+          </button>
+        )}
       </div>
 
       {/* Auth Section */}

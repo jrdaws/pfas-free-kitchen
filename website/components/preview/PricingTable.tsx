@@ -15,47 +15,24 @@ interface PricingTableProps {
   showToggle?: boolean;
   highlightPlan?: string;
   title?: string;
-  integrations?: Record<string, string>;
 }
-
-// Payment provider metadata
-const PAYMENT_PROVIDERS: Record<string, { name: string; color: string; icon: string }> = {
-  "stripe": { name: "Stripe", color: "#635BFF", icon: "💳" },
-  "paddle": { name: "Paddle", color: "#2A2A2A", icon: "🏓" },
-  "lemonsqueezy": { name: "LemonSqueezy", color: "#FFC233", icon: "🍋" },
-};
 
 export function PricingTable({
   plans = [],
   showToggle = true,
   highlightPlan,
   title = "Simple, Transparent Pricing",
-  integrations = {},
 }: PricingTableProps) {
   if (!plans || plans.length === 0) {
     return null;
   }
 
-  // Get payment provider info
-  const paymentProvider = integrations.payments;
-  const paymentInfo = paymentProvider ? PAYMENT_PROVIDERS[paymentProvider] : null;
-
   return (
     <section className="w-full px-6 py-16 bg-background">
       <div className="max-w-6xl mx-auto">
-        <div className="flex items-center justify-center gap-3 mb-4">
-          <h2 className="text-3xl font-bold text-foreground text-center">
-            {title}
-          </h2>
-          {paymentInfo && (
-            <span 
-              className="text-xs px-2 py-1 rounded-full"
-              style={{ backgroundColor: `${paymentInfo.color}20`, color: paymentInfo.color }}
-            >
-              {paymentInfo.icon} {paymentInfo.name}
-            </span>
-          )}
-        </div>
+        <h2 className="text-3xl font-bold text-foreground mb-4 text-center">
+          {title}
+        </h2>
         
         {showToggle && (
           <div className="flex justify-center mb-10">
