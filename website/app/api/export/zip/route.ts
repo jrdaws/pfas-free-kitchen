@@ -131,7 +131,14 @@ const TEMPLATE_COMPONENTS: Record<string, {
   },
   dashboard: {
     pages: ["app/page.tsx", "app/layout.tsx", "app/settings/page.tsx"],
-    components: [],
+    components: [
+      "components/dashboard/StatsCard.tsx",
+      "components/dashboard/SimpleChart.tsx",
+      "components/dashboard/DataTable.tsx",
+      "components/dashboard/ActivityFeed.tsx",
+      "components/dashboard/Sidebar.tsx",
+      "components/dashboard/index.ts",
+    ],
     lib: [],
     styles: ["app/globals.css"],
     config: ["package.json", "tailwind.config.ts", "tsconfig.json", "next.config.js", "postcss.config.js"],
