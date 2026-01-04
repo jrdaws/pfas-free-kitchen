@@ -1,0 +1,31 @@
+{
+  "id": "paddle",
+  "name": "Paddle",
+  "category": "payments",
+  "description": "Merchant of record for global SaaS payments",
+  "files": [
+    { "path": "lib/paddle.ts", "template": "lib/paddle.ts" },
+    { "path": "lib/paddle-client.ts", "template": "lib/paddle-client.ts" },
+    { "path": "app/api/paddle/checkout/route.ts", "template": "app/api/checkout/route.ts" },
+    { "path": "app/api/paddle/webhooks/route.ts", "template": "app/api/webhooks/route.ts" },
+    { "path": "app/api/paddle/portal/route.ts", "template": "app/api/portal/route.ts" },
+    { "path": "components/payments/PaddleCheckout.tsx", "template": "components/PaddleCheckout.tsx" },
+    { "path": "components/payments/PricingTable.tsx", "template": "components/PricingTable.tsx" },
+    { "path": "components/payments/SubscriptionStatus.tsx", "template": "components/SubscriptionStatus.tsx" },
+    { "path": "hooks/useSubscription.ts", "template": "hooks/useSubscription.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "@paddle/paddle-js": "^1.0.0",
+      "@paddle/paddle-node-sdk": "^1.0.0"
+    },
+    "env": [
+      "PADDLE_API_KEY",
+      "PADDLE_WEBHOOK_SECRET",
+      "NEXT_PUBLIC_PADDLE_CLIENT_TOKEN",
+      "NEXT_PUBLIC_PADDLE_ENVIRONMENT"
+    ]
+  },
+  "postInstall": "Configure webhook URL in Paddle dashboard: /api/paddle/webhooks"
+}
+

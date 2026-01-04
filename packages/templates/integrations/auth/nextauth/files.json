@@ -1,0 +1,33 @@
+{
+  "id": "nextauth",
+  "name": "NextAuth.js",
+  "category": "auth",
+  "description": "Flexible authentication for Next.js with multiple providers",
+  "files": [
+    { "path": "lib/auth.ts", "template": "lib/auth.ts" },
+    { "path": "lib/auth-options.ts", "template": "lib/auth-options.ts" },
+    { "path": "app/api/auth/[...nextauth]/route.ts", "template": "app/api/auth/route.ts" },
+    { "path": "components/auth/SignInButton.tsx", "template": "components/SignInButton.tsx" },
+    { "path": "components/auth/SignOutButton.tsx", "template": "components/SignOutButton.tsx" },
+    { "path": "components/auth/UserAvatar.tsx", "template": "components/UserAvatar.tsx" },
+    { "path": "components/auth/AuthProvider.tsx", "template": "components/AuthProvider.tsx" },
+    { "path": "hooks/useSession.ts", "template": "hooks/useSession.ts" },
+    { "path": "middleware.ts", "template": "middleware.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "next-auth": "^4.24.5",
+      "@auth/prisma-adapter": "^1.0.0"
+    },
+    "env": [
+      "NEXTAUTH_URL",
+      "NEXTAUTH_SECRET",
+      "GOOGLE_CLIENT_ID",
+      "GOOGLE_CLIENT_SECRET",
+      "GITHUB_CLIENT_ID",
+      "GITHUB_CLIENT_SECRET"
+    ]
+  },
+  "postInstall": "Run `openssl rand -base64 32` to generate NEXTAUTH_SECRET"
+}
+

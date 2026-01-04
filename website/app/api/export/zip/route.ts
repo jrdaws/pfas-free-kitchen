@@ -274,6 +274,37 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/flags/posthog/hooks/useFeatureFlag.ts",
     "integrations/flags/posthog/components/FeatureFlag.tsx",
   ],
+  // Phase 1 new integrations
+  "auth:nextauth": [
+    "integrations/auth/nextauth/lib/auth.ts",
+    "integrations/auth/nextauth/lib/auth-options.ts",
+    "integrations/auth/nextauth/app/api/auth/[...nextauth]/route.ts",
+    "integrations/auth/nextauth/components/auth/SignInButton.tsx",
+    "integrations/auth/nextauth/components/auth/SignOutButton.tsx",
+    "integrations/auth/nextauth/components/auth/UserAvatar.tsx",
+    "integrations/auth/nextauth/components/auth/AuthProvider.tsx",
+    "integrations/auth/nextauth/hooks/useSession.ts",
+    "integrations/auth/nextauth/middleware.ts",
+  ],
+  "payments:paddle": [
+    "integrations/payments/paddle/lib/paddle.ts",
+    "integrations/payments/paddle/lib/paddle-client.ts",
+    "integrations/payments/paddle/app/api/paddle/checkout/route.ts",
+    "integrations/payments/paddle/app/api/paddle/webhooks/route.ts",
+    "integrations/payments/paddle/app/api/paddle/portal/route.ts",
+    "integrations/payments/paddle/components/payments/PaddleCheckout.tsx",
+    "integrations/payments/paddle/components/payments/PricingTable.tsx",
+    "integrations/payments/paddle/components/payments/SubscriptionStatus.tsx",
+    "integrations/payments/paddle/hooks/useSubscription.ts",
+  ],
+  "payments:lemonsqueezy": [
+    "integrations/payments/lemonsqueezy/lib/lemonsqueezy.ts",
+    "integrations/payments/lemonsqueezy/app/api/lemonsqueezy/checkout/route.ts",
+    "integrations/payments/lemonsqueezy/app/api/lemonsqueezy/webhooks/route.ts",
+    "integrations/payments/lemonsqueezy/components/payments/LemonCheckout.tsx",
+    "integrations/payments/lemonsqueezy/components/payments/PricingTable.tsx",
+    "integrations/payments/lemonsqueezy/hooks/useSubscription.ts",
+  ],
 };
 
 interface ExportRequest {
@@ -388,6 +419,16 @@ function getRequiredEnvVars(integrations: Record<string, string>): string[] {
           vars.push("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST");
         }
         break;
+      // Phase 1 new integrations
+      case "auth:nextauth":
+        vars.push("NEXTAUTH_URL", "NEXTAUTH_SECRET", "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GITHUB_CLIENT_ID", "GITHUB_CLIENT_SECRET");
+        break;
+      case "payments:paddle":
+        vars.push("PADDLE_API_KEY", "PADDLE_WEBHOOK_SECRET", "NEXT_PUBLIC_PADDLE_CLIENT_TOKEN", "NEXT_PUBLIC_PADDLE_ENVIRONMENT");
+        break;
+      case "payments:lemonsqueezy":
+        vars.push("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID", "LEMONSQUEEZY_WEBHOOK_SECRET");
+        break;
     }
   });
   
@@ -476,6 +517,18 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
       case "flags:posthog":
       case "featureFlags:posthog-flags":
         deps["posthog-js"] = "^1.100.0";
+        break;
+      // Phase 1 new integrations
+      case "auth:nextauth":
+        deps["next-auth"] = "^4.24.5";
+        deps["@auth/prisma-adapter"] = "^1.0.0";
+        break;
+      case "payments:paddle":
+        deps["@paddle/paddle-js"] = "^1.0.0";
+        deps["@paddle/paddle-node-sdk"] = "^1.0.0";
+        break;
+      case "payments:lemonsqueezy":
+        deps["@lemonsqueezy/lemonsqueezy.js"] = "^3.0.0";
         break;
     }
   });

@@ -1,0 +1,26 @@
+{
+  "id": "lemonsqueezy",
+  "name": "LemonSqueezy",
+  "category": "payments",
+  "description": "All-in-one platform for selling digital products and subscriptions",
+  "files": [
+    { "path": "lib/lemonsqueezy.ts", "template": "lib/lemonsqueezy.ts" },
+    { "path": "app/api/lemonsqueezy/checkout/route.ts", "template": "app/api/checkout/route.ts" },
+    { "path": "app/api/lemonsqueezy/webhooks/route.ts", "template": "app/api/webhooks/route.ts" },
+    { "path": "components/payments/LemonCheckout.tsx", "template": "components/LemonCheckout.tsx" },
+    { "path": "components/payments/PricingTable.tsx", "template": "components/PricingTable.tsx" },
+    { "path": "hooks/useSubscription.ts", "template": "hooks/useSubscription.ts" }
+  ],
+  "dependencies": {
+    "npm": {
+      "@lemonsqueezy/lemonsqueezy.js": "^3.0.0"
+    },
+    "env": [
+      "LEMONSQUEEZY_API_KEY",
+      "LEMONSQUEEZY_STORE_ID",
+      "LEMONSQUEEZY_WEBHOOK_SECRET"
+    ]
+  },
+  "postInstall": "Configure webhook URL in LemonSqueezy dashboard: /api/lemonsqueezy/webhooks"
+}
+
