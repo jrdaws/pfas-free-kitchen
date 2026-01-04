@@ -149,6 +149,72 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/storage/uploadthing/components/storage/index.ts",
     "integrations/storage/uploadthing/lib/uploadthing.ts",
   ],
+  // New integrations (P1)
+  "search:algolia": [
+    "integrations/search/algolia/lib/search/algolia.ts",
+    "integrations/search/algolia/lib/search/indexer.ts",
+    "integrations/search/algolia/components/search/SearchBox.tsx",
+    "integrations/search/algolia/components/search/SearchResults.tsx",
+    "integrations/search/algolia/components/search/SearchModal.tsx",
+    "integrations/search/algolia/hooks/useSearch.ts",
+  ],
+  "monitoring:sentry": [
+    "integrations/monitoring/sentry/sentry.client.config.ts",
+    "integrations/monitoring/sentry/sentry.server.config.ts",
+    "integrations/monitoring/sentry/sentry.edge.config.ts",
+    "integrations/monitoring/sentry/instrumentation.ts",
+    "integrations/monitoring/sentry/app/global-error.tsx",
+    "integrations/monitoring/sentry/lib/sentry.ts",
+  ],
+  "cms:sanity": [
+    "integrations/cms/sanity/lib/sanity/client.ts",
+    "integrations/cms/sanity/lib/sanity/queries.ts",
+    "integrations/cms/sanity/lib/sanity/image.ts",
+    "integrations/cms/sanity/sanity.config.ts",
+    "integrations/cms/sanity/sanity/schemas/index.ts",
+    "integrations/cms/sanity/app/studio/[[...tool]]/page.tsx",
+  ],
+  "images:cloudinary": [
+    "integrations/images/cloudinary/lib/cloudinary.ts",
+    "integrations/images/cloudinary/lib/cloudinary-upload.ts",
+    "integrations/images/cloudinary/components/media/CloudinaryImage.tsx",
+    "integrations/images/cloudinary/components/media/CloudinaryUpload.tsx",
+    "integrations/images/cloudinary/app/api/cloudinary/sign/route.ts",
+  ],
+  "imageOpt:cloudinary": [  // Alias for configurator compatibility
+    "integrations/images/cloudinary/lib/cloudinary.ts",
+    "integrations/images/cloudinary/lib/cloudinary-upload.ts",
+    "integrations/images/cloudinary/components/media/CloudinaryImage.tsx",
+    "integrations/images/cloudinary/components/media/CloudinaryUpload.tsx",
+    "integrations/images/cloudinary/app/api/cloudinary/sign/route.ts",
+  ],
+  "jobs:inngest": [
+    "integrations/jobs/inngest/lib/inngest/client.ts",
+    "integrations/jobs/inngest/lib/inngest/functions.ts",
+    "integrations/jobs/inngest/app/api/inngest/route.ts",
+  ],
+  "backgroundJobs:inngest": [  // Alias for configurator compatibility
+    "integrations/jobs/inngest/lib/inngest/client.ts",
+    "integrations/jobs/inngest/lib/inngest/functions.ts",
+    "integrations/jobs/inngest/app/api/inngest/route.ts",
+  ],
+  "notifications:novu": [
+    "integrations/notifications/novu/lib/notifications/novu.ts",
+    "integrations/notifications/novu/lib/notifications/novu-client.ts",
+    "integrations/notifications/novu/components/notifications/NotificationBell.tsx",
+    "integrations/notifications/novu/components/notifications/NotificationCenter.tsx",
+    "integrations/notifications/novu/app/api/notifications/route.ts",
+  ],
+  "flags:posthog": [
+    "integrations/flags/posthog/lib/feature-flags/posthog.ts",
+    "integrations/flags/posthog/hooks/useFeatureFlag.ts",
+    "integrations/flags/posthog/components/FeatureFlag.tsx",
+  ],
+  "featureFlags:posthog-flags": [  // Alias for configurator compatibility
+    "integrations/flags/posthog/lib/feature-flags/posthog.ts",
+    "integrations/flags/posthog/hooks/useFeatureFlag.ts",
+    "integrations/flags/posthog/components/FeatureFlag.tsx",
+  ],
 };
 
 interface ExportRequest {
@@ -236,6 +302,33 @@ function getRequiredEnvVars(integrations: Record<string, string>): string[] {
       case "storage:uploadthing":
         vars.push("UPLOADTHING_SECRET", "UPLOADTHING_APP_ID");
         break;
+      // New integrations (P1)
+      case "search:algolia":
+        vars.push("NEXT_PUBLIC_ALGOLIA_APP_ID", "NEXT_PUBLIC_ALGOLIA_SEARCH_KEY", "ALGOLIA_ADMIN_KEY", "NEXT_PUBLIC_ALGOLIA_INDEX_NAME");
+        break;
+      case "monitoring:sentry":
+        vars.push("SENTRY_DSN", "SENTRY_ORG", "SENTRY_PROJECT");
+        break;
+      case "cms:sanity":
+        vars.push("NEXT_PUBLIC_SANITY_PROJECT_ID", "NEXT_PUBLIC_SANITY_DATASET", "SANITY_API_TOKEN");
+        break;
+      case "images:cloudinary":
+      case "imageOpt:cloudinary":
+        vars.push("NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME", "CLOUDINARY_API_KEY", "CLOUDINARY_API_SECRET");
+        break;
+      case "jobs:inngest":
+      case "backgroundJobs:inngest":
+        vars.push("INNGEST_EVENT_KEY", "INNGEST_SIGNING_KEY");
+        break;
+      case "notifications:novu":
+        vars.push("NOVU_API_KEY", "NEXT_PUBLIC_NOVU_APP_ID");
+        break;
+      case "flags:posthog":
+      case "featureFlags:posthog-flags":
+        if (!vars.includes("NEXT_PUBLIC_POSTHOG_KEY")) {
+          vars.push("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST");
+        }
+        break;
     }
   });
   
@@ -292,6 +385,37 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
       case "storage:uploadthing":
         deps["uploadthing"] = "^6.0.0";
         deps["@uploadthing/react"] = "^6.0.0";
+        break;
+      // New integrations (P1)
+      case "search:algolia":
+        deps["algoliasearch"] = "^4.23.0";
+        deps["react-instantsearch"] = "^7.6.0";
+        break;
+      case "monitoring:sentry":
+        deps["@sentry/nextjs"] = "^8.0.0";
+        break;
+      case "cms:sanity":
+        deps["sanity"] = "^3.40.0";
+        deps["@sanity/image-url"] = "^1.0.2";
+        deps["@sanity/vision"] = "^3.40.0";
+        deps["next-sanity"] = "^9.0.0";
+        break;
+      case "images:cloudinary":
+      case "imageOpt:cloudinary":
+        deps["cloudinary"] = "^2.0.0";
+        deps["next-cloudinary"] = "^6.0.0";
+        break;
+      case "jobs:inngest":
+      case "backgroundJobs:inngest":
+        deps["inngest"] = "^3.19.0";
+        break;
+      case "notifications:novu":
+        deps["@novu/node"] = "^0.24.0";
+        deps["@novu/notification-center"] = "^0.24.0";
+        break;
+      case "flags:posthog":
+      case "featureFlags:posthog-flags":
+        deps["posthog-js"] = "^1.100.0";
         break;
     }
   });

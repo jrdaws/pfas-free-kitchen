@@ -1,8 +1,8 @@
 # Gap Analysis Report
 
-Generated: 2026-01-04T05:27:01.793Z
+Generated: 2026-01-04T06:05:14.851Z
 
-Failed Tests: 22/28
+Failed Tests: 8/12
 
 ---
 
@@ -10,10 +10,6 @@ Failed Tests: 22/28
 
 | Test | Expected | Found | Missing |
 |------|----------|-------|---------|
-| T09 | 3 | 2 | lib/supabase.ts |
-| T10 | 3 | 2 | lib/supabase.ts |
-| T14 | 4 | 3 | components/upload-button.tsx |
-| T19 | 3 | 1 | src/app/page.tsx, src/app/layout.tsx |
 | T21 | 6 | 0 | lib/sanity/client.ts, lib/sanity/queries.ts, lib/sanity/image.ts (+3 more) |
 | T22 | 6 | 0 | sentry.client.config.ts, sentry.server.config.ts, sentry.edge.config.ts (+3 more) |
 | T23 | 5 | 0 | lib/cloudinary.ts, lib/cloudinary-upload.ts, components/media/CloudinaryImage.tsx (+2 more) |
@@ -21,90 +17,17 @@ Failed Tests: 22/28
 | T25 | 5 | 0 | lib/notifications/novu.ts, lib/notifications/novu-client.ts, components/notifications/NotificationBell.tsx (+2 more) |
 | T26 | 3 | 0 | lib/feature-flags/posthog.ts, hooks/useFeatureFlag.ts, components/FeatureFlag.tsx |
 | T27 | 5 | 0 | lib/search/algolia.ts, lib/search/indexer.ts, components/search/SearchBox.tsx (+2 more) |
-| T28 | 6 | 2 | lib/sanity/client.ts, lib/sentry.ts, lib/search/algolia.ts (+1 more) |
 
 ## Build Failures
 
 | Test | Error | Root Cause |
 |------|-------|------------|
-| T01 | occurred prerendering page "/login". Read more: ht | See logs |
-| T03 | Unknown error | See logs |
-| T04 | RESEND_API_KEY is not set in environment variables | See logs |
-| T06 | Type '"2024-11-20.acacia"' is not assignable to ty | See logs |
-| T07 | Unknown error | See logs |
-| T08 | Unknown error | See logs |
-| T09 | Unknown error | See logs |
-| T10 | Unknown error | See logs |
-| T11 | Type '"2024-11-20.acacia"' is not assignable to ty | See logs |
-| T12 | Unknown error | See logs |
-| T13 | Argument of type 'Stream<ChatCompletionChunk> & {  | See logs |
-| T14 | Type '"2024-11-20.acacia"' is not assignable to ty | See logs |
-| T20 | occurred prerendering page "/login". Read more: ht | See logs |
 
 ## Recommendations
 
-### T01: SaaS + Supabase Auth
+### T05: SaaS + PostHog Analytics
 
-- Fix: Build failed (see logs)
-
-### T03: SaaS + Stripe Payments
-
-- Fix: Build failed (see logs)
-
-### T04: SaaS + Resend Email
-
-- Fix: Build failed (see logs)
-
-### T06: SaaS + Supabase + Stripe
-
-- Fix: Build failed (see logs)
-
-### T07: SaaS + Clerk + Stripe
-
-- Fix: Build failed (see logs)
-
-### T08: E-commerce Full Stack
-
-- Fix: Build failed (see logs)
-
-### T09: Blog + Auth + Analytics
-
-- Add missing files: lib/supabase.ts
-- Fix: Missing files: lib/supabase.ts
-- Fix: Build failed (see logs)
-
-### T10: Dashboard + Auth + Analytics
-
-- Add missing files: lib/supabase.ts
-- Fix: Missing files: lib/supabase.ts
-- Fix: Build failed (see logs)
-
-### T11: SaaS Full Stack (4 integrations)
-
-- Fix: Build failed (see logs)
-
-### T12: E-commerce + AI
-
-- Fix: Build failed (see logs)
-
-### T13: SaaS + AI + Analytics
-
-- Fix: Build failed (see logs)
-
-### T14: SaaS + UploadThing Storage
-
-- Add missing files: components/upload-button.tsx
-- Fix: Missing files: components/upload-button.tsx
-- Fix: Build failed (see logs)
-
-### T19: SEO Directory Base
-
-- Add missing files: src/app/page.tsx, src/app/layout.tsx
-- Fix: Missing files: src/app/page.tsx, src/app/layout.tsx
-
-### T20: SaaS + Custom Branding
-
-- Fix: Build failed (see logs)
+- Fix: fetch failed
 
 ### T21: SaaS + Sanity CMS
 
@@ -147,9 +70,3 @@ Failed Tests: 22/28
 - Add missing files: lib/search/algolia.ts, lib/search/indexer.ts, components/search/SearchBox.tsx, components/search/SearchModal.tsx, hooks/useSearch.ts
 - Fix: Missing files: lib/search/algolia.ts, lib/search/indexer.ts, components/search/SearchBox.tsx, components/search/SearchModal.tsx, hooks/useSearch.ts
 - Fix: Missing env vars: NEXT_PUBLIC_ALGOLIA_APP_ID, NEXT_PUBLIC_ALGOLIA_SEARCH_KEY, ALGOLIA_ADMIN_KEY
-
-### T28: E-commerce + All New Integrations
-
-- Add missing files: lib/sanity/client.ts, lib/sentry.ts, lib/search/algolia.ts, lib/cloudinary.ts
-- Fix: Missing files: lib/sanity/client.ts, lib/sentry.ts, lib/search/algolia.ts, lib/cloudinary.ts
-- Fix: Missing env vars: NEXT_PUBLIC_SANITY_PROJECT_ID, SENTRY_DSN, NEXT_PUBLIC_ALGOLIA_APP_ID, NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME

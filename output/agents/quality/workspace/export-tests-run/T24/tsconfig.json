@@ -19,16 +19,11 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     },
     "plugins": [
       {
         "name": "test-t24"
-      },
-      {
-        "name": "next"
       }
     ]
   },
