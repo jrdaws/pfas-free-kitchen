@@ -1,0 +1,9 @@
+{
+  "template": "saas",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-04T05:24:48.912Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "notifications": "novu"
+  }
+}

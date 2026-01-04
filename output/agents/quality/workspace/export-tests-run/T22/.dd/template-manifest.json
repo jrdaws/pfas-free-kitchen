@@ -1,0 +1,9 @@
+{
+  "template": "saas",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-04T05:23:23.403Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "monitoring": "sentry"
+  }
+}

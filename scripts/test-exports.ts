@@ -15,6 +15,7 @@
 
 import * as fs from "fs";
 import * as path from "path";
+import { fileURLToPath } from "url";
 import {
   TestConfig,
   TestResult,
@@ -30,6 +31,7 @@ import {
 } from "./lib/export-validator.js";
 
 // Configuration
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const CONFIG_PATH = path.join(__dirname, "test-configs", "export-tests.json");
 const OUTPUT_DIR = path.join(process.cwd(), "output", "agents", "quality", "workspace", "export-tests-run");
 const BASELINE_DIR = path.join(process.cwd(), "output", "agents", "quality", "baseline-exports");

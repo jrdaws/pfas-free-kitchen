@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- f92d2ad 2026-01-03 test: add 8 new test cases for new integrations
 - 7b96e5b 2026-01-03 docs: add deprecation schedule for PreviewCard and ProjectOverviewBox
 - 853d3fc 2026-01-03 chore: mark P1 remaining integrations task as done
 - e874913 2026-01-03 feat: add 6 new integration templates
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 54341d7 2026-01-03 feat: add OpenAI, Clerk, Algolia integration templates
 - 3c03c8c 2026-01-03 feat: add Resend/PostHog templates, wire generator to ZIP export
 - 7d91459 2026-01-03 chore: update framework map
-- 11d7bc0 2026-01-03 fix(ui): address 4 UX issues from visual QA
 
 ## Agent Governance Structure
 

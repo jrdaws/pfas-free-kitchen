@@ -1,0 +1,11 @@
+{
+  "template": "saas",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-04T05:19:33.375Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "auth": "supabase",
+    "payments": "stripe",
+    "storage": "uploadthing"
+  }
+}

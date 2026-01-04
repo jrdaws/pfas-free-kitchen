@@ -142,7 +142,11 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
   "storage:uploadthing": [
     "integrations/storage/uploadthing/app/api/uploadthing/core.ts",
     "integrations/storage/uploadthing/app/api/uploadthing/route.ts",
-    "integrations/storage/uploadthing/components/upload-button.tsx",
+    "integrations/storage/uploadthing/components/storage/upload-button.tsx",
+    "integrations/storage/uploadthing/components/storage/upload-dropzone.tsx",
+    "integrations/storage/uploadthing/components/storage/file-upload.tsx",
+    "integrations/storage/uploadthing/components/storage/file-preview.tsx",
+    "integrations/storage/uploadthing/components/storage/index.ts",
     "integrations/storage/uploadthing/lib/uploadthing.ts",
   ],
 };
@@ -254,7 +258,7 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
         deps["@clerk/nextjs"] = "^5.0.0";
         break;
       case "payments:stripe":
-        deps["stripe"] = "^14.21.0";
+        deps["stripe"] = "^17.4.0";  // Updated for 2024-11-20.acacia API version
         break;
       case "payments:paddle":
         deps["@paddle/paddle-js"] = "^1.0.0";
@@ -490,6 +494,9 @@ export async function POST(request: NextRequest) {
       "next": "^15.0.0",
       "react": "^19.0.0",
       "react-dom": "^19.0.0",
+      // Required by lib/utils.ts (cn function) used by all components
+      "clsx": "^2.1.1",
+      "tailwind-merge": "^2.6.0",
     };
     
     const integrationDeps = getIntegrationDependencies(integrations);

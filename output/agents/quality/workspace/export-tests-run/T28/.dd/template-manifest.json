@@ -1,0 +1,14 @@
+{
+  "template": "ecommerce",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-04T05:26:50.611Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "auth": "supabase",
+    "payments": "stripe",
+    "cms": "sanity",
+    "monitoring": "sentry",
+    "search": "algolia",
+    "imageOpt": "cloudinary"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "template": "saas",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-04T05:24:10.863Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "backgroundJobs": "inngest"
+  }
+}
