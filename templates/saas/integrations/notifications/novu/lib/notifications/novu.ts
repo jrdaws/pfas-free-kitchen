@@ -35,7 +35,7 @@ export async function sendNotification({
   try {
     const response = await novu.trigger(templateId, {
       to: { subscriberId: userId, email, firstName, lastName },
-      payload: payload || {},
+      payload: (payload || {}) as Record<string, string | number | boolean>,
     });
     return response.data;
   } catch (error) {

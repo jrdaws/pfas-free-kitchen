@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 3d478da 2026-01-03 chore: move completed task to done
 - 1f44926 2026-01-03 fix: add supabase re-export shim for backward compatibility
 - a814819 2026-01-03 fix(exports): add missing components to e-commerce template
 - 8ece2be 2026-01-03 feat(governance): add 'rr' shortcut for re-reading rules
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - b7595fa 2026-01-03 feat: add parallel agent prompts for export fixes
 - 7eca558 2026-01-03 docs: add export validation reports for testprojectnew03
 - 28fecd4 2026-01-03 fix(configurator): remove GenerateFramework from Vercel step, update preview styling
-- 6157dcb 2026-01-03 chore(testing): complete Supabase OAuth E2E tests task - 18/18 pass
 
 ## Agent Governance Structure
 
