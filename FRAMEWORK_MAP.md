@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 7db1a04 2026-01-04 test: Add E2E export tests for Phase 1-3 integrations
 - f2319cb 2026-01-04 fix: Remove duplicate integration paths and cases in export route
 - 499f523 2026-01-04 feat: Phase 3 templates - Contentful, Meilisearch, Cloudflare R2
 - 9768052 2026-01-04 feat: Phase 2 templates - Plausible, SendGrid, Anthropic, Trigger.dev
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 41e08b7 2026-01-03 feat: add 7 new integration templates to templates/saas/integrations
 - 0f44540 2026-01-03 test(export): verify P0 fixes - export build PASSES
 - d727097 2026-01-03 docs(integrations): add Algolia, Sentry, and Sanity guides
-- 6b1c2b9 2026-01-03 test(export): prepare export validation tests for P0 fixes
 
 ## Agent Governance Structure
 

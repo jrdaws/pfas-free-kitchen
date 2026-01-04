@@ -1,15 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { ShoppingCart, Heart, Truck, Shield, RotateCcw } from "lucide-react";
+import { ShoppingCart, Heart, Truck, Shield, RotateCcw, Check } from "lucide-react";
+import { useCartStore } from "@/lib/cart/cart-store";
 
 interface Product {
   id: string;
   name: string;
+  slug?: string;
   price: number;
   compareAtPrice?: number;
   description: string;
   category: string;
+  images?: string[];
   variants?: { name: string; options: string[] }[];
   inStock: boolean;
 }
@@ -21,6 +24,8 @@ interface ProductInfoProps {
 export function ProductInfo({ product }: ProductInfoProps) {
   const [selectedVariants, setSelectedVariants] = useState<Record<string, string>>({});
   const [quantity, setQuantity] = useState(1);
+  const [isAdded, setIsAdded] = useState(false);
+  const { addItem } = useCartStore();
 
   const formatPrice = (cents: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -33,9 +38,26 @@ export function ProductInfo({ product }: ProductInfoProps) {
     ? Math.round((1 - product.price / product.compareAtPrice) * 100)
     : null;
 
+  const getVariantString = () => {
+    const variants = Object.entries(selectedVariants);
+    return variants.length > 0 
+      ? variants.map(([, value]) => value).join(" / ")
+      : undefined;
+  };
+
   const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log("Add to cart:", { product, selectedVariants, quantity });
+    addItem({
+      productId: product.id,
+      name: product.name,
+      price: product.price / 100, // Convert cents to dollars for display
+      quantity,
+      image: product.images?.[0],
+      variant: getVariantString(),
+    });
+    
+    // Show feedback
+    setIsAdded(true);
+    setTimeout(() => setIsAdded(false), 2000);
   };
 
   return (
@@ -65,6 +87,21 @@ export function ProductInfo({ product }: ProductInfoProps) {
         )}
       </div>
 
+      {/* Stock Status */}
+      <div className="flex items-center gap-2">
+        {product.inStock ? (
+          <>
+            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
+            <span className="text-sm text-green-600 dark:text-green-400">In Stock</span>
+          </>
+        ) : (
+          <>
+            <span className="w-2 h-2 bg-red-500 rounded-full"></span>
+            <span className="text-sm text-red-600 dark:text-red-400">Out of Stock</span>
+          </>
+        )}
+      </div>
+
       {/* Description */}
       <p className="text-muted-foreground leading-relaxed">
         {product.description}
@@ -74,7 +111,7 @@ export function ProductInfo({ product }: ProductInfoProps) {
       {product.variants?.map((variant) => (
         <div key={variant.name}>
           <label className="block text-sm font-medium text-foreground mb-2">
-            {variant.name}
+            {variant.name}: <span className="text-muted-foreground">{selectedVariants[variant.name] || "Select"}</span>
           </label>
           <div className="flex flex-wrap gap-2">
             {variant.options.map((option) => (
@@ -102,14 +139,14 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setQuantity(Math.max(1, quantity - 1))}
-            className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:bg-muted"
+            className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"
           >
             -
           </button>
           <span className="w-12 text-center font-medium">{quantity}</span>
           <button
             onClick={() => setQuantity(quantity + 1)}
-            className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:bg-muted"
+            className="w-10 h-10 rounded-lg border border-border flex items-center justify-center hover:bg-muted transition-colors"
           >
             +
           </button>
@@ -121,12 +158,25 @@ export function ProductInfo({ product }: ProductInfoProps) {
         <button
           onClick={handleAddToCart}
           disabled={!product.inStock}
-          className="flex-1 flex items-center justify-center gap-2 bg-primary text-primary-foreground py-3 px-6 rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
+            isAdded 
+              ? "bg-green-600 text-white" 
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
+          }`}
         >
-          <ShoppingCart className="w-5 h-5" />
-          {product.inStock ? "Add to Cart" : "Out of Stock"}
+          {isAdded ? (
+            <>
+              <Check className="w-5 h-5" />
+              Added to Cart!
+            </>
+          ) : (
+            <>
+              <ShoppingCart className="w-5 h-5" />
+              {product.inStock ? "Add to Cart" : "Out of Stock"}
+            </>
+          )}
         </button>
-        <button className="w-12 h-12 flex items-center justify-center border border-border rounded-lg hover:bg-muted transition-colors">
+        <button className="w-12 h-12 flex items-center justify-center border border-border rounded-lg hover:bg-muted hover:text-red-500 transition-colors">
           <Heart className="w-5 h-5" />
         </button>
       </div>
@@ -149,4 +199,3 @@ export function ProductInfo({ product }: ProductInfoProps) {
     </div>
   );
 }
-
