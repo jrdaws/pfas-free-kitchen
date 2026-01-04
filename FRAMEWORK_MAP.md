@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 35a0542 2026-01-03 chore: move completed feature templates task to done
 - 4196c20 2026-01-03 feat(templates): add Shopping Cart, User Registration, and Admin Dashboard feature templates
 - 87d964c 2026-01-03 fix(website): remove invalid SVG filter style in AccordionSidebar
 - e4c933e 2026-01-03 feat: add Uploadthing storage template + feature templates
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - e3ae726 2026-01-03 fix(ux): improve Research section clarity - Option A
 - 25cecc8 2026-01-03 docs(task): create research UX Option A implementation task
 - 7bf96cf 2026-01-03 feat(configurator): add brand colors section
-- c71b05a 2026-01-03 docs(audit): add research UX improvement proposal and configurator test suite
 
 ## Agent Governance Structure
 

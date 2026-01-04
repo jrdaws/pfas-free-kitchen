@@ -90,7 +90,9 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/auth/supabase/app/api/auth/callback/route.ts",
     "integrations/auth/supabase/app/login/page.tsx",
     "integrations/auth/supabase/components/auth/auth-button.tsx",
-    "integrations/auth/supabase/lib/supabase.ts",
+    "integrations/auth/supabase/lib/supabase/client.ts",
+    "integrations/auth/supabase/lib/supabase/server.ts",
+    "integrations/auth/supabase/lib/supabase/index.ts",
     "integrations/auth/supabase/middleware.ts",
   ],
   "auth:clerk": [

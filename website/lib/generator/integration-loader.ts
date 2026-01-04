@@ -19,6 +19,7 @@ const INTEGRATION_MANIFESTS: Record<string, Record<string, IntegrationManifest>>
       files: [
         { path: "lib/supabase/client.ts", template: "auth/supabase/lib/client.ts" },
         { path: "lib/supabase/server.ts", template: "auth/supabase/lib/server.ts" },
+        { path: "lib/supabase/index.ts", template: "auth/supabase/lib/index.ts" },
         { path: "lib/supabase/middleware.ts", template: "auth/supabase/lib/middleware.ts" },
         { path: "middleware.ts", template: "auth/supabase/middleware.ts" },
         { path: "components/auth/LoginForm.tsx", template: "auth/supabase/components/LoginForm.tsx" },

@@ -16,6 +16,11 @@
       "transform": "none"
     },
     {
+      "path": "lib/supabase/index.ts",
+      "template": "lib/index.ts",
+      "transform": "none"
+    },
+    {
       "path": "lib/supabase/middleware.ts",
       "template": "lib/middleware.ts",
       "transform": "none"
