@@ -283,6 +283,197 @@ const INTEGRATION_MANIFESTS: Record<string, Record<string, IntegrationManifest>>
       ],
     },
   },
+  cms: {
+    sanity: {
+      id: "sanity",
+      name: "Sanity CMS",
+      category: "cms",
+      version: "1.0.0",
+      description: "Headless CMS with real-time collaboration",
+      files: [
+        { path: "lib/sanity/client.ts", template: "cms/sanity/lib/client.ts" },
+        { path: "lib/sanity/queries.ts", template: "cms/sanity/lib/queries.ts" },
+        { path: "lib/sanity/image.ts", template: "cms/sanity/lib/image.ts" },
+        { path: "sanity.config.ts", template: "cms/sanity/sanity.config.ts" },
+        { path: "sanity/schemas/index.ts", template: "cms/sanity/sanity/schemas/index.ts" },
+        { path: "app/studio/[[...tool]]/page.tsx", template: "cms/sanity/app/studio/page.tsx" },
+      ],
+      dependencies: {
+        npm: {
+          "sanity": "^3.40.0",
+          "@sanity/image-url": "^1.0.2",
+          "@sanity/vision": "^3.40.0",
+          "next-sanity": "^9.0.0",
+        },
+        env: [
+          { name: "NEXT_PUBLIC_SANITY_PROJECT_ID", description: "Sanity project ID", required: true, public: true },
+          { name: "NEXT_PUBLIC_SANITY_DATASET", description: "Sanity dataset name", required: true, public: true },
+          { name: "SANITY_API_TOKEN", description: "Sanity API token for mutations", required: false },
+        ],
+      },
+      postInstall: [
+        "Create a Sanity account at https://www.sanity.io",
+        "Create a new project in the Sanity dashboard",
+        "Get your project ID and add to .env.local",
+        "Access the embedded studio at /studio",
+      ],
+    },
+  },
+  monitoring: {
+    sentry: {
+      id: "sentry",
+      name: "Sentry",
+      category: "monitoring",
+      version: "1.0.0",
+      description: "Error tracking and performance monitoring",
+      files: [
+        { path: "sentry.client.config.ts", template: "monitoring/sentry/sentry.client.config.ts" },
+        { path: "sentry.server.config.ts", template: "monitoring/sentry/sentry.server.config.ts" },
+        { path: "sentry.edge.config.ts", template: "monitoring/sentry/sentry.edge.config.ts" },
+        { path: "instrumentation.ts", template: "monitoring/sentry/instrumentation.ts" },
+        { path: "app/global-error.tsx", template: "monitoring/sentry/app/global-error.tsx" },
+        { path: "lib/sentry.ts", template: "monitoring/sentry/lib/sentry.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "@sentry/nextjs": "^8.0.0",
+        },
+        env: [
+          { name: "SENTRY_DSN", description: "Sentry DSN", required: true },
+          { name: "SENTRY_ORG", description: "Sentry organization slug", required: false },
+          { name: "SENTRY_PROJECT", description: "Sentry project slug", required: false },
+          { name: "SENTRY_AUTH_TOKEN", description: "Sentry auth token for source maps", required: false },
+        ],
+      },
+      postInstall: [
+        "Create a Sentry account at https://sentry.io",
+        "Create a new Next.js project",
+        "Get your DSN from Project Settings > Client Keys",
+        "For source maps, add SENTRY_AUTH_TOKEN to CI environment",
+      ],
+    },
+  },
+  imageOpt: {
+    cloudinary: {
+      id: "cloudinary",
+      name: "Cloudinary",
+      category: "imageOpt",
+      version: "1.0.0",
+      description: "Image and video optimization with Cloudinary",
+      files: [
+        { path: "lib/cloudinary.ts", template: "imageOpt/cloudinary/lib/cloudinary.ts" },
+        { path: "lib/cloudinary-upload.ts", template: "imageOpt/cloudinary/lib/cloudinary-upload.ts" },
+        { path: "components/media/CloudinaryImage.tsx", template: "imageOpt/cloudinary/components/CloudinaryImage.tsx" },
+        { path: "components/media/CloudinaryUpload.tsx", template: "imageOpt/cloudinary/components/CloudinaryUpload.tsx" },
+        { path: "app/api/cloudinary/sign/route.ts", template: "imageOpt/cloudinary/app/api/cloudinary/sign/route.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "cloudinary": "^2.0.0",
+          "next-cloudinary": "^6.0.0",
+        },
+        env: [
+          { name: "NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME", description: "Cloudinary cloud name", required: true, public: true },
+          { name: "CLOUDINARY_API_KEY", description: "Cloudinary API key", required: true },
+          { name: "CLOUDINARY_API_SECRET", description: "Cloudinary API secret", required: true },
+        ],
+      },
+      postInstall: [
+        "Create a Cloudinary account at https://cloudinary.com",
+        "Get your cloud name, API key, and secret from the dashboard",
+        "Add credentials to .env.local",
+      ],
+    },
+  },
+  backgroundJobs: {
+    inngest: {
+      id: "inngest",
+      name: "Inngest",
+      category: "backgroundJobs",
+      version: "1.0.0",
+      description: "Event-driven background jobs and workflows",
+      files: [
+        { path: "lib/inngest/client.ts", template: "backgroundJobs/inngest/lib/client.ts" },
+        { path: "lib/inngest/functions.ts", template: "backgroundJobs/inngest/lib/functions.ts" },
+        { path: "app/api/inngest/route.ts", template: "backgroundJobs/inngest/app/api/inngest/route.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "inngest": "^3.19.0",
+        },
+        env: [
+          { name: "INNGEST_EVENT_KEY", description: "Inngest event key", required: true },
+          { name: "INNGEST_SIGNING_KEY", description: "Inngest signing key", required: true },
+        ],
+      },
+      postInstall: [
+        "Create an Inngest account at https://www.inngest.com",
+        "Get your event key and signing key from the dashboard",
+        "Run 'npx inngest-cli@latest dev' for local development",
+      ],
+    },
+  },
+  notifications: {
+    novu: {
+      id: "novu",
+      name: "Novu",
+      category: "notifications",
+      version: "1.0.0",
+      description: "Multi-channel notifications infrastructure",
+      files: [
+        { path: "lib/notifications/novu.ts", template: "notifications/novu/lib/novu.ts" },
+        { path: "lib/notifications/novu-client.ts", template: "notifications/novu/lib/novu-client.ts" },
+        { path: "components/notifications/NotificationBell.tsx", template: "notifications/novu/components/NotificationBell.tsx" },
+        { path: "components/notifications/NotificationCenter.tsx", template: "notifications/novu/components/NotificationCenter.tsx" },
+        { path: "app/api/notifications/route.ts", template: "notifications/novu/app/api/notifications/route.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "@novu/node": "^0.24.0",
+          "@novu/notification-center": "^0.24.0",
+        },
+        env: [
+          { name: "NOVU_API_KEY", description: "Novu API key", required: true },
+          { name: "NEXT_PUBLIC_NOVU_APP_ID", description: "Novu application ID", required: true, public: true },
+        ],
+      },
+      postInstall: [
+        "Create a Novu account at https://novu.co",
+        "Create an application and get your API key",
+        "Set up notification templates in the Novu dashboard",
+        "Configure notification channels (email, in-app, SMS, push)",
+      ],
+    },
+  },
+  featureFlags: {
+    "posthog-flags": {
+      id: "posthog-flags",
+      name: "PostHog Feature Flags",
+      category: "featureFlags",
+      version: "1.0.0",
+      description: "Feature flags and A/B testing with PostHog",
+      files: [
+        { path: "lib/feature-flags/posthog.ts", template: "featureFlags/posthog-flags/lib/posthog.ts" },
+        { path: "hooks/useFeatureFlag.ts", template: "featureFlags/posthog-flags/hooks/useFeatureFlag.ts" },
+        { path: "components/FeatureFlag.tsx", template: "featureFlags/posthog-flags/components/FeatureFlag.tsx" },
+      ],
+      dependencies: {
+        npm: {
+          "posthog-js": "^1.100.0",
+        },
+        env: [
+          { name: "NEXT_PUBLIC_POSTHOG_KEY", description: "PostHog project API key", required: true, public: true },
+          { name: "NEXT_PUBLIC_POSTHOG_HOST", description: "PostHog host URL", required: false, public: true },
+        ],
+      },
+      postInstall: [
+        "Sign up at https://posthog.com",
+        "Create a project and copy your API key",
+        "Create feature flags in the PostHog dashboard",
+        "Use the useFeatureFlag hook or FeatureFlag component",
+      ],
+    },
+  },
 };
 
 /**

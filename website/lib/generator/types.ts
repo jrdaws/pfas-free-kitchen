@@ -16,9 +16,9 @@ export type IntegrationCategory =
   | "monitoring"
   | "cms"
   | "notifications"
-  | "background-jobs"
-  | "feature-flags"
-  | "image-optimization";
+  | "backgroundJobs"
+  | "featureFlags"
+  | "imageOpt";
 
 export type FeatureCategory =
   | "user-management"
