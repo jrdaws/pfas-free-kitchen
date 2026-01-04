@@ -33,6 +33,12 @@
     },
     "app/api/projects/[token]/download/route.ts": {
       "maxDuration": 30
+    },
+    "app/api/research/analyze/route.ts": {
+      "maxDuration": 60
+    },
+    "app/api/export/zip/route.ts": {
+      "maxDuration": 30
     }
   }
 }

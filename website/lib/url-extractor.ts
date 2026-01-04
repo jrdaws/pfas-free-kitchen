@@ -2,9 +2,26 @@
  * URL Content Extractor
  * Primary: Firecrawl (better quality, JS rendering, structured extraction)
  * Fallback: Jina Reader API (free, no API key required)
+ * 
+ * Note: All extractions have a 8-second timeout to prevent Vercel function timeouts
  */
 
 import FirecrawlApp from "@mendable/firecrawl-js";
+
+// Timeout for each URL extraction (8 seconds)
+const EXTRACTION_TIMEOUT_MS = 8000;
+
+/**
+ * Wrap a promise with a timeout
+ */
+function withTimeout<T>(promise: Promise<T>, timeoutMs: number, errorMessage: string): Promise<T> {
+  return Promise.race([
+    promise,
+    new Promise<T>((_, reject) => 
+      setTimeout(() => reject(new Error(errorMessage)), timeoutMs)
+    )
+  ]);
+}
 
 export interface ExtractedContent {
   url: string;
@@ -157,24 +174,41 @@ async function extractWithJina(url: string): Promise<ExtractedContent | null> {
 }
 
 /**
- * Extract content from a URL
+ * Extract content from a URL with timeout
  * Tries Firecrawl first (if configured), falls back to Jina
+ * Each attempt has an 8-second timeout to prevent Vercel function timeouts
  */
 export async function extractUrlContent(url: string): Promise<ExtractedContent> {
   console.log(`[URL Extractor] Extracting: ${url}`);
 
-  // Try Firecrawl first (better quality)
-  const firecrawlResult = await extractWithFirecrawl(url);
-  if (firecrawlResult) {
-    console.log(`[URL Extractor] Success via Firecrawl: ${url}`);
-    return firecrawlResult;
+  // Try Firecrawl first (better quality) with timeout
+  try {
+    const firecrawlResult = await withTimeout(
+      extractWithFirecrawl(url),
+      EXTRACTION_TIMEOUT_MS,
+      `Firecrawl timeout for ${url}`
+    );
+    if (firecrawlResult) {
+      console.log(`[URL Extractor] Success via Firecrawl: ${url}`);
+      return firecrawlResult;
+    }
+  } catch (error) {
+    console.warn(`[URL Extractor] Firecrawl failed/timed out for ${url}:`, error);
   }
 
-  // Fall back to Jina Reader
-  const jinaResult = await extractWithJina(url);
-  if (jinaResult) {
-    console.log(`[URL Extractor] Success via Jina: ${url}`);
-    return jinaResult;
+  // Fall back to Jina Reader with timeout
+  try {
+    const jinaResult = await withTimeout(
+      extractWithJina(url),
+      EXTRACTION_TIMEOUT_MS,
+      `Jina timeout for ${url}`
+    );
+    if (jinaResult) {
+      console.log(`[URL Extractor] Success via Jina: ${url}`);
+      return jinaResult;
+    }
+  } catch (error) {
+    console.warn(`[URL Extractor] Jina failed/timed out for ${url}:`, error);
   }
 
   // Both failed

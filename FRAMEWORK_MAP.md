@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 547f282 2026-01-03 fix(PreviewCard): sync progress bar with sidebar
 - 8da3fbb 2026-01-03 refactor(configurator): consolidate research inputs into sidebar
 - 53d2ca2 2026-01-03 fix(configurator): theme colors + research loading UX
 - a8e0ee0 2026-01-03 fix(configurator): address 8 UX issues
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - e40dbcb 2025-12-26 chore(testing): complete accordion tests task - 21/21 pass
 - 6a43c2c 2025-12-26 fix(test): update progress indicator test to match new sidebar design
 - 65c1d05 2025-12-26 chore: commit Cycle 20 governance work, demos, and reports
-- 6043641 2025-12-25 fix(auth): update ProtectedRoute for Navy theme
 
 ## Agent Governance Structure
 
