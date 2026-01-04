@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- a814819 2026-01-03 fix(exports): add missing components to e-commerce template
 - 8ece2be 2026-01-03 feat(governance): add 'rr' shortcut for re-reading rules
 - f16cfb3 2026-01-03 feat(governance): add role-based SOP requirements
 - 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 28fecd4 2026-01-03 fix(configurator): remove GenerateFramework from Vercel step, update preview styling
 - 6157dcb 2026-01-03 chore(testing): complete Supabase OAuth E2E tests task - 18/18 pass
 - fc1d9f8 2026-01-03 docs(governance): add Advanced Prompt Suggestions rule
-- 9c17c75 2026-01-03 feat(testing): build export validation framework for 20 test configs
 
 ## Agent Governance Structure
 

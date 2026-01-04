@@ -1,7 +1,7 @@
 {
   "template": "blog",
   "version": "1.0.0",
-  "generatedAt": "2026-01-04T06:53:53.140Z",
+  "generatedAt": "2026-01-04T07:13:27.596Z",
   "generatedBy": "dawson-does-framework-configurator",
   "integrations": {
     "auth": "clerk",

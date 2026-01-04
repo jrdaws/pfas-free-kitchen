@@ -12,9 +12,20 @@
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
     "@supabase/supabase-js": "^2.47.10",
     "@supabase/ssr": "^0.1.0",
-    "stripe": "^14.21.0"
+    "stripe": "^17.4.0",
+    "sanity": "^3.40.0",
+    "@sanity/image-url": "^1.0.2",
+    "@sanity/vision": "^3.40.0",
+    "next-sanity": "^9.0.0",
+    "@sentry/nextjs": "^8.0.0",
+    "algoliasearch": "^4.23.0",
+    "react-instantsearch": "^7.6.0",
+    "cloudinary": "^2.0.0",
+    "next-cloudinary": "^6.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

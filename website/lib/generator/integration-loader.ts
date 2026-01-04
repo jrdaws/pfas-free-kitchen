@@ -17,6 +17,7 @@ const INTEGRATION_MANIFESTS: Record<string, Record<string, IntegrationManifest>>
       version: "1.0.0",
       description: "Authentication with Supabase",
       files: [
+        { path: "lib/supabase.ts", template: "auth/supabase/lib/supabase.ts" },  // Re-export shim for backward compatibility
         { path: "lib/supabase/client.ts", template: "auth/supabase/lib/client.ts" },
         { path: "lib/supabase/server.ts", template: "auth/supabase/lib/server.ts" },
         { path: "lib/supabase/index.ts", template: "auth/supabase/lib/index.ts" },

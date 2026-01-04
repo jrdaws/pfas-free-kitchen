@@ -27,11 +27,15 @@ export function CloudinaryUpload({ folder, onUpload, children }: CloudinaryUploa
       onOpen={() => setIsUploading(true)}
       onClose={() => setIsUploading(false)}
     >
-      {({ open }) => children || (
-        <button type="button" onClick={() => open()} disabled={isUploading}
-          className="px-4 py-2 border rounded-md hover:bg-gray-50 disabled:opacity-50">
-          {isUploading ? "Uploading..." : "Upload Image"}
-        </button>
+      {({ open }) => (
+        <>
+          {children || (
+            <button type="button" onClick={() => open()} disabled={isUploading}
+              className="px-4 py-2 border rounded-md hover:bg-gray-50 disabled:opacity-50">
+              {isUploading ? "Uploading..." : "Upload Image"}
+            </button>
+          )}
+        </>
       )}
     </CldUploadWidget>
   );

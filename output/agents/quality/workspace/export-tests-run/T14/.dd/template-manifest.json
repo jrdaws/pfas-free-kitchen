@@ -1,7 +1,7 @@
 {
   "template": "saas",
   "version": "1.0.0",
-  "generatedAt": "2026-01-04T06:50:32.044Z",
+  "generatedAt": "2026-01-04T07:31:18.980Z",
   "generatedBy": "dawson-does-framework-configurator",
   "integrations": {
     "auth": "supabase",

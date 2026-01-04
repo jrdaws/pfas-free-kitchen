@@ -102,6 +102,7 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/auth/supabase/app/api/auth/callback/route.ts",
     "integrations/auth/supabase/app/login/page.tsx",
     "integrations/auth/supabase/components/auth/auth-button.tsx",
+    "integrations/auth/supabase/lib/supabase.ts",  // Re-export shim for backward compatibility
     "integrations/auth/supabase/lib/supabase/client.ts",
     "integrations/auth/supabase/lib/supabase/server.ts",
     "integrations/auth/supabase/lib/supabase/index.ts",
@@ -411,6 +412,7 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
         deps["@sanity/image-url"] = "^1.0.2";
         deps["@sanity/vision"] = "^3.40.0";
         deps["next-sanity"] = "^9.0.0";
+        deps["styled-components"] = "^6.1.0";
         break;
       case "images:cloudinary":
       case "imageOpt:cloudinary":
