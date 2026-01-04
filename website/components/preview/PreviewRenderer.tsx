@@ -224,7 +224,8 @@ export function PreviewRenderer({
 /**
  * PreviewFrame
  * 
- * Wraps the preview in a device-like frame for display in the configurator.
+ * Wraps the preview in a clean browser-like frame for display in the configurator.
+ * Uses theme colors instead of hardcoded Mac window chrome.
  */
 export function PreviewFrame({
   template,
@@ -238,38 +239,36 @@ export function PreviewFrame({
   const featureCount = Object.values(selectedFeatures).flat().length;
   
   return (
-    <div className="rounded-xl overflow-hidden bg-[#111111] border border-white/10 shadow-2xl">
-      {/* Browser Chrome */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-[#0A0A0A] border-b border-white/5">
-        <div className="flex gap-2">
-          <div className="w-3 h-3 rounded-full bg-red-500" />
-          <div className="w-3 h-3 rounded-full bg-yellow-500" />
-          <div className="w-3 h-3 rounded-full bg-green-500" />
-        </div>
-        <div className="flex-1 mx-4">
-          <div className="bg-[#1a1a1a] rounded-lg px-4 py-1.5 text-center">
-            <span className="text-foreground-muted text-xs font-mono">
+    <div className="rounded-xl overflow-hidden bg-card border border-border shadow-2xl">
+      {/* Clean Browser Header */}
+      <div className="flex items-center gap-3 px-4 py-2.5 bg-muted/50 border-b border-border">
+        {/* URL Bar */}
+        <div className="flex-1">
+          <div className="bg-background rounded-lg px-3 py-1.5 flex items-center gap-2 border border-border">
+            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <span className="text-muted-foreground text-xs font-mono">
               localhost:3000
             </span>
           </div>
         </div>
+        
+        {/* Status Badges */}
         <div className="flex items-center gap-2">
           {featureCount > 0 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
               {featureCount} features
             </span>
           )}
           {activeCount > 0 && (
-            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400">
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
               {activeCount} services
             </span>
           )}
-          <span className="text-foreground-muted text-xs">{title}</span>
         </div>
       </div>
 
       {/* Preview Content */}
-      <div className="max-h-[600px] overflow-y-auto">
+      <div className="max-h-[600px] overflow-y-auto bg-background">
         <PreviewRenderer
           template={template}
           componentProps={componentProps}
@@ -287,6 +286,7 @@ export function PreviewFrame({
  * MobilePreviewFrame
  * 
  * Mobile device preview for responsive testing.
+ * Uses theme colors for consistency.
  */
 export function MobilePreviewFrame({
   template,
@@ -297,15 +297,15 @@ export function MobilePreviewFrame({
 }: PreviewRendererProps) {
   return (
     <div className="w-[375px] mx-auto">
-      {/* Phone Frame */}
-      <div className="rounded-[40px] bg-[#1a1a1a] p-3 border-4 border-[#333]">
+      {/* Phone Frame - using theme colors */}
+      <div className="rounded-[40px] bg-muted p-3 border-4 border-border">
         {/* Notch */}
         <div className="flex justify-center mb-2">
-          <div className="w-24 h-6 bg-black rounded-full" />
+          <div className="w-24 h-6 bg-background rounded-full border border-border" />
         </div>
         
         {/* Screen */}
-        <div className="rounded-[28px] overflow-hidden bg-[#0A0A0A] aspect-[9/19.5] overflow-y-auto">
+        <div className="rounded-[28px] overflow-hidden bg-background aspect-[9/19.5] overflow-y-auto border border-border">
           <PreviewRenderer
             template={template}
             componentProps={componentProps}
@@ -318,7 +318,7 @@ export function MobilePreviewFrame({
         
         {/* Home Indicator */}
         <div className="flex justify-center mt-2">
-          <div className="w-32 h-1 bg-stone-50/20 rounded-full" />
+          <div className="w-32 h-1 bg-foreground/20 rounded-full" />
         </div>
       </div>
     </div>

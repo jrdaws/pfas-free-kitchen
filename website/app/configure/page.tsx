@@ -928,21 +928,17 @@ export default function ConfigurePage() {
       case "github":
       case "supabase":
       case "vercel":
+        // Tool setup steps - just show instructions, actual content is in sidebar
         return (
           <div className="space-y-6">
             <div className="max-w-2xl">
               <h2 className="text-2xl font-bold text-foreground mb-2">
-                {STEP_TITLES[currentStep]}
+                {STEP_TITLES[currentStep]} Setup
               </h2>
               <p className="text-foreground-secondary">
-                Follow the steps in the sidebar to set up {STEP_TITLES[currentStep]}.
+                Follow the steps in the sidebar to connect {STEP_TITLES[currentStep]}.
               </p>
             </div>
-            
-            {/* Show Generate Framework when on final step */}
-            {currentSection === "vercel" && (
-              <GenerateFramework />
-            )}
             
             {/* Show progress overview for tool setup steps */}
             <div className="bg-card rounded-xl p-6 border border-border">
