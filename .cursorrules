@@ -118,6 +118,18 @@ Read and execute: output/agents/[role]/inbox/TASK.txt
 | Task says "follow SOP" | ✅ Yes |
 | Unsure how to proceed | ✅ Yes - always safe to read |
 
+### Role-Based Required SOPs (Read Before Work)
+
+| Role Category | Agents | Required SOPs |
+|---------------|--------|---------------|
+| Code Writers | WEB, CLI, PLT, TPL, INT | `CODE_QUALITY_SOP`, `REGRESSION_TESTING_SOP` |
+| Quality/Review | QUA, AUD, TST | `BUG_TRIAGE_SOP`, `CODE_QUALITY_SOP` |
+| Documentation | DOC | `DOCUMENTATION_SYNC_SOP` |
+| Media/Assets | MED, RES | `MEDIA_NAMING_SOP` |
+
+**Rule**: Before writing code, agents MUST read their category's required SOPs.
+Location: `docs/sops/[SOP_NAME].md`
+
 ---
 
 ## Checkpoint / Session End (Tiered)

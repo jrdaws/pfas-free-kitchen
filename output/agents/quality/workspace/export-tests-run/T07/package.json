@@ -12,8 +12,10 @@
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
     "@clerk/nextjs": "^5.0.0",
-    "stripe": "^14.21.0"
+    "stripe": "^17.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

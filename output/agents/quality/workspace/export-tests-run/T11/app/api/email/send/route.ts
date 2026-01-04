@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { resend, FROM_EMAIL } from "../../../../lib/resend";
-import { WelcomeEmail } from "../../../../emails/welcome-email";
+import { resend, FROM_EMAIL } from "@/lib/resend";
+import { WelcomeEmail } from "@/emails/welcome-email";
 
 export async function POST(req: NextRequest) {
   try {

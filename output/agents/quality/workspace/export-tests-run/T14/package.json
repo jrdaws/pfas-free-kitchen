@@ -12,9 +12,11 @@
     "next": "^15.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "clsx": "^2.1.1",
+    "tailwind-merge": "^2.6.0",
     "@supabase/supabase-js": "^2.47.10",
     "@supabase/ssr": "^0.1.0",
-    "stripe": "^14.21.0",
+    "stripe": "^17.4.0",
     "uploadthing": "^6.0.0",
     "@uploadthing/react": "^6.0.0"
   },

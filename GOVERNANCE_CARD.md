@@ -51,6 +51,14 @@ Proceeding with task...
 ## Role Codes
 CLI | WEB | DOC | TST | PLT | TPL | INT | RES | MED | QUA | AUD | STR | CUR
 
+## Required SOPs by Role (Read Before Complex Tasks)
+| Role | SOPs to Read |
+|------|--------------|
+| Code (WEB, CLI, PLT, TPL, INT) | CODE_QUALITY, REGRESSION_TESTING |
+| Quality (QUA, AUD, TST) | BUG_TRIAGE, CODE_QUALITY |
+| Docs (DOC) | DOCUMENTATION_SYNC |
+| Media (MED, RES) | MEDIA_NAMING |
+
 ## Human Terminal Command Rule
 When human needs to interact with a file (open, view, edit, copy):
 ```bash

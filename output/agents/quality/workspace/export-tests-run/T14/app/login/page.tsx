@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
 
@@ -11,7 +11,15 @@ export default function LoginPage() {
   const [message, setMessage] = useState<{ type: "error" | "success"; text: string } | null>(null);
   const [mode, setMode] = useState<"signin" | "signup">("signin");
   const router = useRouter();
-  const supabase = createClient();
+  
+  // Lazy initialize client only when needed (not during SSR/pre-render)
+  const getSupabase = useMemo(() => {
+    let client: ReturnType<typeof createClient> | null = null;
+    return () => {
+      if (!client) client = createClient();
+      return client;
+    };
+  }, []);
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,6 +27,7 @@ export default function LoginPage() {
     setMessage(null);
 
     try {
+      const supabase = getSupabase();
       if (mode === "signin") {
         const { error } = await supabase.auth.signInWithPassword({
           email,
@@ -31,7 +40,7 @@ export default function LoginPage() {
         router.push("/");
         router.refresh();
       } else {
-        const { error } = await supabase.auth.signUp({
+        const { error } = await getSupabase().auth.signUp({
           email,
           password,
           options: {

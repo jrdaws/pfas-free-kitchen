@@ -1,33 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe } from "../../../../lib/stripe";
-import { createServerSupabaseClient } from "../../../../lib/supabase";
+import { stripe } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
   try {
-    // Get user from Supabase
-    const supabase = await createServerSupabaseClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
+    // Get customer email or ID from request body
+    const { email, customerId } = await req.json();
 
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!email && !customerId) {
+      return NextResponse.json(
+        { error: "Email or customer ID is required" },
+        { status: 400 }
+      );
     }
 
-    // Get customer ID from user metadata
-    const customerId = user.user_metadata?.stripe_customer_id;
+    let resolvedCustomerId = customerId;
 
-    if (!customerId) {
-      return NextResponse.json(
-        { error: "No Stripe customer found" },
-        { status: 404 }
-      );
+    // If email provided, look up customer
+    if (!resolvedCustomerId && email) {
+      const customers = await stripe.customers.list({
+        email: email,
+        limit: 1,
+      });
+
+      if (customers.data.length === 0) {
+        return NextResponse.json(
+          { error: "No Stripe customer found for this email" },
+          { status: 404 }
+        );
+      }
+
+      resolvedCustomerId = customers.data[0].id;
     }
 
     // Create customer portal session
     const session = await stripe.billingPortal.sessions.create({
-      customer: customerId,
+      customer: resolvedCustomerId,
       return_url: `${req.nextUrl.origin}/dashboard`,
     });
 

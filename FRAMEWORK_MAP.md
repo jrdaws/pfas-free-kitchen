@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
 - 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
 - 61543f4 2026-01-03 test(export): document 5 build failures from tier 1 tests
 - bb25e33 2026-01-03 feat: wire 7 new integrations into export route
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 9c17c75 2026-01-03 feat(testing): build export validation framework for 20 test configs
 - 8b7925c 2026-01-03 feat: add export validation framework with 20 test configurations
 - 36948a9 2026-01-03 chore: move completed P0 supabase fix to done
-- 8dead2a 2026-01-03 fix(P0): split Supabase lib into client.ts and server.ts to fix build errors
 
 ## Agent Governance Structure
 

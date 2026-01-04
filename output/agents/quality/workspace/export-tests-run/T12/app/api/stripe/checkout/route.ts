@@ -1,25 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { stripe, PRICING_PLANS } from "../../../../lib/stripe";
-import { createServerSupabaseClient } from "../../../../lib/supabase";
+import { stripe, PRICING_PLANS } from "@/lib/stripe";
 
 export async function POST(req: NextRequest) {
   try {
-    // Get user from Supabase
-    const supabase = await createServerSupabaseClient();
-    const {
-      data: { user },
-      error: authError,
-    } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get plan from request body
-    const { plan } = await req.json();
+    // Get plan and email from request body
+    const { plan, email } = await req.json();
 
     if (!plan || !PRICING_PLANS[plan as keyof typeof PRICING_PLANS]) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
+    }
+
+    if (!email) {
+      return NextResponse.json({ error: "Email is required" }, { status: 400 });
     }
 
     const selectedPlan = PRICING_PLANS[plan as keyof typeof PRICING_PLANS];
@@ -32,21 +24,20 @@ export async function POST(req: NextRequest) {
     }
 
     // Create or retrieve Stripe customer
-    let customerId = user.user_metadata?.stripe_customer_id;
+    const customers = await stripe.customers.list({
+      email: email,
+      limit: 1,
+    });
 
-    if (!customerId) {
+    let customerId: string;
+
+    if (customers.data.length > 0) {
+      customerId = customers.data[0].id;
+    } else {
       const customer = await stripe.customers.create({
-        email: user.email,
-        metadata: {
-          supabase_user_id: user.id,
-        },
+        email: email,
       });
       customerId = customer.id;
-
-      // Update user metadata with customer ID
-      await supabase.auth.updateUser({
-        data: { stripe_customer_id: customerId },
-      });
     }
 
     // Create checkout session
@@ -63,8 +54,8 @@ export async function POST(req: NextRequest) {
       success_url: `${req.nextUrl.origin}/dashboard?success=true`,
       cancel_url: `${req.nextUrl.origin}/pricing?canceled=true`,
       metadata: {
-        user_id: user.id,
         plan: plan,
+        email: email,
       },
     });
 
