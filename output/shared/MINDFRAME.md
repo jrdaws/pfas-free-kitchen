@@ -38,6 +38,13 @@ git status && curl -s https://httpbin.org/get > /dev/null 2>&1 && echo "✅ Perm
 - If not inline, offer "Generate Next Agent Prompt" as last Quick Actions option
 - Only omit entirely when no obvious next steps exist
 
+### 4. Advanced Prompt Suggestions (When Applicable)
+
+When a better, more advanced prompt could unlock superior results:
+- Offer to suggest an optimized prompt
+- Explain what additional capabilities it would unlock
+- Include as Quick Actions option: "Suggest advanced prompt for [goal]"
+
 Fenced block starts IMMEDIATELY after the header line:
 ```
 Next Agent: [Role] Agent

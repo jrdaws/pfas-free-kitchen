@@ -1,13 +1,17 @@
 /**
  * Export Validation Utilities
- *
- * Core functions for validating framework exports against expected outputs.
+ * 
+ * Functions for validating exported project ZIPs:
+ * - Structure validation (expected files present)
+ * - Dependency validation (npm install succeeds)
+ * - Build validation (npm run build succeeds)
+ * - Baseline comparison (diff against known-good exports)
  */
 
 import * as fs from "fs";
 import * as path from "path";
+import { execSync, spawn } from "child_process";
 import * as crypto from "crypto";
-import { execSync } from "child_process";
 
 // Types
 export interface TestConfig {
@@ -19,7 +23,6 @@ export interface TestConfig {
     template: string;
     projectName: string;
     integrations: Record<string, string>;
-    vision?: string;
     branding?: {
       primaryColor?: string;
       secondaryColor?: string;
@@ -27,144 +30,129 @@ export interface TestConfig {
   };
   expectedFiles: string[];
   expectedEnvVars: string[];
-  expectedDeps: string[];
 }
 
 export interface ValidationResult {
-  id: string;
-  name: string;
-  status: "passed" | "failed" | "skipped";
-  duration: number;
-  structure: {
-    expected: number;
-    found: number;
-    missing: string[];
-    extra: string[];
-  };
-  envVars: {
-    expected: number;
-    found: number;
-    missing: string[];
-  };
-  dependencies: {
-    expected: number;
-    found: number;
-    missing: string[];
-  };
-  build: {
-    success: boolean;
-    duration: number;
-    error?: string;
-  } | null;
-  errors: string[];
-}
-
-export interface DiffResult {
-  identical: boolean;
-  newFiles: string[];
-  removedFiles: string[];
-  modifiedFiles: string[];
-  checksumMismatches: number;
-}
-
-/**
- * Calculate MD5 checksum of a file
- */
-export function getFileChecksum(filePath: string): string {
-  const content = fs.readFileSync(filePath);
-  return crypto.createHash("md5").update(content).digest("hex");
-}
-
-/**
- * Get all files in a directory recursively
- */
-export function getAllFiles(dir: string, baseDir = dir): string[] {
-  const files: string[] = [];
-
-  if (!fs.existsSync(dir)) return files;
-
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
-    const relativePath = path.relative(baseDir, fullPath);
-
-    // Skip node_modules and .git
-    if (entry.name === "node_modules" || entry.name === ".git") continue;
-
-    if (entry.isDirectory()) {
-      files.push(...getAllFiles(fullPath, baseDir));
-    } else {
-      files.push(relativePath);
-    }
-  }
-
-  return files;
-}
-
-/**
- * Generate checksums for all files in a directory
- */
-export function generateChecksums(dir: string): Record<string, string> {
-  const checksums: Record<string, string> = {};
-  const files = getAllFiles(dir);
-
-  for (const file of files) {
-    const fullPath = path.join(dir, file);
-    if (fs.statSync(fullPath).isFile()) {
-      checksums[file] = getFileChecksum(fullPath);
-    }
-  }
-
-  return checksums;
-}
-
-/**
- * Validate project structure
- */
-export function validateStructure(
-  projectPath: string,
-  expectedFiles: string[]
-): {
+  passed: boolean;
   expected: number;
   found: number;
   missing: string[];
   extra: string[];
-} {
-  const actualFiles = getAllFiles(projectPath);
-  const missing: string[] = [];
-  const found: string[] = [];
+}
 
-  for (const expected of expectedFiles) {
-    const exists = actualFiles.some(
-      (actual) => actual === expected || actual.endsWith(expected)
-    );
-    if (exists) {
-      found.push(expected);
+export interface BuildResult {
+  success: boolean;
+  duration: number;
+  stdout: string;
+  stderr: string;
+  exitCode: number;
+}
+
+export interface DiffResult {
+  identical: boolean;
+  added: string[];
+  removed: string[];
+  modified: string[];
+  checksumMismatches: string[];
+}
+
+export interface TestResult {
+  id: string;
+  name: string;
+  tier: number;
+  priority: string;
+  status: "passed" | "failed" | "skipped";
+  duration: number;
+  structure: ValidationResult;
+  dependencies: BuildResult | null;
+  build: BuildResult | null;
+  baseline: DiffResult | null;
+  errors: string[];
+  warnings: string[];
+}
+
+// Constants
+const TIMEOUT_INSTALL = 120000; // 2 minutes
+const TIMEOUT_BUILD = 180000;   // 3 minutes
+
+/**
+ * Download and extract ZIP from export API
+ */
+export async function downloadExport(
+  config: TestConfig,
+  baseUrl: string,
+  outputDir: string
+): Promise<string> {
+  const response = await fetch(`${baseUrl}/api/export/zip`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      template: config.config.template,
+      projectName: config.config.projectName,
+      integrations: config.config.integrations,
+      branding: config.config.branding,
+    }),
+  });
+
+  if (!response.ok) {
+    const text = await response.text();
+    throw new Error(`Export failed: ${response.status} - ${text}`);
+  }
+
+  const arrayBuffer = await response.arrayBuffer();
+  const zipPath = path.join(outputDir, `${config.id}.zip`);
+  fs.writeFileSync(zipPath, Buffer.from(arrayBuffer));
+
+  // Extract ZIP
+  const extractPath = path.join(outputDir, config.id);
+  if (fs.existsSync(extractPath)) {
+    fs.rmSync(extractPath, { recursive: true });
+  }
+  fs.mkdirSync(extractPath, { recursive: true });
+
+  // Use unzip command
+  execSync(`unzip -q "${zipPath}" -d "${extractPath}"`, { 
+    timeout: 30000,
+    stdio: "pipe"
+  });
+
+  return extractPath;
+}
+
+/**
+ * Validate project structure against expected files
+ */
+export function validateStructure(
+  projectPath: string,
+  expectedFiles: string[]
+): ValidationResult {
+  const found: string[] = [];
+  const missing: string[] = [];
+
+  for (const file of expectedFiles) {
+    const filePath = path.join(projectPath, file);
+    if (fs.existsSync(filePath)) {
+      found.push(file);
     } else {
-      missing.push(expected);
+      missing.push(file);
     }
   }
 
-  // Find extra files that weren't expected (only integration-related)
-  const integrationDirs = [
-    "lib/supabase",
-    "lib/stripe",
-    "lib/email",
-    "lib/analytics",
-    "lib/ai",
-    "lib/search",
-    "lib/uploadthing",
-  ];
-  const extra = actualFiles.filter((file) => {
-    const isIntegration = integrationDirs.some((dir) => file.startsWith(dir));
-    const isExpected = expectedFiles.some(
-      (exp) => file === exp || file.endsWith(exp)
-    );
-    return isIntegration && !isExpected;
-  });
+  // Get all actual files for comparison
+  const actualFiles = getAllFiles(projectPath).map(f => 
+    path.relative(projectPath, f)
+  );
+
+  // Find extra files (not in expected list, excluding node_modules and common generated)
+  const extra = actualFiles.filter(f => 
+    !expectedFiles.includes(f) &&
+    !f.startsWith("node_modules") &&
+    !f.startsWith(".next") &&
+    !f.endsWith(".log")
+  );
 
   return {
+    passed: missing.length === 0,
     expected: expectedFiles.length,
     found: found.length,
     missing,
@@ -173,119 +161,156 @@ export function validateStructure(
 }
 
 /**
- * Validate environment variables in .env.local.example
+ * Validate .env.local.example contains required env vars
  */
 export function validateEnvVars(
   projectPath: string,
   expectedVars: string[]
-): {
-  expected: number;
-  found: number;
-  missing: string[];
-} {
+): ValidationResult {
   const envPath = path.join(projectPath, ".env.local.example");
-  const missing: string[] = [];
-  const found: string[] = [];
-
+  
   if (!fs.existsSync(envPath)) {
-    return { expected: expectedVars.length, found: 0, missing: expectedVars };
+    return {
+      passed: expectedVars.length === 0,
+      expected: expectedVars.length,
+      found: 0,
+      missing: expectedVars,
+      extra: [],
+    };
   }
 
-  const envContent = fs.readFileSync(envPath, "utf-8");
+  const content = fs.readFileSync(envPath, "utf-8");
+  const found: string[] = [];
+  const missing: string[] = [];
 
-  for (const varName of expectedVars) {
-    if (envContent.includes(varName)) {
-      found.push(varName);
+  for (const v of expectedVars) {
+    if (content.includes(v)) {
+      found.push(v);
     } else {
-      missing.push(varName);
+      missing.push(v);
     }
   }
 
   return {
+    passed: missing.length === 0,
     expected: expectedVars.length,
     found: found.length,
     missing,
+    extra: [],
   };
 }
 
 /**
- * Validate package.json dependencies
+ * Run npm install in project directory
  */
-export function validateDependencies(
-  projectPath: string,
-  expectedDeps: string[]
-): {
-  expected: number;
-  found: number;
-  missing: string[];
-} {
-  const pkgPath = path.join(projectPath, "package.json");
-  const missing: string[] = [];
-  const found: string[] = [];
-
-  if (!fs.existsSync(pkgPath)) {
-    return { expected: expectedDeps.length, found: 0, missing: expectedDeps };
-  }
-
-  const pkg = JSON.parse(fs.readFileSync(pkgPath, "utf-8"));
-  const allDeps = {
-    ...pkg.dependencies,
-    ...pkg.devDependencies,
-  };
-
-  for (const dep of expectedDeps) {
-    if (allDeps[dep]) {
-      found.push(dep);
-    } else {
-      missing.push(dep);
-    }
-  }
-
-  return {
-    expected: expectedDeps.length,
-    found: found.length,
-    missing,
-  };
-}
-
-/**
- * Run npm install and build
- */
-export function validateBuild(projectPath: string): {
-  success: boolean;
-  duration: number;
-  error?: string;
-} {
+export async function runNpmInstall(projectPath: string): Promise<BuildResult> {
   const start = Date.now();
-
-  try {
-    // Run npm install
-    execSync("npm install --legacy-peer-deps", {
+  
+  return new Promise((resolve) => {
+    const proc = spawn("npm", ["install", "--legacy-peer-deps"], {
       cwd: projectPath,
+      shell: true,
       stdio: "pipe",
-      timeout: 120000, // 2 minutes
     });
 
-    // Run npm run build
-    execSync("npm run build", {
-      cwd: projectPath,
-      stdio: "pipe",
-      timeout: 300000, // 5 minutes
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout?.on("data", (data) => { stdout += data.toString(); });
+    proc.stderr?.on("data", (data) => { stderr += data.toString(); });
+
+    const timeout = setTimeout(() => {
+      proc.kill();
+      resolve({
+        success: false,
+        duration: Date.now() - start,
+        stdout,
+        stderr: stderr + "\n[TIMEOUT: install took too long]",
+        exitCode: -1,
+      });
+    }, TIMEOUT_INSTALL);
+
+    proc.on("close", (code) => {
+      clearTimeout(timeout);
+      resolve({
+        success: code === 0,
+        duration: Date.now() - start,
+        stdout,
+        stderr,
+        exitCode: code ?? -1,
+      });
     });
 
-    return { success: true, duration: Date.now() - start };
-  } catch (error) {
-    const err = error as { stderr?: Buffer; message: string };
-    return {
-      success: false,
-      duration: Date.now() - start,
-      error: err.stderr?.toString() || err.message,
-    };
-  }
+    proc.on("error", (err) => {
+      clearTimeout(timeout);
+      resolve({
+        success: false,
+        duration: Date.now() - start,
+        stdout,
+        stderr: stderr + "\n" + err.message,
+        exitCode: -1,
+      });
+    });
+  });
 }
 
 /**
- * Compare project to baseline
+ * Run npm run build in project directory
+ */
+export async function runNpmBuild(projectPath: string): Promise<BuildResult> {
+  const start = Date.now();
+  
+  return new Promise((resolve) => {
+    const proc = spawn("npm", ["run", "build"], {
+      cwd: projectPath,
+      shell: true,
+      stdio: "pipe",
+      env: { ...process.env, CI: "true" },
+    });
+
+    let stdout = "";
+    let stderr = "";
+
+    proc.stdout?.on("data", (data) => { stdout += data.toString(); });
+    proc.stderr?.on("data", (data) => { stderr += data.toString(); });
+
+    const timeout = setTimeout(() => {
+      proc.kill();
+      resolve({
+        success: false,
+        duration: Date.now() - start,
+        stdout,
+        stderr: stderr + "\n[TIMEOUT: build took too long]",
+        exitCode: -1,
+      });
+    }, TIMEOUT_BUILD);
+
+    proc.on("close", (code) => {
+      clearTimeout(timeout);
+      resolve({
+        success: code === 0,
+        duration: Date.now() - start,
+        stdout,
+        stderr,
+        exitCode: code ?? -1,
+      });
+    });
+
+    proc.on("error", (err) => {
+      clearTimeout(timeout);
+      resolve({
+        success: false,
+        duration: Date.now() - start,
+        stdout,
+        stderr: stderr + "\n" + err.message,
+        exitCode: -1,
+      });
+    });
+  });
+}
+
+/**
+ * Compare project to baseline export
  */
 export function compareToBaseline(
   projectPath: string,
@@ -294,181 +319,231 @@ export function compareToBaseline(
   if (!fs.existsSync(baselinePath)) {
     return {
       identical: false,
-      newFiles: getAllFiles(projectPath),
-      removedFiles: [],
-      modifiedFiles: [],
-      checksumMismatches: 0,
+      added: [],
+      removed: [],
+      modified: [],
+      checksumMismatches: ["Baseline does not exist"],
     };
   }
 
-  const projectFiles = new Set(getAllFiles(projectPath));
-  const baselineFiles = new Set(getAllFiles(baselinePath));
+  const projectFiles = getAllFiles(projectPath)
+    .map(f => path.relative(projectPath, f))
+    .filter(f => !f.startsWith("node_modules") && !f.startsWith(".next"));
 
-  const newFiles: string[] = [];
-  const removedFiles: string[] = [];
-  const modifiedFiles: string[] = [];
-  let checksumMismatches = 0;
+  const baselineFiles = getAllFiles(baselinePath)
+    .map(f => path.relative(baselinePath, f))
+    .filter(f => !f.startsWith("node_modules") && !f.startsWith(".next"));
 
-  // Find new and modified files
-  for (const file of projectFiles) {
-    if (!baselineFiles.has(file)) {
-      newFiles.push(file);
-    } else {
-      // Compare checksums
-      const projectChecksum = getFileChecksum(path.join(projectPath, file));
-      const baselineChecksum = getFileChecksum(path.join(baselinePath, file));
-      if (projectChecksum !== baselineChecksum) {
-        modifiedFiles.push(file);
-        checksumMismatches++;
-      }
-    }
-  }
+  const projectSet = new Set(projectFiles);
+  const baselineSet = new Set(baselineFiles);
 
-  // Find removed files
-  for (const file of baselineFiles) {
-    if (!projectFiles.has(file)) {
-      removedFiles.push(file);
+  const added = projectFiles.filter(f => !baselineSet.has(f));
+  const removed = baselineFiles.filter(f => !projectSet.has(f));
+  const common = projectFiles.filter(f => baselineSet.has(f));
+
+  const checksumMismatches: string[] = [];
+
+  for (const file of common) {
+    const projContent = fs.readFileSync(path.join(projectPath, file));
+    const baseContent = fs.readFileSync(path.join(baselinePath, file));
+    
+    const projHash = crypto.createHash("md5").update(projContent).digest("hex");
+    const baseHash = crypto.createHash("md5").update(baseContent).digest("hex");
+    
+    if (projHash !== baseHash) {
+      checksumMismatches.push(file);
     }
   }
 
   return {
-    identical: newFiles.length === 0 && removedFiles.length === 0 && modifiedFiles.length === 0,
-    newFiles,
-    removedFiles,
-    modifiedFiles,
+    identical: added.length === 0 && removed.length === 0 && checksumMismatches.length === 0,
+    added,
+    removed,
+    modified: checksumMismatches,
     checksumMismatches,
   };
 }
 
 /**
- * Run a single test
+ * Generate checksums for all files in a directory
  */
-export async function runTest(
-  test: TestConfig,
-  projectPath: string,
-  options: { skipBuild?: boolean; baselinePath?: string } = {}
-): Promise<ValidationResult> {
-  const start = Date.now();
-  const errors: string[] = [];
+export function generateChecksums(dirPath: string): Record<string, string> {
+  const checksums: Record<string, string> = {};
+  const files = getAllFiles(dirPath).filter(f => 
+    !f.includes("node_modules") && !f.includes(".next")
+  );
 
-  // Validate structure
-  const structure = validateStructure(projectPath, test.expectedFiles);
-  if (structure.missing.length > 0) {
-    errors.push(`Missing files: ${structure.missing.join(", ")}`);
+  for (const file of files) {
+    const content = fs.readFileSync(file);
+    const hash = crypto.createHash("md5").update(content).digest("hex");
+    const relativePath = path.relative(dirPath, file);
+    checksums[relativePath] = hash;
   }
 
-  // Validate env vars
-  const envVars = validateEnvVars(projectPath, test.expectedEnvVars);
-  if (envVars.missing.length > 0) {
-    errors.push(`Missing env vars: ${envVars.missing.join(", ")}`);
+  return checksums;
+}
+
+/**
+ * Recursively get all files in a directory
+ */
+function getAllFiles(dirPath: string): string[] {
+  const files: string[] = [];
+  
+  if (!fs.existsSync(dirPath)) {
+    return files;
   }
 
-  // Validate dependencies
-  const dependencies = validateDependencies(projectPath, test.expectedDeps);
-  if (dependencies.missing.length > 0) {
-    errors.push(`Missing dependencies: ${dependencies.missing.join(", ")}`);
-  }
-
-  // Run build if not skipped
-  let build = null;
-  if (!options.skipBuild) {
-    build = validateBuild(projectPath);
-    if (!build.success) {
-      errors.push(`Build failed: ${build.error?.slice(0, 200)}`);
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+  
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    
+    if (entry.isDirectory()) {
+      if (!["node_modules", ".next", ".git"].includes(entry.name)) {
+        files.push(...getAllFiles(fullPath));
+      }
+    } else {
+      files.push(fullPath);
     }
   }
 
-  const status =
-    errors.length === 0
-      ? "passed"
-      : structure.missing.length > 0 || (build && !build.success)
-      ? "failed"
-      : "passed";
-
-  return {
-    id: test.id,
-    name: test.name,
-    status,
-    duration: Date.now() - start,
-    structure,
-    envVars,
-    dependencies,
-    build,
-    errors,
-  };
+  return files;
 }
 
 /**
  * Generate summary report
  */
-export function generateReport(results: ValidationResult[]): string {
-  const passed = results.filter((r) => r.status === "passed").length;
-  const failed = results.filter((r) => r.status === "failed").length;
-
-  let report = `# Export Validation Results\n\n`;
-  report += `**Date**: ${new Date().toISOString()}\n`;
-  report += `**Total**: ${results.length} | **Passed**: ${passed} | **Failed**: ${failed}\n\n`;
+export function generateReport(results: TestResult[]): string {
+  const lines: string[] = [
+    "Export Validation Results",
+    "========================",
+    "",
+  ];
 
   // Group by tier
-  const tiers = new Map<number, ValidationResult[]>();
-  for (const result of results) {
-    const tier = parseInt(result.id.slice(1, 3)) <= 5 ? 1 : parseInt(result.id.slice(1, 3)) <= 10 ? 2 : parseInt(result.id.slice(1, 3)) <= 15 ? 3 : 4;
-    if (!tiers.has(tier)) tiers.set(tier, []);
-    tiers.get(tier)!.push(result);
+  const byTier: Record<number, TestResult[]> = {};
+  for (const r of results) {
+    if (!byTier[r.tier]) byTier[r.tier] = [];
+    byTier[r.tier].push(r);
   }
 
-  for (const [tier, tierResults] of tiers) {
-    report += `## Tier ${tier}\n\n`;
-    for (const result of tierResults) {
-      const icon = result.status === "passed" ? "✅" : "❌";
-      const fileStatus = `[files: ${result.structure.found}/${result.structure.expected}]`;
-      const buildStatus = result.build
-        ? `[build: ${result.build.success ? "pass" : "FAIL"}]`
-        : "";
-      report += `${icon} **${result.id}** ${result.name} ${fileStatus} ${buildStatus}\n`;
+  const tierNames = ["", "Single Integration", "Common Combinations", "Full Stack", "Edge Cases"];
 
-      if (result.errors.length > 0) {
-        for (const error of result.errors) {
-          report += `   - ${error}\n`;
+  for (const tier of [1, 2, 3, 4]) {
+    const tierResults = byTier[tier] || [];
+    if (tierResults.length === 0) continue;
+
+    lines.push(`Tier ${tier}: ${tierNames[tier]} Tests`);
+    
+    for (const r of tierResults) {
+      const icon = r.status === "passed" ? "✅" : r.status === "skipped" ? "⏭️" : "❌";
+      const buildStatus = r.build 
+        ? (r.build.success ? "pass" : "FAIL") 
+        : "skip";
+      const fileStatus = `${r.structure.found}/${r.structure.expected}`;
+      
+      lines.push(`  ${icon} ${r.id} ${r.name.padEnd(30)} [build: ${buildStatus}, files: ${fileStatus}]`);
+      
+      if (r.errors.length > 0) {
+        for (const err of r.errors) {
+          lines.push(`      ⚠️ ${err}`);
         }
       }
     }
-    report += "\n";
+    lines.push("");
   }
 
-  return report;
+  // Summary
+  const total = results.length;
+  const passed = results.filter(r => r.status === "passed").length;
+  const failed = results.filter(r => r.status === "failed").length;
+
+  const byPriority: Record<string, { total: number; passed: number }> = {};
+  for (const r of results) {
+    if (!byPriority[r.priority]) byPriority[r.priority] = { total: 0, passed: 0 };
+    byPriority[r.priority].total++;
+    if (r.status === "passed") byPriority[r.priority].passed++;
+  }
+
+  lines.push("Summary:");
+  lines.push(`  Total: ${total} | Passed: ${passed} | Failed: ${failed}`);
+  
+  for (const p of ["P0", "P1", "P2"]) {
+    const stats = byPriority[p];
+    if (!stats) continue;
+    const pct = Math.round((stats.passed / stats.total) * 100);
+    const icon = pct === 100 ? "✅" : pct >= 75 ? "⚠️" : "❌";
+    lines.push(`  ${p}: ${stats.passed}/${stats.total} (${pct}%) ${icon}`);
+  }
+
+  return lines.join("\n");
 }
 
 /**
- * Save baseline
+ * Generate gap analysis markdown report
  */
-export function saveBaseline(
-  projectPath: string,
-  baselineDir: string,
-  testId: string
-): void {
-  const targetDir = path.join(baselineDir, testId);
-
-  // Remove existing baseline
-  if (fs.existsSync(targetDir)) {
-    fs.rmSync(targetDir, { recursive: true });
+export function generateGapAnalysis(results: TestResult[]): string {
+  const failed = results.filter(r => r.status === "failed");
+  
+  if (failed.length === 0) {
+    return "# Gap Analysis Report\n\n✅ All tests passed! No gaps found.\n";
   }
 
-  // Copy project to baseline (excluding node_modules)
-  fs.mkdirSync(targetDir, { recursive: true });
-  const files = getAllFiles(projectPath);
-  for (const file of files) {
-    const srcPath = path.join(projectPath, file);
-    const destPath = path.join(targetDir, file);
-    fs.mkdirSync(path.dirname(destPath), { recursive: true });
-    fs.copyFileSync(srcPath, destPath);
+  const lines: string[] = [
+    "# Gap Analysis Report",
+    "",
+    `Generated: ${new Date().toISOString()}`,
+    "",
+    `Failed Tests: ${failed.length}/${results.length}`,
+    "",
+    "---",
+    "",
+    "## Missing Files",
+    "",
+    "| Test | Expected | Found | Missing |",
+    "|------|----------|-------|---------|",
+  ];
+
+  for (const r of failed) {
+    if (r.structure.missing.length > 0) {
+      const missing = r.structure.missing.slice(0, 3).join(", ");
+      const more = r.structure.missing.length > 3 ? ` (+${r.structure.missing.length - 3} more)` : "";
+      lines.push(`| ${r.id} | ${r.structure.expected} | ${r.structure.found} | ${missing}${more} |`);
+    }
   }
 
-  // Save checksums
-  const checksums = generateChecksums(targetDir);
-  fs.writeFileSync(
-    path.join(targetDir, "checksums.json"),
-    JSON.stringify(checksums, null, 2)
-  );
+  lines.push("");
+  lines.push("## Build Failures");
+  lines.push("");
+  lines.push("| Test | Error | Root Cause |");
+  lines.push("|------|-------|------------|");
+
+  for (const r of failed) {
+    if (r.build && !r.build.success) {
+      const errorMatch = r.build.stderr.match(/error[:\s]+(.+)/i);
+      const error = errorMatch ? errorMatch[1].substring(0, 50) : "Unknown error";
+      lines.push(`| ${r.id} | ${error} | See logs |`);
+    }
+  }
+
+  lines.push("");
+  lines.push("## Recommendations");
+  lines.push("");
+
+  for (const r of failed) {
+    lines.push(`### ${r.id}: ${r.name}`);
+    lines.push("");
+    
+    if (r.structure.missing.length > 0) {
+      lines.push(`- Add missing files: ${r.structure.missing.join(", ")}`);
+    }
+    
+    for (const err of r.errors) {
+      lines.push(`- Fix: ${err}`);
+    }
+    
+    lines.push("");
+  }
+
+  return lines.join("\n");
 }
-
