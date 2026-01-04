@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 0edfa72 2026-01-04 test: all tier 1 export tests pass (12/12)
 - c64cbe1 2026-01-04 feat(website): add dashboard with connected services UI
 - 610c280 2026-01-04 feat: dynamic preview integration badges and template-specific CTAs
 - 5dd762b 2026-01-04 fix: progress bar can now reach 100% - remove hidden claude-code tool
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 7b96e5b 2026-01-03 docs: add deprecation schedule for PreviewCard and ProjectOverviewBox
 - 853d3fc 2026-01-03 chore: mark P1 remaining integrations task as done
 - e874913 2026-01-03 feat: add 6 new integration templates
-- e1f8afc 2026-01-03 feat(features): complete feature-to-code mapping with 31 features
 
 ## Agent Governance Structure
 
