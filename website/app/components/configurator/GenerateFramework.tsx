@@ -257,7 +257,7 @@ export function GenerateFramework({ className }: GenerateFrameworkProps) {
                   {isReady ? "Ready to Export!" : "Almost There..."}
                 </h3>
                 <p className="text-sm text-muted-foreground">
-                  {requiredComplete}/{requiredTotal} required steps complete
+                  {requiredComplete}/{requiredTotal} pre-export requirements met
                 </p>
               </div>
             </div>

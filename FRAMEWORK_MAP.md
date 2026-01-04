@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 6528df1 2026-01-03 feat(seo): add complete SEO content pipeline
 - d947dd0 2026-01-03 feat(preview): add feature preview components for WYSIWYG experience
 - 0fde215 2026-01-03 feat: add integration templates and project generator
 - 45da8a0 2026-01-03 feat: connect sidebar integrations to existing preview system
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - f299ea9 2026-01-03 feat(research): add AI-powered domain & URL analysis
 - b4e3eda 2025-12-27 feat(configurator): add P1/P2/P3 UI enhancements
 - b4c98dc 2025-12-27 feat(configurator): add missing configuration steps
-- dafd8bc 2025-12-27 feat(sidebar): make service indicators dynamic based on step completion
 
 ## Agent Governance Structure
 

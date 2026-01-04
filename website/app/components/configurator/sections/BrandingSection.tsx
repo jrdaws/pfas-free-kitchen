@@ -38,7 +38,7 @@ export function BrandingSection({
   return (
     <div className="space-y-2.5">
       <p className="text-[10px] text-white/50">
-        Choose your brand colors
+        Colors for your generated project
       </p>
 
       {/* Color Scheme Dropdown */}

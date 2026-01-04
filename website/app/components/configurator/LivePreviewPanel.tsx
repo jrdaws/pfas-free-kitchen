@@ -163,24 +163,24 @@ export function LivePreviewPanel({
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/80 backdrop-blur">
-        <div className="flex items-center gap-3">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/80 backdrop-blur overflow-hidden">
+        <div className="flex items-center gap-3 min-w-0 flex-1">
           <button
             onClick={onToggle}
-            className="p-1.5 rounded hover:bg-muted transition-colors"
+            className="p-1.5 rounded hover:bg-muted transition-colors flex-shrink-0"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Sparkles className="h-4 w-4 text-primary" />
-            <span className="font-medium text-sm">Live Preview</span>
+            <span className="font-medium text-sm whitespace-nowrap">Live Preview</span>
           </div>
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs flex-shrink-0 hidden sm:inline-flex">
             {featureCount + configuredIntegrations} integration{(featureCount + configuredIntegrations) !== 1 ? 's' : ''}
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-shrink-0">
           {/* AI Enhance Button */}
           <Button
             variant="outline"

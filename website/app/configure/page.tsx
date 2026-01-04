@@ -991,16 +991,16 @@ export default function ConfigurePage() {
             onToggle={() => setShowLivePreview(!showLivePreview)} 
           />
 
-          {/* Feature/Integration Counts */}
+          {/* Feature/Service Counts - distinct labels to avoid confusion */}
           <div className="hidden sm:flex items-center gap-3 text-sm">
             <div className="flex items-center gap-1.5 text-foreground-muted">
               <span className="font-medium text-primary">{Object.values(selectedFeatures).flat().length}</span>
-              <span>integrations</span>
+              <span>features</span>
             </div>
             <span className="text-border">•</span>
             <div className="flex items-center gap-1.5 text-foreground-muted">
               <span className="font-medium text-primary">{Object.values(integrations).filter(Boolean).length}</span>
-              <span>integrations</span>
+              <span>services</span>
             </div>
           </div>
 
@@ -1044,6 +1044,7 @@ export default function ConfigurePage() {
         vision={vision}
         mission={mission}
         inspirations={inspirations}
+        branding={{ colorScheme, customColors }}
         isVisible={showLivePreview}
         onToggle={() => setShowLivePreview(!showLivePreview)}
       />

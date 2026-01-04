@@ -49,6 +49,69 @@ const INTEGRATION_MANIFESTS: Record<string, Record<string, IntegrationManifest>>
       ],
     },
   },
+  email: {
+    resend: {
+      id: "resend",
+      name: "Resend",
+      category: "email",
+      version: "1.0.0",
+      description: "Transactional email with React Email templates",
+      files: [
+        { path: "lib/email/resend.ts", template: "email/resend/lib/resend.ts" },
+        { path: "lib/email/send.ts", template: "email/resend/lib/send.ts" },
+        { path: "emails/WelcomeEmail.tsx", template: "email/resend/emails/WelcomeEmail.tsx", transform: "mustache" },
+        { path: "emails/PasswordResetEmail.tsx", template: "email/resend/emails/PasswordResetEmail.tsx", transform: "mustache" },
+        { path: "emails/InvoiceEmail.tsx", template: "email/resend/emails/InvoiceEmail.tsx", transform: "mustache" },
+        { path: "app/api/email/send/route.ts", template: "email/resend/app/api/send/route.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "resend": "^3.0.0",
+          "@react-email/components": "^0.0.15",
+          "react-email": "^2.0.0",
+        },
+        env: [
+          { name: "RESEND_API_KEY", description: "Resend API key", required: true },
+          { name: "EMAIL_FROM", description: "Default sender email", required: true, example: "noreply@yourdomain.com" },
+        ],
+      },
+      postInstall: [
+        "Sign up at https://resend.com",
+        "Get your API key from the dashboard",
+        "Add and verify your domain for production emails",
+      ],
+    },
+  },
+  analytics: {
+    posthog: {
+      id: "posthog",
+      name: "PostHog",
+      category: "analytics",
+      version: "1.0.0",
+      description: "Product analytics with feature flags",
+      files: [
+        { path: "lib/analytics/posthog.ts", template: "analytics/posthog/lib/posthog.ts" },
+        { path: "components/analytics/PostHogProvider.tsx", template: "analytics/posthog/components/PostHogProvider.tsx" },
+        { path: "components/analytics/PostHogPageView.tsx", template: "analytics/posthog/components/PostHogPageView.tsx" },
+        { path: "hooks/useAnalytics.ts", template: "analytics/posthog/hooks/useAnalytics.ts" },
+        { path: "hooks/useFeatureFlag.ts", template: "analytics/posthog/hooks/useFeatureFlag.ts" },
+      ],
+      dependencies: {
+        npm: {
+          "posthog-js": "^1.100.0",
+        },
+        env: [
+          { name: "NEXT_PUBLIC_POSTHOG_KEY", description: "PostHog project API key", required: true, public: true },
+          { name: "NEXT_PUBLIC_POSTHOG_HOST", description: "PostHog host URL", required: false, example: "https://app.posthog.com", public: true },
+        ],
+      },
+      postInstall: [
+        "Sign up at https://posthog.com",
+        "Create a project and copy your API key",
+        "Add PostHogProvider to your root layout",
+      ],
+    },
+  },
   payments: {
     stripe: {
       id: "stripe",

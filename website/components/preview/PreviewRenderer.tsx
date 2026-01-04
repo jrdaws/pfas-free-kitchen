@@ -155,7 +155,7 @@ export function PreviewRenderer({
     <div 
       className={`w-full min-h-screen bg-[#0A0A0A] ${className}`}
       style={{
-        ...brandingStyles,
+        ...(brandingStyles as React.CSSProperties),
         transform: scale !== 1 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
         width: scale !== 1 ? `${100 / scale}%` : undefined,
