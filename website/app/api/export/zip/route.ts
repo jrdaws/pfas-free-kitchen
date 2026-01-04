@@ -182,21 +182,11 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/ai/openai/components/ai/chat-interface.tsx",
     "integrations/ai/openai/lib/openai.ts",
   ],
-  "ai:anthropic": [
-    "integrations/ai/anthropic/app/api/ai/claude/route.ts",
-    "integrations/ai/anthropic/components/ai/claude-chat.tsx",
-    "integrations/ai/anthropic/lib/anthropic.ts",
-  ],
   "analytics:posthog": [
     "integrations/analytics/posthog/components/analytics/posthog-provider.tsx",
     "integrations/analytics/posthog/components/analytics/use-posthog.tsx",
     "integrations/analytics/posthog/lib/posthog.ts",
   ],
-  "analytics:plausible": [
-    "integrations/analytics/plausible/components/analytics/plausible-provider.tsx",
-    "integrations/analytics/plausible/components/analytics/use-plausible.tsx",
-  ],
-  "storage:r2": [],  // Will generate boilerplate inline
   "storage:s3": [],  // Will generate boilerplate inline
   "storage:uploadthing": [
     "integrations/storage/uploadthing/app/api/uploadthing/core.ts",
@@ -443,9 +433,6 @@ function getRequiredEnvVars(integrations: Record<string, string>): string[] {
       case "analytics:plausible":
         vars.push("NEXT_PUBLIC_PLAUSIBLE_DOMAIN");
         break;
-      case "storage:r2":
-        vars.push("R2_ACCESS_KEY_ID", "R2_SECRET_ACCESS_KEY", "R2_BUCKET_NAME", "R2_ENDPOINT");
-        break;
       case "storage:s3":
         vars.push("AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_S3_BUCKET", "AWS_REGION");
         break;
@@ -490,14 +477,8 @@ function getRequiredEnvVars(integrations: Record<string, string>): string[] {
         vars.push("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID", "LEMONSQUEEZY_WEBHOOK_SECRET");
         break;
       // Phase 2 new integrations
-      case "analytics:plausible":
-        vars.push("NEXT_PUBLIC_PLAUSIBLE_DOMAIN");
-        break;
       case "email:sendgrid":
         vars.push("SENDGRID_API_KEY", "SENDGRID_FROM_EMAIL", "SENDGRID_FROM_NAME");
-        break;
-      case "ai:anthropic":
-        vars.push("ANTHROPIC_API_KEY");
         break;
       case "backgroundJobs:trigger":
         vars.push("TRIGGER_API_KEY", "TRIGGER_API_URL");
@@ -614,17 +595,10 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
         deps["@lemonsqueezy/lemonsqueezy.js"] = "^3.0.0";
         break;
       // Phase 2 new integrations
-      case "analytics:plausible":
-        deps["next-plausible"] = "^3.12.0";
-        break;
       case "email:sendgrid":
         deps["@sendgrid/mail"] = "^8.1.0";
         deps["@react-email/components"] = "^0.0.12";
         deps["react-email"] = "^2.0.0";
-        break;
-      case "ai:anthropic":
-        deps["@anthropic-ai/sdk"] = "^0.17.0";
-        deps["ai"] = "^3.0.0";
         break;
       case "backgroundJobs:trigger":
         deps["@trigger.dev/sdk"] = "^3.0.0";
@@ -638,10 +612,6 @@ function getIntegrationDependencies(integrations: Record<string, string>): Recor
         break;
       case "search:meilisearch":
         deps["meilisearch"] = "^0.37.0";
-        break;
-      case "storage:r2":
-        deps["@aws-sdk/client-s3"] = "^3.500.0";
-        deps["@aws-sdk/s3-request-presigner"] = "^3.500.0";
         break;
     }
   });

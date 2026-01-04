@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 499f523 2026-01-04 feat: Phase 3 templates - Contentful, Meilisearch, Cloudflare R2
 - 9768052 2026-01-04 feat: Phase 2 templates - Plausible, SendGrid, Anthropic, Trigger.dev
 - 14b92a6 2026-01-04 feat: Phase 1 templates - NextAuth, Paddle, LemonSqueezy, Checkout, Subscriptions
 - 109f07f 2026-01-04 chore: move completed tasks to done
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - d727097 2026-01-03 docs(integrations): add Algolia, Sentry, and Sanity guides
 - 6b1c2b9 2026-01-03 test(export): prepare export validation tests for P0 fixes
 - 81c2afe 2026-01-03 fix(P0): export builds failing due to missing deps and lazy init
-- f92d2ad 2026-01-03 test: add 8 new test cases for new integrations
 
 ## Agent Governance Structure
 
