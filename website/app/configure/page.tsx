@@ -310,6 +310,32 @@ export default function ConfigurePage() {
   // Calculate progress
   const progress = (completedSteps.size / TOTAL_STEPS) * 100;
 
+  // Auto-complete steps when providers are selected
+  useEffect(() => {
+    // Map providers to their step numbers (Step type = 1-23)
+    if (aiProvider && !completedSteps.has(5)) completeStep(5 as Step);
+    if (paymentProvider && !completedSteps.has(6)) completeStep(6 as Step);
+    if (emailProvider && !completedSteps.has(7)) completeStep(7 as Step);
+    if (analyticsProvider && !completedSteps.has(8)) completeStep(8 as Step);
+    if (authProvider && !completedSteps.has(9)) completeStep(9 as Step);
+    if (storageProvider && !completedSteps.has(10)) completeStep(10 as Step);
+    if (searchProvider && !completedSteps.has(11)) completeStep(11 as Step);
+    if (cmsProvider && !completedSteps.has(12)) completeStep(12 as Step);
+    if (monitoringProvider && !completedSteps.has(13)) completeStep(13 as Step);
+    if (imageOptProvider && !completedSteps.has(14)) completeStep(14 as Step);
+    if (backgroundJobsProvider && !completedSteps.has(15)) completeStep(15 as Step);
+    if (notificationsProvider && !completedSteps.has(16)) completeStep(16 as Step);
+    if (featureFlagsProvider && !completedSteps.has(17)) completeStep(17 as Step);
+  }, [aiProvider, paymentProvider, emailProvider, analyticsProvider, authProvider, storageProvider, searchProvider, cmsProvider, monitoringProvider, imageOptProvider, backgroundJobsProvider, notificationsProvider, featureFlagsProvider, completedSteps, completeStep]);
+
+  // Auto-complete step 4 (core-features) when features are selected
+  useEffect(() => {
+    const hasFeatures = Object.values(selectedFeatures).flat().length > 0;
+    if (hasFeatures && !completedSteps.has(4)) {
+      completeStep(4 as Step);
+    }
+  }, [selectedFeatures, completedSteps, completeStep]);
+
   // Handle research API call
   const handleStartResearch = useCallback(async () => {
     if (!researchDomain.trim()) return;

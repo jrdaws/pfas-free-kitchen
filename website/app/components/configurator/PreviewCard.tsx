@@ -46,13 +46,13 @@ export function PreviewCard({ className, compact = false }: PreviewCardProps) {
   const featureCount = Object.values(selectedFeatures).flat().length;
   const integrationCount = Object.values(integrations).filter(Boolean).length;
   const completedCount = completedSteps.size;
-  const totalSteps = 15; // Match sidebar's NAV_SECTIONS.length
+  const totalSteps = 23; // Match NAV_SECTIONS.length (23 steps)
 
-  // Check service status
+  // Check service status (steps 20, 21, 22)
   const services = {
-    github: toolStatus.github || completedSteps.has(5),
-    supabase: toolStatus.supabase || completedSteps.has(7),
-    vercel: toolStatus.vercel || completedSteps.has(8),
+    github: toolStatus.github || completedSteps.has(20),
+    supabase: toolStatus.supabase || completedSteps.has(21),
+    vercel: toolStatus.vercel || completedSteps.has(22),
   };
 
   const copyCommand = async () => {

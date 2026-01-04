@@ -1,130 +1,89 @@
-# Task: Build Feature Code Templates
+# Task: Create Feature Code Templates
+Priority: P1
+Agent: Website Agent
+Date: 2026-01-03
 
-## Context
-The Platform Agent has completed integration templates (Supabase Auth, Stripe, Resend, PostHog). Now we need feature code templates that combine these integrations into user-facing functionality.
+## Objective
+Create code templates for the 3 most commonly selected features. These templates get included in generated projects when users select these features.
 
-## Your Task
-Create feature code templates in `packages/templates/features/` that generate working code for common features.
-
-## Priority Features to Build
+## Feature Templates to Build
 
 ### 1. Shopping Cart Feature
 Location: `packages/templates/features/ecommerce/shopping-cart/`
 
-Files needed:
-```
-shopping-cart/
-├── files.json              # Manifest
-├── components/
-│   ├── CartDrawer.tsx      # Slide-out cart panel
-│   ├── CartItem.tsx        # Individual cart item row
-│   ├── AddToCartButton.tsx # Add to cart button
-│   └── CartBadge.tsx       # Cart icon with count badge
-├── context/
-│   └── CartContext.tsx     # Cart state provider
-├── hooks/
-│   └── useCart.ts          # Cart operations hook
-└── lib/
-    └── cart-storage.ts     # Local storage persistence
-```
+Required files:
+- `files.json` - Manifest with dependencies
+- `lib/cart/cart-context.tsx` - React context for cart state
+- `lib/cart/cart-utils.ts` - Price formatting, totals, etc.
+- `components/CartDrawer.tsx` - Slide-out cart panel
+- `components/CartItem.tsx` - Individual cart item display
+- `components/AddToCartButton.tsx` - Add to cart trigger
+- `hooks/useCart.ts` - Cart operations hook
 
-Requirements:
-- Works with or without auth
-- Persists to localStorage by default
-- If Stripe integration present, include checkout integration
-- TypeScript with proper types
+Features:
+- Add/remove/update quantities
+- Persistent storage (localStorage)
+- Cart totals calculation
+- Empty cart state
 
-### 2. Admin Dashboard Feature
-Location: `packages/templates/features/admin/dashboard/`
+### 2. User Registration Feature  
+Location: `packages/templates/features/user-management/email-registration/`
 
-Files needed:
-```
-dashboard/
-├── files.json
-├── app/
-│   ├── admin/
-│   │   ├── layout.tsx      # Admin layout with sidebar
-│   │   ├── page.tsx        # Dashboard overview
-│   │   └── users/
-│   │       └── page.tsx    # User management
-├── components/
-│   ├── AdminSidebar.tsx
-│   ├── StatsCard.tsx
-│   └── UserTable.tsx
-└── lib/
-    └── admin-guard.ts      # Admin role check
-```
+Required files:
+- `files.json` - Manifest (depends on auth integration)
+- `components/SignupForm.tsx` - Email/password registration
+- `components/LoginForm.tsx` - Login form
+- `components/ForgotPasswordForm.tsx` - Password reset request
+- `components/ResetPasswordForm.tsx` - Set new password
+- `lib/auth/validation.ts` - Form validation helpers
+- `hooks/useAuth.ts` - Auth state and actions hook
 
-Requirements:
-- Requires auth integration
-- Role-based access (admin role)
-- Shows user count, recent signups stats
-- If analytics present, show analytics widgets
+Features:
+- Email/password validation
+- Password strength indicator
+- Remember me option
+- Redirect after auth
 
-### 3. Subscription Management Feature
-Location: `packages/templates/features/billing/subscription/`
+### 3. Admin Dashboard Feature
+Location: `packages/templates/features/enterprise/admin-dashboard/`
 
-Files needed:
-```
-subscription/
-├── files.json
-├── components/
-│   ├── CurrentPlan.tsx     # Shows current subscription
-│   ├── PlanSelector.tsx    # Upgrade/downgrade UI
-│   └── UsageDisplay.tsx    # Usage limits/quotas
-├── hooks/
-│   └── useSubscription.ts
-└── app/
-    └── account/
-        └── billing/
-            └── page.tsx
-```
+Required files:
+- `files.json` - Manifest
+- `app/(admin)/layout.tsx` - Admin layout with sidebar
+- `app/(admin)/dashboard/page.tsx` - Overview page
+- `app/(admin)/users/page.tsx` - User management
+- `components/admin/AdminSidebar.tsx` - Navigation sidebar
+- `components/admin/StatsCard.tsx` - Metric display card
+- `components/admin/DataTable.tsx` - Sortable data table
+- `lib/admin/permissions.ts` - Role-based access helpers
 
-Requirements:
-- Requires Stripe payments integration
-- Requires auth integration
-- Shows current plan, usage, billing date
+Features:
+- Protected routes (admin only)
+- Stats overview cards
+- User CRUD operations
+- Role/permission checks
 
 ## Manifest Schema
-Each `files.json` should follow this structure:
-
 ```json
 {
   "id": "shopping-cart",
   "name": "Shopping Cart",
   "category": "ecommerce",
-  "version": "1.0.0",
-  "description": "Full shopping cart with checkout",
   "files": [
-    { "path": "components/CartDrawer.tsx", "template": "components/CartDrawer.tsx" }
+    { "path": "lib/cart/cart-context.tsx", "template": "cart-context.tsx" }
   ],
   "dependencies": {
-    "npm": { "zustand": "^4.5.0" },
-    "integrations": ["payments"],
-    "features": []
+    "npm": ["zustand"],
+    "features": [],
+    "integrations": []
   },
-  "previewComponent": "CartBadge"
+  "previewComponent": "CartIcon"
 }
 ```
 
-## Reference
-- Existing integration templates: `packages/templates/integrations/`
-- Type definitions: `website/lib/generator/types.ts`
-- Task breakdown: `output/shared/PREVIEW_GENERATION_TASKS.md`
-
 ## Success Criteria
-- [ ] Shopping cart feature works standalone
-- [ ] Shopping cart integrates with Stripe when present
-- [ ] Admin dashboard has working user list (mock data)
-- [ ] Subscription management shows plan details
-- [ ] All features use TypeScript with proper types
-- [ ] Each feature has a `files.json` manifest
-
-## Deliverables
-1. Feature templates in `packages/templates/features/`
-2. Update `website/lib/generator/feature-loader.ts` (create if needed)
-3. Update `PREVIEW_GENERATION_TASKS.md` when complete
-
----
-Website Agent - work on this in parallel with Platform Agent
-
+- [ ] All 3 feature templates created
+- [ ] Each has files.json manifest
+- [ ] Code is production-ready (TypeScript, proper types)
+- [ ] Components match preview components visually
+- [ ] Build passes
