@@ -1,0 +1,144 @@
+# P0 Task: Fix Supabase Template Build Error
+
+> **Priority**: P0 - Critical (Projects cannot build)
+> **From**: Quality Agent
+> **Created**: 2026-01-03
+> **Reference**: `output/agents/quality/workspace/export-test-report-20260103.md`
+
+---
+
+## Problem
+
+Exported projects with Supabase auth integration **fail to build** with this error:
+
+```
+./lib/supabase.ts
+Error: You're importing a component that needs "next/headers". 
+That only works in a Server Component which is not supported in the pages/ directory.
+```
+
+**Root Cause**: The template file `lib/supabase.ts` combines browser and server Supabase clients in one file. The `import { cookies } from "next/headers"` at the top level breaks when the file is imported from client components like `app/login/page.tsx`.
+
+---
+
+## Current Broken File
+
+`templates/saas/integrations/auth/supabase/lib/supabase.ts`:
+
+```typescript
+import { createBrowserClient } from "@supabase/ssr";
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";  // ❌ BREAKS CLIENT IMPORTS
+
+// Browser client - gets imported by client components
+export function createClient() { ... }
+
+// Server client - needs next/headers
+export async function createServerSupabaseClient() { ... }
+```
+
+---
+
+## Solution
+
+Split into two files:
+
+### 1. `lib/supabase/client.ts` (for Client Components)
+
+```typescript
+import { createBrowserClient } from "@supabase/ssr";
+
+// Browser client for client components
+export function createClient() {
+  return createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
+}
+```
+
+### 2. `lib/supabase/server.ts` (for Server Components/API Routes)
+
+```typescript
+import { createServerClient, type CookieOptions } from "@supabase/ssr";
+import { cookies } from "next/headers";
+
+// Server client for server components and API routes
+export async function createServerSupabaseClient() {
+  const cookieStore = await cookies();
+
+  return createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return cookieStore.getAll();
+        },
+        setAll(cookiesToSet) {
+          try {
+            cookiesToSet.forEach(({ name, value, options }) => {
+              cookieStore.set(name, value, options);
+            });
+          } catch (error) {
+            // The `set` method was called from a Server Component.
+          }
+        },
+      },
+    }
+  );
+}
+```
+
+### 3. `lib/supabase/index.ts` (Optional re-export for backwards compat)
+
+```typescript
+// Re-export for convenience
+export { createClient } from './client';
+export { createServerSupabaseClient } from './server';
+```
+
+---
+
+## Files to Update
+
+1. **Template file**: `templates/saas/integrations/auth/supabase/lib/supabase.ts`
+   - Split into `lib/supabase/client.ts` and `lib/supabase/server.ts`
+   - Add `lib/supabase/index.ts` for re-exports
+
+2. **Login page**: `templates/saas/integrations/auth/supabase/app/login/page.tsx`
+   - Update import: `import { createClient } from '@/lib/supabase/client'`
+
+3. **Auth callback**: `templates/saas/integrations/auth/supabase/app/api/auth/callback/route.ts`
+   - Update import: `import { createServerSupabaseClient } from '@/lib/supabase/server'`
+
+4. **Middleware**: `templates/saas/integrations/auth/supabase/middleware.ts`
+   - Update import based on usage
+
+5. **Export route**: `website/app/api/export/zip/route.ts`
+   - Update `INTEGRATION_PATHS` to include new file paths
+
+---
+
+## Validation
+
+After fix:
+1. Export a project with Supabase auth
+2. Run `npm install` 
+3. Run `npm run build` - **MUST PASS**
+4. Run `npm run dev` - Should start without errors
+
+---
+
+## Affected Templates
+
+All templates that include Supabase auth:
+- SaaS
+- E-commerce  
+- Blog
+- Dashboard
+
+---
+
+*Task created by Quality Agent | Critical build failure affecting all exports*
+

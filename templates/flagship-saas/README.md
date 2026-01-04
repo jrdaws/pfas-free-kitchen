@@ -48,36 +48,13 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to see the dashboard.
 
-## Bundled Integrations
+## Integration Points
 
-This template includes ready-to-use integrations in `integrations/`:
-
-| Category | Providers | Description |
-|----------|-----------|-------------|
-| **Auth** | Supabase, Clerk | User authentication & sessions |
-| **Database** | Supabase | PostgreSQL with real-time subscriptions |
-| **Payments** | Stripe | Subscriptions, checkout, customer portal |
-| **Analytics** | PostHog, Plausible | Privacy-friendly analytics |
-| **Email** | Resend | Transactional email delivery |
-| **Storage** | UploadThing | File uploads & management |
-| **AI** | Anthropic, OpenAI | LLM & AI capabilities |
-
-### Using Integrations
-
-Copy integration files to your project:
-```bash
-# Example: Add Stripe payments
-cp -r integrations/payments/stripe/* ./
-
-# Install dependencies
-npm install stripe
-```
-
-Each integration includes:
-- `integration.json` - Configuration metadata
-- `.env.example` - Required environment variables
-- `lib/*.ts` - Client/server utilities
-- `app/api/*` - API routes (if applicable)
+This template is ready to integrate with:
+- **Auth**: Supabase Auth, Clerk, Auth.js
+- **Payments**: Stripe
+- **AI**: Anthropic Claude, OpenAI
+- **Database**: PostgreSQL, Supabase
 
 ## Project Structure
 

@@ -4,6 +4,8 @@
  * Implements standard error response format per docs/standards/API_CONTRACTS.md
  */
 
+import { NextResponse } from "next/server";
+
 export enum ErrorCodes {
   // Client errors (400-499)
   BAD_REQUEST = 'BAD_REQUEST',
@@ -70,7 +72,7 @@ export function apiError(
   details?: any,
   recovery?: string,
   headers?: Record<string, string>
-): Response {
+): NextResponse {
   const statusCode = status || ERROR_STATUS_CODES[code];
 
   const response: ApiErrorResponse = {
@@ -86,10 +88,9 @@ export function apiError(
     },
   };
 
-  return new Response(JSON.stringify(response), {
+  return NextResponse.json(response, {
     status: statusCode,
     headers: {
-      'Content-Type': 'application/json',
       ...headers,
     },
   });
@@ -130,19 +131,18 @@ export function apiSuccess(
   data: any,
   status: number = 200,
   headers?: Record<string, string>
-): Response {
-  return new Response(
-    JSON.stringify({
+): NextResponse {
+  return NextResponse.json(
+    {
       success: true,
       data,
       meta: {
         timestamp: new Date().toISOString(),
       },
-    }),
+    },
     {
       status,
       headers: {
-        'Content-Type': 'application/json',
         ...headers,
       },
     }

@@ -1,0 +1,23 @@
+{
+  "id": "admin-dashboard",
+  "name": "Admin Dashboard",
+  "category": "enterprise",
+  "description": "Complete admin dashboard with sidebar navigation, stats cards, user management, and data tables",
+  "files": [
+    { "path": "app/(admin)/layout.tsx", "template": "app/(admin)/layout.tsx" },
+    { "path": "app/(admin)/dashboard/page.tsx", "template": "app/(admin)/dashboard/page.tsx" },
+    { "path": "app/(admin)/users/page.tsx", "template": "app/(admin)/users/page.tsx" },
+    { "path": "components/admin/AdminSidebar.tsx", "template": "components/admin/AdminSidebar.tsx" },
+    { "path": "components/admin/StatsCard.tsx", "template": "components/admin/StatsCard.tsx" },
+    { "path": "components/admin/DataTable.tsx", "template": "components/admin/DataTable.tsx" },
+    { "path": "lib/admin/permissions.ts", "template": "lib/admin/permissions.ts" }
+  ],
+  "dependencies": {
+    "npm": ["@tanstack/react-table"],
+    "features": [],
+    "integrations": ["auth"]
+  },
+  "previewComponent": "AdminNav",
+  "postInstall": "Admin dashboard is ready! Users need admin role to access /dashboard routes."
+}
+
