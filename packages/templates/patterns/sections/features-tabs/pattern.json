@@ -1,0 +1,22 @@
+{
+  "id": "features-tabs",
+  "name": "Tabbed Features",
+  "category": "section",
+  "description": "Tabbed interface showing one feature at a time",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false, "aiGenerate": true },
+    { "name": "subtext", "type": "text", "required": false },
+    { "name": "features", "type": "array", "required": true, "aiGenerate": true }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": [],
+  "tags": ["features", "tabs", "interactive", "organized"],
+  "bestFor": ["complex", "many-features", "organized"]
+}
+

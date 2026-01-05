@@ -1,0 +1,22 @@
+{
+  "id": "pricing-simple",
+  "name": "Simple Pricing",
+  "category": "section",
+  "description": "3 pricing cards side by side",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false, "aiGenerate": true },
+    { "name": "subtext", "type": "text", "required": false },
+    { "name": "plans", "type": "array", "required": true, "aiGenerate": true, "validation": { "minItems": 2, "maxItems": 3 } }
+  ],
+  "compatibleWith": ["saas", "all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": ["lucide-react"],
+  "tags": ["pricing", "subscription", "cards", "tiers"],
+  "bestFor": ["saas", "subscription"]
+}
+

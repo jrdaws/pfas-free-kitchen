@@ -1,0 +1,23 @@
+{
+  "id": "stats-highlight",
+  "name": "Stats Highlight",
+  "category": "section",
+  "description": "Key metrics/numbers display",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false },
+    { "name": "subtext", "type": "text", "required": false },
+    { "name": "stats", "type": "array", "required": true, "aiGenerate": true, "validation": { "minItems": 3, "maxItems": 4 } }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" },
+    { "id": "primary", "name": "Primary Background" }
+  ],
+  "dependencies": [],
+  "tags": ["stats", "metrics", "numbers", "social-proof"],
+  "bestFor": ["trust", "achievements", "impact"]
+}
+

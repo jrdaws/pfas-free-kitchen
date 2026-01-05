@@ -1,0 +1,23 @@
+{
+  "id": "testimonials-carousel",
+  "name": "Testimonial Carousel",
+  "category": "section",
+  "description": "Sliding carousel of quotes",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false },
+    { "name": "testimonials", "type": "array", "required": true, "aiGenerate": true, "validation": { "minItems": 3 } },
+    { "name": "autoPlay", "type": "boolean", "required": false, "defaultValue": true },
+    { "name": "interval", "type": "number", "required": false, "defaultValue": 5000 }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": ["lucide-react"],
+  "tags": ["testimonials", "carousel", "social-proof", "slider"],
+  "bestFor": ["social-proof", "trust"]
+}
+

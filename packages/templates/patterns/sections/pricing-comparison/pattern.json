@@ -1,0 +1,23 @@
+{
+  "id": "pricing-comparison",
+  "name": "Pricing Comparison",
+  "category": "section",
+  "description": "Feature comparison matrix",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false },
+    { "name": "subtext", "type": "text", "required": false },
+    { "name": "plans", "type": "array", "required": true },
+    { "name": "categories", "type": "array", "required": true }
+  ],
+  "compatibleWith": ["saas", "all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": ["lucide-react"],
+  "tags": ["pricing", "comparison", "table", "enterprise"],
+  "bestFor": ["b2b", "enterprise", "complex"]
+}
+

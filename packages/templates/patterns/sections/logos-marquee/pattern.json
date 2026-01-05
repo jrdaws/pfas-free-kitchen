@@ -1,0 +1,23 @@
+{
+  "id": "logos-marquee",
+  "name": "Logo Marquee",
+  "category": "section",
+  "description": "Scrolling logo banner",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false, "defaultValue": "Trusted by industry leaders" },
+    { "name": "logos", "type": "array", "required": true, "validation": { "minItems": 4 } },
+    { "name": "animated", "type": "boolean", "required": false, "defaultValue": true },
+    { "name": "grayscale", "type": "boolean", "required": false, "defaultValue": true }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": [],
+  "tags": ["logos", "social-proof", "trust", "marquee"],
+  "bestFor": ["b2b", "enterprise", "trust"]
+}
+

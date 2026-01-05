@@ -1,0 +1,22 @@
+{
+  "id": "features-alternating",
+  "name": "Alternating Features",
+  "category": "section",
+  "description": "Left/right alternating with images",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false, "aiGenerate": true },
+    { "name": "subtext", "type": "text", "required": false },
+    { "name": "features", "type": "array", "required": true, "aiGenerate": true }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": [],
+  "tags": ["features", "alternating", "images", "detailed"],
+  "bestFor": ["storytelling", "detailed-features"]
+}
+

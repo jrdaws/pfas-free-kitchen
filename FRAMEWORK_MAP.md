@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 3ec1c4c 2026-01-05 feat(preview): integrate Intelligent Preview with AI Composer
 - 72ba4b5 2026-01-05 feat(composer): implement AI Pattern Composer engine
 - 0e13af2 2026-01-05 chore: mark modular pattern library task complete
 - f963bb1 2026-01-05 feat(patterns): add modular pattern library architecture
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 0aa25e2 2026-01-04 feat: Complete Blog template with comments and related posts
 - 1fbf216 2026-01-04 feat: Complete E-commerce template with cart, checkout, orders
 - 7db1a04 2026-01-04 test: Add E2E export tests for Phase 1-3 integrations
-- f2319cb 2026-01-04 fix: Remove duplicate integration paths and cases in export route
 
 ## Agent Governance Structure
 
