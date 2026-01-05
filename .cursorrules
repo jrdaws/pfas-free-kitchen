@@ -83,6 +83,12 @@ npm test                    # Before committing
 Read .cursorrules now and apply all rules immediately. Confirm you understand the Permission Probing, Quick Actions, and Handoff Prompt requirements.
 ```
 
+**Key rules to enforce:**
+- Permission Probing (request permissions upfront)
+- Quick Actions (numbered options every response)
+- Handoff Prompt (fenced block for next agent)
+- Clean Command Blocks (no `#` comments, use `cd /full/path &&`)
+
 ### Protected Files (Never Delete)
 - AGENT_CONTEXT.md, .cursorrules
 - prompts/agents/memory/*.md

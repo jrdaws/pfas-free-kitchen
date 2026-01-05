@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 59db00e 2026-01-04 feat(platform): implement project management data model & API routes
 - b4b0ef6 2026-01-04 test(platform): add comprehensive test plans for platform features
 - e5c94b2 2026-01-04 feat(governance): add fallback command for old chats
 - 5803db7 2026-01-04 chore: move env-pull task to done
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 9d3591d 2026-01-03 fix(P1): resolve remaining P1 export failures
 - 3d478da 2026-01-03 chore: move completed task to done
 - 1f44926 2026-01-03 fix: add supabase re-export shim for backward compatibility
-- a814819 2026-01-03 fix(exports): add missing components to e-commerce template
 
 ## Agent Governance Structure
 
