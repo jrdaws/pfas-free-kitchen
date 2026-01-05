@@ -299,7 +299,11 @@ test('POST /api/projects: applies rate limiting', () => {
 // ============================================================================
 
 test('PATCH /api/projects/[id]: updates project name', () => {
-  const project = createMockProject({ name: 'Old Name' });
+  // Create project with old timestamp
+  const project = createMockProject({
+    name: 'Old Name',
+    updated_at: '2025-01-01T00:00:00.000Z',
+  });
   const update = { name: 'New Name' };
 
   const updated = { ...project, ...update, updated_at: new Date().toISOString() };

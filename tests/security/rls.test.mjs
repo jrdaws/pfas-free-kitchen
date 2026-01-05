@@ -15,6 +15,7 @@ import assert from 'node:assert/strict';
 // ============================================================================
 
 function createMockRLSDatabase() {
+  // Use 'this' context so methods access the same data
   const db = {
     users: [
       { id: 'user_1', email: 'user1@example.com' },
@@ -39,19 +40,16 @@ function createMockRLSDatabase() {
       { id: 'ver_1', project_id: 'proj_1', version_number: 1 },
       { id: 'ver_2', project_id: 'proj_3', version_number: 1 },
     ],
-  };
 
-  // RLS-aware query functions
-  return {
-    ...db,
+    // RLS-aware query functions using 'this' context
 
     // Project queries with RLS
     selectProjects(authUserId) {
-      return db.projects.filter((p) => p.user_id === authUserId);
+      return this.projects.filter((p) => p.user_id === authUserId);
     },
 
     updateProject(authUserId, projectId, updates) {
-      const project = db.projects.find((p) => p.id === projectId);
+      const project = this.projects.find((p) => p.id === projectId);
       if (!project) return { error: 'NOT_FOUND' };
       if (project.user_id !== authUserId) return { error: 'RLS_VIOLATION' };
       Object.assign(project, updates);
@@ -59,25 +57,25 @@ function createMockRLSDatabase() {
     },
 
     deleteProject(authUserId, projectId) {
-      const project = db.projects.find((p) => p.id === projectId);
+      const project = this.projects.find((p) => p.id === projectId);
       if (!project) return { error: 'NOT_FOUND' };
       if (project.user_id !== authUserId) return { error: 'RLS_VIOLATION' };
-      db.projects = db.projects.filter((p) => p.id !== projectId);
+      this.projects = this.projects.filter((p) => p.id !== projectId);
       return { success: true };
     },
 
     // Page queries with RLS (inherits from project)
     selectPages(authUserId, projectId) {
-      const project = db.projects.find((p) => p.id === projectId);
+      const project = this.projects.find((p) => p.id === projectId);
       if (!project || project.user_id !== authUserId) return [];
-      return db.pages.filter((p) => p.project_id === projectId);
+      return this.pages.filter((p) => p.project_id === projectId);
     },
 
     updatePage(authUserId, pageId, updates) {
-      const page = db.pages.find((p) => p.id === pageId);
+      const page = this.pages.find((p) => p.id === pageId);
       if (!page) return { error: 'NOT_FOUND' };
 
-      const project = db.projects.find((p) => p.id === page.project_id);
+      const project = this.projects.find((p) => p.id === page.project_id);
       if (!project || project.user_id !== authUserId) return { error: 'RLS_VIOLATION' };
 
       Object.assign(page, updates);
@@ -86,11 +84,11 @@ function createMockRLSDatabase() {
 
     // Service connection queries with RLS
     selectServiceConnections(authUserId) {
-      return db.service_connections.filter((c) => c.user_id === authUserId);
+      return this.service_connections.filter((c) => c.user_id === authUserId);
     },
 
     updateServiceConnection(authUserId, connectionId, updates) {
-      const connection = db.service_connections.find((c) => c.id === connectionId);
+      const connection = this.service_connections.find((c) => c.id === connectionId);
       if (!connection) return { error: 'NOT_FOUND' };
       if (connection.user_id !== authUserId) return { error: 'RLS_VIOLATION' };
       Object.assign(connection, updates);
@@ -99,21 +97,23 @@ function createMockRLSDatabase() {
 
     // Version queries with RLS (inherits from project)
     selectVersions(authUserId, projectId) {
-      const project = db.projects.find((p) => p.id === projectId);
+      const project = this.projects.find((p) => p.id === projectId);
       if (!project || project.user_id !== authUserId) return [];
-      return db.versions.filter((v) => v.project_id === projectId);
+      return this.versions.filter((v) => v.project_id === projectId);
     },
 
     restoreVersion(authUserId, versionId) {
-      const version = db.versions.find((v) => v.id === versionId);
+      const version = this.versions.find((v) => v.id === versionId);
       if (!version) return { error: 'NOT_FOUND' };
 
-      const project = db.projects.find((p) => p.id === version.project_id);
+      const project = this.projects.find((p) => p.id === version.project_id);
       if (!project || project.user_id !== authUserId) return { error: 'RLS_VIOLATION' };
 
       return { success: true };
     },
   };
+
+  return db;
 }
 
 // ============================================================================
