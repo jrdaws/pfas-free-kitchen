@@ -1,0 +1,38 @@
+{
+  "id": "button-primary",
+  "name": "Primary Button",
+  "category": "atom",
+  "description": "Primary action button with hover states",
+  "version": "1.0.0",
+  "slots": [
+    {
+      "name": "text",
+      "type": "text",
+      "required": true,
+      "description": "Button label"
+    },
+    {
+      "name": "href",
+      "type": "text",
+      "required": false,
+      "description": "Link destination"
+    },
+    {
+      "name": "size",
+      "type": "text",
+      "required": false,
+      "defaultValue": "md"
+    }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "default", "name": "Default" },
+    { "id": "large", "name": "Large", "className": "px-8 py-4 text-lg" },
+    { "id": "small", "name": "Small", "className": "px-4 py-2 text-sm" }
+  ],
+  "dependencies": [],
+  "tags": ["button", "cta", "action"],
+  "bestFor": ["forms", "cta", "navigation"]
+}
+

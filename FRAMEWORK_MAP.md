@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- c2d0981 2026-01-05 docs: update PROJECT_PRIORITIES.md and add integration test task
 - 1d29667 2026-01-05 feat: complete configurator optimization - 6 agent tasks
 - a00718d 2026-01-05 chore: mark dynamic templates task complete
 - 4c0611a 2026-01-05 feat(patterns): add dynamic AI-composed template system
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 499f523 2026-01-04 feat: Phase 3 templates - Contentful, Meilisearch, Cloudflare R2
 - 9768052 2026-01-04 feat: Phase 2 templates - Plausible, SendGrid, Anthropic, Trigger.dev
 - 14b92a6 2026-01-04 feat: Phase 1 templates - NextAuth, Paddle, LemonSqueezy, Checkout, Subscriptions
-- 109f07f 2026-01-04 chore: move completed tasks to done
 
 ## Agent Governance Structure
 
