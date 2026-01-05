@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- e7e7bea 2026-01-05 feat(dashboard): add project dashboard UI and page editor components
 - 70eb8f1 2026-01-04 test: complete validation of new platform features
 - 5a8eba5 2026-01-04 chore: mark slot templates task complete
 - 69c18d1 2026-01-04 feat(slots): add component slot templates for page builder
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 0edfa72 2026-01-04 test: all tier 1 export tests pass (12/12)
 - c64cbe1 2026-01-04 feat(website): add dashboard with connected services UI
 - 610c280 2026-01-04 feat: dynamic preview integration badges and template-specific CTAs
-- 5dd762b 2026-01-04 fix: progress bar can now reach 100% - remove hidden claude-code tool
 
 ## Agent Governance Structure
 

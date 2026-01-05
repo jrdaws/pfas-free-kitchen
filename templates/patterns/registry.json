@@ -1,0 +1,329 @@
+{
+  "$schema": "./pattern.schema.json",
+  "version": "1.0.0",
+  "description": "Pattern library for AI-composed templates",
+  "categories": {
+    "landing": {
+      "label": "Landing Page",
+      "description": "Hero sections and landing page components",
+      "icon": "layout"
+    },
+    "pricing": {
+      "label": "Pricing",
+      "description": "Pricing tables and plan comparisons",
+      "icon": "dollar-sign"
+    },
+    "auth": {
+      "label": "Authentication",
+      "description": "Login, signup, and auth flows",
+      "icon": "lock"
+    },
+    "dashboard": {
+      "label": "Dashboard",
+      "description": "Admin and user dashboards",
+      "icon": "layout-dashboard"
+    },
+    "features": {
+      "label": "Features",
+      "description": "Feature showcases and benefits",
+      "icon": "grid"
+    },
+    "testimonials": {
+      "label": "Testimonials",
+      "description": "Social proof and reviews",
+      "icon": "message-circle"
+    },
+    "cta": {
+      "label": "Call to Action",
+      "description": "Conversion sections",
+      "icon": "arrow-right"
+    },
+    "faq": {
+      "label": "FAQ",
+      "description": "Frequently asked questions",
+      "icon": "help-circle"
+    }
+  },
+  "patterns": [
+    {
+      "id": "hero-centered",
+      "name": "Centered Hero",
+      "category": "landing",
+      "description": "Centered headline with CTA buttons",
+      "path": "landing/hero-centered",
+      "bestFor": ["saas", "startup", "product"],
+      "tags": ["minimal", "clean", "conversion"]
+    },
+    {
+      "id": "hero-split",
+      "name": "Split Hero",
+      "category": "landing",
+      "description": "Text on left, image/video on right",
+      "path": "landing/hero-split",
+      "bestFor": ["saas", "b2b", "enterprise"],
+      "tags": ["screenshot", "demo", "visual"]
+    },
+    {
+      "id": "hero-video",
+      "name": "Video Hero",
+      "category": "landing",
+      "description": "Background video with overlay text",
+      "path": "landing/hero-video",
+      "bestFor": ["creative", "agency", "media"],
+      "tags": ["video", "immersive", "dynamic"]
+    },
+    {
+      "id": "hero-animated",
+      "name": "Animated Hero",
+      "category": "landing",
+      "description": "Hero with animated elements and gradients",
+      "path": "landing/hero-animated",
+      "bestFor": ["tech", "startup", "modern"],
+      "tags": ["animation", "gradient", "modern"]
+    },
+    {
+      "id": "hero-waitlist",
+      "name": "Waitlist Hero",
+      "category": "landing",
+      "description": "Pre-launch hero with email capture",
+      "path": "landing/hero-waitlist",
+      "bestFor": ["prelaunch", "startup", "beta"],
+      "tags": ["waitlist", "email", "coming-soon"]
+    },
+    {
+      "id": "pricing-simple",
+      "name": "Simple Pricing",
+      "category": "pricing",
+      "description": "Clean 2-3 tier pricing cards",
+      "path": "pricing/pricing-simple",
+      "bestFor": ["saas", "subscription", "simple"],
+      "tags": ["cards", "tiers", "monthly"]
+    },
+    {
+      "id": "pricing-comparison",
+      "name": "Comparison Table",
+      "category": "pricing",
+      "description": "Feature comparison across plans",
+      "path": "pricing/pricing-comparison",
+      "bestFor": ["b2b", "enterprise", "complex"],
+      "tags": ["table", "features", "comparison"]
+    },
+    {
+      "id": "pricing-calculator",
+      "name": "Usage Calculator",
+      "category": "pricing",
+      "description": "Interactive usage-based pricing",
+      "path": "pricing/pricing-calculator",
+      "bestFor": ["api", "infrastructure", "usage-based"],
+      "tags": ["calculator", "slider", "usage"]
+    },
+    {
+      "id": "pricing-toggle",
+      "name": "Monthly/Annual Toggle",
+      "category": "pricing",
+      "description": "Pricing with billing period toggle",
+      "path": "pricing/pricing-toggle",
+      "bestFor": ["saas", "subscription", "discount"],
+      "tags": ["toggle", "annual", "discount"]
+    },
+    {
+      "id": "auth-modal",
+      "name": "Auth Modal",
+      "category": "auth",
+      "description": "Login/signup in modal overlay",
+      "path": "auth/auth-modal",
+      "bestFor": ["saas", "app", "seamless"],
+      "tags": ["modal", "overlay", "quick"]
+    },
+    {
+      "id": "auth-page",
+      "name": "Auth Page",
+      "category": "auth",
+      "description": "Full page login/signup form",
+      "path": "auth/auth-page",
+      "bestFor": ["enterprise", "b2b", "security"],
+      "tags": ["page", "form", "branded"]
+    },
+    {
+      "id": "auth-social",
+      "name": "Social Auth",
+      "category": "auth",
+      "description": "OAuth buttons with social providers",
+      "path": "auth/auth-social",
+      "bestFor": ["consumer", "quick-signup", "social"],
+      "tags": ["oauth", "google", "github"]
+    },
+    {
+      "id": "auth-magic-link",
+      "name": "Magic Link",
+      "category": "auth",
+      "description": "Passwordless email authentication",
+      "path": "auth/auth-magic-link",
+      "bestFor": ["modern", "simple", "secure"],
+      "tags": ["passwordless", "email", "magic-link"]
+    },
+    {
+      "id": "dashboard-sidebar",
+      "name": "Sidebar Dashboard",
+      "category": "dashboard",
+      "description": "Fixed sidebar navigation layout",
+      "path": "dashboard/dashboard-sidebar",
+      "bestFor": ["saas", "admin", "complex"],
+      "tags": ["sidebar", "navigation", "desktop"]
+    },
+    {
+      "id": "dashboard-topnav",
+      "name": "Top Nav Dashboard",
+      "category": "dashboard",
+      "description": "Horizontal navigation at top",
+      "path": "dashboard/dashboard-topnav",
+      "bestFor": ["simple", "mobile", "minimal"],
+      "tags": ["topnav", "horizontal", "mobile"]
+    },
+    {
+      "id": "dashboard-cards",
+      "name": "Card Grid Dashboard",
+      "category": "dashboard",
+      "description": "Card-based metric dashboard",
+      "path": "dashboard/dashboard-cards",
+      "bestFor": ["analytics", "metrics", "overview"],
+      "tags": ["cards", "metrics", "stats"]
+    },
+    {
+      "id": "dashboard-kanban",
+      "name": "Kanban Board",
+      "category": "dashboard",
+      "description": "Drag-drop kanban columns",
+      "path": "dashboard/dashboard-kanban",
+      "bestFor": ["project-management", "workflow", "tasks"],
+      "tags": ["kanban", "drag-drop", "columns"]
+    },
+    {
+      "id": "features-grid",
+      "name": "Features Grid",
+      "category": "features",
+      "description": "3-column grid with icons",
+      "path": "features/features-grid",
+      "bestFor": ["saas", "product", "capabilities"],
+      "tags": ["grid", "icons", "clean"]
+    },
+    {
+      "id": "features-alternating",
+      "name": "Alternating Features",
+      "category": "features",
+      "description": "Left-right alternating sections",
+      "path": "features/features-alternating",
+      "bestFor": ["detailed", "storytelling", "visual"],
+      "tags": ["alternating", "images", "detailed"]
+    },
+    {
+      "id": "features-bento",
+      "name": "Bento Grid",
+      "category": "features",
+      "description": "Asymmetric bento box layout",
+      "path": "features/features-bento",
+      "bestFor": ["modern", "creative", "apple-style"],
+      "tags": ["bento", "asymmetric", "modern"]
+    },
+    {
+      "id": "features-tabs",
+      "name": "Tabbed Features",
+      "category": "features",
+      "description": "Features organized in tabs",
+      "path": "features/features-tabs",
+      "bestFor": ["complex", "many-features", "organized"],
+      "tags": ["tabs", "organized", "interactive"]
+    },
+    {
+      "id": "testimonials-carousel",
+      "name": "Testimonial Carousel",
+      "category": "testimonials",
+      "description": "Sliding testimonial cards",
+      "path": "testimonials/testimonials-carousel",
+      "bestFor": ["social-proof", "multiple", "dynamic"],
+      "tags": ["carousel", "slider", "animated"]
+    },
+    {
+      "id": "testimonials-grid",
+      "name": "Testimonial Grid",
+      "category": "testimonials",
+      "description": "Static grid of testimonials",
+      "path": "testimonials/testimonials-grid",
+      "bestFor": ["volume", "trust", "static"],
+      "tags": ["grid", "cards", "static"]
+    },
+    {
+      "id": "testimonials-logos",
+      "name": "Logo Wall",
+      "category": "testimonials",
+      "description": "Customer logo showcase",
+      "path": "testimonials/testimonials-logos",
+      "bestFor": ["b2b", "enterprise", "trust"],
+      "tags": ["logos", "brands", "trust"]
+    },
+    {
+      "id": "testimonials-video",
+      "name": "Video Testimonials",
+      "category": "testimonials",
+      "description": "Video testimonial cards",
+      "path": "testimonials/testimonials-video",
+      "bestFor": ["authentic", "emotional", "trust"],
+      "tags": ["video", "authentic", "embed"]
+    },
+    {
+      "id": "cta-simple",
+      "name": "Simple CTA",
+      "category": "cta",
+      "description": "Headline with single button",
+      "path": "cta/cta-simple",
+      "bestFor": ["conversion", "focused", "clean"],
+      "tags": ["simple", "button", "focused"]
+    },
+    {
+      "id": "cta-newsletter",
+      "name": "Newsletter CTA",
+      "category": "cta",
+      "description": "Email signup form",
+      "path": "cta/cta-newsletter",
+      "bestFor": ["content", "blog", "updates"],
+      "tags": ["newsletter", "email", "subscribe"]
+    },
+    {
+      "id": "cta-demo",
+      "name": "Demo CTA",
+      "category": "cta",
+      "description": "Book a demo section",
+      "path": "cta/cta-demo",
+      "bestFor": ["b2b", "enterprise", "sales"],
+      "tags": ["demo", "meeting", "sales"]
+    },
+    {
+      "id": "faq-accordion",
+      "name": "FAQ Accordion",
+      "category": "faq",
+      "description": "Expandable FAQ list",
+      "path": "faq/faq-accordion",
+      "bestFor": ["support", "questions", "compact"],
+      "tags": ["accordion", "expandable", "compact"]
+    },
+    {
+      "id": "faq-grid",
+      "name": "FAQ Grid",
+      "category": "faq",
+      "description": "Two-column FAQ layout",
+      "path": "faq/faq-grid",
+      "bestFor": ["many-questions", "scannable", "organized"],
+      "tags": ["grid", "columns", "static"]
+    },
+    {
+      "id": "faq-categories",
+      "name": "Categorized FAQ",
+      "category": "faq",
+      "description": "FAQ organized by category",
+      "path": "faq/faq-categories",
+      "bestFor": ["complex-product", "support", "organized"],
+      "tags": ["categories", "tabs", "organized"]
+    }
+  ]
+}
+

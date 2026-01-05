@@ -1,0 +1,38 @@
+{
+  "id": "auth-page",
+  "name": "Auth Page",
+  "category": "auth",
+  "description": "Full page login/signup form",
+  "version": "1.0.0",
+  "props": {
+    "mode": {
+      "type": "enum",
+      "options": ["login", "signup"],
+      "default": "login"
+    },
+    "logoText": {
+      "type": "string",
+      "default": "Company"
+    },
+    "headline": {
+      "type": "string",
+      "required": false
+    },
+    "subtext": {
+      "type": "string",
+      "required": false
+    },
+    "providers": {
+      "type": "array",
+      "default": []
+    },
+    "backgroundImage": {
+      "type": "string",
+      "required": false
+    }
+  },
+  "bestFor": ["enterprise", "b2b", "security"],
+  "tags": ["page", "form", "branded"],
+  "dependencies": []
+}
+

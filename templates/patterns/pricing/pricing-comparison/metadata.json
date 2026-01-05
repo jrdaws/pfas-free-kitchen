@@ -1,0 +1,31 @@
+{
+  "id": "pricing-comparison",
+  "name": "Comparison Table",
+  "category": "pricing",
+  "description": "Feature comparison across plans",
+  "version": "1.0.0",
+  "props": {
+    "headline": {
+      "type": "string",
+      "default": "Compare plans"
+    },
+    "subtext": {
+      "type": "string",
+      "required": false
+    },
+    "plans": {
+      "type": "array",
+      "required": true,
+      "aiGenerate": true
+    },
+    "categories": {
+      "type": "array",
+      "required": true,
+      "aiGenerate": true
+    }
+  },
+  "bestFor": ["b2b", "enterprise", "complex"],
+  "tags": ["table", "features", "comparison"],
+  "dependencies": ["lucide-react"]
+}
+

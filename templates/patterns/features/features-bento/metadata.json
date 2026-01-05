@@ -1,0 +1,30 @@
+{
+  "id": "features-bento",
+  "name": "Bento Grid",
+  "category": "features",
+  "description": "Asymmetric bento box layout (Apple-style)",
+  "version": "1.0.0",
+  "props": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "aiGenerate": true
+    },
+    "subtext": {
+      "type": "string",
+      "required": false,
+      "aiGenerate": true
+    },
+    "items": {
+      "type": "array",
+      "required": true,
+      "aiGenerate": true,
+      "minItems": 4,
+      "maxItems": 6
+    }
+  },
+  "bestFor": ["modern", "creative", "apple-style"],
+  "tags": ["bento", "asymmetric", "modern"],
+  "dependencies": []
+}
+

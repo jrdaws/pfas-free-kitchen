@@ -1,0 +1,29 @@
+{
+  "id": "dashboard-topnav",
+  "name": "Top Nav Dashboard",
+  "category": "dashboard",
+  "description": "Horizontal navigation at top",
+  "version": "1.0.0",
+  "props": {
+    "logoText": {
+      "type": "string",
+      "default": "App"
+    },
+    "navItems": {
+      "type": "array",
+      "required": true
+    },
+    "user": {
+      "type": "object",
+      "required": false
+    },
+    "onLogout": {
+      "type": "function",
+      "required": false
+    }
+  },
+  "bestFor": ["simple", "mobile", "minimal"],
+  "tags": ["topnav", "horizontal", "mobile"],
+  "dependencies": ["lucide-react"]
+}
+

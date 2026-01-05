@@ -1,0 +1,116 @@
+{
+  "$schema": "../patterns/composition.schema.json",
+  "id": "saas-starter",
+  "name": "SaaS Starter",
+  "description": "Complete SaaS landing page with auth and dashboard",
+  "version": "1.0.0",
+  "pages": [
+    {
+      "path": "/",
+      "title": "Home",
+      "layout": "marketing",
+      "slots": [
+        {
+          "slot": "hero",
+          "pattern": "hero-centered",
+          "reason": "Centered hero works well for SaaS with clear value proposition"
+        },
+        {
+          "slot": "logos",
+          "pattern": "testimonials-logos",
+          "reason": "Build trust with customer logos"
+        },
+        {
+          "slot": "features",
+          "pattern": "features-bento",
+          "reason": "Modern bento layout showcases product capabilities"
+        },
+        {
+          "slot": "testimonials",
+          "pattern": "testimonials-carousel",
+          "reason": "Social proof with rotating testimonials"
+        },
+        {
+          "slot": "cta",
+          "pattern": "cta-simple",
+          "reason": "Clear call-to-action to drive signups"
+        }
+      ]
+    },
+    {
+      "path": "/pricing",
+      "title": "Pricing",
+      "layout": "marketing",
+      "slots": [
+        {
+          "slot": "pricing",
+          "pattern": "pricing-toggle",
+          "reason": "Monthly/annual toggle encourages annual commitments"
+        },
+        {
+          "slot": "faq",
+          "pattern": "faq-accordion",
+          "reason": "Answer common pricing questions"
+        }
+      ]
+    },
+    {
+      "path": "/login",
+      "title": "Login",
+      "layout": "auth",
+      "slots": [
+        {
+          "slot": "auth",
+          "pattern": "auth-modal",
+          "reason": "Modal auth for seamless experience"
+        }
+      ]
+    },
+    {
+      "path": "/dashboard",
+      "title": "Dashboard",
+      "layout": "app",
+      "auth": true,
+      "slots": [
+        {
+          "slot": "overview",
+          "pattern": "dashboard-cards",
+          "reason": "Card metrics for at-a-glance overview"
+        }
+      ]
+    }
+  ],
+  "layouts": {
+    "marketing": {
+      "component": "marketing-layout",
+      "config": {
+        "navItems": [
+          { "label": "Features", "href": "#features" },
+          { "label": "Pricing", "href": "/pricing" },
+          { "label": "About", "href": "/about" }
+        ],
+        "ctaText": "Get Started",
+        "ctaHref": "/signup"
+      }
+    },
+    "app": {
+      "component": "app-layout",
+      "config": {
+        "navItems": [
+          { "label": "Dashboard", "href": "/dashboard", "icon": "LayoutDashboard" },
+          { "label": "Projects", "href": "/projects", "icon": "Folder" },
+          { "label": "Analytics", "href": "/analytics", "icon": "BarChart" }
+        ]
+      }
+    },
+    "auth": {
+      "component": null,
+      "config": {}
+    }
+  },
+  "theme": {
+    "primaryColor": "#6366f1",
+    "style": "modern"
+  }
+}
+

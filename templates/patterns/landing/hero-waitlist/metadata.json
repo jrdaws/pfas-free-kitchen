@@ -1,0 +1,50 @@
+{
+  "id": "hero-waitlist",
+  "name": "Waitlist Hero",
+  "category": "landing",
+  "description": "Pre-launch hero with email capture form",
+  "version": "1.0.0",
+  "props": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "aiGenerate": true
+    },
+    "subtext": {
+      "type": "string",
+      "required": true,
+      "aiGenerate": true
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Join the Waitlist"
+    },
+    "placeholder": {
+      "type": "string",
+      "default": "Enter your email"
+    },
+    "launchDate": {
+      "type": "string",
+      "required": false,
+      "description": "e.g., 'Q1 2026'"
+    },
+    "socialLinks": {
+      "type": "object",
+      "required": false,
+      "properties": {
+        "twitter": { "type": "string" },
+        "discord": { "type": "string" },
+        "github": { "type": "string" }
+      }
+    },
+    "signupCount": {
+      "type": "number",
+      "required": false,
+      "description": "Number of waitlist signups to display"
+    }
+  },
+  "bestFor": ["prelaunch", "startup", "beta"],
+  "tags": ["waitlist", "email", "coming-soon"],
+  "dependencies": []
+}
+

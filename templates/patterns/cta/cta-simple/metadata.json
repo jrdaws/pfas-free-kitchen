@@ -1,0 +1,36 @@
+{
+  "id": "cta-simple",
+  "name": "Simple CTA",
+  "category": "cta",
+  "description": "Headline with single button",
+  "version": "1.0.0",
+  "props": {
+    "headline": {
+      "type": "string",
+      "required": true,
+      "aiGenerate": true
+    },
+    "subtext": {
+      "type": "string",
+      "required": false,
+      "aiGenerate": true
+    },
+    "buttonText": {
+      "type": "string",
+      "default": "Get Started"
+    },
+    "buttonHref": {
+      "type": "string",
+      "default": "/signup"
+    },
+    "variant": {
+      "type": "enum",
+      "options": ["primary", "dark", "gradient"],
+      "default": "primary"
+    }
+  },
+  "bestFor": ["conversion", "focused", "clean"],
+  "tags": ["simple", "button", "focused"],
+  "dependencies": []
+}
+

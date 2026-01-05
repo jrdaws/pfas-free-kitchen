@@ -1,0 +1,30 @@
+{
+  "id": "dashboard-cards",
+  "name": "Card Grid Dashboard",
+  "category": "dashboard",
+  "description": "Card-based metric dashboard",
+  "version": "1.0.0",
+  "props": {
+    "title": {
+      "type": "string",
+      "required": true
+    },
+    "subtitle": {
+      "type": "string",
+      "required": false
+    },
+    "metrics": {
+      "type": "array",
+      "required": true,
+      "aiGenerate": true
+    },
+    "charts": {
+      "type": "array",
+      "required": false
+    }
+  },
+  "bestFor": ["analytics", "metrics", "overview"],
+  "tags": ["cards", "metrics", "stats"],
+  "dependencies": ["lucide-react"]
+}
+

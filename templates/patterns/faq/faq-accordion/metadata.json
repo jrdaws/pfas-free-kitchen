@@ -1,0 +1,33 @@
+{
+  "id": "faq-accordion",
+  "name": "FAQ Accordion",
+  "category": "faq",
+  "description": "Expandable FAQ list",
+  "version": "1.0.0",
+  "props": {
+    "headline": {
+      "type": "string",
+      "default": "Frequently Asked Questions"
+    },
+    "subtext": {
+      "type": "string",
+      "required": false,
+      "aiGenerate": true
+    },
+    "faqs": {
+      "type": "array",
+      "required": true,
+      "aiGenerate": true,
+      "minItems": 4,
+      "maxItems": 10
+    },
+    "allowMultiple": {
+      "type": "boolean",
+      "default": false
+    }
+  },
+  "bestFor": ["support", "questions", "compact"],
+  "tags": ["accordion", "expandable", "compact"],
+  "dependencies": ["lucide-react"]
+}
+
