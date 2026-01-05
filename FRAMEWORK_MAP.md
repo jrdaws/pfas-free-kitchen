@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
 - 3ecb457 2026-01-04 feat: Complete Dashboard template with charts and data table
 - 0aa25e2 2026-01-04 feat: Complete Blog template with comments and related posts
 - 1fbf216 2026-01-04 feat: Complete E-commerce template with cart, checkout, orders
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
 - 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
 - 61543f4 2026-01-03 test(export): document 5 build failures from tier 1 tests
-- bb25e33 2026-01-03 feat: wire 7 new integrations into export route
 
 ## Agent Governance Structure
 

@@ -1,0 +1,133 @@
+TASK: Create Component Slot Templates for Page Builder
+PRIORITY: P2 (After Data Model)
+TYPE: Templates / Code Generation
+REFERENCE: output/shared/design/PLATFORM_ARCHITECTURE_RESEARCH.md Part B.2
+
+---
+
+## Objective
+
+Create the template system for component slots that will be used in the page builder. These templates define what gets generated when a user adds a component slot to a page.
+
+## Deliverables
+
+### 1. Slot Type Templates
+
+Create templates for each slot type in `templates/slots/`:
+
+```
+templates/slots/
+├── hero/
+│   ├── hero-simple.tsx.hbs
+│   ├── hero-with-image.tsx.hbs
+│   └── hero-gradient.tsx.hbs
+├── features/
+│   ├── features-grid.tsx.hbs
+│   ├── features-list.tsx.hbs
+│   └── features-cards.tsx.hbs
+├── pricing/
+│   ├── pricing-three-tier.tsx.hbs
+│   └── pricing-comparison.tsx.hbs
+├── testimonials/
+│   ├── testimonials-carousel.tsx.hbs
+│   └── testimonials-grid.tsx.hbs
+├── cta/
+│   ├── cta-simple.tsx.hbs
+│   └── cta-newsletter.tsx.hbs
+├── faq/
+│   └── faq-accordion.tsx.hbs
+└── shared/
+    ├── header.tsx.hbs
+    ├── footer.tsx.hbs
+    └── sidebar.tsx.hbs
+```
+
+### 2. Slot Metadata Schema
+
+Create `templates/slots/manifest.json`:
+
+```json
+{
+  "slots": [
+    {
+      "id": "hero-simple",
+      "name": "Simple Hero",
+      "category": "hero",
+      "description": "Clean hero section with headline, subtext, and CTA",
+      "thumbnail": "/images/slots/hero-simple.png",
+      "variables": [
+        { "name": "headline", "type": "string", "aiGenerate": true },
+        { "name": "subtext", "type": "string", "aiGenerate": true },
+        { "name": "ctaText", "type": "string", "default": "Get Started" },
+        { "name": "ctaLink", "type": "string", "default": "/signup" }
+      ],
+      "supports": ["page", "landing"]
+    }
+  ]
+}
+```
+
+### 3. AI Generation Prompts
+
+Create prompt templates for AI-generated content in `templates/slots/prompts/`:
+
+```
+templates/slots/prompts/
+├── hero.prompt.md
+├── features.prompt.md
+├── pricing.prompt.md
+├── testimonials.prompt.md
+└── faq.prompt.md
+```
+
+Example `hero.prompt.md`:
+```markdown
+Generate hero section content for a {{projectType}} application.
+
+Project: {{projectName}}
+Description: {{projectDescription}}
+Target audience: {{targetAudience}}
+
+Generate:
+1. A compelling headline (5-10 words)
+2. Supporting subtext (15-25 words)
+3. Primary CTA button text (2-4 words)
+
+Tone: {{voiceTone}}
+```
+
+### 4. Slot Assembler
+
+Create `lib/slot-assembler.mjs`:
+
+```javascript
+export async function assembleSlot(slotId, variables, options) {
+  // 1. Load template from manifest
+  // 2. If AI generation needed, call LLM with prompt template
+  // 3. Render Handlebars template with variables
+  // 4. Return rendered component code
+}
+```
+
+## Template Requirements
+
+- Use Handlebars syntax (consistent with existing templates)
+- Include TypeScript types
+- Use existing design system classes (globals.css)
+- Responsive by default
+- Accessible (proper ARIA labels)
+
+## Success Criteria
+
+- [ ] At least 10 slot templates created
+- [ ] Manifest.json documents all slots
+- [ ] AI prompts generate coherent content
+- [ ] Slot assembler renders templates correctly
+- [ ] Templates use design system consistently
+
+## NOT in Scope
+
+- Page tree editor UI (Website Agent)
+- API routes for slots (Platform Agent)
+- Preview rendering
+

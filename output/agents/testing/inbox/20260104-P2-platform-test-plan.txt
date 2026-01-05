@@ -1,0 +1,172 @@
+TASK: Create Test Plan for Platform Features
+PRIORITY: P2 (Parallel with Development)
+TYPE: Testing / QA Planning
+REFERENCE: output/shared/design/PLATFORM_ARCHITECTURE_RESEARCH.md
+
+---
+
+## Objective
+
+Create comprehensive test plans for the new platform features: project dashboard, page tree editor, env sync, and preview system.
+
+## Deliverables
+
+### 1. Project Management Tests
+
+Create `__tests__/api/projects.test.ts`:
+
+```typescript
+describe('Project API', () => {
+  describe('GET /api/projects', () => {
+    it('returns only user\'s projects')
+    it('returns empty array for new user')
+    it('excludes archived projects by default')
+    it('includes archived with ?status=archived')
+    it('requires authentication')
+  })
+
+  describe('POST /api/projects', () => {
+    it('creates project with valid data')
+    it('generates unique slug')
+    it('rejects duplicate names')
+    it('requires authentication')
+  })
+
+  describe('PATCH /api/projects/[id]', () => {
+    it('updates project name')
+    it('rejects invalid status')
+    it('prevents editing other user\'s project')
+  })
+
+  describe('DELETE /api/projects/[id]', () => {
+    it('soft deletes (archives) project')
+    it('prevents deleting other user\'s project')
+  })
+})
+```
+
+### 2. Page Hierarchy Tests
+
+Create `__tests__/api/pages.test.ts`:
+
+```typescript
+describe('Page API', () => {
+  describe('Page CRUD', () => {
+    it('creates page with valid path')
+    it('validates path format')
+    it('prevents duplicate paths in project')
+    it('handles dynamic routes [id]')
+    it('handles catch-all routes [...slug]')
+  })
+
+  describe('Page Reordering', () => {
+    it('reorders pages within parent')
+    it('moves page to different parent')
+    it('updates child paths when parent changes')
+  })
+
+  describe('Page Deletion', () => {
+    it('deletes page and children')
+    it('orphans children to root (configurable)')
+  })
+})
+```
+
+### 3. Environment Sync Tests
+
+Create `__tests__/cli/env.test.ts`:
+
+```typescript
+describe('CLI env commands', () => {
+  describe('env pull', () => {
+    it('writes .env.local with public keys')
+    it('includes placeholder for secret keys')
+    it('warns if .env.local exists without --force')
+    it('respects --dry-run flag')
+    it('fails gracefully without auth')
+  })
+
+  describe('env check', () => {
+    it('reports missing required variables')
+    it('reports present variables')
+    it('exits 0 if all required present')
+    it('exits 1 if missing required')
+  })
+})
+```
+
+### 4. Integration Test Scenarios
+
+Create `__tests__/integration/project-workflow.test.ts`:
+
+```typescript
+describe('Project Workflow Integration', () => {
+  it('complete project creation flow', async () => {
+    // 1. Create project
+    // 2. Add pages
+    // 3. Configure slots
+    // 4. Export project
+    // 5. Verify exported files
+  })
+
+  it('version snapshot and restore', async () => {
+    // 1. Create project with pages
+    // 2. Create version snapshot
+    // 3. Make changes
+    // 4. Restore snapshot
+    // 5. Verify state restored
+  })
+})
+```
+
+### 5. E2E Test Plan
+
+Create `__tests__/e2e/dashboard.spec.ts` (Playwright):
+
+```typescript
+describe('Dashboard E2E', () => {
+  it('displays empty state for new user')
+  it('creates project via modal')
+  it('opens project on card click')
+  it('archives project via menu')
+  it('searches projects with ⌘K')
+})
+```
+
+### 6. Security Tests
+
+Create `__tests__/security/rls.test.ts`:
+
+```typescript
+describe('Row Level Security', () => {
+  it('user cannot read other user projects')
+  it('user cannot update other user projects')
+  it('user cannot delete other user projects')
+  it('API validates ownership before mutation')
+})
+```
+
+## Test Coverage Targets
+
+| Area | Target |
+|------|--------|
+| API Routes | 90% |
+| CLI Commands | 85% |
+| UI Components | 75% |
+| Integration | Key flows |
+| E2E | Happy paths |
+
+## Success Criteria
+
+- [ ] Test files created for all major features
+- [ ] Test plan document in docs/testing/
+- [ ] CI pipeline updated to run new tests
+- [ ] Security test suite for RLS
+- [ ] Performance benchmarks defined
+
+## NOT in Scope
+
+- Running all tests (depends on implementation)
+- Load testing
+- Visual regression testing
+

@@ -1,0 +1,99 @@
+TASK: Implement Project Dashboard UI
+PRIORITY: P1 (Core Feature)
+TYPE: Frontend / React / UI
+REFERENCE: output/shared/design/PLATFORM_ARCHITECTURE_RESEARCH.md
+DEPENDS_ON: Platform Agent completing data model (can stub API calls initially)
+
+---
+
+## Objective
+
+Create the multi-project dashboard where users can view, create, and manage their projects.
+
+## Deliverables
+
+### 1. Dashboard Page
+
+Create `/app/projects/page.tsx` (or update existing):
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🏠 Projects                       [Search ⌘K]    [+ New]    │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
+│  │ Preview  │  │ Preview  │  │ Preview  │  │   + New   │    │
+│  │ Thumb    │  │ Thumb    │  │ Thumb    │  │  Project  │    │
+│  ├──────────┤  ├──────────┤  ├──────────┤  │           │    │
+│  │ Name     │  │ Name     │  │ Name     │  │           │    │
+│  │ ● Active │  │ ● Active │  │ ◐ Draft  │  │           │    │
+│  │ Updated  │  │ Updated  │  │ Updated  │  │           │    │
+│  │ [⋯]      │  │ [⋯]      │  │ [⋯]      │  │           │    │
+│  └──────────┘  └──────────┘  └──────────┘  └──────────┘    │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### 2. Components to Create
+
+```
+website/app/components/dashboard/
+├── ProjectCard.tsx        # Individual project card
+├── ProjectGrid.tsx        # Grid layout for cards
+├── CreateProjectCard.tsx  # "+ New Project" CTA card
+├── ProjectMenu.tsx        # ⋯ dropdown (Clone, Archive, Delete)
+├── EmptyState.tsx         # "Create your first project"
+└── ProjectSearch.tsx      # ⌘K search modal
+```
+
+### 3. Project Card Features
+
+- Thumbnail preview (placeholder initially)
+- Project name (editable inline)
+- Status badge (Active, Draft, Archived)
+- Last updated timestamp
+- Quick actions menu (⋯)
+  - Open
+  - Clone
+  - Archive
+  - Delete (with confirmation)
+
+### 4. Create Project Flow
+
+Modal or slide-over with:
+- Project name input
+- Optional description
+- Template selection (Start blank, From template)
+- Create button
+
+## UI/UX Requirements
+
+- Follow existing design system (globals.css)
+- Use orange accent for primary actions
+- Keyboard navigation (arrow keys, Enter to open)
+- Loading skeletons while fetching
+- Empty state when no projects
+
+## API Integration
+
+Use these endpoints (stub if not ready):
+- `GET /api/projects` - List projects
+- `POST /api/projects` - Create project
+- `PATCH /api/projects/[id]` - Update project
+- `DELETE /api/projects/[id]` - Archive project
+
+## Success Criteria
+
+- [ ] Dashboard displays project cards in grid
+- [ ] Create project modal works
+- [ ] Quick actions menu functional
+- [ ] Empty state shows for new users
+- [ ] Responsive on mobile
+- [ ] Keyboard accessible
+
+## NOT in Scope
+
+- Page tree editor (separate task)
+- Preview system
+- API implementation (Platform Agent)
+

@@ -1,0 +1,81 @@
+TASK: Implement Project Management Data Model & API
+PRIORITY: P1 (Foundation - Blocks other work)
+TYPE: Backend / Database / API
+REFERENCE: output/shared/design/PLATFORM_ARCHITECTURE_RESEARCH.md
+
+---
+
+## Objective
+
+Implement the data model and API routes for multi-project management. This is the foundation for the admin dashboard.
+
+## Deliverables
+
+### 1. Database Schema (Supabase/Prisma)
+
+Create tables for:
+- `projects` - Multi-project per user
+- `project_versions` - Version snapshots for rollback
+- `pages` - Page hierarchy within projects
+- `component_slots` - AI generation slots per page
+- `generation_history` - Track AI generations
+
+Use the TypeScript interfaces from PLATFORM_ARCHITECTURE_RESEARCH.md Part A.1 as your guide.
+
+### 2. API Routes
+
+Create Next.js API routes:
+
+```
+/api/projects
+  GET    - List user's projects
+  POST   - Create new project
+
+/api/projects/[id]
+  GET    - Get project details
+  PATCH  - Update project
+  DELETE - Archive project (soft delete)
+
+/api/projects/[id]/pages
+  GET    - List pages in project
+  POST   - Create page
+  PATCH  - Reorder pages
+
+/api/projects/[id]/pages/[pageId]
+  GET    - Get page details
+  PATCH  - Update page
+  DELETE - Delete page
+
+/api/projects/[id]/versions
+  GET    - List versions
+  POST   - Create snapshot
+
+/api/projects/[id]/export
+  POST   - Generate export package
+```
+
+### 3. Type Definitions
+
+Create TypeScript types in `website/lib/types/project.ts` matching the schema.
+
+## Constraints
+
+- Use Supabase for database (existing integration)
+- Row-level security for multi-tenant isolation
+- Soft deletes for projects (status: 'deleted')
+- JSON column for `config` (flexible schema)
+
+## Success Criteria
+
+- [ ] All tables created with proper relations
+- [ ] All API routes functional
+- [ ] RLS policies prevent cross-user access
+- [ ] TypeScript types exported
+- [ ] Basic error handling with apiError/apiSuccess
+
+## NOT in Scope
+
+- UI implementation (Website Agent)
+- CLI commands (CLI Agent)
+- AI generation logic (separate task)
+

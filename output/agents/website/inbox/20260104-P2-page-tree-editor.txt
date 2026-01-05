@@ -1,0 +1,104 @@
+TASK: Implement Page Tree Editor UI
+PRIORITY: P2 (After Dashboard)
+TYPE: Frontend / React / UI
+REFERENCE: output/shared/design/PLATFORM_ARCHITECTURE_RESEARCH.md Part B
+DEPENDS_ON: Project Dashboard UI, Data Model
+
+---
+
+## Objective
+
+Create the page tree editor where users can design their app's page structure.
+
+## Deliverables
+
+### 1. Page Editor Layout
+
+Create `/app/projects/[id]/pages/page.tsx`:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│ ◀ Back to Dashboard        Project: My SaaS        [Preview]│
+├──────────────────┬──────────────────────────────────────────┤
+│ PAGES            │  PAGE SETTINGS                            │
+│ ────────────────│                                           │
+│ 📄 / (Home)      │  Title: [Home                    ]       │
+│ 📄 /pricing      │  Path:  [/                       ]       │
+│ 📄 /about        │  Type:  (●) Page  ( ) Layout  ( ) API    │
+│ 📁 /dashboard 🔒 │                                           │
+│   📄 /settings   │  ─────────────────────────────────────   │
+│   📄 /billing    │  COMPONENTS                               │
+│ 📄 /blog         │  ┌─────────────────────────────────┐     │
+│   📄 /[slug] 🔷  │  │ 🔗 Header (shared)              │     │
+│                  │  ├─────────────────────────────────┤     │
+│ [+ Add Page]     │  │ 🤖 Hero Section                 │     │
+│                  │  │    [Prompt input...]            │     │
+│                  │  └─────────────────────────────────┘     │
+└──────────────────┴──────────────────────────────────────────┘
+```
+
+### 2. Components to Create
+
+```
+website/app/components/page-editor/
+├── PageTree.tsx           # Collapsible tree sidebar
+├── PageTreeItem.tsx       # Individual tree node
+├── PageSettings.tsx       # Right panel settings form
+├── ComponentSlots.tsx     # Component slot list
+├── ComponentSlot.tsx      # Individual slot (shared/AI/static)
+├── AddPageModal.tsx       # Create new page modal
+└── RouteTypeBadge.tsx     # Dynamic, Catch-all, API badges
+```
+
+### 3. Page Tree Features
+
+- Drag-and-drop reordering
+- Nested pages (parent/child)
+- Visual indicators:
+  - 🔒 Protected (auth required)
+  - 🔷 Dynamic route ([id])
+  - 🟣 Catch-all ([...slug])
+  - ⚡ API route
+- Add page button
+- Delete page (with confirmation)
+- Rename inline
+
+### 4. Page Settings Panel
+
+When a page is selected, show:
+- Title input
+- Path input (auto-slugify)
+- Route type selector (Page, Layout, API)
+- Auth required toggle
+- SEO fields (title, description)
+- Component slots list
+
+### 5. Component Slots
+
+Display list of slots:
+- 🔗 Shared (inherited from layout)
+- 🤖 AI Generate (with prompt input)
+- 📝 Static (pre-built component selector)
+
+## Technical Requirements
+
+- Use existing tree component or build with headless UI
+- Optimistic updates for reordering
+- Debounced auto-save for settings
+- Keyboard navigation (up/down arrows)
+
+## Success Criteria
+
+- [ ] Tree displays page hierarchy
+- [ ] Can add/remove/reorder pages
+- [ ] Settings panel shows on selection
+- [ ] Component slots display correctly
+- [ ] Route badges show correctly
+- [ ] Mobile-responsive (collapse tree)
+
+## NOT in Scope
+
+- Actual page preview/generation
+- Component slot content editing
+- Graph view (future feature)
+
