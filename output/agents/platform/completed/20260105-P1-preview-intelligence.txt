@@ -1,0 +1,109 @@
+TASK: Build Intelligent Multi-Page Preview System
+PRIORITY: P1 (Core Feature)
+TYPE: AI / Backend / Preview
+AGENT: Platform Agent
+
+---
+
+## Objective
+
+Transform the preview from a single static page into an intelligent,
+navigable prototype that accurately represents the final project.
+
+## Current Problems
+
+1. Preview is single-page only
+2. Preview doesn't reflect all user choices
+3. No navigation between pages
+4. Component props are generic, not personalized
+5. No state simulation (auth, cart, etc.)
+
+## Deliverables
+
+### 1. Multi-Page Preview Architecture
+
+Implement system where:
+- Each page in `project_pages` can be previewed
+- Navigation links work between previewed pages
+- URL changes reflect current preview page
+- Preview maintains consistent design across pages
+
+Technical approach:
+- Use iframe sandbox with custom router
+- Generate each page on-demand or pre-cache
+- Share context (colors, fonts, user data) across pages
+
+### 2. Intelligent Component Props
+
+Instead of generic props, generate contextual props:
+
+Current:
+```tsx
+<Hero title="Welcome" subtitle="Get started" />
+```
+
+Improved:
+```tsx
+<Hero 
+  title="Build Your SaaS in 5 Days"  // From user's vision
+  subtitle="AI-powered development framework"  // From research
+  ctaText="Start Free Trial"  // From pricing integration
+  ctaLink="/signup"  // From page structure
+/>
+```
+
+Source data from:
+- User's vision statement
+- Research domain insights
+- Selected integrations
+- Page hierarchy
+
+### 3. State Simulation
+
+Simulate realistic app states:
+- **Auth state**: Preview as logged-in/logged-out user
+- **Data state**: Mock database with realistic fixtures
+- **Cart state**: E-commerce cart with sample items
+- **Subscription state**: Show Pro vs Free tier differences
+
+### 4. Preview-to-Export Fidelity
+
+Ensure preview accurately represents export:
+- Same component library (shadcn/ui)
+- Same Tailwind config
+- Same color scheme application
+- Same responsive behavior
+
+Add "Fidelity Score" showing match percentage.
+
+## API Routes to Create
+
+```
+POST /api/preview/page/[pageId]
+  - Generate preview for specific page
+  - Include navigation context
+  - Apply user's branding
+
+POST /api/preview/session
+  - Create preview session with shared state
+  - Return session ID for navigation
+
+GET /api/preview/session/[id]/page/[path]
+  - Get page within session context
+```
+
+## Success Criteria
+
+- [ ] Multi-page navigation works
+- [ ] Props are personalized from user input
+- [ ] State simulation implemented
+- [ ] Fidelity score shows match %
+- [ ] Export matches preview
+
+## References
+
+- Current: website/lib/preview/template-compositions.ts
+- Current: website/components/preview/PreviewRenderer.tsx
+- Current: website/lib/ai/preview-generator.ts
+- Database: project_pages, component_slots tables
+

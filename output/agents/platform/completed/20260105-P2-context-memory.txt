@@ -1,0 +1,162 @@
+TASK: Implement AI Context Memory System
+PRIORITY: P2 (Enhancement)
+TYPE: AI / Backend / State
+AGENT: Platform Agent
+
+---
+
+## Objective
+
+Create a persistent context system so AI generations maintain coherence
+across the entire configurator session and between sessions.
+
+## Current Problems
+
+1. Each AI call is stateless - no memory of previous calls
+2. Preview generation doesn't know about research results
+3. Export doesn't reflect preview customizations
+4. Returning users start from scratch
+5. No learning from user corrections
+
+## Deliverables
+
+### 1. Session Context Store
+
+Maintain context throughout configurator session:
+
+```typescript
+interface SessionContext {
+  sessionId: string;
+  userId?: string;
+  
+  // Accumulated understanding
+  understanding: {
+    projectType: string;
+    targetAudience: string;
+    keyFeatures: string[];
+    designPreferences: {
+      style: string;
+      colors: string[];
+      inspiration: string[];
+    };
+    technicalRequirements: string[];
+  };
+  
+  // AI interaction history
+  interactions: {
+    timestamp: Date;
+    type: 'research' | 'preview' | 'component' | 'export';
+    input: any;
+    output: any;
+    userFeedback?: 'accepted' | 'modified' | 'rejected';
+  }[];
+  
+  // Corrections and refinements
+  corrections: {
+    original: string;
+    corrected: string;
+    context: string;
+  }[];
+}
+```
+
+### 2. Context-Aware AI Prompts
+
+Pass accumulated context to every AI call:
+
+```typescript
+async function generateWithContext(
+  prompt: string,
+  context: SessionContext
+): Promise<AIResponse> {
+  const systemPrompt = buildSystemPrompt(context);
+  // System prompt includes:
+  // - Project understanding
+  // - Previous decisions
+  // - User corrections
+  // - Style preferences
+}
+```
+
+### 3. Cross-Step Context Flow
+
+```
+Research → Understanding extracted → Stored in context
+    ↓
+Template Selection → Context influences recommendation
+    ↓
+Integration Config → Context suggests providers
+    ↓
+Preview → Context drives component props
+    ↓
+Export → Context included in README, comments
+```
+
+### 4. User Correction Learning
+
+When user modifies AI output:
+- Detect what changed
+- Store as correction
+- Apply to future generations
+
+Example:
+```
+AI generates: "Welcome to Our Platform"
+User changes: "Welcome to TaskFlow Pro"
+System learns: Project name is "TaskFlow Pro"
+Future generations use correct name
+```
+
+### 5. Project Memory (Returning Users)
+
+When user returns to saved project:
+- Load previous context
+- Show "Welcome back" with summary
+- AI remembers previous decisions
+- Can iterate from where they left off
+
+## API Routes
+
+```
+POST /api/context/session
+  - Create new session context
+  - Returns sessionId
+
+PATCH /api/context/session/[id]
+  - Update context with new interactions
+  - Record corrections
+
+GET /api/context/session/[id]
+  - Get full context for AI calls
+
+POST /api/context/session/[id]/learn
+  - Process user correction
+  - Update understanding
+```
+
+## Database Schema Addition
+
+```sql
+CREATE TABLE session_contexts (
+  id UUID PRIMARY KEY,
+  project_id UUID REFERENCES user_projects(id),
+  context JSONB NOT NULL,
+  created_at TIMESTAMP DEFAULT NOW(),
+  updated_at TIMESTAMP DEFAULT NOW()
+);
+```
+
+## Success Criteria
+
+- [ ] Context persists across steps
+- [ ] AI uses context in all generations
+- [ ] Corrections improve future output
+- [ ] Returning users have continuity
+- [ ] Context visible in debug mode
+
+## References
+
+- Current: website/lib/configurator-state.ts
+- Current: website/lib/ai/preview-generator.ts
+- Inspiration: ChatGPT memory, Cursor context
+

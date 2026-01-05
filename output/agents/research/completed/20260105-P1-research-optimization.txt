@@ -1,0 +1,77 @@
+TASK: Optimize Research Phase for Better Output Quality
+PRIORITY: P1 (High Impact)
+TYPE: Research / AI / UX
+AGENT: Research Agent
+
+---
+
+## Objective
+
+Improve how the research phase captures, analyzes, and applies user intent
+to generate more relevant and accurate project configurations.
+
+## Current Problems
+
+1. Research runs once, no iteration
+2. URL extraction sometimes fails or returns shallow data
+3. Recommendations aren't always applied correctly
+4. No feedback loop - user can't refine results
+5. Research context is lost after the step
+
+## Deliverables
+
+### 1. Multi-Source Research Input
+
+Design a system that accepts:
+- **Text description** (current)
+- **Image uploads** (screenshots of inspiration sites)
+- **URL deep-crawling** (not just homepage)
+- **Figma/design file links** (extract design tokens)
+- **Competitor analysis** (multiple URLs compared)
+
+Output: Research input specification document
+
+### 2. Iterative Research Refinement
+
+Design UX flow for:
+- User sees initial recommendations
+- User can say "more like X, less like Y"
+- AI refines recommendations based on feedback
+- 2-3 iteration cycles before finalizing
+
+Output: UX wireframes and API spec
+
+### 3. Research Context Persistence
+
+Design how research insights carry through:
+- Store in Zustand state AND database
+- Pass to preview generation
+- Include in export README
+- Use for component prop generation
+
+Output: Data flow diagram
+
+### 4. Competitive Analysis Feature
+
+When user provides competitor URLs:
+- Extract their features
+- Identify differentiation opportunities
+- Suggest unique selling points
+- Map to available integrations
+
+Output: Feature specification
+
+## Success Criteria
+
+- [ ] Research inputs documented
+- [ ] Iteration UX designed
+- [ ] Context persistence designed
+- [ ] Competitive analysis specified
+- [ ] Ready for Platform Agent implementation
+
+## References
+
+- Current: website/app/api/research/analyze/route.ts
+- Current: website/lib/research-client.ts
+- Current: website/app/components/configurator/sections/ResearchSection.tsx
+

@@ -19,3 +19,4 @@ export { ImageOptSection } from "./ImageOptSection";
 export { BackgroundJobsSection } from "./BackgroundJobsSection";
 export { NotificationsSection } from "./NotificationsSection";
 export { FeatureFlagsSection } from "./FeatureFlagsSection";
+export { VisionBuilderSection } from "./VisionBuilderSection";

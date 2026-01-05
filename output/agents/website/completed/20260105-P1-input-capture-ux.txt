@@ -1,0 +1,133 @@
+TASK: Enhanced User Input Capture UX
+PRIORITY: P1 (Foundation)
+TYPE: UX / Frontend / AI
+AGENT: Website Agent
+
+---
+
+## Objective
+
+Redesign how we capture user intent to maximize signal for AI generation.
+Better inputs = better outputs.
+
+## Current Problems
+
+1. Vision field is a simple textarea - low engagement
+2. Users don't know what to write
+3. No structured extraction of requirements
+4. Image/screenshot input underutilized
+5. No guided discovery of needs
+
+## Deliverables
+
+### 1. Guided Vision Builder
+
+Replace single textarea with guided experience:
+
+```
+Step 1: "What's the core problem you're solving?"
+        [Text input with examples]
+        
+Step 2: "Who are your users?"
+        [Persona selector: B2B | B2C | Internal | Mixed]
+        [Optional: describe in detail]
+        
+Step 3: "What's your business model?"
+        [Cards: Subscription | One-time | Freemium | Marketplace | Free]
+        
+Step 4: "What's your design vibe?"
+        [Image grid: Minimal | Bold | Playful | Corporate | Dark]
+        [Optional: upload inspiration images]
+        
+Step 5: "Any specific features you need?"
+        [Smart checklist based on previous answers]
+```
+
+Each step updates a structured `VisionDocument`:
+
+```typescript
+interface VisionDocument {
+  problem: string;
+  audience: {
+    type: 'b2b' | 'b2c' | 'internal' | 'mixed';
+    description?: string;
+  };
+  businessModel: string;
+  designStyle: string;
+  inspirations: string[];  // URLs or uploaded images
+  requiredFeatures: string[];
+  niceToHaveFeatures: string[];
+}
+```
+
+### 2. Smart Prompts & Examples
+
+For each input, show:
+- Placeholder with good example
+- "Need help?" expands to show 3 examples
+- AI suggestion based on template selection
+
+Example:
+```
+Template: SaaS
+Prompt: "What problem does your SaaS solve?"
+Placeholder: "Help small businesses manage inventory without spreadsheets"
+Examples:
+  - "Automate social media scheduling for agencies"
+  - "Track developer productivity metrics"
+  - "Simplify contract signing for legal teams"
+```
+
+### 3. Voice Input Option
+
+Add microphone button for voice-to-text:
+- User describes vision verbally
+- Transcribed to text
+- AI structures into VisionDocument
+- User reviews and edits
+
+### 4. Inspiration Screenshot Analysis
+
+When user uploads screenshots:
+- AI analyzes visual style
+- Extracts: colors, typography, layout patterns
+- Auto-fills design preferences
+- Shows "We detected: Modern, minimal, blue accent"
+
+### 5. Progressive Disclosure
+
+Don't overwhelm with all 23 steps upfront:
+- Show 4 essential steps first
+- "Advanced options" expands rest
+- Smart defaults for skipped steps
+- "AI will choose optimal settings"
+
+## Components to Create
+
+```
+website/app/components/configurator/vision/
+├── VisionBuilder.tsx        # Main guided flow
+├── ProblemStep.tsx
+├── AudienceStep.tsx
+├── BusinessModelStep.tsx
+├── DesignStyleStep.tsx
+├── FeatureDiscovery.tsx
+├── VoiceInput.tsx
+├── ScreenshotAnalyzer.tsx
+└── VisionSummary.tsx
+```
+
+## Success Criteria
+
+- [ ] Guided vision builder implemented
+- [ ] Smart prompts for each input
+- [ ] Voice input works
+- [ ] Screenshot analysis extracts style
+- [ ] VisionDocument passed to all generation
+
+## References
+
+- Current: website/app/components/configurator/sections/ResearchSection.tsx
+- Current: website/lib/configurator-state.ts (vision field)
+- Inspiration: Typeform, Notion AI, Webflow wizard
+
