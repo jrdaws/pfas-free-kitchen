@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -178,6 +178,22 @@ export function LivePreviewPanel({
       setIsComposing(false);
     }
   }, [projectName, description, vision, template, integrations, featureCount]);
+
+  // Auto-compose when user has provided enough context
+  const hasEnoughContext = projectName && projectName.length > 2 && template;
+  const hasAutoComposedRef = useRef(false);
+  
+  useEffect(() => {
+    // Auto-compose on first load when there's enough context
+    if (hasEnoughContext && !hasAutoComposedRef.current && !composition && !isComposing && isVisible) {
+      hasAutoComposedRef.current = true;
+      // Delay to let the panel render first
+      const timer = setTimeout(() => {
+        handleCompose();
+      }, 800);
+      return () => clearTimeout(timer);
+    }
+  }, [hasEnoughContext, composition, isComposing, isVisible, handleCompose]);
 
   // Handle section regeneration
   const handleRegenerateSection = useCallback(async (pageId: string, sectionIndex: number, feedback?: string) => {
