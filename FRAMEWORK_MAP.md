@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- cf24487 2026-01-05 feat: complete deep website analysis system (Waves 1-3)
 - 9c9c4cd 2026-01-05 feat(research): enhance Firecrawl with screenshots + Claude Vision analysis
 - 4e4cf1c 2026-01-05 feat(analysis): implement deep website analysis from inspiration URLs
 - c6f2c47 2026-01-05 fix: prevent AI from copying vision verbatim
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 70eb8f1 2026-01-04 test: complete validation of new platform features
 - 5a8eba5 2026-01-04 chore: mark slot templates task complete
 - 69c18d1 2026-01-04 feat(slots): add component slot templates for page builder
-- a4709e4 2026-01-04 feat(marketplace): add C2C marketplace with auction system
 
 ## Agent Governance Structure
 

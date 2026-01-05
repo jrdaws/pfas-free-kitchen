@@ -45,6 +45,56 @@ export interface ProjectConfig {
     textColor?: string;
     fontFamily?: string;
   };
+  /** Website analysis data from inspiration site */
+  websiteAnalysis?: {
+    url: string;
+    timestamp: string;
+    features: Record<string, Record<string, boolean | Record<string, boolean>>>;
+    visual: {
+      colors: {
+        primary: string;
+        secondary?: string;
+        accent?: string;
+        background: string;
+        foreground: string;
+        muted?: string;
+        border?: string;
+      };
+      typography: {
+        headingFont: string;
+        bodyFont: string;
+        baseFontSize?: string;
+      };
+      components: {
+        buttons: { shape: 'rounded' | 'pill' | 'square'; style: 'filled' | 'outline' | 'ghost' };
+        cards: { shadow: 'none' | 'sm' | 'md' | 'lg' | 'xl'; rounded: 'none' | 'sm' | 'md' | 'lg' | 'xl' };
+        inputs: { style: 'filled' | 'outline' | 'underline'; rounded: 'none' | 'sm' | 'md' | 'lg' | 'full' };
+      };
+      darkMode?: boolean;
+    };
+    structure: {
+      pages: Array<{
+        url: string;
+        title: string;
+        sections: Array<{
+          type: string;
+          variant?: string;
+          order: number;
+        }>;
+      }>;
+      navigation: Array<{
+        label: string;
+        href: string;
+        children?: Array<{ label: string; href: string }>;
+      }>;
+      footer?: {
+        columns: Array<{
+          title: string;
+          links: Array<{ label: string; href: string }>;
+        }>;
+      };
+    };
+  };
 }
 
 export interface GeneratedFile {

@@ -1,7 +1,7 @@
 /**
  * Project Generator Orchestrator
  * 
- * Combines templates, features, and integrations into a complete project.
+ * Combines templates, features, integrations, and website analysis into a complete project.
  */
 
 import { ProjectConfig, GeneratedProject, GeneratedFile, IntegrationCategory } from "./types";
@@ -11,6 +11,7 @@ import { getTemplateBase } from "./template-base";
 import { buildPackageJson } from "./package-builder";
 import { buildEnvTemplate } from "./env-builder";
 import { buildReadme } from "./readme-builder";
+import { processAnalysisForExport, WebsiteAnalysis } from "./analysis-loader";
 
 /**
  * Generate a complete project from configuration
@@ -48,40 +49,83 @@ export async function generateProject(config: ProjectConfig): Promise<GeneratedP
     ? getFeatureFiles(config.features, { projectName: config.projectName })
     : { files: [], packages: {}, devPackages: {}, envVars: [] };
 
-  // 6. Merge all files (base + integrations + features)
-  const allFiles = mergeFiles([baseFiles, integrationResult.files, featureResult.files]);
+  // 6. NEW: Process website analysis if provided
+  let analysisFiles: GeneratedFile[] = [];
+  let analysisDeps: Record<string, string> = {};
+  let analysisDevDeps: Record<string, string> = {};
+  let analysisEnvVars: string[] = [];
 
-  // 7. Apply branding to files
+  if (config.websiteAnalysis) {
+    const analysisResult = processAnalysisForExport(
+      config.websiteAnalysis as WebsiteAnalysis,
+      config.projectName
+    );
+    analysisFiles = analysisResult.files;
+    analysisDeps = analysisResult.dependencies;
+    analysisDevDeps = analysisResult.devDependencies;
+    analysisEnvVars = analysisResult.envVars;
+
+    // Add analysis summary to setup instructions
+    setupInstructions.push(`\n## Website Analysis Applied\n`);
+    setupInstructions.push(`- Source: ${config.websiteAnalysis.url}`);
+    setupInstructions.push(`- Files generated: ${analysisResult.summary.totalFiles}`);
+    setupInstructions.push(`  - Feature components: ${analysisResult.summary.featureFiles}`);
+    setupInstructions.push(`  - Style files: ${analysisResult.summary.styleFiles}`);
+    setupInstructions.push(`  - Structure files: ${analysisResult.summary.structureFiles}`);
+    setupInstructions.push(`  - Section components: ${analysisResult.summary.sectionComponents}`);
+  }
+
+  // 7. Merge all files (base + integrations + features + analysis)
+  const allFiles = mergeFiles([
+    baseFiles,
+    integrationResult.files,
+    featureResult.files,
+    analysisFiles,
+  ]);
+
+  // 8. Apply branding to files
   const brandedFiles = applyBranding(allFiles, config.branding, config.projectName);
 
-  // 8. Merge all dependencies
+  // 9. Merge all dependencies
   const allDependencies = {
     ...integrationResult.dependencies,
     ...featureResult.packages,
+    ...analysisDeps,
   };
   const allDevDependencies = {
     ...integrationResult.devDependencies,
     ...featureResult.devPackages,
+    ...analysisDevDeps,
   };
 
-  // 9. Merge all env vars
+  // 10. Merge all env vars
   const allEnvVars = [...integrationResult.envVars];
   for (const envVar of featureResult.envVars) {
     if (!allEnvVars.some(e => e.name === envVar.name)) {
       allEnvVars.push(envVar);
     }
   }
+  // Add analysis env vars
+  for (const envVarName of analysisEnvVars) {
+    if (!allEnvVars.some(e => e.name === envVarName)) {
+      allEnvVars.push({
+        name: envVarName,
+        description: `Required for detected feature`,
+        required: true,
+      });
+    }
+  }
 
-  // 10. Build package.json
+  // 11. Build package.json
   const packageJson = buildPackageJson(config, allDependencies, allDevDependencies);
 
-  // 11. Build .env.example
+  // 12. Build .env.example
   const envTemplate = buildEnvTemplate(allEnvVars);
 
-  // 12. Build README with feature info
+  // 13. Build README with feature info
   const readme = buildReadme(config, integrationResult.postInstall);
 
-  // 13. Collect setup instructions
+  // 14. Collect setup instructions
   setupInstructions.push(...integrationResult.postInstall);
 
   // Add feature-specific instructions
@@ -155,4 +199,7 @@ function applyBranding(
 export * from "./types";
 export { getIntegrationManifest, checkIntegrationDependencies } from "./integration-loader";
 export { getFeatureFiles, validateFeatureSelection, resolveFeatureDependencies, getFeatureSummary } from "./feature-loader";
+export { processAnalysisForExport, getAnalysisExportSummary, WebsiteAnalysis } from "./analysis-loader";
+export { generateStyleFiles, generateTailwindConfig, generateGlobalsCss } from "./style-generator";
+export { generateStructureFiles, generateSectionComponents, generatePageFromStructure } from "./structure-generator";
 
