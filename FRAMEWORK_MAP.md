@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 5a8eba5 2026-01-04 chore: mark slot templates task complete
 - 69c18d1 2026-01-04 feat(slots): add component slot templates for page builder
 - a4709e4 2026-01-04 feat(marketplace): add C2C marketplace with auction system
 - b71f792 2026-01-04 docs(governance): add key rules checklist to fallback command
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 610c280 2026-01-04 feat: dynamic preview integration badges and template-specific CTAs
 - 5dd762b 2026-01-04 fix: progress bar can now reach 100% - remove hidden claude-code tool
 - bdeded9 2026-01-04 chore: move completed task to done
-- 510cfc4 2026-01-04 feat: auto-include features + integration bridges + e-commerce templates
 
 ## Agent Governance Structure
 
