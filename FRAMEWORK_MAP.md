@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 03d7a5f 2026-01-05 feat: pass Firecrawl research results to preview composer
 - 2fef60f 2026-01-05 debug: add console logs to track auto-compose status
 - b6f0545 2026-01-05 chore: remove completed task file for optimization tests
 - dc44dc6 2026-01-05 test: add integration tests for 6 optimization features
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - b4b0ef6 2026-01-04 test(platform): add comprehensive test plans for platform features
 - e5c94b2 2026-01-04 feat(governance): add fallback command for old chats
 - 5803db7 2026-01-04 chore: move env-pull task to done
-- ecbc45c 2026-01-04 feat(cli): add env pull and env check commands
 
 ## Agent Governance Structure
 

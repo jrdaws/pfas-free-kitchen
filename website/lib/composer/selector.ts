@@ -16,6 +16,7 @@ import type {
   PageType,
   LayoutType,
 } from "./types";
+import { mapAestheticToVariant, mapLayoutType, type DesignAnalysis } from "../design-analyzer";
 
 // ============================================================================
 // Pattern Registry (will be expanded by Template Agent)
@@ -302,10 +303,82 @@ function getFallbackSelection(pageType: PageType): PatternSelection[] {
 }
 
 // ============================================================================
+// Design Analysis Integration
+// ============================================================================
+
+/**
+ * Convert design analysis pattern recommendations to pattern selections
+ */
+function selectFromDesignAnalysis(
+  designAnalysis: DesignAnalysis,
+  pageType: PageType
+): SelectorOutput {
+  const variant = mapAestheticToVariant(designAnalysis.aesthetic);
+  const layoutRecommendation = mapLayoutType(designAnalysis.layout) as LayoutType;
+  
+  // Start with AI recommendations
+  const sections: PatternSelection[] = designAnalysis.patternRecommendations.map((rec, index) => ({
+    patternId: rec.patternId,
+    reason: rec.reason,
+    variant,
+    order: index + 1,
+    confidenceScore: rec.confidence,
+  }));
+  
+  // If no recommendations, fall back to page type defaults
+  if (sections.length === 0) {
+    return {
+      sections: getFallbackSelection(pageType),
+      layoutRecommendation,
+    };
+  }
+  
+  // Ensure we have navigation and footer
+  const hasNav = sections.some(s => s.patternId.includes("nav"));
+  const hasFooter = sections.some(s => s.patternId.includes("footer"));
+  
+  if (!hasNav) {
+    sections.unshift({
+      patternId: "nav-standard",
+      reason: "Navigation added for page structure",
+      variant: designAnalysis.layout.navigation === "transparent" ? "transparent" : "solid",
+      order: 0,
+      confidenceScore: 100,
+    });
+  }
+  
+  if (!hasFooter) {
+    sections.push({
+      patternId: "footer-multi-column",
+      reason: "Footer added for page structure",
+      variant,
+      order: sections.length + 1,
+      confidenceScore: 100,
+    });
+  }
+  
+  // Renumber orders
+  sections.forEach((s, i) => s.order = i + 1);
+  
+  console.log(`[Selector] Using design analysis - ${sections.length} patterns, layout: ${layoutRecommendation}`);
+  
+  return {
+    sections,
+    layoutRecommendation,
+  };
+}
+
+// ============================================================================
 // Main Export
 // ============================================================================
 
 export async function selectPatterns(input: SelectorInput): Promise<SelectorOutput> {
+  // If we have design analysis with pattern recommendations, use it directly
+  if (input.designAnalysis?.patternRecommendations?.length) {
+    console.log("[Selector] Using design analysis for pattern selection");
+    return selectFromDesignAnalysis(input.designAnalysis, input.pageType);
+  }
+  
   const apiKey = process.env.ANTHROPIC_API_KEY;
   
   // If no API key, use fallback

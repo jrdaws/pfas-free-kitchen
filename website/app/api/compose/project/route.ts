@@ -65,6 +65,16 @@ export async function POST(request: NextRequest) {
       );
     }
     
+    // Transform research recommendations if provided (API accepts string[], internal type is object[])
+    const research = body.research ? {
+      insights: body.research.insights,
+      recommendations: body.research.recommendations.map((r: string) => ({
+        category: "general",
+        features: [],
+        reason: r,
+      })),
+    } : undefined;
+
     const input: ComposerInput = {
       vision: {
         projectName: body.vision.projectName,
@@ -74,7 +84,7 @@ export async function POST(request: NextRequest) {
         goals: body.vision.goals,
         keywords: body.vision.keywords,
       },
-      research: body.research,
+      research,
       template: body.template as ComposerInput["template"],
       pages: body.pages.map(p => ({
         path: p.path,
