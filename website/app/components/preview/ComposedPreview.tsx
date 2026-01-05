@@ -1,14 +1,20 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { PreviewLink } from "./PreviewLink";
+import { StyledButton, type ComponentStyleButton } from "./StyledButton";
+import { StyledCard, type ComponentStyleCard } from "./StyledCard";
+import { FeatureBadges, type DetectedFeatures } from "./FeatureBadges";
 import type { PreviewComposition, PreviewPage, PreviewComponent } from "./types";
+import type { WebsiteAnalysis, AppliedStyles } from "./analysis-types";
+import { extractAppliedStyles } from "./analysis-types";
 
 interface ComposedPreviewProps {
   composition: PreviewComposition;
   currentPath: string;
   onNavigate: (path: string) => void;
+  websiteAnalysis?: WebsiteAnalysis;
   className?: string;
 }
 
@@ -16,9 +22,37 @@ export function ComposedPreview({
   composition,
   currentPath,
   onNavigate,
+  websiteAnalysis,
   className,
 }: ComposedPreviewProps) {
   const currentPage = composition.pages.find((p) => p.path === currentPath);
+  
+  // Extract applied styles from analysis
+  const appliedStyles = useMemo(
+    () => extractAppliedStyles(websiteAnalysis),
+    [websiteAnalysis]
+  );
+  
+  // Build CSS variable styles from analysis or theme
+  const colorStyles = useMemo(() => {
+    if (appliedStyles) {
+      return {
+        "--preview-primary": appliedStyles.colors.primary,
+        "--preview-secondary": appliedStyles.colors.secondary,
+        "--preview-accent": appliedStyles.colors.accent,
+        "--preview-background": appliedStyles.colors.background,
+        "--preview-foreground": appliedStyles.colors.foreground,
+        "--preview-muted": appliedStyles.colors.muted,
+      } as React.CSSProperties;
+    }
+    // Fall back to theme
+    return {
+      "--preview-primary": composition.theme.primaryColor,
+      "--preview-secondary": composition.theme.secondaryColor,
+      "--preview-background": composition.theme.backgroundColor,
+      "--preview-foreground": composition.theme.textColor,
+    } as React.CSSProperties;
+  }, [appliedStyles, composition.theme]);
 
   if (!currentPage) {
     return (
@@ -39,7 +73,21 @@ export function ComposedPreview({
   }
 
   return (
-    <div className={cn("min-h-full bg-white", className)}>
+    <div 
+      className={cn("min-h-full bg-white", className)}
+      style={colorStyles}
+    >
+      {/* Feature badges from analysis */}
+      {websiteAnalysis?.features && (
+        <div className="px-6 py-2 bg-gray-50 border-b border-gray-200">
+          <FeatureBadges
+            features={websiteAnalysis.features as DetectedFeatures}
+            variant="compact"
+            primaryColor={appliedStyles?.colors.primary}
+          />
+        </div>
+      )}
+      
       {/* Render navigation */}
       <PreviewNavigation
         navigation={composition.navigation}
@@ -47,6 +95,7 @@ export function ComposedPreview({
         onNavigate={onNavigate}
         siteName={composition.projectName}
         theme={composition.theme}
+        appliedStyles={appliedStyles}
       />
 
       {/* Render page components */}
@@ -57,6 +106,7 @@ export function ComposedPreview({
             component={component}
             onNavigate={onNavigate}
             theme={composition.theme}
+            appliedStyles={appliedStyles}
           />
         ))}
       </main>
@@ -77,6 +127,7 @@ interface PreviewNavigationProps {
   onNavigate: (path: string) => void;
   siteName: string;
   theme: PreviewComposition["theme"];
+  appliedStyles?: AppliedStyles | null;
 }
 
 function PreviewNavigation({
@@ -85,7 +136,9 @@ function PreviewNavigation({
   onNavigate,
   siteName,
   theme,
+  appliedStyles,
 }: PreviewNavigationProps) {
+  const primaryColor = appliedStyles?.colors.primary || theme.primaryColor;
   return (
     <header
       className="sticky top-0 z-50 px-6 py-4 bg-white/90 backdrop-blur-sm border-b border-slate-200"
@@ -94,7 +147,7 @@ function PreviewNavigation({
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <div
           className="text-xl font-bold cursor-pointer"
-          style={{ color: theme.primaryColor }}
+          style={{ color: primaryColor }}
           onClick={() => onNavigate("/")}
         >
           {siteName}
@@ -125,13 +178,20 @@ interface PreviewComponentRendererProps {
   component: PreviewComponent;
   onNavigate: (path: string) => void;
   theme: PreviewComposition["theme"];
+  appliedStyles?: AppliedStyles | null;
 }
 
 function PreviewComponentRenderer({
   component,
   onNavigate,
   theme,
+  appliedStyles,
 }: PreviewComponentRendererProps) {
+  // Use applied styles colors or fall back to theme
+  const primaryColor = appliedStyles?.colors.primary || theme.primaryColor;
+  const secondaryColor = appliedStyles?.colors.secondary || theme.secondaryColor;
+  const buttonStyle = appliedStyles?.components.button;
+  const cardStyle = appliedStyles?.components.card;
   const renderComponent = useCallback(() => {
     const { type, props } = component;
 
@@ -143,10 +203,13 @@ function PreviewComponentRenderer({
           <section
             className="px-6 py-24 text-center"
             style={{ 
-              background: `linear-gradient(135deg, ${theme.primaryColor}10 0%, ${theme.secondaryColor}10 100%)` 
+              background: `linear-gradient(135deg, ${primaryColor}10 0%, ${secondaryColor}10 100%)` 
             }}
           >
-            <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            <h1 className={cn(
+              "text-4xl md:text-5xl text-slate-900 mb-4",
+              appliedStyles?.typography.headingClass || "font-bold"
+            )}>
               {(props.headline as string) || "Welcome to Our Platform"}
             </h1>
             <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
@@ -156,21 +219,27 @@ function PreviewComponentRenderer({
               <PreviewLink
                 href={(props.ctaLink as string) || "/signup"}
                 onNavigate={onNavigate}
-                className="px-6 py-3 rounded-lg text-white font-medium"
               >
-                <span
-                  className="px-6 py-3 rounded-lg text-white font-medium"
-                  style={{ backgroundColor: theme.primaryColor }}
+                <StyledButton
+                  componentStyle={buttonStyle}
+                  primaryColor={primaryColor}
+                  secondaryColor={secondaryColor}
+                  variant="primary"
                 >
                   {(props.ctaText as string) || "Get Started"}
-                </span>
+                </StyledButton>
               </PreviewLink>
               <PreviewLink
                 href={(props.secondaryLink as string) || "/features"}
                 onNavigate={onNavigate}
-                className="px-6 py-3 rounded-lg border border-slate-300 text-slate-700 font-medium hover:bg-slate-50"
               >
-                Learn More
+                <StyledButton
+                  componentStyle={{ ...buttonStyle, style: "outline" }}
+                  primaryColor={primaryColor}
+                  variant="secondary"
+                >
+                  Learn More
+                </StyledButton>
               </PreviewLink>
             </div>
           </section>
@@ -184,18 +253,29 @@ function PreviewComponentRenderer({
         ];
         return (
           <section className="px-6 py-16">
-            <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
+            <h2 className={cn(
+              "text-3xl text-center text-slate-900 mb-12",
+              appliedStyles?.typography.headingClass || "font-bold"
+            )}>
               {(props.title as string) || "Features"}
             </h2>
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {features.map((feature, i) => (
-                <div key={i} className="p-6 rounded-xl bg-slate-50 text-center">
-                  <div className="text-4xl mb-4">{feature.icon}</div>
+                <StyledCard key={i} componentStyle={cardStyle} className="text-center">
+                  <div 
+                    className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
+                    style={{ 
+                      backgroundColor: `${primaryColor}15`,
+                      color: primaryColor,
+                    }}
+                  >
+                    {feature.icon}
+                  </div>
                   <h3 className="text-lg font-semibold text-slate-900 mb-2">
                     {feature.title}
                   </h3>
                   <p className="text-slate-600">{feature.description}</p>
-                </div>
+                </StyledCard>
               ))}
             </div>
           </section>
