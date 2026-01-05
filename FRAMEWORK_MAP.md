@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: 890a7cc38d
+Hash: ae3a969bf2
 
 ## Recent changes
+- 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
 - f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
 - 3ecb457 2026-01-04 feat: Complete Dashboard template with charts and data table
 - 0aa25e2 2026-01-04 feat: Complete Blog template with comments and related posts
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - f16cfb3 2026-01-03 feat(governance): add role-based SOP requirements
 - 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
 - 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
-- 61543f4 2026-01-03 test(export): document 5 build failures from tier 1 tests
 
 ## Agent Governance Structure
 
@@ -136,6 +136,7 @@ Used for: runtime reasoning, blast-radius analysis, debugging
   - `src/dd/pull.mjs`
   - `src/dd/cursorrules.mjs`
   - `src/dd/feature-assembler.mjs`
+  - `src/dd/env-manager.mjs`
   - `scripts/orchestrator/project-config.mjs`
   - `scripts/orchestrator/capability-engine.mjs`
     - `src/dd/recovery-guidance.mjs`
@@ -253,6 +254,8 @@ Used for: onboarding, refactors, capability ownership
 - `│  src/dd/cursorrules.mjs`
 - `├─ src/dd/feature-assembler.mjs`
 - `│  src/dd/feature-assembler.mjs`
+- `├─ src/dd/env-manager.mjs`
+- `│  src/dd/env-manager.mjs`
 - `├─ scripts/orchestrator/project-config.mjs`
 - `│  scripts/orchestrator/project-config.mjs`
 - `└─ scripts/orchestrator/capability-engine.mjs`
@@ -281,6 +284,7 @@ Used for: onboarding, refactors, capability ownership
 - `src/dd/pull.mjs` <- `bin/framework.js`
 - `src/dd/cursorrules.mjs` <- `bin/framework.js`
 - `src/dd/feature-assembler.mjs` <- `bin/framework.js`
+- `src/dd/env-manager.mjs` <- `bin/framework.js`
 - `scripts/orchestrator/project-config.mjs` <- `bin/framework.js`, `scripts/orchestrator/capability-engine.mjs`
 - `scripts/orchestrator/capability-engine.mjs` <- `bin/framework.js`
 - `src/dd/recovery-guidance.mjs` <- `src/commands/llm.mjs`, `src/commands/auth.mjs`

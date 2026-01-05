@@ -25,6 +25,7 @@ import { validateIntegrations, applyIntegrations } from "../src/dd/integrations.
 import { parsePullFlags, getApiUrl, fetchProject, generateEnvExample, generateContext, openInCursor, formatIntegrations } from "../src/dd/pull.mjs";
 import { generateCursorRules, generateStartPrompt } from "../src/dd/cursorrules.mjs";
 import { assembleFeatures, generateClaudeMd, getFeatureSummary, validateFeatureSelection } from "../src/dd/feature-assembler.mjs";
+import * as envManager from "../src/dd/env-manager.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PKG_ROOT = path.resolve(__dirname, "..");
@@ -1218,6 +1219,8 @@ Examples:
   framework clone swift-eagle-1234 ./my-app          # Clone to specific directory
   framework clone swift-eagle-1234 --features auth   # Clone with extra features
   framework features                                 # List available features
+  framework env pull                                 # Sync env vars from cloud
+  framework env check                                # Check which env vars are missing
   framework pull fast-lion-1234                      # Pull project from web platform
   framework pull fast-lion-1234 --cursor --open      # Pull with Cursor AI files and open
   framework d9d8c242-19af-4b6d-92d8-6d6a79094abc     # Pull by full UUID token
@@ -2150,6 +2153,361 @@ async function cmdListFeatures() {
 }
 
 /**
+ * Environment variable management commands
+ * Usage: framework env [pull|check|push] [options]
+ */
+async function cmdEnv(subcommand, extraArgs = []) {
+  // Handle help
+  if (!subcommand || subcommand === "--help" || subcommand === "-h" || subcommand === "help") {
+    console.log(`Usage: framework env <command> [options]
+
+Manage environment variables between cloud dashboard and local .env.local
+
+Commands:
+  pull      Download env vars from cloud to .env.local
+  check     Validate which env vars are set/missing
+  push      Push public keys to cloud (coming soon)
+
+Pull Options:
+  --project <id>    Specify project ID (optional if .dd/project.json exists)
+  --force           Overwrite existing .env.local
+  --dry-run         Show what would be written without writing
+
+Check Options:
+  --fix             Create missing .env.local entries
+
+Examples:
+  framework env pull
+  framework env pull --project abc123
+  framework env pull --dry-run
+  framework env check
+  framework env check --fix
+`)
+    process.exit(subcommand ? 0 : 1)
+  }
+
+  switch (subcommand) {
+    case "pull":
+      await cmdEnvPull(extraArgs)
+      break
+    case "check":
+      await cmdEnvCheck(extraArgs)
+      break
+    case "push":
+      logger.log("⚠️  env push is coming in Phase 2")
+      logger.log("   For now, manage public keys in the dashboard")
+      break
+    default:
+      logger.error(`Unknown env command: ${subcommand}`)
+      logger.log("Run 'framework env --help' for usage")
+      process.exit(1)
+  }
+}
+
+/**
+ * Pull environment variables from cloud to local .env.local
+ */
+async function cmdEnvPull(args = []) {
+  const cwd = process.cwd()
+  
+  // Parse flags
+  const flags = {
+    project: null,
+    force: args.includes("--force"),
+    dryRun: args.includes("--dry-run"),
+  }
+  
+  const projectIdx = args.findIndex(a => a === "--project")
+  if (projectIdx !== -1 && args[projectIdx + 1]) {
+    flags.project = args[projectIdx + 1]
+  }
+
+  logger.log("")
+  logger.log("╔════════════════════════════════════════════════════════════╗")
+  logger.log("║           🔐 ENVIRONMENT PULL                              ║")
+  logger.log("╚════════════════════════════════════════════════════════════╝")
+  logger.log("")
+
+  // Check for CI environment
+  if (envManager.isCI()) {
+    logger.stepWarning("Running in CI environment")
+    logger.log("   Environment variables should be set via CI secrets, not env pull")
+    logger.log("")
+  }
+
+  // 1. Find project configuration
+  logger.log("📁 Finding project configuration...")
+  
+  let projectId = flags.project
+  let projectName = "Unknown Project"
+  let integrations = {}
+  
+  const projectConfig = await envManager.findProjectConfig(cwd)
+  if (projectConfig) {
+    projectId = projectId || projectConfig.token || projectConfig.projectId
+    projectName = projectConfig.project_name || projectConfig.projectName || projectName
+    integrations = projectConfig.integrations || {}
+    logger.log(`   ✓ Found project: ${projectName}`)
+  } else if (!projectId) {
+    logger.error("❌ No project configuration found")
+    logger.log("")
+    logger.log("   Either:")
+    logger.log("   1. Run this from a project created with 'framework pull <token>'")
+    logger.log("   2. Specify a project: framework env pull --project <id>")
+    process.exit(1)
+  }
+
+  // 2. Check for authentication
+  logger.log("")
+  logger.log("🔑 Checking authentication...")
+  
+  let authData = await envManager.loadAuthToken()
+  
+  if (!authData) {
+    // For MVP, we'll use the project token as auth
+    // Full OAuth flow will be Phase 2
+    if (projectId) {
+      logger.log("   ✓ Using project token for authentication")
+      authData = { token: projectId }
+    } else {
+      logger.error("❌ No authentication found")
+      logger.log("")
+      logger.log("   Run 'framework auth login' to authenticate")
+      process.exit(1)
+    }
+  } else {
+    logger.log("   ✓ Authenticated")
+  }
+
+  // 3. Get required env vars based on integrations
+  logger.log("")
+  logger.log("📋 Analyzing required environment variables...")
+  
+  const requiredVars = envManager.getRequiredVarsForIntegrations(integrations)
+  
+  // Build env vars object
+  const envVars = {}
+  for (const varName of requiredVars) {
+    envVars[varName] = envManager.isSecretKey(varName) ? '' : `your_${varName.toLowerCase()}_here`
+  }
+  
+  // Try to fetch from cloud if we have a valid project
+  let cloudVars = {}
+  try {
+    const response = await fetch(`${getApiUrl(flags.dev)}/api/projects/${projectId}`)
+    if (response.ok) {
+      const data = await response.json()
+      if (data.data?.env_keys) {
+        cloudVars = data.data.env_keys
+      }
+    }
+  } catch {
+    // Cloud fetch failed, continue with local config
+  }
+  
+  // Merge cloud vars (only public keys)
+  for (const [key, value] of Object.entries(cloudVars)) {
+    if (!envManager.isSecretKey(key) && value) {
+      envVars[key] = value
+    }
+  }
+  
+  // 4. Display env vars
+  logger.log("")
+  logger.log("Environment Variables:")
+  
+  let publicCount = 0
+  let secretCount = 0
+  
+  for (const [key, value] of Object.entries(envVars)) {
+    const isSecret = envManager.isSecretKey(key)
+    if (isSecret) {
+      logger.log(`  ⚠️  ${key} (placeholder - add manually)`)
+      secretCount++
+    } else {
+      logger.log(`  ✓ ${key} ${value ? '(from config)' : '(placeholder)'}`)
+      publicCount++
+    }
+  }
+  
+  logger.log("")
+  logger.log(`   ${publicCount} public keys, ${secretCount} secret keys (placeholders)`)
+
+  // 5. Check existing .env.local
+  const envLocalPath = path.join(cwd, ".env.local")
+  const envExists = fs.existsSync(envLocalPath)
+  
+  if (envExists && !flags.force && !flags.dryRun) {
+    logger.log("")
+    logger.stepWarning(".env.local already exists")
+    logger.log("   Use --force to overwrite, or manually merge")
+    
+    // Check what's missing
+    const existingVars = await envManager.parseEnvFile(envLocalPath)
+    const missingVars = Object.keys(envVars).filter(k => !(k in existingVars))
+    
+    if (missingVars.length > 0) {
+      logger.log("")
+      logger.log("   Missing variables:")
+      for (const v of missingVars) {
+        logger.log(`     - ${v}`)
+      }
+    }
+    
+    process.exit(0)
+  }
+
+  // 6. Check gitignore
+  const isGitignored = await envManager.isEnvFileGitignored(cwd)
+  if (!isGitignored) {
+    logger.log("")
+    logger.stepWarning(".env.local is NOT in .gitignore!")
+    logger.log("   Add '.env.local' to .gitignore to prevent committing secrets")
+  }
+
+  // 7. Generate and write .env.local
+  const envContent = envManager.generateEnvContent(envVars, { projectName })
+  
+  if (flags.dryRun) {
+    logger.log("")
+    logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    logger.log("DRY RUN - Would write to .env.local:")
+    logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    logger.log("")
+    console.log(envContent)
+    logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    logger.log("")
+    logger.log("   Run without --dry-run to write the file")
+  } else {
+    fs.writeFileSync(envLocalPath, envContent, "utf8")
+    logger.log("")
+    logger.log(`✓ ${envExists ? 'Updated' : 'Created'} .env.local with ${Object.keys(envVars).length} variables`)
+  }
+
+  // 8. Next steps
+  logger.log("")
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logger.log("📝 NEXT STEPS:")
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  logger.log("")
+  logger.log("1. Open .env.local and fill in your secret keys")
+  
+  // Show links for secret keys
+  for (const [key] of Object.entries(envVars).filter(([k]) => envManager.isSecretKey(k))) {
+    const link = envManager.getKeyDocLink(key)
+    if (link) {
+      logger.log(`   ${key}: ${link}`)
+    }
+  }
+  
+  logger.log("")
+  logger.log("2. Run 'npm run dev' to start developing")
+  logger.log("")
+}
+
+/**
+ * Check which environment variables are set/missing
+ */
+async function cmdEnvCheck(args = []) {
+  const cwd = process.cwd()
+  const fix = args.includes("--fix")
+
+  logger.log("")
+  logger.log("╔════════════════════════════════════════════════════════════╗")
+  logger.log("║           🔍 ENVIRONMENT CHECK                             ║")
+  logger.log("╚════════════════════════════════════════════════════════════╝")
+  logger.log("")
+
+  // 1. Find project config
+  const projectConfig = await envManager.findProjectConfig(cwd)
+  if (!projectConfig) {
+    logger.stepWarning("No project configuration found")
+    logger.log("   Checking for common environment variables...")
+  }
+
+  const integrations = projectConfig?.integrations || {}
+  const requiredVars = envManager.getRequiredVarsForIntegrations(integrations)
+
+  // 2. Check .env.local
+  const envLocalPath = path.join(cwd, ".env.local")
+  const envExists = fs.existsSync(envLocalPath)
+  
+  if (!envExists) {
+    logger.error("❌ .env.local not found")
+    logger.log("")
+    if (fix) {
+      logger.log("   Creating .env.local with placeholders...")
+      await cmdEnvPull(["--force"])
+    } else {
+      logger.log("   Run 'framework env pull' to create it")
+      logger.log("   Or run 'framework env check --fix' to auto-create")
+    }
+    process.exit(1)
+  }
+
+  // 3. Parse and check
+  const { missing, present, empty } = await envManager.getMissingEnvVars(requiredVars, cwd)
+  
+  logger.log("Environment Variables Status:")
+  logger.log("")
+  
+  // Present (with values)
+  for (const v of present) {
+    const isSecret = envManager.isSecretKey(v)
+    logger.log(`  ✓ ${v} ${isSecret ? '(secret - not shown)' : '(set)'}`)
+  }
+  
+  // Empty (present but no value)
+  for (const v of empty) {
+    logger.log(`  ⚠️  ${v} (empty - needs value)`)
+  }
+  
+  // Missing
+  for (const v of missing) {
+    logger.log(`  ❌ ${v} (missing)`)
+  }
+  
+  // Summary
+  logger.log("")
+  logger.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+  
+  const total = requiredVars.length
+  const ready = present.length
+  
+  if (missing.length === 0 && empty.length === 0) {
+    logger.log(`✅ All ${total} environment variables are set!`)
+    logger.log("")
+    logger.log("   Your project is ready for development.")
+    logger.log("   Run 'npm run dev' to start.")
+  } else {
+    logger.log(`📊 ${ready}/${total} variables configured`)
+    logger.log("")
+    
+    if (missing.length > 0) {
+      logger.log(`   ${missing.length} missing - add to .env.local`)
+    }
+    if (empty.length > 0) {
+      logger.log(`   ${empty.length} empty - fill in values`)
+    }
+    
+    logger.log("")
+    logger.log("   Get your API keys from:")
+    
+    for (const v of [...missing, ...empty]) {
+      const link = envManager.getKeyDocLink(v)
+      if (link) {
+        logger.log(`   ${v}: ${link}`)
+      }
+    }
+  }
+  
+  logger.log("")
+  
+  // Exit code based on status
+  process.exit(missing.length > 0 || empty.length > 0 ? 1 : 0)
+}
+
+/**
  * Unified dispatcher (single source of truth)
  */
 const selfPath = realpathSync(fileURLToPath(import.meta.url));
@@ -2211,6 +2569,11 @@ if (isEntrypoint) {
   }
   if (a === "--list-features" || a === "features") {
     await cmdListFeatures();
+    process.exit(0);
+  }
+  if (a === "env") {
+    const envArgs = process.argv.slice(4); // Everything after "framework env <subcommand>"
+    await cmdEnv(b, envArgs);
     process.exit(0);
   }
   if (a === "demo") {
