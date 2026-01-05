@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 4c0611a 2026-01-05 feat(patterns): add dynamic AI-composed template system
 - e7e7bea 2026-01-05 feat(dashboard): add project dashboard UI and page editor components
 - 70eb8f1 2026-01-04 test: complete validation of new platform features
 - 5a8eba5 2026-01-04 chore: mark slot templates task complete
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 109f07f 2026-01-04 chore: move completed tasks to done
 - 0edfa72 2026-01-04 test: all tier 1 export tests pass (12/12)
 - c64cbe1 2026-01-04 feat(website): add dashboard with connected services UI
-- 610c280 2026-01-04 feat: dynamic preview integration badges and template-specific CTAs
 
 ## Agent Governance Structure
 
