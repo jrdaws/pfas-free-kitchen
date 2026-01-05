@@ -1,0 +1,172 @@
+TASK: Implement 20+ Section Patterns
+PRIORITY: P1 (Depends on Pattern Library Architecture)
+TYPE: Templates / Components
+AGENT: Template Agent
+PARALLEL: No - Wave 2 (after architecture done)
+
+---
+
+## Objective
+
+Create the actual React components for 20+ section patterns
+following the architecture from the Pattern Library task.
+
+## Pattern List
+
+### Heroes (5 patterns)
+
+1. **hero-centered**
+   - Centered headline, subtext, CTA buttons
+   - Optional background image/gradient
+   - Slots: headline, subtext, primaryCta, secondaryCta, backgroundImage
+
+2. **hero-split-image**
+   - Text on left, large image on right
+   - Good for product showcases
+   - Slots: headline, subtext, cta, image, imageAlt
+
+3. **hero-video-background**
+   - Full-width video background
+   - Overlay with text
+   - Slots: headline, subtext, cta, videoUrl, overlayOpacity
+
+4. **hero-gradient-animated**
+   - Animated gradient background
+   - Modern, eye-catching
+   - Slots: headline, subtext, cta, gradientColors
+
+5. **hero-with-form**
+   - Includes signup form inline
+   - Good for lead generation
+   - Slots: headline, subtext, formFields, submitText
+
+### Features (5 patterns)
+
+1. **features-grid-3**
+   - 3 column grid with icons
+   - Slots: features[{icon, title, description}]
+
+2. **features-grid-4**
+   - 4 column grid
+   - Slots: features[{icon, title, description}]
+
+3. **features-alternating**
+   - Left/right alternating with images
+   - Slots: features[{image, title, description, cta}]
+
+4. **features-bento**
+   - Bento box layout (mixed sizes)
+   - Slots: features[{size, image, title, description}]
+
+5. **features-tabs**
+   - Tabbed interface showing one at a time
+   - Slots: features[{tabTitle, content, image}]
+
+### Pricing (3 patterns)
+
+1. **pricing-simple**
+   - 3 pricing cards side by side
+   - Slots: plans[{name, price, features, cta, highlighted}]
+
+2. **pricing-comparison**
+   - Feature comparison matrix
+   - Slots: plans[], features[{name, availability[]}]
+
+3. **pricing-toggle**
+   - Monthly/yearly toggle
+   - Slots: plans[], billingPeriods[]
+
+### Social Proof (4 patterns)
+
+1. **testimonials-carousel**
+   - Sliding carousel of quotes
+   - Slots: testimonials[{quote, author, role, avatar}]
+
+2. **testimonials-grid**
+   - Grid of testimonial cards
+   - Slots: testimonials[]
+
+3. **logos-marquee**
+   - Scrolling logo banner
+   - Slots: logos[{src, alt, url}]
+
+4. **stats-highlight**
+   - Key metrics/numbers
+   - Slots: stats[{value, label, prefix, suffix}]
+
+### CTA (3 patterns)
+
+1. **cta-centered**
+   - Centered text with button
+   - Slots: headline, subtext, cta, backgroundColor
+
+2. **cta-split**
+   - Text left, image right
+   - Slots: headline, subtext, cta, image
+
+3. **cta-newsletter**
+   - Email signup focused
+   - Slots: headline, subtext, placeholder, buttonText
+
+## Implementation Requirements
+
+For each pattern:
+
+1. **Component** (`index.tsx`):
+   - TypeScript with proper types
+   - Responsive (mobile-first)
+   - Uses Tailwind CSS
+   - Accepts variant prop (light/dark)
+   - All slots as props
+
+2. **Metadata** (`pattern.json`):
+   ```json
+   {
+     "id": "hero-centered",
+     "name": "Centered Hero",
+     "category": "section",
+     "slots": [...],
+     "compatibleWith": ["all"],
+     "variants": ["light", "dark"],
+     "thumbnail": "thumbnail.png"
+   }
+   ```
+
+3. **Thumbnail** (`thumbnail.png`):
+   - 400x300px preview image
+   - Shows the pattern in action
+
+4. **Example Props** (`examples/saas.json`):
+   ```json
+   {
+     "headline": "Ship faster with AI",
+     "subtext": "Build production apps in days",
+     "primaryCta": { "text": "Get Started", "href": "/signup" }
+   }
+   ```
+
+## File Structure
+
+```
+packages/templates/patterns/sections/
+├── hero-centered/
+│   ├── index.tsx
+│   ├── pattern.json
+│   ├── thumbnail.png
+│   └── examples/
+│       ├── saas.json
+│       └── ecommerce.json
+├── hero-split-image/
+│   └── ...
+└── ... (20 total)
+```
+
+## Success Criteria
+
+- [ ] 20 patterns implemented
+- [ ] Each has component + metadata + thumbnail
+- [ ] All patterns responsive
+- [ ] Light/dark variants work
+- [ ] Example props provided
+- [ ] Registered in registry.ts
+

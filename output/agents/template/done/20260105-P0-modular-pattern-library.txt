@@ -1,0 +1,213 @@
+TASK: Create Modular Pattern Library Architecture
+PRIORITY: P0 (Foundation - Blocks Other Work)
+TYPE: Architecture / Templates
+AGENT: Template Agent
+PARALLEL: Yes - Wave 1
+
+---
+
+## Objective
+
+Design and implement a modular pattern library where atomic patterns
+can be combined into infinite unique page compositions.
+
+## Key Concept
+
+NOT this (rigid templates):
+```
+templates/
+├── saas-template/     # Monolithic, can't mix
+├── ecommerce-template/
+└── blog-template/
+```
+
+YES this (composable patterns):
+```
+patterns/
+├── atoms/           # Smallest units (Button, Input, Badge)
+├── molecules/       # Combinations (SearchBar, NavLink, PriceCard)
+├── organisms/       # Complex units (Header, Footer, AuthForm)
+├── sections/        # Page sections (HeroSection, PricingGrid)
+└── layouts/         # Page wrappers (MarketingLayout, DashboardLayout)
+```
+
+## Deliverables
+
+### 1. Pattern Schema
+
+Define the structure every pattern must follow:
+
+```typescript
+// packages/templates/patterns/types.ts
+
+interface Pattern {
+  id: string;                    // "hero-split-image"
+  name: string;                  // "Hero with Split Image"
+  category: 'atom' | 'molecule' | 'organism' | 'section' | 'layout';
+  
+  // What this pattern needs
+  slots: {
+    name: string;               // "headline"
+    type: 'text' | 'image' | 'component' | 'array';
+    required: boolean;
+    defaultValue?: any;
+    aiPrompt?: string;          // How AI should generate this
+  }[];
+  
+  // What templates this works with
+  compatibleWith: string[];     // ["saas", "ecommerce", "all"]
+  
+  // Dependencies
+  requires: string[];           // Other patterns this needs
+  
+  // Styling
+  variants: string[];           // ["light", "dark", "minimal", "bold"]
+  
+  // The actual component
+  component: string;            // Path to React component
+  
+  // Preview
+  thumbnail: string;            // Path to preview image
+}
+```
+
+### 2. Pattern Registry
+
+Central registry of all available patterns:
+
+```typescript
+// packages/templates/patterns/registry.ts
+
+export const PATTERN_REGISTRY: Record<string, Pattern> = {
+  // Atoms
+  "button-primary": { ... },
+  "button-secondary": { ... },
+  
+  // Molecules
+  "nav-link": { ... },
+  "price-card": { ... },
+  
+  // Organisms
+  "header-simple": { ... },
+  "header-with-search": { ... },
+  "footer-minimal": { ... },
+  "footer-full": { ... },
+  
+  // Sections
+  "hero-centered": { ... },
+  "hero-split-image": { ... },
+  "hero-video-background": { ... },
+  "features-grid-3": { ... },
+  "features-grid-4": { ... },
+  "features-alternating": { ... },
+  "pricing-simple": { ... },
+  "pricing-comparison": { ... },
+  "testimonials-carousel": { ... },
+  "testimonials-grid": { ... },
+  "cta-centered": { ... },
+  "cta-split": { ... },
+  
+  // Layouts
+  "layout-marketing": { ... },
+  "layout-dashboard": { ... },
+  "layout-docs": { ... },
+};
+```
+
+### 3. Initial Patterns (20 minimum)
+
+Create these section patterns with full implementations:
+
+**Heroes (5):**
+- hero-centered (text centered, CTA below)
+- hero-split-image (text left, image right)
+- hero-video-background (video bg, overlay text)
+- hero-animated (motion graphics)
+- hero-product-showcase (product image prominent)
+
+**Features (4):**
+- features-grid-3 (3 column icon grid)
+- features-grid-4 (4 column)
+- features-alternating (left/right sections)
+- features-bento (bento box layout)
+
+**Pricing (3):**
+- pricing-simple (3 cards)
+- pricing-comparison (feature matrix)
+- pricing-calculator (interactive)
+
+**Social Proof (3):**
+- testimonials-carousel
+- testimonials-grid
+- logos-marquee
+
+**CTA (3):**
+- cta-centered
+- cta-split-image
+- cta-newsletter
+
+**Footer (2):**
+- footer-minimal
+- footer-full-sitemap
+
+### 4. Pattern File Structure
+
+Each pattern is a folder:
+
+```
+packages/templates/patterns/sections/hero-split-image/
+├── index.tsx          # React component
+├── pattern.json       # Metadata (schema above)
+├── thumbnail.png      # Preview image
+├── variants/
+│   ├── light.tsx      # Light mode variant
+│   ├── dark.tsx       # Dark mode variant
+│   └── minimal.tsx    # Minimal variant
+└── examples/
+    ├── saas.json      # Example props for SaaS
+    └── ecommerce.json # Example props for e-commerce
+```
+
+### 5. Pattern Loader
+
+Utility to load and instantiate patterns:
+
+```typescript
+// packages/templates/patterns/loader.ts
+
+export function loadPattern(patternId: string): Pattern;
+export function getCompatiblePatterns(template: string, category: string): Pattern[];
+export function instantiatePattern(pattern: Pattern, props: Record<string, any>): ReactNode;
+```
+
+## Success Criteria
+
+- [ ] Pattern schema defined and documented
+- [ ] Registry with 20+ patterns
+- [ ] Each pattern has component + metadata + thumbnail
+- [ ] Loader utility works
+- [ ] Patterns are truly composable (can combine any)
+
+## File Locations
+
+```
+packages/templates/patterns/
+├── types.ts           # Pattern schema
+├── registry.ts        # All patterns
+├── loader.ts          # Load/instantiate
+├── atoms/
+├── molecules/
+├── organisms/
+├── sections/
+│   ├── hero-centered/
+│   ├── hero-split-image/
+│   └── ... (20+ patterns)
+└── layouts/
+```
+
+## NOT in Scope
+
+- AI composition logic (Platform Agent)
+- UI integration (Website Agent)
+- Personalization (Platform Agent)
+
