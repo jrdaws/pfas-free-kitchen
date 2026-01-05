@@ -1,4 +1,4 @@
-# test-t08
+# T08-EcommerceFullStack
 
 Generated with [dawson-does-framework](https://github.com/jrdaws/dawson-does-framework)
 

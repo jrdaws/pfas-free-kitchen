@@ -25,7 +25,7 @@
     },
     "plugins": [
       {
-        "name": "test-t01"
+        "name": "t01-saassupabase"
       },
       {
         "name": "next"

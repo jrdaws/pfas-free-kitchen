@@ -7,7 +7,7 @@ export default function BlogHome() {
   const posts = [
     {
       slug: "getting-started-nextjs",
-      title: "test-t09",
+      title: "T09-BlogAuthAnalytics",
       excerpt: "Learn how to build modern web applications with the latest version of Next.js. We'll cover App Router, Server Components, and more.",
       author: "Sarah Johnson",
       authorBio: "Full-stack developer and tech writer",

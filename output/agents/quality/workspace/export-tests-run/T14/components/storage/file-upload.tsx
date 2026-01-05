@@ -8,8 +8,8 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { useUploadThing } from "@/lib/uploadthing";
-import type { UploadedFile } from "@/lib/uploadthing";
+import { useUploadThing } from "@/lib/uploadthing-client";
+import type { UploadedFile } from "@/lib/uploadthing-client";
 
 interface FileUploadProps {
   /**
@@ -64,11 +64,12 @@ export function FileUpload({
 
   const { startUpload, isUploading, permittedFileInfo } = useUploadThing(endpoint, {
     onClientUploadComplete: (res) => {
-      const uploaded = res.map((file) => ({
+      const uploaded: UploadedFile[] = res.map((file) => ({
         key: file.key,
         url: file.url,
         name: file.name,
         size: file.size,
+        uploadedAt: new Date().toISOString(),
       }));
       setUploadedFiles((prev) => [...prev, ...uploaded]);
       setFiles([]);

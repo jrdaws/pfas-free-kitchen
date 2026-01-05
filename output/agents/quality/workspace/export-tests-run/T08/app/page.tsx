@@ -1,176 +1,98 @@
-"use client";
-
 import { Nav } from "@/components/Nav";
 import { Hero } from "@/components/Hero";
-import { FeatureCards } from "@/components/FeatureCards";
-import { PricingTable } from "@/components/PricingTable";
-import { Testimonials } from "@/components/Testimonials";
-import { FAQ } from "@/components/FAQ";
+import { ProductGrid } from "@/components/products/ProductGrid";
+import { FeaturedProducts } from "@/components/products/FeaturedProducts";
+import { Categories } from "@/components/products/Categories";
 import { CTA } from "@/components/CTA";
 import { Footer } from "@/components/Footer";
 
-// Default content - customize these for your project
-const PROJECT_NAME = "SaaS App";
-
-const FEATURES = [
+// Mock featured products - replace with real data from your database
+const featuredProducts = [
   {
-    title: "test-t08",
-    description: "Built on Next.js 15 with optimized performance out of the box.",
-    iconName: "zap",
+    id: "1",
+    name: "Premium Wireless Headphones",
+    slug: "premium-wireless-headphones",
+    price: 29900,
+    compareAtPrice: 34900,
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400",
+    category: "Electronics",
   },
   {
-    title: "Secure by Default",
-    description: "Enterprise-grade security with authentication ready to configure.",
-    iconName: "shield",
+    id: "2",
+    name: "Minimalist Watch",
+    slug: "minimalist-watch",
+    price: 19900,
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=400",
+    category: "Accessories",
   },
   {
-    title: "Real-time Updates",
-    description: "Live data synchronization powered by modern database technology.",
-    iconName: "clock",
+    id: "3",
+    name: "Leather Backpack",
+    slug: "leather-backpack",
+    price: 14900,
+    image: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=400",
+    category: "Bags",
   },
   {
-    title: "Analytics Built-in",
-    description: "Track user behavior and make data-driven decisions.",
-    iconName: "chart",
-  },
-  {
-    title: "Team Collaboration",
-    description: "Multi-user support with role-based access controls.",
-    iconName: "users",
-  },
-  {
-    title: "Premium Support",
-    description: "Get help when you need it with our responsive support team.",
-    iconName: "star",
-  },
-];
-
-const PRICING_PLANS = [
-  {
-    name: "Starter",
-    price: 0,
-    features: [
-      "Up to 3 team members",
-      "Basic analytics",
-      "Community support",
-      "1GB storage",
-    ],
-  },
-  {
-    name: "Pro",
-    price: 29,
-    highlighted: true,
-    features: [
-      "Unlimited team members",
-      "Advanced analytics",
-      "Priority support",
-      "100GB storage",
-      "Custom integrations",
-    ],
-  },
-  {
-    name: "Enterprise",
-    price: 99,
-    features: [
-      "Everything in Pro",
-      "Dedicated account manager",
-      "SLA guarantee",
-      "Unlimited storage",
-      "On-premise deployment",
-    ],
+    id: "4",
+    name: "Running Shoes",
+    slug: "running-shoes",
+    price: 12900,
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400",
+    category: "Footwear",
   },
 ];
 
-const TESTIMONIALS = [
-  {
-    quote: "This platform transformed how we manage our business. The time savings alone have been worth it.",
-    author: "Sarah Chen",
-    role: "CEO",
-    company: "TechStart Inc",
-  },
-  {
-    quote: "The best developer experience I've had. Everything just works, and the documentation is excellent.",
-    author: "Marcus Johnson",
-    role: "Lead Developer",
-    company: "BuildFast",
-  },
-  {
-    quote: "We cut our development time in half. The integrations work seamlessly with our existing tools.",
-    author: "Emily Rodriguez",
-    role: "CTO",
-    company: "ScaleUp",
-  },
+const categories = [
+  { name: "Electronics", slug: "electronics", image: "https://images.unsplash.com/photo-1498049794561-7780e7231661?w=300", count: 42 },
+  { name: "Accessories", slug: "accessories", image: "https://images.unsplash.com/photo-1492707892479-7bc8d5a4ee93?w=300", count: 28 },
+  { name: "Clothing", slug: "clothing", image: "https://images.unsplash.com/photo-1445205170230-053b83016050?w=300", count: 156 },
+  { name: "Home & Garden", slug: "home-garden", image: "https://images.unsplash.com/photo-1484101403633-562f891dc89a?w=300", count: 89 },
 ];
 
-const FAQ_ITEMS = [
-  {
-    question: "How do I get started?",
-    answer: "Simply sign up for a free account and you'll be guided through the setup process. No credit card required for the Starter plan.",
-  },
-  {
-    question: "Can I upgrade or downgrade my plan?",
-    answer: "Yes, you can change your plan at any time. Changes take effect immediately, and we'll prorate the billing accordingly.",
-  },
-  {
-    question: "Is there a free trial for paid plans?",
-    answer: "Yes! All paid plans come with a 14-day free trial. You can explore all features before committing.",
-  },
-  {
-    question: "What kind of support do you offer?",
-    answer: "We offer community support for Starter plans, priority email support for Pro, and dedicated account managers for Enterprise customers.",
-  },
-];
-
-export default function Page() {
+export default function HomePage() {
   return (
-    <div className="min-h-screen bg-[#0A0A0A]">
-      <Nav 
-        projectName={PROJECT_NAME} 
-        links={["Features", "Pricing", "About"]}
+    <main className="min-h-screen bg-background">
+      <Nav />
+      
+      <Hero 
+        title="Shop the Latest Trends"
+        subtitle="Discover our curated collection of premium products. Free shipping on orders over $50."
+        ctaText="Shop Now"
+        ctaLink="/products"
       />
       
-      <Hero
-        title="Build Your SaaS Faster Than Ever"
-        subtitle="The complete platform for launching your next big idea. From authentication to payments, everything you need in one place."
-        ctaText="Get Started Free"
-        ctaSecondaryText="View Demo"
+      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+          Featured Products
+        </h2>
+        <FeaturedProducts products={featuredProducts} />
+      </section>
+      
+      <section className="py-16 px-4 md:px-8 bg-muted/30">
+        <div className="max-w-7xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+            Shop by Category
+          </h2>
+          <Categories categories={categories} />
+        </div>
+      </section>
+      
+      <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-8">
+          New Arrivals
+        </h2>
+        <ProductGrid products={featuredProducts} />
+      </section>
+      
+      <CTA 
+        title="Join Our Newsletter"
+        description="Get 10% off your first order and be the first to know about new arrivals and exclusive offers."
+        buttonText="Subscribe"
       />
       
-      <FeatureCards
-        title="Everything You Need to Scale"
-        features={FEATURES}
-        columns={3}
-      />
-      
-      <Testimonials
-        testimonials={TESTIMONIALS}
-        title="Loved by Teams Worldwide"
-      />
-      
-      <PricingTable
-        title="Simple, Transparent Pricing"
-        plans={PRICING_PLANS}
-        showToggle={true}
-      />
-      
-      <FAQ
-        title="Got Questions?"
-        items={FAQ_ITEMS}
-        layout="accordion"
-      />
-      
-      <CTA
-        title="Ready to Get Started?"
-        subtitle="Join thousands of teams already using our platform to build better products."
-        buttonText="Start Your Free Trial"
-        variant="gradient"
-      />
-      
-      <Footer
-        projectName={PROJECT_NAME}
-        links={["Privacy", "Terms", "Contact"]}
-        description="Building the future of SaaS, one feature at a time."
-      />
-    </div>
+      <Footer />
+    </main>
   );
 }
+

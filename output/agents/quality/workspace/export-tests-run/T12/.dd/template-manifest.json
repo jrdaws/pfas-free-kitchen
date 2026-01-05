@@ -1,7 +1,7 @@
 {
   "template": "ecommerce",
   "version": "1.0.0",
-  "generatedAt": "2026-01-04T08:53:14.402Z",
+  "generatedAt": "2026-01-04T20:46:57.660Z",
   "generatedBy": "dawson-does-framework-configurator",
   "integrations": {
     "auth": "supabase",

@@ -19,11 +19,16 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
-        "name": "test-t09"
+        "name": "t09-blogauthanalytics"
+      },
+      {
+        "name": "next"
       }
     ]
   },

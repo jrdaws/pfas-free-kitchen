@@ -36,7 +36,10 @@ const INTEGRATION_BRIDGES: Record<string, { requires: string[]; files: string[] 
   },
   "auth-email": {
     requires: ["auth", "email"],
-    files: ["bridges/auth-email/lib/auth-email-bridge.ts"],
+    files: [
+      "bridges/auth-email/lib/auth-email-bridge.ts",
+      "bridges/auth-email/lib/email.ts",
+    ],
   },
   "payments-email": {
     requires: ["payments", "email"],
@@ -221,6 +224,7 @@ const INTEGRATION_PATHS: Record<string, string[]> = {
     "integrations/storage/uploadthing/components/storage/file-preview.tsx",
     "integrations/storage/uploadthing/components/storage/index.ts",
     "integrations/storage/uploadthing/lib/uploadthing.ts",
+    "integrations/storage/uploadthing/lib/uploadthing-client.ts",
   ],
   // New integrations (P1)
   "search:algolia": [
@@ -724,7 +728,7 @@ export async function POST(request: NextRequest) {
 
     const zip = new JSZip();
     const templatesPath = getTemplatesPath();
-    const templatePath = path.join(templatesPath, template === "ecommerce" ? "saas" : template);
+    const templatePath = path.join(templatesPath, template);
 
     // Get template component manifest
     const templateManifest = TEMPLATE_COMPONENTS[template] || TEMPLATE_COMPONENTS.saas;
@@ -831,8 +835,12 @@ export async function POST(request: NextRequest) {
     }
 
     // 3.5. Add auto-included features based on template type
+    // Only add feature files if they don't already exist in the template
     const autoFeatures = TEMPLATE_AUTO_FEATURES[template] || [];
     const featuresPath = path.join(templatesPath, "features");
+    
+    // Build set of files already in template
+    const templateFiles = new Set(allFiles);
     
     for (const featureId of autoFeatures) {
       // Parse feature ID like "ecommerce-shopping-cart" -> category: "ecommerce", feature: "shopping-cart"
@@ -846,8 +854,12 @@ export async function POST(request: NextRequest) {
       if (fs.existsSync(manifestPath)) {
         try {
           const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf-8"));
-          // Copy feature files
+          // Copy feature files only if not already in template
           for (const file of manifest.files || []) {
+            // Skip if template already has this file
+            if (templateFiles.has(file.path)) {
+              continue;
+            }
             const sourcePath = path.join(featurePath, file.template);
             const content = safeReadFile(sourcePath);
             if (content) {

@@ -25,7 +25,7 @@
     },
     "plugins": [
       {
-        "name": "test-t04"
+        "name": "t04"
       },
       {
         "name": "next"

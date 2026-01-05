@@ -1,14 +1,14 @@
 "use client";
 
 interface FooterProps {
-  projectName: string;
+  projectName?: string;
   links?: string[];
   showSocial?: boolean;
   description?: string;
 }
 
 export function Footer({
-  projectName,
+  projectName = "Store",
   links = [],
   showSocial = true,
   description,

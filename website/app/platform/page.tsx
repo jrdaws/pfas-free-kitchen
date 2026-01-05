@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { Header } from "@/components/layout/Header";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
@@ -204,36 +205,8 @@ export default function PlatformPage() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-              <Code2 className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-bold text-foreground">Framework</span>
-          </Link>
-          
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#features" className="text-sm text-foreground-secondary hover:text-foreground transition">Features</a>
-            <a href="#how-it-works" className="text-sm text-foreground-secondary hover:text-foreground transition">How it Works</a>
-            <a href="#testimonials" className="text-sm text-foreground-secondary hover:text-foreground transition">Testimonials</a>
-            <Link href="/projects" className="text-sm text-foreground-secondary hover:text-foreground transition">My Projects</Link>
-          </div>
-
-          <div className="flex items-center gap-3">
-            <Link href="/login">
-              <Button variant="ghost" size="sm">Sign In</Button>
-            </Link>
-            <Link href="/configure">
-              <Button size="sm" className="bg-primary hover:bg-primary-hover text-primary-foreground">
-                Start Building
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </nav>
+      {/* Shared Navigation with Auth */}
+      <Header />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 relative overflow-hidden">

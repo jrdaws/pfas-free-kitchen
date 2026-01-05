@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: 890a7cc38d
 
 ## Recent changes
+- 3ecb457 2026-01-04 feat: Complete Dashboard template with charts and data table
 - 0aa25e2 2026-01-04 feat: Complete Blog template with comments and related posts
 - 1fbf216 2026-01-04 feat: Complete E-commerce template with cart, checkout, orders
 - 7db1a04 2026-01-04 test: Add E2E export tests for Phase 1-3 integrations
@@ -28,7 +29,6 @@ Hash: 890a7cc38d
 - 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
 - 61543f4 2026-01-03 test(export): document 5 build failures from tier 1 tests
 - bb25e33 2026-01-03 feat: wire 7 new integrations into export route
-- 41e08b7 2026-01-03 feat: add 7 new integration templates to templates/saas/integrations
 
 ## Agent Governance Structure
 

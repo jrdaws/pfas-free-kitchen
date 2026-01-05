@@ -19,11 +19,16 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
-        "name": "test-t10"
+        "name": "t10-dashboardauthanalytics"
+      },
+      {
+        "name": "next"
       }
     ]
   },

@@ -14,7 +14,7 @@ const PROJECT_NAME = "SaaS App";
 
 const FEATURES = [
   {
-    title: "test-t06",
+    title: "T06",
     description: "Built on Next.js 15 with optimized performance out of the box.",
     iconName: "zap",
   },

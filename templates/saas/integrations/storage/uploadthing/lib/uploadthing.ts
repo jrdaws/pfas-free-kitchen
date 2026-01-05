@@ -10,7 +10,6 @@ import {
   type FileRouter,
 } from "uploadthing/next";
 import { UploadThingError } from "uploadthing/server";
-import { generateReactHelpers } from "@uploadthing/react";
 
 // ============================================================
 // Environment Validation
@@ -152,6 +151,29 @@ export const ourFileRouter = {
         uploadedAt: metadata.uploadedAt,
       };
     }),
+
+  /**
+   * General file uploader - accepts common file types
+   * Max file size: 8MB
+   */
+  fileUploader: f({
+    blob: {
+      maxFileSize: "8MB",
+      maxFileCount: 4,
+    },
+  })
+    .middleware(async () => {
+      return { uploadedAt: new Date().toISOString() };
+    })
+    .onUploadComplete(async ({ metadata, file }) => {
+      console.log("File uploaded:", file.url);
+      return {
+        url: file.url,
+        name: file.name,
+        size: file.size,
+        uploadedAt: metadata.uploadedAt,
+      };
+    }),
 } satisfies FileRouter;
 
 export type OurFileRouter = typeof ourFileRouter;
@@ -161,6 +183,7 @@ export type OurFileRouter = typeof ourFileRouter;
 // ============================================================
 
 export interface UploadedFile {
+  key: string;
   url: string;
   name: string;
   size: number;
@@ -243,9 +266,5 @@ export function isUploadThingUrl(url: string): boolean {
 // ============================================================
 // React Helpers
 // ============================================================
-
-/**
- * Generate type-safe React hooks and components for UploadThing
- */
-export const { useUploadThing, uploadFiles } =
-  generateReactHelpers<OurFileRouter>();
+// Note: React hooks are in uploadthing-client.ts to separate
+// client and server code for Next.js App Router compatibility

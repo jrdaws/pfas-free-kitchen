@@ -1,12 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 interface HeroProps {
   title: string;
   subtitle: string;
   ctaText: string;
+  ctaLink?: string;
   ctaSecondaryText?: string;
+  ctaSecondaryLink?: string;
   backgroundStyle?: "gradient" | "mesh" | "solid" | "image";
   alignment?: "center" | "left";
 }
@@ -15,7 +18,9 @@ export function Hero({
   title,
   subtitle,
   ctaText,
+  ctaLink = "#",
   ctaSecondaryText,
+  ctaSecondaryLink = "#",
   backgroundStyle = "gradient",
   alignment = "center",
 }: HeroProps) {
@@ -43,8 +48,8 @@ export function Hero({
       {/* Gradient orbs for gradient style */}
       {backgroundStyle === "gradient" && (
         <>
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-indigo-500/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-violet-500/20 rounded-full blur-3xl" />
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-orange-500/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-amber-500/20 rounded-full blur-3xl" />
         </>
       )}
 
@@ -68,13 +73,19 @@ export function Hero({
             alignment === "left" && "justify-start"
           )}
         >
-          <button className="px-8 py-4 bg-gradient-to-r from-indigo-500 to-violet-500 hover:from-indigo-600 hover:to-violet-600 text-white rounded-xl font-semibold text-lg transition-all shadow-lg shadow-indigo-500/25">
+          <Link 
+            href={ctaLink}
+            className="px-8 py-4 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-xl font-semibold text-lg transition-all shadow-lg shadow-orange-500/25"
+          >
             {ctaText}
-          </button>
+          </Link>
           {ctaSecondaryText && (
-            <button className="px-8 py-4 border border-white/20 hover:border-white/40 text-white rounded-xl font-semibold text-lg transition-all">
+            <Link 
+              href={ctaSecondaryLink}
+              className="px-8 py-4 border border-white/20 hover:border-white/40 text-white rounded-xl font-semibold text-lg transition-all"
+            >
               {ctaSecondaryText}
-            </button>
+            </Link>
           )}
         </div>
       </div>

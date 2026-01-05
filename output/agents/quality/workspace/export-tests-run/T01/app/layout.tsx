@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 import "./globals.css";
 
-export const metadata = { title: "test-t01" };
+export const metadata = { title: "T01-SaaSSupabase" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (

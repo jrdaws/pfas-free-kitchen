@@ -1,4 +1,4 @@
-# test-t15
+# T15-SaaSMaxComplexity
 
 Generated with [dawson-does-framework](https://github.com/jrdaws/dawson-does-framework)
 
@@ -11,7 +11,6 @@ Generated with [dawson-does-framework](https://github.com/jrdaws/dawson-does-fra
 - **email**: resend
 - **analytics**: posthog
 - **ai**: openai
-- **storage**: uploadthing
 
 ## Getting Started
 

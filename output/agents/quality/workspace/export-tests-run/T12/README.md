@@ -1,4 +1,4 @@
-# test-t12
+# T12-EcommerceAI
 
 Generated with [dawson-does-framework](https://github.com/jrdaws/dawson-does-framework)
 

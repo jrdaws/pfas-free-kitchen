@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 interface CTAProps {
   title: string;
   subtitle?: string;
+  description?: string; // Alias for subtitle
   buttonText: string;
   variant?: "gradient" | "solid" | "outlined";
 }
@@ -12,9 +13,12 @@ interface CTAProps {
 export function CTA({
   title,
   subtitle,
+  description,
   buttonText,
   variant = "gradient",
 }: CTAProps) {
+  // Support both subtitle and description props
+  const ctaDescription = subtitle || description;
   return (
     <section
       className={cn(
@@ -34,14 +38,14 @@ export function CTA({
         >
           {title}
         </h2>
-        {subtitle && (
+        {ctaDescription && (
           <p
             className={cn(
               "text-lg mb-8 max-w-2xl mx-auto",
               variant === "outlined" ? "text-gray-400" : "text-white/80"
             )}
           >
-            {subtitle}
+            {ctaDescription}
           </p>
         )}
         <button

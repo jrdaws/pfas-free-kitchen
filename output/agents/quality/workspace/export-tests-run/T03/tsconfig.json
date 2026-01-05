@@ -25,7 +25,7 @@
     },
     "plugins": [
       {
-        "name": "test-t03"
+        "name": "t03-saasstripe"
       },
       {
         "name": "next"

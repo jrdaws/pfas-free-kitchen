@@ -1,27 +1,72 @@
-import { auth, currentUser, clerkClient } from "@clerk/nextjs/server";
-import { User } from "@clerk/nextjs/server";
-
 /**
- * Clerk Helper Utilities
+ * Clerk Helper Utilities with Lazy Initialization
  *
  * This module provides utility functions for common Clerk authentication
- * and user management tasks.
+ * and user management tasks. All functions gracefully handle missing
+ * configuration.
  */
+
+// Check if Clerk is configured
+const CLERK_KEY = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
+const isClerkConfigured = 
+  CLERK_KEY && 
+  CLERK_KEY.startsWith("pk_") && 
+  !CLERK_KEY.includes("placeholder");
+
+// Lazy import Clerk functions to avoid initialization errors
+async function getClerkAuth() {
+  if (!isClerkConfigured) {
+    throw new Error("Clerk is not configured. Set NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY to enable authentication.");
+  }
+  const { auth } = await import("@clerk/nextjs/server");
+  return auth;
+}
+
+async function getClerkCurrentUser() {
+  if (!isClerkConfigured) {
+    return null;
+  }
+  const { currentUser } = await import("@clerk/nextjs/server");
+  return currentUser;
+}
+
+async function getClerkClient() {
+  if (!isClerkConfigured) {
+    throw new Error("Clerk is not configured. Set CLERK_SECRET_KEY to enable admin operations.");
+  }
+  const { clerkClient } = await import("@clerk/nextjs/server");
+  return clerkClient;
+}
+
+/**
+ * Check if Clerk authentication is configured
+ */
+export function isAuthConfigured(): boolean {
+  return isClerkConfigured;
+}
 
 /**
  * Get the current authenticated user's ID
- * Returns null if not authenticated
+ * Returns null if not authenticated or Clerk not configured
  */
 export async function getCurrentUserId(): Promise<string | null> {
+  if (!isClerkConfigured) {
+    return null;
+  }
+  
+  const auth = await getClerkAuth();
   const { userId } = await auth();
   return userId;
 }
 
 /**
  * Get the current authenticated user's full data
- * Returns null if not authenticated
+ * Returns null if not authenticated or Clerk not configured
  */
-export async function getCurrentUser(): Promise<User | null> {
+export async function getCurrentUser() {
+  const currentUser = await getClerkCurrentUser();
+  if (!currentUser) return null;
+  
   const user = await currentUser();
   return user;
 }
@@ -31,6 +76,11 @@ export async function getCurrentUser(): Promise<User | null> {
  * Useful for server actions and API routes
  */
 export async function requireAuth(): Promise<string> {
+  if (!isClerkConfigured) {
+    throw new Error("Authentication is not configured");
+  }
+
+  const auth = await getClerkAuth();
   const { userId } = await auth();
 
   if (!userId) {
@@ -45,15 +95,18 @@ export async function requireAuth(): Promise<string> {
  * @param role - The role to check for (e.g., "admin", "moderator")
  */
 export async function hasRole(role: string): Promise<boolean> {
+  if (!isClerkConfigured) {
+    return false;
+  }
+
+  const auth = await getClerkAuth();
   const { sessionClaims } = await auth();
 
   if (!sessionClaims) {
     return false;
   }
 
-  // Roles can be stored in metadata or custom claims
   const roles = (sessionClaims.metadata as any)?.roles as string[] | undefined;
-
   return roles ? roles.includes(role) : false;
 }
 
@@ -61,7 +114,9 @@ export async function hasRole(role: string): Promise<boolean> {
  * Get user by ID (requires admin privileges)
  * @param userId - The Clerk user ID
  */
-export async function getUserById(userId: string): Promise<User> {
+export async function getUserById(userId: string) {
+  const clerkClient = await getClerkClient();
+  
   try {
     const user = await clerkClient().users.getUser(userId);
     return user;
@@ -81,7 +136,9 @@ export async function updateUserMetadata(
     publicMetadata?: Record<string, any>;
     privateMetadata?: Record<string, any>;
   }
-): Promise<User> {
+) {
+  const clerkClient = await getClerkClient();
+  
   try {
     const user = await clerkClient().users.updateUser(userId, metadata);
     return user;
@@ -94,7 +151,7 @@ export async function updateUserMetadata(
  * Get user's email addresses
  */
 export async function getUserEmails(): Promise<string[]> {
-  const user = await currentUser();
+  const user = await getCurrentUser();
 
   if (!user) {
     return [];
@@ -107,7 +164,7 @@ export async function getUserEmails(): Promise<string[]> {
  * Check if user's email is verified
  */
 export async function isEmailVerified(): Promise<boolean> {
-  const user = await currentUser();
+  const user = await getCurrentUser();
 
   if (!user || !user.primaryEmailAddress) {
     return false;
@@ -120,6 +177,11 @@ export async function isEmailVerified(): Promise<boolean> {
  * Get user's organization memberships
  */
 export async function getUserOrganizations() {
+  if (!isClerkConfigured) {
+    return null;
+  }
+
+  const auth = await getClerkAuth();
   const { userId, orgId, orgRole, orgSlug } = await auth();
 
   if (!userId) {
@@ -137,7 +199,9 @@ export async function getUserOrganizations() {
  * Ban a user (requires admin privileges)
  * @param userId - The Clerk user ID to ban
  */
-export async function banUser(userId: string): Promise<User> {
+export async function banUser(userId: string) {
+  const clerkClient = await getClerkClient();
+  
   try {
     const user = await clerkClient().users.banUser(userId);
     return user;
@@ -150,7 +214,9 @@ export async function banUser(userId: string): Promise<User> {
  * Unban a user (requires admin privileges)
  * @param userId - The Clerk user ID to unban
  */
-export async function unbanUser(userId: string): Promise<User> {
+export async function unbanUser(userId: string) {
+  const clerkClient = await getClerkClient();
+  
   try {
     const user = await clerkClient().users.unbanUser(userId);
     return user;
@@ -163,6 +229,11 @@ export async function unbanUser(userId: string): Promise<User> {
  * Get user's session information
  */
 export async function getSession() {
+  if (!isClerkConfigured) {
+    return { sessionId: null, sessionClaims: null };
+  }
+
+  const auth = await getClerkAuth();
   const { sessionId, sessionClaims } = await auth();
 
   return {

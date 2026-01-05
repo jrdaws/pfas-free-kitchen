@@ -1,5 +1,5 @@
 {
-  "name": "test-t15",
+  "name": "t15-saasmaxcomplexity",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -22,9 +22,7 @@
     "@react-email/components": "^0.0.15",
     "posthog-js": "^1.100.0",
     "openai": "^4.28.0",
-    "ai": "^3.0.0",
-    "uploadthing": "^6.0.0",
-    "@uploadthing/react": "^6.0.0"
+    "ai": "^3.0.0"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",

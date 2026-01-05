@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Settings, LinkIcon, User, Home } from "lucide-react";
+import { Settings, LinkIcon, User, Home, FolderOpen, Plus } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Dashboard - Dawson Does Framework",
@@ -9,7 +9,8 @@ export const metadata: Metadata = {
 
 const NAV_ITEMS = [
   { href: "/dashboard", label: "Overview", icon: Home },
-  { href: "/dashboard/services", label: "Connected Services", icon: LinkIcon },
+  { href: "/dashboard/projects", label: "Projects", icon: FolderOpen },
+  { href: "/dashboard/services", label: "Services", icon: LinkIcon },
   { href: "/dashboard/settings", label: "Settings", icon: Settings },
   { href: "/dashboard/profile", label: "Profile", icon: User },
 ];

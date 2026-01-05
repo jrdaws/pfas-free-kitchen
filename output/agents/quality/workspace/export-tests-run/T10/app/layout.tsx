@@ -1,7 +1,7 @@
 import "./globals.css";
 
 export const metadata = {
-  title: "test-t10",
+  title: "T10-DashboardAuthAnalytics",
   description: "Modern admin dashboard built with Next.js"
 };
 

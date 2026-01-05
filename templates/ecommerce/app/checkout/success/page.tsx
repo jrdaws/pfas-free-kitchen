@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { Suspense } from "react";
 
 interface SuccessPageProps {
-  searchParams: { order?: string };
+  searchParams: Promise<{ order?: string }>;
 }
 
-export default function CheckoutSuccessPage({ searchParams }: SuccessPageProps) {
-  const orderId = searchParams.order;
+export default async function CheckoutSuccessPage({ searchParams }: SuccessPageProps) {
+  const { order: orderId } = await searchParams;
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
@@ -81,4 +80,3 @@ export function generateMetadata() {
     description: "Your order has been successfully placed.",
   };
 }
-

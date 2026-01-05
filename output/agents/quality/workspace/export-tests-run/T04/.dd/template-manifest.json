@@ -1,7 +1,7 @@
 {
   "template": "saas",
   "version": "1.0.0",
-  "generatedAt": "2026-01-04T09:36:20.884Z",
+  "generatedAt": "2026-01-04T21:02:57.104Z",
   "generatedBy": "dawson-does-framework-configurator",
   "integrations": {
     "email": "resend"

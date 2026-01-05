@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import { Header } from '@/components/layout/Header';
 
 // Comparison data for value proposition
 const comparisonData = [
@@ -155,6 +156,9 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-background">
+      {/* Site Header with Auth */}
+      <Header />
+      
       {/* ============================================
           HERO SECTION
           Light: Cream background with amber glow

@@ -19,11 +19,16 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     },
     "plugins": [
       {
-        "name": "test-t12"
+        "name": "t12-ecommerceai"
+      },
+      {
+        "name": "next"
       }
     ]
   },
