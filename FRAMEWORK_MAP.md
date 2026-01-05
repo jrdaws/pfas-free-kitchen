@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- b6f0545 2026-01-05 chore: remove completed task file for optimization tests
 - dc44dc6 2026-01-05 test: add integration tests for 6 optimization features
 - 75c75ff 2026-01-05 feat: auto-compose preview when user has enough context
 - dbe8d70 2026-01-05 chore: mark pattern implementations task complete
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 5803db7 2026-01-04 chore: move env-pull task to done
 - ecbc45c 2026-01-04 feat(cli): add env pull and env check commands
 - 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
-- f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
 
 ## Agent Governance Structure
 

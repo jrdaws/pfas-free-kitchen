@@ -166,14 +166,21 @@ export function LivePreviewPanel({
 
       if (response.ok) {
         const data = await response.json();
+        console.log("[Preview] Compose API response:", data);
         if (data.success && data.data?.composition) {
+          console.log("[Preview] ✅ Composition received:", data.data.composition.pages?.length, "pages");
           setComposition(data.data.composition);
           setLastRendered({ template, integrations, projectName, featureCount });
           setHasPendingChanges(false);
+        } else {
+          console.warn("[Preview] ⚠️ Composition failed:", data.error || "Unknown error");
         }
+      } else {
+        const errorText = await response.text();
+        console.error("[Preview] ❌ API error:", response.status, errorText);
       }
     } catch (error) {
-      console.error("AI composition failed:", error);
+      console.error("[Preview] ❌ AI composition failed:", error);
     } finally {
       setIsComposing(false);
     }
@@ -185,7 +192,16 @@ export function LivePreviewPanel({
   
   useEffect(() => {
     // Auto-compose on first load when there's enough context
+    console.log("[Preview] Auto-compose check:", { 
+      hasEnoughContext, 
+      hasAutoComposed: hasAutoComposedRef.current, 
+      composition: !!composition, 
+      isComposing, 
+      isVisible 
+    });
+    
     if (hasEnoughContext && !hasAutoComposedRef.current && !composition && !isComposing && isVisible) {
+      console.log("[Preview] 🚀 Triggering auto-compose...");
       hasAutoComposedRef.current = true;
       // Delay to let the panel render first
       const timer = setTimeout(() => {
