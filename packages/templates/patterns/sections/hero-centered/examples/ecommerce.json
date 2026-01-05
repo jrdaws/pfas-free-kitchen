@@ -1,0 +1,14 @@
+{
+  "headline": "Discover curated collections for every style",
+  "subtext": "Shop the latest trends from top designers. Free shipping on orders over $50.",
+  "primaryCta": {
+    "text": "Shop Now",
+    "href": "/products"
+  },
+  "secondaryCta": {
+    "text": "View Lookbook",
+    "href": "/lookbook"
+  },
+  "variant": "gradient"
+}
+

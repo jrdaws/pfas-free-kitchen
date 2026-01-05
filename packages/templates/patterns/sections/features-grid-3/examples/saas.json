@@ -1,0 +1,38 @@
+{
+  "headline": "Everything you need to scale",
+  "subtext": "Powerful features that help you build, deploy, and grow your business faster than ever.",
+  "features": [
+    {
+      "icon": "zap",
+      "title": "Lightning Fast",
+      "description": "Built on edge infrastructure for sub-100ms response times globally."
+    },
+    {
+      "icon": "shield",
+      "title": "Enterprise Security",
+      "description": "SOC 2 compliant with end-to-end encryption and SSO support."
+    },
+    {
+      "icon": "rocket",
+      "title": "Easy Integration",
+      "description": "Connect with your existing tools in minutes, not weeks."
+    },
+    {
+      "icon": "chart",
+      "title": "Real-time Analytics",
+      "description": "Track performance metrics and user behavior as it happens."
+    },
+    {
+      "icon": "users",
+      "title": "Team Collaboration",
+      "description": "Built-in workflows for seamless team coordination."
+    },
+    {
+      "icon": "globe",
+      "title": "Global Scale",
+      "description": "Automatically scales to handle millions of requests."
+    }
+  ],
+  "variant": "cards"
+}
+

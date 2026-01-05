@@ -3,6 +3,8 @@
 import dynamic from "next/dynamic";
 import { getTemplateComposition } from "@/lib/preview/template-compositions";
 import { Loader2 } from "lucide-react";
+import type { ProjectComposition } from "@/lib/composer/types";
+import { ComposedPreview } from "./ComposedPreview";
 
 // Feature preview components - show selected integrations visually
 import { IntegrationStack } from "./features/IntegrationBadge";
@@ -84,6 +86,11 @@ interface PreviewRendererProps {
   };
   scale?: number;
   className?: string;
+  // NEW: Support for composed previews
+  composition?: ProjectComposition;
+  editable?: boolean;
+  onRegenerateSection?: (pageId: string, sectionIndex: number, feedback?: string) => Promise<void>;
+  onSwapPattern?: (pageId: string, sectionIndex: number, newPatternId: string) => Promise<void>;
 }
 
 /**
@@ -121,8 +128,27 @@ export function PreviewRenderer({
   branding,
   scale = 1,
   className = "",
+  composition,
+  editable = false,
+  onRegenerateSection,
+  onSwapPattern,
 }: PreviewRendererProps) {
-  const composition = getTemplateComposition(template);
+  // NEW: If a composition is provided, render using ComposedPreview
+  if (composition) {
+    return (
+      <ComposedPreview
+        composition={composition}
+        editable={editable}
+        onRegenerateSection={onRegenerateSection}
+        onSwapPattern={onSwapPattern}
+        scale={scale}
+        className={className}
+      />
+    );
+  }
+  
+  // FALLBACK: Use template-based rendering
+  const templateComposition = getTemplateComposition(template);
   
   // Filter out empty integrations for display
   const activeIntegrations = Object.fromEntries(
@@ -188,7 +214,7 @@ export function PreviewRenderer({
         width: scale !== 1 ? `${100 / scale}%` : undefined,
       }}
     >
-      {composition.sections.map((section, index) => {
+      {templateComposition.sections.map((section, index) => {
         const Component = COMPONENT_MAP[section.component];
         
         if (!Component) {
@@ -198,7 +224,7 @@ export function PreviewRenderer({
 
         // Merge props: defaults < template < AI-generated
         const props = {
-          ...composition.defaultProps[section.component],
+          ...templateComposition.defaultProps[section.component],
           ...componentProps[section.component],
           // Pass integrations to components that can use them
           integrations: activeIntegrations,
@@ -260,6 +286,10 @@ export function PreviewFrame({
   integrations = {},
   selectedFeatures = {},
   branding,
+  composition,
+  editable,
+  onRegenerateSection,
+  onSwapPattern,
   title = "Preview",
 }: PreviewRendererProps & { title?: string }) {
   const activeCount = Object.values(integrations).filter(Boolean).length;
@@ -281,6 +311,11 @@ export function PreviewFrame({
         
         {/* Status Badges */}
         <div className="flex items-center gap-2">
+          {composition && (
+            <span className="text-[10px] px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 border border-orange-500/30">
+              AI Composed
+            </span>
+          )}
           {featureCount > 0 && (
             <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30">
               {featureCount} features
@@ -297,7 +332,7 @@ export function PreviewFrame({
       {/* Preview Content */}
       <div className="relative max-h-[600px] overflow-y-auto bg-background">
         {/* Floating Integration Stack */}
-        {activeCount > 0 && (
+        {activeCount > 0 && !composition && (
           <div className="absolute top-2 right-2 z-20">
             <IntegrationStack 
               integrations={integrations} 
@@ -311,6 +346,10 @@ export function PreviewFrame({
           integrations={integrations}
           selectedFeatures={selectedFeatures}
           branding={branding}
+          composition={composition}
+          editable={editable}
+          onRegenerateSection={onRegenerateSection}
+          onSwapPattern={onSwapPattern}
           scale={0.6}
         />
       </div>
@@ -330,6 +369,10 @@ export function MobilePreviewFrame({
   integrations = {},
   selectedFeatures = {},
   branding,
+  composition,
+  editable,
+  onRegenerateSection,
+  onSwapPattern,
 }: PreviewRendererProps) {
   return (
     <div className="w-[375px] mx-auto">
@@ -348,6 +391,10 @@ export function MobilePreviewFrame({
             integrations={integrations}
             selectedFeatures={selectedFeatures}
             branding={branding}
+            composition={composition}
+            editable={editable}
+            onRegenerateSection={onRegenerateSection}
+            onSwapPattern={onSwapPattern}
             scale={0.4}
           />
         </div>

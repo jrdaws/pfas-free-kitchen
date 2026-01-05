@@ -1,0 +1,25 @@
+{
+  "id": "hero-with-form",
+  "name": "Hero with Form",
+  "category": "section",
+  "description": "Includes signup form inline for lead generation",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": true, "aiGenerate": true },
+    { "name": "subtext", "type": "text", "required": true, "aiGenerate": true },
+    { "name": "formFields", "type": "array", "required": true },
+    { "name": "submitText", "type": "text", "required": false, "defaultValue": "Get Started" },
+    { "name": "successMessage", "type": "text", "required": false },
+    { "name": "features", "type": "array", "required": false, "aiGenerate": true }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" }
+  ],
+  "dependencies": [],
+  "tags": ["hero", "form", "lead-generation", "signup"],
+  "bestFor": ["b2b", "enterprise", "lead-gen"]
+}
+

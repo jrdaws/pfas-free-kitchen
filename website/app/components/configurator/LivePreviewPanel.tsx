@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { TEMPLATES } from "@/lib/templates";
 import { PreviewFrame, MobilePreviewFrame } from "@/components/preview/PreviewRenderer";
 import { generateFallbackProps, UserConfig } from "@/lib/ai/preview-generator";
+import type { ProjectComposition } from "@/lib/composer/types";
 import { 
   Eye, 
   EyeOff, 
@@ -17,7 +18,8 @@ import {
   RefreshCw,
   ChevronRight,
   Sparkles,
-  Loader2
+  Loader2,
+  Wand2
 } from "lucide-react";
 
 interface LivePreviewPanelProps {
@@ -54,7 +56,9 @@ export function LivePreviewPanel({
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasPendingChanges, setHasPendingChanges] = useState(false);
   const [isEnhancing, setIsEnhancing] = useState(false);
+  const [isComposing, setIsComposing] = useState(false);
   const [componentProps, setComponentProps] = useState<Record<string, Record<string, unknown>>>({});
+  const [composition, setComposition] = useState<ProjectComposition | null>(null);
   
   // Track last rendered values to detect changes
   const [lastRendered, setLastRendered] = useState({
@@ -110,7 +114,7 @@ export function LivePreviewPanel({
     setHasPendingChanges(false);
   }, [buildUserConfig, template, integrations, projectName, featureCount]);
 
-  // Handle AI enhancement
+  // Handle AI enhancement (legacy)
   const handleAIEnhance = useCallback(async () => {
     setIsEnhancing(true);
     
@@ -135,6 +139,93 @@ export function LivePreviewPanel({
       setIsEnhancing(false);
     }
   }, [buildUserConfig, template, integrations, projectName, featureCount]);
+
+  // Handle AI Composition (new pattern-based approach)
+  const handleCompose = useCallback(async () => {
+    setIsComposing(true);
+    
+    try {
+      const response = await fetch("/api/compose/project", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          vision: {
+            projectName: projectName || "My Project",
+            description: description || vision || "A modern web application",
+            audience: undefined,
+            tone: "professional",
+            goals: [],
+          },
+          template,
+          pages: [
+            { path: "/", name: "Home", type: "home" },
+          ],
+          integrations,
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data?.composition) {
+          setComposition(data.data.composition);
+          setLastRendered({ template, integrations, projectName, featureCount });
+          setHasPendingChanges(false);
+        }
+      }
+    } catch (error) {
+      console.error("AI composition failed:", error);
+    } finally {
+      setIsComposing(false);
+    }
+  }, [projectName, description, vision, template, integrations, featureCount]);
+
+  // Handle section regeneration
+  const handleRegenerateSection = useCallback(async (pageId: string, sectionIndex: number, feedback?: string) => {
+    if (!composition) return;
+    
+    try {
+      const response = await fetch("/api/compose/regenerate-section", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          composition,
+          pageId,
+          sectionIndex,
+          feedback,
+          context: {
+            vision: {
+              projectName: projectName || "My Project",
+              description: description || vision || "",
+            },
+            template,
+            pages: [],
+            integrations,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.data) {
+          // Update the section in the composition
+          setComposition(prev => {
+            if (!prev) return prev;
+            const newPages = prev.pages.map(page => {
+              if (page.pageId === pageId) {
+                const newSections = [...page.sections];
+                newSections[sectionIndex] = data.data;
+                return { ...page, sections: newSections };
+              }
+              return page;
+            });
+            return { ...prev, pages: newPages };
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Section regeneration failed:", error);
+    }
+  }, [composition, projectName, description, vision, template, integrations]);
 
   // Initial render - set lastRendered
   useEffect(() => {
@@ -181,20 +272,37 @@ export function LivePreviewPanel({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
-          {/* AI Enhance Button */}
+          {/* AI Compose Button (new pattern-based) */}
+          <Button
+            variant={composition ? "secondary" : "default"}
+            size="sm"
+            onClick={handleCompose}
+            disabled={isComposing}
+            className="h-8 px-3 text-xs gap-1.5"
+          >
+            {isComposing ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Wand2 className="h-3.5 w-3.5" />
+            )}
+            {isComposing ? "Composing..." : composition ? "Recompose" : "AI Compose"}
+          </Button>
+
+          {/* AI Enhance Button (legacy) */}
           <Button
             variant="outline"
             size="sm"
             onClick={handleAIEnhance}
-            disabled={isEnhancing}
+            disabled={isEnhancing || !!composition}
             className="h-8 px-3 text-xs gap-1.5"
+            title={composition ? "Using composed preview" : "Enhance with AI"}
           >
             {isEnhancing ? (
               <Loader2 className="h-3.5 w-3.5 animate-spin" />
             ) : (
               <Sparkles className="h-3.5 w-3.5" />
             )}
-            {isEnhancing ? "Enhancing..." : "AI Enhance"}
+            {isEnhancing ? "Enhancing..." : "Enhance"}
           </Button>
 
           {/* Viewport Toggle */}
@@ -260,6 +368,7 @@ export function LivePreviewPanel({
               integrations={integrations}
               selectedFeatures={selectedFeatures}
               branding={branding}
+              composition={composition || undefined}
             />
           </div>
         ) : (
@@ -269,6 +378,9 @@ export function LivePreviewPanel({
             integrations={integrations}
             selectedFeatures={selectedFeatures}
             branding={branding}
+            composition={composition || undefined}
+            editable={!!composition}
+            onRegenerateSection={composition ? handleRegenerateSection : undefined}
           />
         )}
       </div>

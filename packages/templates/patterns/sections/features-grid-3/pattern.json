@@ -1,0 +1,23 @@
+{
+  "id": "features-grid-3",
+  "name": "3-Column Feature Grid",
+  "category": "section",
+  "description": "3 column grid with icons",
+  "version": "1.0.0",
+  "slots": [
+    { "name": "headline", "type": "text", "required": false, "aiGenerate": true },
+    { "name": "subtext", "type": "text", "required": false, "aiGenerate": true },
+    { "name": "features", "type": "array", "required": true, "aiGenerate": true, "validation": { "minItems": 3, "maxItems": 9 } }
+  ],
+  "compatibleWith": ["all"],
+  "requires": [],
+  "variants": [
+    { "id": "light", "name": "Light" },
+    { "id": "dark", "name": "Dark" },
+    { "id": "cards", "name": "With Cards" }
+  ],
+  "dependencies": ["lucide-react"],
+  "tags": ["features", "grid", "icons", "benefits"],
+  "bestFor": ["saas", "product", "capabilities"]
+}
+

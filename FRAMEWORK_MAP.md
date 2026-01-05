@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 72ba4b5 2026-01-05 feat(composer): implement AI Pattern Composer engine
 - 0e13af2 2026-01-05 chore: mark modular pattern library task complete
 - f963bb1 2026-01-05 feat(patterns): add modular pattern library architecture
 - c2d0981 2026-01-05 docs: update PROJECT_PRIORITIES.md and add integration test task
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 1fbf216 2026-01-04 feat: Complete E-commerce template with cart, checkout, orders
 - 7db1a04 2026-01-04 test: Add E2E export tests for Phase 1-3 integrations
 - f2319cb 2026-01-04 fix: Remove duplicate integration paths and cases in export route
-- 499f523 2026-01-04 feat: Phase 3 templates - Contentful, Meilisearch, Cloudflare R2
 
 ## Agent Governance Structure
 
