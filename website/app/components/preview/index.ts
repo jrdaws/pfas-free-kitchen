@@ -14,4 +14,5 @@ export { PreviewFrame } from "./PreviewFrame";
 export { PageFlowDiagram } from "./PageFlowDiagram";
 export { ComposedPreview } from "./ComposedPreview";
 export { MultiPagePreview } from "./MultiPagePreview";
+export { ImageGeneratorPanel } from "./ImageGeneratorPanel";
 

@@ -29,6 +29,9 @@ interface ComposeProjectRequest {
     priority?: number;
   }>;
   integrations?: Record<string, string>;
+  preferences?: {
+    generateImages?: boolean;
+  };
 }
 
 function validateRequest(body: unknown): body is ComposeProjectRequest {
@@ -93,6 +96,9 @@ export async function POST(request: NextRequest) {
         priority: p.priority,
       })),
       integrations: body.integrations || {},
+      preferences: body.preferences ? {
+        generateImages: body.preferences.generateImages,
+      } : undefined,
     };
     
     const result = await composeProject(input);

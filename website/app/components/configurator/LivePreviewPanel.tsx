@@ -62,6 +62,7 @@ export function LivePreviewPanel({
   const [isComposing, setIsComposing] = useState(false);
   const [componentProps, setComponentProps] = useState<Record<string, Record<string, unknown>>>({});
   const [composition, setComposition] = useState<ProjectComposition | null>(null);
+  const [generateImages, setGenerateImages] = useState(false);
   
   // Track last rendered values to detect changes
   const [lastRendered, setLastRendered] = useState({
@@ -185,6 +186,9 @@ export function LivePreviewPanel({
             { path: "/", name: "Home", type: "home" },
           ],
           integrations,
+          preferences: {
+            generateImages,
+          },
         }),
       });
 
@@ -208,7 +212,7 @@ export function LivePreviewPanel({
     } finally {
       setIsComposing(false);
     }
-  }, [projectName, description, vision, template, integrations, featureCount, research]);
+  }, [projectName, description, vision, template, integrations, featureCount, research, generateImages]);
 
   // Auto-compose when user has provided enough context
   const hasEnoughContext = projectName && projectName.length > 2 && template;
@@ -360,6 +364,20 @@ export function LivePreviewPanel({
             )}
             {isEnhancing ? "Enhancing..." : "Enhance"}
           </Button>
+
+          {/* AI Images Toggle */}
+          <label 
+            className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
+            title="Generate AI images for preview (requires Replicate API)"
+          >
+            <input
+              type="checkbox"
+              checked={generateImages}
+              onChange={(e) => setGenerateImages(e.target.checked)}
+              className="w-3.5 h-3.5 rounded border-border accent-primary"
+            />
+            <span className="hidden lg:inline">AI Images</span>
+          </label>
 
           {/* Viewport Toggle */}
           <div className="flex items-center gap-1 p-1 rounded-lg bg-muted/50">

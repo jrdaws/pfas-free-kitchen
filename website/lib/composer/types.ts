@@ -174,6 +174,7 @@ export interface ComposerPreferences {
   preferPatterns?: string[];
   avoidPatterns?: string[];
   customInstructions?: string;
+  generateImages?: boolean;
 }
 
 // ============================================================================
