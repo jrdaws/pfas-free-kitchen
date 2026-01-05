@@ -1,0 +1,174 @@
+TASK: Integrate Intelligent Preview with Composer
+PRIORITY: P1 (Depends on Wave 1)
+TYPE: Frontend / Backend / Integration
+AGENT: Platform Agent
+PARALLEL: No - Wave 2 (after Pattern Library + Composer)
+
+---
+
+## Objective
+
+Connect the AI Composer output to the preview renderer so users
+see truly personalized, composed previews.
+
+## Dependencies
+
+Requires completion of:
+- Template Agent: Modular Pattern Library
+- Platform Agent: AI Pattern Composer
+- Website Agent: VisionBuilder wired in
+
+## Deliverables
+
+### 1. Preview from Composition
+
+Update `website/components/preview/PreviewRenderer.tsx`:
+
+```typescript
+interface PreviewRendererProps {
+  // OLD
+  template: string;
+  componentProps: Record<string, Record<string, unknown>>;
+  
+  // NEW
+  composition?: ProjectComposition;  // From composer
+}
+
+export function PreviewRenderer({ template, componentProps, composition }: PreviewRendererProps) {
+  if (composition) {
+    return <ComposedPreview composition={composition} />;
+  }
+  // Fallback to old behavior
+  return <TemplatePreview template={template} props={componentProps} />;
+}
+```
+
+### 2. Composed Preview Component
+
+```typescript
+// website/components/preview/ComposedPreview.tsx
+
+function ComposedPreview({ composition }: { composition: ProjectComposition }) {
+  const { pages, globalStyles } = composition;
+  const [currentPage, setCurrentPage] = useState(pages[0]);
+  
+  return (
+    <div style={applyGlobalStyles(globalStyles)}>
+      <PreviewNav pages={pages} current={currentPage} onChange={setCurrentPage} />
+      <PreviewPage page={currentPage} />
+    </div>
+  );
+}
+
+function PreviewPage({ page }: { page: PageComposition }) {
+  const Layout = loadPattern(page.layout);
+  
+  return (
+    <Layout>
+      {page.sections.map((section, i) => (
+        <PreviewSection key={i} section={section} />
+      ))}
+    </Layout>
+  );
+}
+
+function PreviewSection({ section }: { section: SectionComposition }) {
+  const Pattern = loadPattern(section.patternId);
+  const variant = section.variant;
+  
+  return <Pattern {...section.props} variant={variant} />;
+}
+```
+
+### 3. Trigger Composition on Preview
+
+When user clicks "Preview" or views preview panel:
+
+```typescript
+// website/app/components/configurator/LivePreviewPanel.tsx
+
+const handleRefresh = async () => {
+  setLoading(true);
+  
+  // Get composition from AI
+  const composition = await fetch('/api/compose/project', {
+    method: 'POST',
+    body: JSON.stringify({
+      vision: visionDocument,
+      research: researchResult,
+      template,
+      pages: projectPages,
+      integrations,
+    }),
+  }).then(r => r.json());
+  
+  setComposition(composition);
+  setLoading(false);
+};
+```
+
+### 4. Section Regeneration
+
+Allow user to regenerate individual sections:
+
+```typescript
+// In preview, each section has a regenerate button
+<PreviewSection section={section}>
+  <button onClick={() => regenerateSection(index)}>
+    🔄 Regenerate
+  </button>
+</PreviewSection>
+
+const regenerateSection = async (index: number) => {
+  const newSection = await fetch('/api/compose/regenerate-section', {
+    method: 'POST',
+    body: JSON.stringify({
+      compositionId: composition.id,
+      sectionIndex: index,
+      feedback: "Make it more bold and attention-grabbing",
+    }),
+  }).then(r => r.json());
+  
+  updateSection(index, newSection);
+};
+```
+
+### 5. Pattern Swapping UI
+
+Let users swap patterns:
+
+```typescript
+function PatternSwapper({ current, alternatives, onSwap }) {
+  return (
+    <div className="pattern-alternatives">
+      <span>Try different styles:</span>
+      {alternatives.map(alt => (
+        <button key={alt.id} onClick={() => onSwap(alt.id)}>
+          <img src={alt.thumbnail} />
+          {alt.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+## Success Criteria
+
+- [ ] Preview uses composition when available
+- [ ] Multi-page navigation works
+- [ ] Sections render from pattern library
+- [ ] Props are personalized
+- [ ] Users can regenerate sections
+- [ ] Users can swap patterns
+
+## Files to Create/Modify
+
+```
+website/components/preview/ComposedPreview.tsx (new)
+website/components/preview/PreviewRenderer.tsx (modify)
+website/components/preview/PreviewSection.tsx (new)
+website/components/preview/PatternSwapper.tsx (new)
+website/app/components/configurator/LivePreviewPanel.tsx (modify)
+```
+

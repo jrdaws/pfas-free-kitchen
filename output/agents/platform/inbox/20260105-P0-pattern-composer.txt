@@ -1,0 +1,230 @@
+TASK: Build AI Pattern Composer
+PRIORITY: P0 (Core Engine)
+TYPE: AI / Backend / Composition
+AGENT: Platform Agent
+PARALLEL: Yes - Wave 1
+
+---
+
+## Objective
+
+Create the AI engine that selects and combines modular patterns
+into complete, personalized page compositions based on user requirements.
+
+## How It Works
+
+```
+User Vision + Research → Composer → Composed Page Structure → Renderer
+```
+
+The Composer:
+1. Analyzes user requirements
+2. Selects best patterns for each section
+3. Determines section order
+4. Generates personalized props for each pattern
+5. Fills gaps with custom generation
+
+## Deliverables
+
+### 1. Composition Schema
+
+Define the output structure:
+
+```typescript
+// website/lib/composer/types.ts
+
+interface PageComposition {
+  pageId: string;
+  path: string;
+  layout: string;                    // "layout-marketing" | "layout-dashboard"
+  
+  sections: SectionComposition[];
+}
+
+interface SectionComposition {
+  patternId: string;                 // "hero-split-image"
+  variant: string;                   // "dark"
+  order: number;
+  props: Record<string, any>;        // AI-generated props
+  customizations?: {
+    className?: string;
+    style?: Record<string, string>;
+  };
+}
+
+interface ProjectComposition {
+  projectId: string;
+  pages: PageComposition[];
+  globalStyles: {
+    colorScheme: string;
+    fontFamily: string;
+    borderRadius: string;
+  };
+  sharedComponents: string[];        // Patterns used across pages
+}
+```
+
+### 2. Composer API
+
+```typescript
+// website/lib/composer/index.ts
+
+interface ComposerInput {
+  vision: VisionDocument;            // From guided builder
+  research: ResearchResult;          // From research phase
+  template: string;                  // Base template type
+  pages: { path: string; name: string; type: string }[];
+  integrations: Record<string, string>;
+}
+
+interface ComposerOutput {
+  composition: ProjectComposition;
+  reasoning: {
+    patternId: string;
+    reason: string;                  // "Selected hero-split-image because user mentioned product screenshots"
+  }[];
+  confidence: number;                // 0-100
+}
+
+export async function composeProject(input: ComposerInput): Promise<ComposerOutput>;
+export async function composePage(input: ComposerInput, page: PageConfig): Promise<PageComposition>;
+```
+
+### 3. Pattern Selection AI
+
+The AI prompt that selects patterns:
+
+```typescript
+// website/lib/composer/selector.ts
+
+const SELECTOR_PROMPT = `
+You are a UI/UX expert selecting page patterns.
+
+Given:
+- User's vision: {vision}
+- Research insights: {research}
+- Available patterns: {patterns}
+- Page type: {pageType}
+
+Select the best patterns for each section of the page.
+
+For each selection, explain WHY this pattern fits the user's needs.
+
+Output JSON:
+{
+  "sections": [
+    {
+      "patternId": "hero-split-image",
+      "reason": "User mentioned showcasing their product, split layout allows prominent product image",
+      "variant": "light",
+      "order": 1
+    },
+    ...
+  ]
+}
+`;
+```
+
+### 4. Prop Generator AI
+
+Generate personalized props for each pattern:
+
+```typescript
+// website/lib/composer/prop-generator.ts
+
+const PROP_PROMPT = `
+You are generating content for a {patternId} component.
+
+User's brand:
+- Name: {projectName}
+- Vision: {vision}
+- Audience: {audience}
+- Tone: {tone}
+
+Pattern slots:
+{slots}
+
+Generate compelling, personalized content for each slot.
+Use the user's actual brand name, not placeholders.
+Match the tone to their audience.
+
+Output JSON with props for each slot.
+`;
+
+export async function generatePatternProps(
+  pattern: Pattern,
+  context: ComposerInput
+): Promise<Record<string, any>>;
+```
+
+### 5. Gap Filler
+
+When no pattern fits, generate custom:
+
+```typescript
+// website/lib/composer/gap-filler.ts
+
+export async function generateCustomSection(
+  requirement: string,
+  context: ComposerInput,
+  existingPatterns: Pattern[]
+): Promise<{
+  component: string;    // Generated React code
+  props: Record<string, any>;
+}>;
+```
+
+### 6. API Route
+
+```
+POST /api/compose/project
+  Input: ComposerInput
+  Output: ComposerOutput
+
+POST /api/compose/page
+  Input: { projectId, pageConfig }
+  Output: PageComposition
+
+POST /api/compose/regenerate-section
+  Input: { compositionId, sectionIndex, feedback }
+  Output: SectionComposition
+```
+
+## Integration Points
+
+Uses:
+- Pattern Registry from Template Agent
+- VisionDocument from Website Agent
+- Research results from existing research API
+
+Outputs to:
+- Preview renderer
+- Export generator
+
+## Success Criteria
+
+- [ ] Composer selects appropriate patterns
+- [ ] Props are personalized (not generic)
+- [ ] Reasoning explains each choice
+- [ ] Gap filler generates valid components
+- [ ] API routes functional
+
+## File Locations
+
+```
+website/lib/composer/
+├── types.ts
+├── index.ts
+├── selector.ts
+├── prop-generator.ts
+├── gap-filler.ts
+└── prompts/
+    ├── selector.txt
+    └── prop-generator.txt
+
+website/app/api/compose/
+├── project/route.ts
+├── page/route.ts
+└── regenerate-section/route.ts
+```
+

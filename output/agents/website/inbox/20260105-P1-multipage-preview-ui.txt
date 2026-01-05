@@ -1,0 +1,217 @@
+TASK: Build Multi-Page Preview UI
+PRIORITY: P1 (Depends on Wave 1)
+TYPE: Frontend / UX
+AGENT: Website Agent
+PARALLEL: No - Wave 2
+
+---
+
+## Objective
+
+Create UI that allows users to navigate between multiple preview pages,
+seeing how their entire application flows together.
+
+## Dependencies
+
+Requires:
+- Composer API returning multi-page composition
+- Pattern library with renderable components
+
+## Deliverables
+
+### 1. Page Navigation Bar
+
+```tsx
+// website/components/preview/PreviewPageNav.tsx
+
+function PreviewPageNav({ pages, currentPath, onChange }) {
+  return (
+    <div className="preview-nav">
+      {pages.map(page => (
+        <button
+          key={page.path}
+          className={currentPath === page.path ? 'active' : ''}
+          onClick={() => onChange(page.path)}
+        >
+          {getPageIcon(page.type)}
+          {page.name}
+        </button>
+      ))}
+    </div>
+  );
+}
+```
+
+### 2. Page Minimap
+
+Show thumbnail previews of all pages:
+
+```tsx
+// website/components/preview/PreviewMinimap.tsx
+
+function PreviewMinimap({ pages, currentPath, onChange }) {
+  return (
+    <div className="preview-minimap">
+      {pages.map(page => (
+        <div 
+          key={page.path}
+          className={`minimap-page ${currentPath === page.path ? 'active' : ''}`}
+          onClick={() => onChange(page.path)}
+        >
+          <div className="minimap-thumbnail">
+            <MiniPagePreview page={page} />
+          </div>
+          <span>{page.name}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### 3. In-Preview Navigation
+
+Links in the preview should navigate between pages:
+
+```tsx
+// website/components/preview/PreviewLink.tsx
+
+function PreviewLink({ href, children, onNavigate }) {
+  const handleClick = (e) => {
+    e.preventDefault();
+    
+    // Check if this is an internal link
+    if (href.startsWith('/')) {
+      onNavigate(href);
+    } else {
+      // External link - show tooltip
+      showTooltip("External link - would open in new tab");
+    }
+  };
+  
+  return (
+    <a href={href} onClick={handleClick}>
+      {children}
+    </a>
+  );
+}
+```
+
+### 4. URL Bar Simulation
+
+Show fake URL bar that updates with navigation:
+
+```tsx
+function PreviewUrlBar({ currentPath, siteName }) {
+  return (
+    <div className="preview-url-bar">
+      <span className="protocol">https://</span>
+      <span className="domain">{siteName}.com</span>
+      <span className="path">{currentPath}</span>
+    </div>
+  );
+}
+```
+
+### 5. Device Frame
+
+Wrap preview in device frame with controls:
+
+```tsx
+function PreviewFrame({ children, device, onDeviceChange }) {
+  return (
+    <div className={`preview-frame device-${device}`}>
+      <div className="frame-controls">
+        <button onClick={() => onDeviceChange('desktop')}>🖥️</button>
+        <button onClick={() => onDeviceChange('tablet')}>📱</button>
+        <button onClick={() => onDeviceChange('mobile')}>📱</button>
+      </div>
+      <PreviewUrlBar />
+      <div className="frame-content">
+        {children}
+      </div>
+    </div>
+  );
+}
+```
+
+### 6. Page Flow Visualization
+
+Show how pages connect:
+
+```tsx
+function PageFlowDiagram({ pages }) {
+  // Simple tree/graph showing page relationships
+  return (
+    <div className="page-flow">
+      <div className="flow-node home">
+        <span>/</span>
+        <span>Home</span>
+      </div>
+      <div className="flow-children">
+        {pages.filter(p => p.path !== '/').map(page => (
+          <div className="flow-node" key={page.path}>
+            <span>{page.path}</span>
+            <span>{page.name}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### 7. Integrate with LivePreviewPanel
+
+Update the existing panel:
+
+```tsx
+// website/app/components/configurator/LivePreviewPanel.tsx
+
+function LivePreviewPanel({ ... }) {
+  const [currentPath, setCurrentPath] = useState('/');
+  const [composition, setComposition] = useState(null);
+  
+  return (
+    <div className="live-preview-panel">
+      <PreviewPageNav 
+        pages={composition?.pages || []}
+        currentPath={currentPath}
+        onChange={setCurrentPath}
+      />
+      
+      <PreviewFrame device={device} onDeviceChange={setDevice}>
+        <ComposedPreview 
+          composition={composition}
+          currentPath={currentPath}
+          onNavigate={setCurrentPath}
+        />
+      </PreviewFrame>
+      
+      <PreviewMinimap 
+        pages={composition?.pages || []}
+        currentPath={currentPath}
+        onChange={setCurrentPath}
+      />
+    </div>
+  );
+}
+```
+
+## Styling
+
+- Dark theme matching configurator
+- Smooth transitions between pages
+- Clear active state indicators
+- Responsive (preview panel can be small)
+
+## Success Criteria
+
+- [ ] Page nav shows all pages
+- [ ] Clicking navigates between pages
+- [ ] In-preview links work
+- [ ] URL bar updates
+- [ ] Device frame with size controls
+- [ ] Minimap shows thumbnails
+- [ ] Flow diagram shows structure
+

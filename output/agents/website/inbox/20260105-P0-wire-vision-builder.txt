@@ -1,0 +1,136 @@
+TASK: Wire Vision Builder into Configurator UI
+PRIORITY: P0 (User-Facing)
+TYPE: Frontend / Integration
+AGENT: Website Agent
+PARALLEL: Yes - Wave 1
+
+---
+
+## Objective
+
+Replace the current simple vision textarea with the guided VisionBuilder
+component that was created. Connect it to the configurator flow.
+
+## Current State
+
+The VisionBuilder components exist in:
+- website/app/components/configurator/vision/
+
+But the configurator still uses a simple textarea in ResearchSection.
+
+## Deliverables
+
+### 1. Replace Vision Input
+
+In `website/app/components/configurator/sections/ResearchSection.tsx`:
+
+Before:
+```tsx
+<textarea
+  value={vision}
+  onChange={(e) => setVision(e.target.value)}
+  placeholder="Describe your project..."
+/>
+```
+
+After:
+```tsx
+<VisionBuilder
+  onComplete={(visionDoc) => {
+    setVisionDocument(visionDoc);
+    setVision(visionDoc.summary);  // Keep text summary for backwards compat
+  }}
+  initialData={existingVisionDoc}
+/>
+```
+
+### 2. Store VisionDocument in State
+
+Update `website/lib/configurator-state.ts`:
+
+```typescript
+interface ConfiguratorState {
+  // Existing
+  vision: string;
+  
+  // NEW
+  visionDocument: VisionDocument | null;
+  setVisionDocument: (doc: VisionDocument) => void;
+}
+```
+
+### 3. Pass VisionDocument to Research
+
+When research runs, include the full VisionDocument:
+
+```typescript
+const result = await analyzeProject({
+  domain: researchDomain,
+  inspirationUrls,
+  vision: vision,
+  visionDocument: visionDocument,  // NEW - structured data
+});
+```
+
+### 4. Update Research API
+
+Modify `/api/research/analyze/route.ts` to use VisionDocument:
+
+```typescript
+// Extract structured requirements
+const { problem, audience, businessModel, designStyle } = visionDocument;
+
+// Use in AI prompt
+const prompt = `
+Analyze for a ${businessModel} targeting ${audience.type}.
+Problem being solved: ${problem}
+Design preference: ${designStyle}
+...
+`;
+```
+
+### 5. Visual Polish
+
+Ensure VisionBuilder matches the configurator's dark theme:
+- Use existing CSS variables (--sidebar-bg, --primary, etc.)
+- Smooth transitions between steps
+- Progress indicator showing current step
+- Mobile responsive
+
+### 6. Auto-Complete Step
+
+When VisionBuilder completes:
+- Mark step 2 (Research) as complete
+- Auto-advance to next step OR
+- Show "Continue" button
+
+## Testing
+
+- [ ] VisionBuilder renders in configurator
+- [ ] All 5 steps work (Problem, Audience, Business, Design, Features)
+- [ ] VisionDocument saved to state
+- [ ] Research uses structured data
+- [ ] Step auto-completes
+
+## Files to Modify
+
+```
+website/app/components/configurator/sections/ResearchSection.tsx
+website/lib/configurator-state.ts
+website/app/api/research/analyze/route.ts
+```
+
+## Files Already Created (Just Wire In)
+
+```
+website/app/components/configurator/vision/
+├── VisionBuilder.tsx
+├── ProblemStep.tsx
+├── AudienceStep.tsx
+├── BusinessModelStep.tsx
+├── DesignStyleStep.tsx
+├── FeatureDiscovery.tsx
+├── VisionSummary.tsx
+└── types.ts
+```
+
