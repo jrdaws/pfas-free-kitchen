@@ -42,6 +42,8 @@ interface ResearchRequest {
   inspirationUrls?: string[];
   vision?: string;
   visionDocument?: VisionDocument;
+  /** Enable enhanced extraction with screenshots and vision analysis */
+  enhancedMode?: boolean;
 }
 
 interface UrlAnalysis {
@@ -51,6 +53,13 @@ interface UrlAnalysis {
   designPatterns: string[];
   targetAudience: string;
   keyTakeaways: string[];
+}
+
+// Enhanced URL analysis with vision data
+interface EnhancedUrlAnalysis extends UrlAnalysis {
+  structured?: EnhancedStructuredData;
+  visual?: VisionAnalysisResult;
+  screenshot?: string; // base64
 }
 
 interface ResearchResponse {
@@ -76,14 +85,26 @@ interface ResearchResponse {
       priorityOrder: string[];
     };
     competitorInsights?: string;
+    // Enhanced visual analysis
+    visualAnalysis?: {
+      commonPatterns: string[];
+      dominantStyle: string;
+      colorRecommendations: {
+        primary: string;
+        secondary: string;
+        accent: string;
+      };
+      layoutPatterns: string[];
+    };
   };
   extractedUrls?: ExtractedContent[];
+  enhancedAnalysis?: EnhancedUrlAnalysis[];
 }
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body: ResearchRequest = await request.json();
-    const { domain, inspirationUrls = [], vision, visionDocument } = body;
+    const { domain, inspirationUrls = [], vision, visionDocument, enhancedMode = true } = body;
 
     if (!domain?.trim()) {
       return NextResponse.json(
@@ -110,13 +131,46 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     const anthropic = new Anthropic({ apiKey });
 
     // Extract content from inspiration URLs (if provided)
+    // Enhanced mode includes screenshots and structured section analysis
     let extractedContent: ExtractedContent[] = [];
+    let enhancedAnalysis: EnhancedUrlAnalysis[] = [];
+    
     if (allInspirationUrls.length > 0) {
-      console.log(`[Research] Extracting content from ${allInspirationUrls.length} URLs...`);
-      extractedContent = await extractMultipleUrls(allInspirationUrls.slice(0, 5)); // Limit to 5 URLs
+      console.log(`[Research] Extracting content from ${allInspirationUrls.length} URLs (enhanced=${enhancedMode})...`);
+      extractedContent = await extractMultipleUrls(
+        allInspirationUrls.slice(0, 5), // Limit to 5 URLs
+        { 
+          includeScreenshot: enhancedMode, 
+          enhancedExtraction: enhancedMode,
+          timeout: enhancedMode ? 20000 : 10000, // More time for screenshots
+        }
+      );
+      
+      // If enhanced mode, run vision analysis on screenshots
+      if (enhancedMode) {
+        console.log("[Research] Running vision analysis on screenshots...");
+        for (const ec of extractedContent.filter(e => e.success && e.screenshot)) {
+          try {
+            const visionResult = await analyzeScreenshotWithVision(ec.screenshot!);
+            enhancedAnalysis.push({
+              url: ec.url,
+              title: ec.title,
+              features: ec.structured?.features || [],
+              designPatterns: ec.structured?.designPatterns || [],
+              targetAudience: ec.structured?.targetAudience || "",
+              keyTakeaways: [],
+              structured: ec.structured,
+              visual: visionResult || undefined,
+              screenshot: ec.screenshot,
+            });
+          } catch (visionError) {
+            console.warn(`[Research] Vision analysis failed for ${ec.url}:`, visionError);
+          }
+        }
+      }
     }
 
-    // Build context from extracted URLs (enhanced with Firecrawl structured data)
+    // Build context from extracted URLs (enhanced with Firecrawl structured data + vision)
     const urlContext = extractedContent
       .filter(ec => ec.success)
       .map(ec => {
@@ -142,17 +196,50 @@ ${ec.description}`;
           if (ec.structured.pricing) {
             context += `\n**Pricing**: ${ec.structured.pricing}`;
           }
+          // Enhanced: Section analysis
+          if (ec.structured.sections?.length) {
+            const sectionTypes = ec.structured.sections.map(s => s.type).join(", ");
+            context += `\n**Page Sections**: ${sectionTypes}`;
+          }
+          // Enhanced: Navigation
+          if (ec.structured.navigation?.items?.length) {
+            context += `\n**Navigation Items**: ${ec.structured.navigation.items.join(", ")}`;
+          }
+          // Enhanced: Branding
+          if (ec.structured.branding) {
+            const { primaryColor, secondaryColor, fontStyle } = ec.structured.branding;
+            context += `\n**Branding**: Primary=${primaryColor || "?"}, Secondary=${secondaryColor || "?"}, Font=${fontStyle}`;
+          }
         }
 
         context += `\n\nContent excerpt:\n${ec.content.slice(0, 1500)}`;
         return context;
       })
       .join("\n\n");
-
-    // Build structured vision context if available
+    
+    // Build vision analysis context if available
     let visionContext = "";
+    if (enhancedAnalysis.length > 0) {
+      const analyses = enhancedAnalysis.filter(a => a.visual);
+      if (analyses.length > 0) {
+        visionContext = `
+## Visual Analysis (from screenshots)
+${analyses.map(a => {
+  const v = a.visual!;
+  return `### ${a.title}
+- **Style**: ${v.layout.overallStyle}
+- **Sections**: ${v.layout.sections.map(s => `${s.type} (${s.pattern})`).join(", ")}
+- **Colors**: Primary=${v.colorPalette.primary}, Secondary=${v.colorPalette.secondary}, Accent=${v.colorPalette.accent}
+- **Buttons**: ${v.components.buttons.shape} ${v.components.buttons.style}
+- **Cards**: ${v.components.cards.style} with ${v.components.cards.corners} corners`;
+}).join("\n\n")}`;
+      }
+    }
+
+    // Build structured vision context if available (from guided builder)
+    let structuredVisionContext = "";
     if (visionDocument) {
-      visionContext = `
+      structuredVisionContext = `
 ## Structured Vision (from Guided Builder)
 - **Problem**: ${visionDocument.problem}
 - **Target Audience**: ${visionDocument.audience.type}${visionDocument.audience.description ? ` - ${visionDocument.audience.description}` : ""}
@@ -168,8 +255,9 @@ ${ec.description}`;
 ## Context
 - **Domain/Industry**: ${domain}
 - **User's Vision**: ${vision || "Not specified"}
-${visionContext}
+${structuredVisionContext}
 ${urlContext ? `\n## Inspiration Websites Analyzed\n${urlContext}` : ""}
+${visionContext}
 
 ## Your Task
 Analyze this domain and provide actionable recommendations for building a web application.
@@ -258,6 +346,45 @@ Important:
       throw new Error("Failed to parse research results");
     }
 
+    // Build visual analysis summary from enhanced data
+    let visualAnalysisSummary = undefined;
+    if (enhancedAnalysis.length > 0) {
+      const visualData = enhancedAnalysis.filter(a => a.visual);
+      if (visualData.length > 0) {
+        // Aggregate common patterns
+        const allSectionTypes = new Set<string>();
+        const layoutPatterns = new Set<string>();
+        const colors: { primary: string[]; secondary: string[]; accent: string[] } = {
+          primary: [],
+          secondary: [],
+          accent: [],
+        };
+        
+        visualData.forEach(a => {
+          const v = a.visual!;
+          v.layout.sections.forEach(s => {
+            allSectionTypes.add(s.type);
+            layoutPatterns.add(s.pattern);
+          });
+          colors.primary.push(v.colorPalette.primary);
+          colors.secondary.push(v.colorPalette.secondary);
+          colors.accent.push(v.colorPalette.accent);
+        });
+        
+        // Most common colors (first occurrence as representative)
+        visualAnalysisSummary = {
+          commonPatterns: Array.from(allSectionTypes),
+          dominantStyle: visualData[0].visual!.layout.overallStyle,
+          colorRecommendations: {
+            primary: colors.primary[0],
+            secondary: colors.secondary[0],
+            accent: colors.accent[0],
+          },
+          layoutPatterns: Array.from(layoutPatterns),
+        };
+      }
+    }
+
     const result: ResearchResponse = {
       success: true,
       analysis: {
@@ -277,8 +404,10 @@ Important:
           priorityOrder: [],
         },
         competitorInsights: analysis.competitorInsights,
+        visualAnalysis: visualAnalysisSummary,
       },
       extractedUrls: extractedContent,
+      enhancedAnalysis: enhancedAnalysis.length > 0 ? enhancedAnalysis : undefined,
     };
 
     console.log(`[Research] Analysis complete for ${domain}`);

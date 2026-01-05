@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 4e4cf1c 2026-01-05 feat(analysis): implement deep website analysis from inspiration URLs
 - c6f2c47 2026-01-05 fix: prevent AI from copying vision verbatim
 - 2e98dd3 2026-01-05 feat: integrate Flux image generation via Replicate
 - c99a478 2026-01-05 feat(colors): implement color extraction from inspiration URLs
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 69c18d1 2026-01-04 feat(slots): add component slot templates for page builder
 - a4709e4 2026-01-04 feat(marketplace): add C2C marketplace with auction system
 - b71f792 2026-01-04 docs(governance): add key rules checklist to fallback command
-- 59db00e 2026-01-04 feat(platform): implement project management data model & API routes
 
 ## Agent Governance Structure
 
