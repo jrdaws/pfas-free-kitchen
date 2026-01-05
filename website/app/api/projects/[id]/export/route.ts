@@ -155,10 +155,11 @@ export async function POST(request: NextRequest, context: RouteContext) {
     zip.file("package.json", packageJson);
 
     // Generate ZIP blob
-    const zipBlob = await zip.generateAsync({ type: "nodebuffer" });
+    const zipBuffer = await zip.generateAsync({ type: "nodebuffer" });
+    const zipUint8 = new Uint8Array(zipBuffer);
 
     // Return ZIP file
-    return new NextResponse(zipBlob, {
+    return new NextResponse(zipUint8, {
       status: 200,
       headers: {
         "Content-Type": "application/zip",

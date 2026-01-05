@@ -1,0 +1,54 @@
+{
+  "name": "user-listings",
+  "description": "C2C marketplace listing management - create, browse, and manage listings",
+  "version": "1.0.0",
+  "category": "marketplace",
+  "dependencies": ["supabase-auth"],
+  "files": [
+    {
+      "source": "lib/listing-types.ts",
+      "destination": "lib/marketplace/listing-types.ts"
+    },
+    {
+      "source": "lib/listings.ts",
+      "destination": "lib/marketplace/listings.ts"
+    },
+    {
+      "source": "components/ListingCard.tsx",
+      "destination": "components/marketplace/ListingCard.tsx"
+    },
+    {
+      "source": "components/ListingFilters.tsx",
+      "destination": "components/marketplace/ListingFilters.tsx"
+    },
+    {
+      "source": "components/ListingForm.tsx",
+      "destination": "components/marketplace/ListingForm.tsx"
+    },
+    {
+      "source": "components/ListingGallery.tsx",
+      "destination": "components/marketplace/ListingGallery.tsx"
+    },
+    {
+      "source": "app/listings/page.tsx",
+      "destination": "app/listings/page.tsx"
+    },
+    {
+      "source": "app/listings/[id]/page.tsx",
+      "destination": "app/listings/[id]/page.tsx"
+    },
+    {
+      "source": "app/listings/create/page.tsx",
+      "destination": "app/listings/create/page.tsx"
+    },
+    {
+      "source": "app/my-listings/page.tsx",
+      "destination": "app/my-listings/page.tsx"
+    }
+  ],
+  "packages": {
+    "lucide-react": "^0.400.0"
+  },
+  "envVars": []
+}
+
