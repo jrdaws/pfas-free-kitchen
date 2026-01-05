@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 5803db7 2026-01-04 chore: move env-pull task to done
 - ecbc45c 2026-01-04 feat(cli): add env pull and env check commands
 - 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
 - f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - a814819 2026-01-03 fix(exports): add missing components to e-commerce template
 - 8ece2be 2026-01-03 feat(governance): add 'rr' shortcut for re-reading rules
 - f16cfb3 2026-01-03 feat(governance): add role-based SOP requirements
-- 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
 
 ## Agent Governance Structure
 

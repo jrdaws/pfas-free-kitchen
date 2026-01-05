@@ -78,6 +78,11 @@ npm test                    # Before committing
 | `cp` | Checkpoint - save work, commit, update memory |
 | `rr` | Re-Read rules - reload .cursorrules and apply updates |
 
+**For old chats that don't recognize shortcuts**, use the full command:
+```
+Read .cursorrules now and apply all rules immediately. Confirm you understand the Permission Probing, Quick Actions, and Handoff Prompt requirements.
+```
+
 ### Protected Files (Never Delete)
 - AGENT_CONTEXT.md, .cursorrules
 - prompts/agents/memory/*.md
