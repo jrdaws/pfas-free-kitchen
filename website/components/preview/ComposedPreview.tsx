@@ -92,6 +92,15 @@ function SectionLoader({ height = "100px" }: { height?: string }) {
 // Props & Types
 // ============================================================================
 
+interface ColorOverrides {
+  primary?: string;
+  secondary?: string;
+  accent?: string;
+  background?: string;
+  foreground?: string;
+  muted?: string;
+}
+
 interface ComposedPreviewProps {
   composition: ProjectComposition;
   onRegenerateSection?: (pageId: string, sectionIndex: number, feedback?: string) => Promise<void>;
@@ -99,22 +108,37 @@ interface ComposedPreviewProps {
   editable?: boolean;
   scale?: number;
   className?: string;
+  /** Color overrides extracted from inspiration URL */
+  colorOverrides?: ColorOverrides;
 }
 
 // ============================================================================
 // Global Styles Application
 // ============================================================================
 
-function applyGlobalStyles(colorScheme: ColorScheme): React.CSSProperties {
+function applyGlobalStyles(
+  colorScheme: ColorScheme, 
+  overrides?: ColorOverrides
+): React.CSSProperties {
+  // Merge composition colors with any overrides (overrides take precedence)
+  const colors = {
+    primary: overrides?.primary || colorScheme.primary,
+    secondary: overrides?.secondary || colorScheme.secondary,
+    accent: overrides?.accent || colorScheme.accent,
+    background: overrides?.background || colorScheme.background,
+    foreground: overrides?.foreground || colorScheme.foreground,
+    muted: overrides?.muted || colorScheme.muted,
+  };
+
   return {
-    '--preview-primary': colorScheme.primary,
-    '--preview-secondary': colorScheme.secondary,
-    '--preview-accent': colorScheme.accent,
-    '--preview-background': colorScheme.background,
-    '--preview-foreground': colorScheme.foreground,
-    '--preview-muted': colorScheme.muted,
-    backgroundColor: colorScheme.background,
-    color: colorScheme.foreground,
+    '--preview-primary': colors.primary,
+    '--preview-secondary': colors.secondary,
+    '--preview-accent': colors.accent,
+    '--preview-background': colors.background,
+    '--preview-foreground': colors.foreground,
+    '--preview-muted': colors.muted,
+    backgroundColor: colors.background,
+    color: colors.foreground,
   } as React.CSSProperties;
 }
 
@@ -287,6 +311,7 @@ export function ComposedPreview({
   editable = false,
   scale = 1,
   className = "",
+  colorOverrides,
 }: ComposedPreviewProps) {
   const { pages, globalStyles } = composition;
   const [currentPage, setCurrentPage] = useState<PageComposition>(pages[0]);
@@ -312,7 +337,7 @@ export function ComposedPreview({
     <div 
       className={cn("w-full min-h-screen", className)}
       style={{
-        ...applyGlobalStyles(globalStyles.colorScheme),
+        ...applyGlobalStyles(globalStyles.colorScheme, colorOverrides),
         transform: scale !== 1 ? `scale(${scale})` : undefined,
         transformOrigin: "top left",
         width: scale !== 1 ? `${100 / scale}%` : undefined,

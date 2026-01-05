@@ -1,0 +1,208 @@
+TASK: AI Vision Screenshot Analysis
+PRIORITY: P1 (Phase 2 of Visual Matching)
+TYPE: Backend / AI
+AGENT: Platform Agent
+PARALLEL: Yes - Can run with color extraction
+
+---
+
+## Objective
+
+Use AI Vision (Claude) to analyze inspiration site screenshots and extract:
+- Layout patterns
+- Typography style
+- Component styles
+- Overall aesthetic
+- Design recommendations
+
+## Implementation
+
+### 1. Create Visual Analysis API
+
+```typescript
+// website/app/api/research/analyze-design/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+import Anthropic from "@anthropic-ai/sdk";
+
+interface DesignAnalysis {
+  layout: {
+    heroStyle: "centered" | "split" | "video" | "minimal";
+    navigation: "sticky" | "static" | "transparent";
+    sections: string[];
+    columnLayout: "single" | "two-column" | "grid" | "bento";
+  };
+  typography: {
+    headingStyle: "bold" | "light" | "serif" | "mono";
+    bodyStyle: "readable" | "compact" | "spacious";
+    emphasis: "uppercase" | "lowercase" | "mixed";
+  };
+  aesthetic: {
+    overall: "modern" | "minimal" | "playful" | "corporate" | "luxury" | "tech";
+    mood: "friendly" | "professional" | "bold" | "calm" | "energetic";
+    density: "spacious" | "balanced" | "compact";
+  };
+  components: {
+    buttonStyle: "rounded" | "sharp" | "pill";
+    cardStyle: "flat" | "elevated" | "bordered" | "glass";
+    imageStyle: "rounded" | "sharp" | "masked" | "full-bleed";
+  };
+  patternRecommendations: {
+    patternId: string;
+    reason: string;
+    confidence: number;
+  }[];
+}
+
+export async function POST(request: NextRequest) {
+  const { screenshotBase64, url } = await request.json();
+  
+  const anthropic = new Anthropic();
+  
+  const response = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 2000,
+    messages: [{
+      role: "user",
+      content: [
+        {
+          type: "image",
+          source: {
+            type: "base64",
+            media_type: "image/png",
+            data: screenshotBase64,
+          },
+        },
+        {
+          type: "text",
+          text: DESIGN_ANALYSIS_PROMPT,
+        },
+      ],
+    }],
+  });
+  
+  const analysis = parseDesignAnalysis(response.content[0].text);
+  
+  return NextResponse.json({
+    success: true,
+    analysis,
+  });
+}
+
+const DESIGN_ANALYSIS_PROMPT = `
+Analyze this website screenshot and extract design details.
+
+Return JSON with this exact structure:
+{
+  "layout": {
+    "heroStyle": "centered" | "split" | "video" | "minimal",
+    "navigation": "sticky" | "static" | "transparent",
+    "sections": ["list", "of", "section", "types"],
+    "columnLayout": "single" | "two-column" | "grid" | "bento"
+  },
+  "typography": {
+    "headingStyle": "bold" | "light" | "serif" | "mono",
+    "bodyStyle": "readable" | "compact" | "spacious",
+    "emphasis": "uppercase" | "lowercase" | "mixed"
+  },
+  "aesthetic": {
+    "overall": "modern" | "minimal" | "playful" | "corporate" | "luxury" | "tech",
+    "mood": "friendly" | "professional" | "bold" | "calm" | "energetic",
+    "density": "spacious" | "balanced" | "compact"
+  },
+  "components": {
+    "buttonStyle": "rounded" | "sharp" | "pill",
+    "cardStyle": "flat" | "elevated" | "bordered" | "glass",
+    "imageStyle": "rounded" | "sharp" | "masked" | "full-bleed"
+  },
+  "patternRecommendations": [
+    {
+      "patternId": "hero-split-image",
+      "reason": "Site uses left text, right image hero layout",
+      "confidence": 95
+    }
+  ]
+}
+
+Be specific about what you see. List all major sections in the page.
+`;
+```
+
+### 2. Integrate with Research Flow
+
+After Firecrawl extracts content, also run visual analysis:
+
+```typescript
+// In research flow
+
+// 1. Extract content (existing)
+const contentResult = await extractContent(url);
+
+// 2. Take screenshot (new)
+const screenshot = await takeScreenshot(url);
+
+// 3. Analyze design (new)
+const designAnalysis = await analyzeDesign(screenshot);
+
+// 4. Combine results
+return {
+  ...contentResult,
+  design: designAnalysis,
+};
+```
+
+### 3. Use Analysis in Pattern Selection
+
+Update `website/lib/composer/selector.ts`:
+
+```typescript
+async function selectPatterns(input: SelectorInput): Promise<SelectorOutput> {
+  const { design } = input.research || {};
+  
+  // If we have design analysis, use it to pre-select patterns
+  if (design?.patternRecommendations) {
+    return {
+      sections: design.patternRecommendations.map(rec => ({
+        patternId: rec.patternId,
+        reason: rec.reason,
+        confidenceScore: rec.confidence,
+        variant: design.aesthetic.overall === "minimal" ? "light" : "dark",
+        order: 0,
+      })),
+      layoutRecommendation: mapLayoutType(design.layout),
+    };
+  }
+  
+  // Fallback to AI selection
+  return await aiSelectPatterns(input);
+}
+```
+
+### 4. Store Design Analysis
+
+```typescript
+// website/lib/configurator-state.ts
+
+interface ConfiguratorState {
+  // ... existing
+  designAnalysis: DesignAnalysis | null;
+  setDesignAnalysis: (analysis: DesignAnalysis) => void;
+}
+```
+
+## Files to Create/Modify
+
+1. `website/app/api/research/analyze-design/route.ts` (new)
+2. `website/lib/design-analyzer.ts` (new)
+3. `website/lib/composer/selector.ts` (use design analysis)
+4. `website/app/api/research/analyze/route.ts` (integrate design analysis)
+
+## Success Criteria
+
+- [ ] Screenshot analyzed by Claude Vision
+- [ ] Layout style detected
+- [ ] Typography analyzed
+- [ ] Aesthetic categorized
+- [ ] Pattern recommendations generated
+- [ ] Preview uses recommended patterns
+

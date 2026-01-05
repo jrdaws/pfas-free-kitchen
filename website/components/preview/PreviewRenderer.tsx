@@ -91,6 +91,15 @@ interface PreviewRendererProps {
   editable?: boolean;
   onRegenerateSection?: (pageId: string, sectionIndex: number, feedback?: string) => Promise<void>;
   onSwapPattern?: (pageId: string, sectionIndex: number, newPatternId: string) => Promise<void>;
+  // Color overrides from inspiration URL extraction
+  colorOverrides?: {
+    primary?: string;
+    secondary?: string;
+    accent?: string;
+    background?: string;
+    foreground?: string;
+    muted?: string;
+  };
 }
 
 /**
@@ -132,6 +141,7 @@ export function PreviewRenderer({
   editable = false,
   onRegenerateSection,
   onSwapPattern,
+  colorOverrides,
 }: PreviewRendererProps) {
   // NEW: If a composition is provided, render using ComposedPreview
   if (composition) {
@@ -143,6 +153,7 @@ export function PreviewRenderer({
         onSwapPattern={onSwapPattern}
         scale={scale}
         className={className}
+        colorOverrides={colorOverrides}
       />
     );
   }
@@ -290,6 +301,7 @@ export function PreviewFrame({
   editable,
   onRegenerateSection,
   onSwapPattern,
+  colorOverrides,
   title = "Preview",
 }: PreviewRendererProps & { title?: string }) {
   const activeCount = Object.values(integrations).filter(Boolean).length;
@@ -350,6 +362,7 @@ export function PreviewFrame({
           editable={editable}
           onRegenerateSection={onRegenerateSection}
           onSwapPattern={onSwapPattern}
+          colorOverrides={colorOverrides}
           scale={0.6}
         />
       </div>
@@ -373,6 +386,7 @@ export function MobilePreviewFrame({
   editable,
   onRegenerateSection,
   onSwapPattern,
+  colorOverrides,
 }: PreviewRendererProps) {
   return (
     <div className="w-[375px] mx-auto">
@@ -395,6 +409,7 @@ export function MobilePreviewFrame({
             editable={editable}
             onRegenerateSection={onRegenerateSection}
             onSwapPattern={onSwapPattern}
+            colorOverrides={colorOverrides}
             scale={0.4}
           />
         </div>

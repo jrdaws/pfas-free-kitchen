@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import type { DesignAnalysis } from './design-analyzer';
 
 export type Mode = 'beginner' | 'advanced';
 
@@ -214,6 +215,9 @@ export interface ConfiguratorState {
   researchDomain: string;
   inspirationUrls: string[];
   
+  // Design analysis from inspiration screenshots
+  designAnalysis: DesignAnalysis | null;
+  
   // AI provider settings (5DS clone)
   aiProvider: string;
   aiApiKey: string;
@@ -282,6 +286,7 @@ export interface ConfiguratorState {
   // Research actions
   setResearchDomain: (domain: string) => void;
   setInspirationUrls: (urls: string[]) => void;
+  setDesignAnalysis: (analysis: DesignAnalysis | null) => void;
   
   // AI provider actions
   setAiProvider: (provider: string) => void;
@@ -341,6 +346,7 @@ const initialState = {
   },
   researchDomain: '',
   inspirationUrls: [],
+  designAnalysis: null,
   aiProvider: '',
   aiApiKey: '',
   colorScheme: 'sunset-orange',
@@ -477,6 +483,8 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       setInspirationUrls: (urls) => set({ inspirationUrls: urls }),
 
+      setDesignAnalysis: (analysis) => set({ designAnalysis: analysis }),
+
       setAiProvider: (provider) => set((state) => ({ 
         aiProvider: provider,
         integrations: { ...state.integrations, ai: provider || '' }
@@ -584,6 +592,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         toolStatus: state.toolStatus,
         researchDomain: state.researchDomain,
         inspirationUrls: state.inspirationUrls,
+        designAnalysis: state.designAnalysis,
         aiProvider: state.aiProvider,
         colorScheme: state.colorScheme,
         customColors: state.customColors,

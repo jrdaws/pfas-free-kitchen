@@ -29,6 +29,15 @@ const PROP_GENERATOR_TEMPLATE = `You are generating personalized content for a {
 - Tone: {{tone}}
 - Goals: {{goals}}
 
+## Research Insights (from analyzing their domain/competitors)
+{{researchInsights}}
+
+## Recommended Features from Research
+{{researchRecommendations}}
+
+## Extracted Content from Inspiration Sites
+{{extractedContent}}
+
 ## Component: {{patternName}}
 Category: {{category}}
 
@@ -37,6 +46,7 @@ Category: {{category}}
 
 ## Task
 Generate compelling, personalized content for each slot.
+IMPORTANT: Use the research insights to inform your content. Reference specific features, patterns, and terminology from the research.
 
 ## Rules
 1. Use the ACTUAL brand name "{{projectName}}" - never use placeholders like "YourBrand"
@@ -93,8 +103,32 @@ function formatGoals(goals?: string[]): string {
 // Build Prompt
 // ============================================================================
 
+function formatResearchInsights(research?: ComposerInput["research"]): string {
+  if (!research?.insights || research.insights.length === 0) {
+    return "No research insights available";
+  }
+  return research.insights.slice(0, 10).map(i => `- ${i}`).join("\n");
+}
+
+function formatResearchRecommendations(research?: ComposerInput["research"]): string {
+  if (!research?.recommendations || research.recommendations.length === 0) {
+    return "No specific recommendations";
+  }
+  return research.recommendations.slice(0, 5).map(r => 
+    `- ${r.category}: ${r.features.join(", ")} (${r.reason})`
+  ).join("\n");
+}
+
+function formatExtractedContent(research?: ComposerInput["research"]): string {
+  if (!research?.extractedContent) {
+    return "No extracted content";
+  }
+  // Limit to first 500 chars to avoid token bloat
+  return research.extractedContent.substring(0, 500);
+}
+
 function buildPrompt(pattern: Pattern, context: ComposerInput): string {
-  const { vision } = context;
+  const { vision, research } = context;
   
   return PROP_GENERATOR_TEMPLATE
     .replace(/\{\{patternId\}\}/g, pattern.id)
@@ -105,7 +139,10 @@ function buildPrompt(pattern: Pattern, context: ComposerInput): string {
     .replace(/\{\{audience\}\}/g, vision.audience || "general audience")
     .replace(/\{\{tone\}\}/g, vision.tone || "professional")
     .replace(/\{\{goals\}\}/g, formatGoals(vision.goals))
-    .replace(/\{\{slots\}\}/g, formatSlots(pattern.slots));
+    .replace(/\{\{slots\}\}/g, formatSlots(pattern.slots))
+    .replace(/\{\{researchInsights\}\}/g, formatResearchInsights(research))
+    .replace(/\{\{researchRecommendations\}\}/g, formatResearchRecommendations(research))
+    .replace(/\{\{extractedContent\}\}/g, formatExtractedContent(research));
 }
 
 // ============================================================================

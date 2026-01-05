@@ -1085,6 +1085,7 @@ export default function ConfigurePage() {
         branding={{ colorScheme, customColors }}
         isVisible={showLivePreview}
         onToggle={() => setShowLivePreview(!showLivePreview)}
+        research={researchResult}
       />
     </div>
   );

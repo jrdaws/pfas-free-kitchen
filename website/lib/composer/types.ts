@@ -120,9 +120,18 @@ export type ToneType =
   | "casual";
 
 export interface ResearchResult {
+  domain?: string;
   insights: string[];
-  recommendations: string[];
+  recommendations: ResearchRecommendation[];
   competitorAnalysis?: CompetitorInsight[];
+  targetAudience?: string;
+  extractedContent?: string;
+}
+
+export interface ResearchRecommendation {
+  category: string;
+  features: string[];
+  reason: string;
 }
 
 export interface CompetitorInsight {
@@ -238,6 +247,7 @@ export interface PatternSelection {
 export interface SelectorInput {
   vision: VisionDocument;
   research?: ResearchResult;
+  designAnalysis?: import('../design-analyzer').DesignAnalysis;
   availablePatterns: Pattern[];
   pageType: PageType;
   existingSections?: SectionComposition[];

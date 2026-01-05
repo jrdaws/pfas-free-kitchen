@@ -1,0 +1,189 @@
+TASK: Extract Colors from Inspiration URLs
+PRIORITY: P1 (Phase 1 of Visual Matching)
+TYPE: Backend / API
+AGENT: Platform Agent
+PARALLEL: Yes - After P0 research fix
+
+---
+
+## Objective
+
+Extract the color palette from inspiration URLs and apply them to the preview.
+
+## Approach
+
+### Option A: Screenshot + Color Extraction (Recommended)
+
+1. Take screenshot of inspiration URL
+2. Extract dominant colors using color-thief or similar
+3. Map to our color scheme (primary, secondary, accent, etc.)
+
+### Option B: CSS Extraction
+
+1. Fetch the URL's CSS
+2. Parse CSS variables and color definitions
+3. Extract the most-used colors
+
+## Implementation
+
+### 1. Create Color Extraction API
+
+```typescript
+// website/app/api/research/extract-colors/route.ts
+
+import { NextRequest, NextResponse } from "next/server";
+
+interface ColorPalette {
+  primary: string;
+  secondary: string;
+  accent: string;
+  background: string;
+  foreground: string;
+  muted: string;
+}
+
+export async function POST(request: NextRequest) {
+  const { url } = await request.json();
+  
+  // Option 1: Use a screenshot service + color extraction
+  // Option 2: Use an existing API like ColorAPI or similar
+  
+  // Example using Browserless for screenshot:
+  const screenshot = await takeScreenshot(url);
+  const colors = await extractDominantColors(screenshot);
+  
+  return NextResponse.json({
+    success: true,
+    palette: mapToColorScheme(colors),
+  });
+}
+
+function mapToColorScheme(dominantColors: string[]): ColorPalette {
+  // Map extracted colors to our semantic scheme
+  return {
+    primary: dominantColors[0] || "#F97316",
+    secondary: dominantColors[1] || "#EA580C",
+    accent: dominantColors[2] || "#FB923C",
+    background: isLight(dominantColors[3]) ? "#FFFFFF" : "#0A0A0A",
+    foreground: isLight(dominantColors[3]) ? "#0A0A0A" : "#FFFFFF",
+    muted: dominantColors[4] || "#78716C",
+  };
+}
+```
+
+### 2. Color Extraction Library Options
+
+**Option A: color-thief-node**
+```bash
+npm install color-thief-node
+```
+
+```typescript
+import ColorThief from 'color-thief-node';
+
+async function extractDominantColors(imageBuffer: Buffer): Promise<string[]> {
+  const palette = await ColorThief.getPalette(imageBuffer, 6);
+  return palette.map(rgb => rgbToHex(rgb));
+}
+```
+
+**Option B: Use Replicate's color extraction model**
+```typescript
+const output = await replicate.run("stability-ai/color-extraction", {
+  input: { image: screenshotUrl }
+});
+```
+
+**Option C: Use AI Vision (Claude)**
+```typescript
+const response = await anthropic.messages.create({
+  model: "claude-3-haiku-20240307",
+  messages: [{
+    role: "user",
+    content: [
+      { type: "image", source: { type: "base64", data: screenshotBase64 } },
+      { type: "text", text: "Extract the 6 main colors from this website as hex codes. Return JSON: { primary, secondary, accent, background, foreground, muted }" }
+    ]
+  }]
+});
+```
+
+### 3. Screenshot Service Options
+
+**Option A: Browserless (recommended)**
+```typescript
+const browser = await puppeteer.connect({
+  browserWSEndpoint: `wss://chrome.browserless.io?token=${BROWSERLESS_TOKEN}`
+});
+const page = await browser.newPage();
+await page.goto(url);
+const screenshot = await page.screenshot({ type: 'png' });
+```
+
+**Option B: ScreenshotAPI**
+```typescript
+const screenshotUrl = `https://api.screenshotapi.net/screenshot?url=${encodeURIComponent(url)}&token=${token}`;
+```
+
+**Option C: Puppeteer locally (for dev)**
+```typescript
+import puppeteer from 'puppeteer';
+const browser = await puppeteer.launch();
+```
+
+### 4. Store Colors in State
+
+Update configurator state:
+
+```typescript
+// website/lib/configurator-state.ts
+
+interface ConfiguratorState {
+  // ... existing
+  extractedColors: ColorPalette | null;
+  setExtractedColors: (colors: ColorPalette) => void;
+}
+```
+
+### 5. Apply Colors to Preview
+
+Pass extracted colors to ComposedPreview:
+
+```typescript
+<ComposedPreview
+  composition={composition}
+  colorOverrides={extractedColors}  // NEW
+/>
+```
+
+In ComposedPreview, apply as CSS variables:
+
+```typescript
+<div style={{
+  '--primary': colorOverrides?.primary,
+  '--secondary': colorOverrides?.secondary,
+  // ...
+}}>
+```
+
+## Environment Variables Needed
+
+```
+BROWSERLESS_TOKEN=xxx  (or alternative screenshot service)
+```
+
+## Files to Create/Modify
+
+1. `website/app/api/research/extract-colors/route.ts` (new)
+2. `website/lib/color-extractor.ts` (new)
+3. `website/lib/configurator-state.ts` (add extractedColors)
+4. `website/components/preview/ComposedPreview.tsx` (apply colors)
+
+## Success Criteria
+
+- [ ] Screenshot taken of inspiration URL
+- [ ] 6 dominant colors extracted
+- [ ] Colors mapped to semantic scheme
+- [ ] Preview uses extracted colors
+- [ ] Colors visually match inspiration site
+

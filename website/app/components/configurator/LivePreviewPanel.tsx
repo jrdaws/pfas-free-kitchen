@@ -8,6 +8,7 @@ import { TEMPLATES } from "@/lib/templates";
 import { PreviewFrame, MobilePreviewFrame } from "@/components/preview/PreviewRenderer";
 import { generateFallbackProps, UserConfig } from "@/lib/ai/preview-generator";
 import type { ProjectComposition } from "@/lib/composer/types";
+import type { ResearchResult } from "@/lib/research-client";
 import { 
   Eye, 
   EyeOff, 
@@ -37,6 +38,7 @@ interface LivePreviewPanelProps {
   };
   isVisible: boolean;
   onToggle: () => void;
+  research?: ResearchResult | null;
 }
 
 export function LivePreviewPanel({
@@ -51,6 +53,7 @@ export function LivePreviewPanel({
   branding,
   isVisible,
   onToggle,
+  research,
 }: LivePreviewPanelProps) {
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isExpanded, setIsExpanded] = useState(false);
@@ -145,6 +148,26 @@ export function LivePreviewPanel({
     setIsComposing(true);
     
     try {
+      // Build research data from Firecrawl results
+      const researchData = research?.success && research.analysis ? {
+        domain: research.analysis.domainInsights?.overview,
+        insights: [
+          ...(research.analysis.domainInsights?.commonFeatures || []),
+          ...(research.analysis.domainInsights?.competitorPatterns || []),
+        ],
+        recommendations: research.analysis.recommendations?.suggestedFeatures?.map(f => ({
+          category: f.category,
+          features: f.features,
+          reason: f.reason,
+        })) || [],
+        targetAudience: research.analysis.domainInsights?.targetAudience,
+        extractedContent: research.analysis.urlAnalysis?.map(u => 
+          `${u.title}: ${u.keyTakeaways?.join(', ')}`
+        ).join('\n'),
+      } : undefined;
+
+      console.log("[Preview] Sending research to composer:", researchData ? "Yes" : "No");
+
       const response = await fetch("/api/compose/project", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -152,10 +175,11 @@ export function LivePreviewPanel({
           vision: {
             projectName: projectName || "My Project",
             description: description || vision || "A modern web application",
-            audience: undefined,
+            audience: researchData?.targetAudience,
             tone: "professional",
             goals: [],
           },
+          research: researchData,
           template,
           pages: [
             { path: "/", name: "Home", type: "home" },
@@ -184,7 +208,7 @@ export function LivePreviewPanel({
     } finally {
       setIsComposing(false);
     }
-  }, [projectName, description, vision, template, integrations, featureCount]);
+  }, [projectName, description, vision, template, integrations, featureCount, research]);
 
   // Auto-compose when user has provided enough context
   const hasEnoughContext = projectName && projectName.length > 2 && template;

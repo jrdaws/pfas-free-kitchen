@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 2fef60f 2026-01-05 debug: add console logs to track auto-compose status
 - b6f0545 2026-01-05 chore: remove completed task file for optimization tests
 - dc44dc6 2026-01-05 test: add integration tests for 6 optimization features
 - 75c75ff 2026-01-05 feat: auto-compose preview when user has enough context
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - e5c94b2 2026-01-04 feat(governance): add fallback command for old chats
 - 5803db7 2026-01-04 chore: move env-pull task to done
 - ecbc45c 2026-01-04 feat(cli): add env pull and env check commands
-- 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
 
 ## Agent Governance Structure
 

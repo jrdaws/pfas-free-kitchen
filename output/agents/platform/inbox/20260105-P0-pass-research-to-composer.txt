@@ -1,0 +1,115 @@
+TASK: Pass Firecrawl Research Results to Preview Composer
+PRIORITY: P0 (Critical Gap)
+TYPE: Integration / Bug Fix
+AGENT: Platform Agent
+PARALLEL: No - Do First
+
+---
+
+## Problem
+
+The preview composer is NOT receiving research data from Firecrawl.
+
+Current flow:
+```
+Research runs → Results stored in state → ❌ NOT passed to composer
+```
+
+The preview generates content without knowing what was researched.
+
+## Solution
+
+### 1. Update LivePreviewPanel Props
+
+Add research prop to `LivePreviewPanelProps`:
+
+```typescript
+interface LivePreviewPanelProps {
+  // ... existing props
+  research?: {
+    domain?: string;
+    insights?: string[];
+    recommendations?: Array<{
+      category: string;
+      features: string[];
+      reason: string;
+    }>;
+    analyzedUrls?: string[];
+    extractedContent?: string;
+  };
+}
+```
+
+### 2. Pass Research from configure/page.tsx
+
+In `website/app/configure/page.tsx`, pass research results to LivePreviewPanel:
+
+```tsx
+<LivePreviewPanel
+  // ... existing props
+  research={researchResults}  // ADD THIS
+/>
+```
+
+### 3. Include Research in Compose API Call
+
+In `LivePreviewPanel.tsx`, update the compose call:
+
+```typescript
+body: JSON.stringify({
+  vision: { ... },
+  research: {                    // ADD THIS BLOCK
+    domain: research?.domain,
+    insights: research?.insights || [],
+    recommendations: research?.recommendations || [],
+    extractedContent: research?.extractedContent,
+  },
+  template,
+  pages,
+  integrations,
+}),
+```
+
+### 4. Use Research in Prop Generator
+
+In `website/lib/composer/prop-generator.ts`, use research insights:
+
+```typescript
+const PROP_PROMPT = `
+Generate content for ${pattern.name}.
+
+User's Research Insights:
+${context.research?.insights?.join('\n') || 'None'}
+
+Recommended Features:
+${context.research?.recommendations?.map(r => `${r.category}: ${r.features.join(', ')}`).join('\n') || 'None'}
+
+Extracted Content from Inspiration:
+${context.research?.extractedContent?.substring(0, 500) || 'None'}
+
+Generate content that reflects these insights...
+`;
+```
+
+## Files to Modify
+
+1. `website/app/components/configurator/LivePreviewPanel.tsx`
+   - Add research prop
+   - Include in compose API call
+
+2. `website/app/configure/page.tsx`
+   - Pass researchResults to LivePreviewPanel
+
+3. `website/lib/composer/prop-generator.ts`
+   - Use research in AI prompt
+
+4. `website/lib/composer/types.ts`
+   - Update ComposerInput interface
+
+## Success Criteria
+
+- [ ] Research results passed to preview
+- [ ] AI prompt includes research insights
+- [ ] Generated content reflects researched features
+- [ ] Preview mentions domain-specific terms from research
+
