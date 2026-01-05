@@ -1,5 +1,5 @@
 {
-  "name": "{{PROJECT_NAME}}",
+  "name": "dashboard-template",
   "private": true,
   "version": "0.0.0",
   "scripts": {

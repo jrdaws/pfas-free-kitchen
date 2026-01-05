@@ -1,0 +1,8 @@
+{
+  "template": "ecommerce",
+  "version": "0.1.0",
+  "capabilities": ["products", "cart", "checkout", "orders"],
+  "description": "E-commerce application template with shopping cart and checkout",
+  "framework_version": "0.3.0"
+}
+

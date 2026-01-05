@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- a4709e4 2026-01-04 feat(marketplace): add C2C marketplace with auction system
 - b71f792 2026-01-04 docs(governance): add key rules checklist to fallback command
 - 59db00e 2026-01-04 feat(platform): implement project management data model & API routes
 - b4b0ef6 2026-01-04 test(platform): add comprehensive test plans for platform features
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - bdeded9 2026-01-04 chore: move completed task to done
 - 510cfc4 2026-01-04 feat: auto-include features + integration bridges + e-commerce templates
 - 9d3591d 2026-01-03 fix(P1): resolve remaining P1 export failures
-- 3d478da 2026-01-03 chore: move completed task to done
 
 ## Agent Governance Structure
 
