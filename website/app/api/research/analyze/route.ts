@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
-import { extractMultipleUrls, type ExtractedContent } from "@/lib/url-extractor";
+import { 
+  extractMultipleUrls, 
+  type ExtractedContent,
+  type EnhancedStructuredData,
+} from "@/lib/url-extractor";
+import { 
+  analyzeScreenshotWithVision, 
+  type VisionAnalysisResult,
+} from "@/lib/vision-analyzer";
 
 // Feature categories from our system
 const AVAILABLE_FEATURES = {

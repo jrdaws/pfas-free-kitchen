@@ -1,0 +1,353 @@
+TASK: Deep Website Analysis from Inspiration URLs
+PRIORITY: P0 (Foundation for Preview/Export)
+TYPE: Backend / AI / Integration
+AGENT: Platform Agent
+PARALLEL: No - Do First (Wave 1)
+
+---
+
+## Objective
+
+When a user provides an inspiration URL, deeply analyze that website to extract:
+1. Visual Design (colors, typography, spacing)
+2. Page Structure (sections, layout patterns)
+3. Component Library (what UI components are used)
+4. Feature Set (what functionality exists)
+5. Content Strategy (how copy is structured)
+
+This analysis should then inform both the preview AND the final export.
+
+---
+
+## Current State
+
+The research flow only extracts text content via Firecrawl:
+```
+URL → Firecrawl → Text extraction → Feature recommendations
+```
+
+We have unused APIs:
+- `/api/research/extract-colors` - Built but not called
+- `/api/research/analyze-design` - Built but not called
+
+---
+
+## Required Changes
+
+### 1. Enhanced Research Flow
+
+Modify `/api/research/analyze/route.ts` to:
+
+```typescript
+// Current flow (text only)
+const content = await extractContent(url);
+
+// NEW flow (full analysis)
+const analysis = await Promise.all([
+  extractContent(url),           // Text content
+  takeScreenshot(url),           // Visual capture
+  extractColors(url),            // Color palette
+  analyzeDesign(url),            // Layout/structure
+  detectFeatures(url),           // Feature detection
+]);
+```
+
+### 2. Screenshot Service
+
+Add screenshot capability using one of:
+- **Browserless** (recommended for production)
+- **Puppeteer** (for local dev)
+- **ScreenshotAPI** (simple but paid)
+
+```typescript
+// website/lib/screenshot.ts
+
+export async function takeScreenshot(url: string): Promise<{
+  fullPage: Buffer;
+  viewport: Buffer;
+  metadata: {
+    width: number;
+    height: number;
+    scrollHeight: number;
+  };
+}> {
+  // Use Browserless or Puppeteer
+  const browser = await puppeteer.connect({
+    browserWSEndpoint: process.env.BROWSERLESS_URL
+  });
+  
+  const page = await browser.newPage();
+  await page.goto(url, { waitUntil: 'networkidle2' });
+  
+  // Capture viewport and full page
+  const viewport = await page.screenshot({ type: 'png' });
+  const fullPage = await page.screenshot({ type: 'png', fullPage: true });
+  
+  return { viewport, fullPage, metadata: { ... } };
+}
+```
+
+### 3. Structure Detection
+
+Use Claude Vision to analyze screenshot and detect:
+
+```typescript
+// website/lib/structure-analyzer.ts
+
+interface PageStructure {
+  sections: {
+    type: 'hero' | 'features' | 'pricing' | 'testimonials' | 'cta' | 'footer' | 'custom';
+    position: number;  // Order on page
+    layout: 'centered' | 'split' | 'grid' | 'list';
+    hasImage: boolean;
+    hasVideo: boolean;
+    estimatedHeight: 'small' | 'medium' | 'large' | 'full-viewport';
+  }[];
+  
+  navigation: {
+    type: 'sticky' | 'static' | 'transparent';
+    items: string[];
+    hasCta: boolean;
+  };
+  
+  footer: {
+    columns: number;
+    hasNewsletter: boolean;
+    hasSocialLinks: boolean;
+  };
+}
+
+export async function analyzePageStructure(
+  screenshot: Buffer
+): Promise<PageStructure> {
+  const anthropic = new Anthropic();
+  
+  const response = await anthropic.messages.create({
+    model: "claude-3-5-sonnet-20241022",
+    max_tokens: 2000,
+    messages: [{
+      role: "user",
+      content: [
+        {
+          type: "image",
+          source: { type: "base64", media_type: "image/png", data: screenshot.toString('base64') },
+        },
+        {
+          type: "text",
+          text: STRUCTURE_ANALYSIS_PROMPT,
+        },
+      ],
+    }],
+  });
+  
+  return parseStructureResponse(response);
+}
+
+const STRUCTURE_ANALYSIS_PROMPT = `
+Analyze this website screenshot and identify its structure.
+
+For EACH SECTION you can see on the page, identify:
+1. Section type (hero, features, pricing, testimonials, CTA, FAQ, footer, etc.)
+2. Position (1 = first/top, 2 = second, etc.)
+3. Layout pattern (centered text, split left/right, grid, list)
+4. Whether it has images/videos
+5. Approximate height relative to viewport
+
+Also identify:
+- Navigation style (sticky, static, transparent overlay)
+- Navigation items (what links are visible)
+- Footer structure
+
+Return JSON:
+{
+  "sections": [
+    { "type": "hero", "position": 1, "layout": "split", "hasImage": true, "hasVideo": false, "estimatedHeight": "full-viewport" },
+    { "type": "features", "position": 2, "layout": "grid", "hasImage": true, "hasVideo": false, "estimatedHeight": "large" },
+    ...
+  ],
+  "navigation": { "type": "sticky", "items": ["Home", "Features", "Pricing"], "hasCta": true },
+  "footer": { "columns": 4, "hasNewsletter": true, "hasSocialLinks": true }
+}
+`;
+```
+
+### 4. Component Detection
+
+Identify specific UI components:
+
+```typescript
+// website/lib/component-detector.ts
+
+interface DetectedComponents {
+  buttons: {
+    style: 'solid' | 'outline' | 'ghost' | 'gradient';
+    shape: 'rounded' | 'pill' | 'square';
+    sizes: ('sm' | 'md' | 'lg')[];
+  };
+  
+  cards: {
+    style: 'elevated' | 'bordered' | 'flat' | 'glass';
+    hasImage: boolean;
+    hasIcon: boolean;
+  };
+  
+  forms: {
+    inputStyle: 'outline' | 'filled' | 'underline';
+    hasLabels: boolean;
+    hasFloatingLabels: boolean;
+  };
+  
+  images: {
+    style: 'rounded' | 'square' | 'circle' | 'masked';
+    hasOverlays: boolean;
+  };
+  
+  typography: {
+    headingStyle: 'bold' | 'light' | 'serif' | 'display';
+    bodyStyle: 'regular' | 'light';
+    accentFont: boolean;
+  };
+}
+```
+
+### 5. Feature Detection
+
+Identify what features/functionality exists:
+
+```typescript
+// website/lib/feature-detector.ts
+
+interface DetectedFeatures {
+  auth: {
+    hasLogin: boolean;
+    hasSignup: boolean;
+    hasSocialAuth: boolean;
+    providers: string[]; // 'google', 'github', etc.
+  };
+  
+  ecommerce: {
+    hasCart: boolean;
+    hasProducts: boolean;
+    hasCheckout: boolean;
+    hasPricing: boolean;
+  };
+  
+  content: {
+    hasBlog: boolean;
+    hasSearch: boolean;
+    hasFilters: boolean;
+    hasPagination: boolean;
+  };
+  
+  social: {
+    hasProfiles: boolean;
+    hasComments: boolean;
+    hasLikes: boolean;
+    hasSharing: boolean;
+  };
+  
+  communication: {
+    hasContactForm: boolean;
+    hasChat: boolean;
+    hasNewsletter: boolean;
+  };
+}
+
+export async function detectFeatures(
+  screenshot: Buffer,
+  pageContent: string
+): Promise<DetectedFeatures> {
+  // Combine visual analysis with text analysis
+  // Look for buttons like "Login", "Sign Up", "Add to Cart"
+  // Look for sections like pricing tables, product grids
+  // Detect forms and their purposes
+}
+```
+
+### 6. Store Analysis Results
+
+Add to configurator state:
+
+```typescript
+// website/lib/configurator-state.ts
+
+interface ConfiguratorState {
+  // ... existing
+
+  // NEW: Website Analysis Results
+  websiteAnalysis: WebsiteAnalysis | null;
+  setWebsiteAnalysis: (analysis: WebsiteAnalysis) => void;
+}
+
+interface WebsiteAnalysis {
+  url: string;
+  analyzedAt: string;
+  
+  visual: {
+    colors: ColorPalette;
+    typography: TypographyConfig;
+    spacing: SpacingConfig;
+  };
+  
+  structure: PageStructure;
+  components: DetectedComponents;
+  features: DetectedFeatures;
+  
+  // Raw data for AI
+  screenshot: string;  // base64
+  extractedContent: string;
+}
+```
+
+### 7. Pass to Composer
+
+Update LivePreviewPanel to pass analysis:
+
+```typescript
+const response = await fetch("/api/compose/project", {
+  method: "POST",
+  body: JSON.stringify({
+    vision: { ... },
+    research: { ... },
+    websiteAnalysis: websiteAnalysis,  // NEW
+    // ...
+  }),
+});
+```
+
+---
+
+## Environment Variables Needed
+
+```
+BROWSERLESS_TOKEN=xxx  # For screenshots
+```
+
+Or for local development, install Puppeteer.
+
+---
+
+## Files to Create
+
+1. `website/lib/screenshot.ts`
+2. `website/lib/structure-analyzer.ts`
+3. `website/lib/component-detector.ts`
+4. `website/lib/feature-detector.ts`
+
+## Files to Modify
+
+1. `website/app/api/research/analyze/route.ts` - Add full analysis
+2. `website/lib/configurator-state.ts` - Store analysis
+3. `website/app/components/configurator/LivePreviewPanel.tsx` - Pass analysis
+
+---
+
+## Success Criteria
+
+- [ ] Screenshot captured for each inspiration URL
+- [ ] Page structure detected (sections, layouts)
+- [ ] UI components identified (buttons, cards, forms)
+- [ ] Features detected (auth, ecommerce, blog)
+- [ ] Colors extracted accurately
+- [ ] All data stored and passed to composer
+

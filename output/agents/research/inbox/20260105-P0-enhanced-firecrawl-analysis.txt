@@ -1,0 +1,358 @@
+TASK: Enhanced Firecrawl Analysis Pipeline
+PRIORITY: P0 (Foundation)
+TYPE: Research / Integration
+AGENT: Research Agent
+PARALLEL: Yes - Wave 1 (Run with Platform Deep Analysis)
+
+---
+
+## Objective
+
+Enhance the Firecrawl integration to extract comprehensive data from
+inspiration URLs, not just text content.
+
+---
+
+## Current Firecrawl Usage
+
+```typescript
+// Current: Just text extraction
+const result = await firecrawl.scrapeUrl(url, {
+  formats: ['markdown'],
+});
+```
+
+## Enhanced Firecrawl Usage
+
+Firecrawl supports extracting structured data. Use this to get:
+
+```typescript
+// Enhanced: Full extraction
+const result = await firecrawl.scrapeUrl(url, {
+  formats: ['markdown', 'screenshot', 'links', 'metadata'],
+  actions: [
+    { type: 'screenshot', fullPage: true },
+  ],
+  extract: {
+    schema: websiteAnalysisSchema,
+  },
+});
+```
+
+---
+
+## Implementation
+
+### 1. Update URL Extractor
+
+```typescript
+// website/lib/url-extractor.ts
+
+import { z } from 'zod';
+import Firecrawl from '@mendable/firecrawl-js';
+
+const firecrawl = new Firecrawl({
+  apiKey: process.env.FIRECRAWL_API_KEY,
+});
+
+// Schema for structured extraction
+const websiteAnalysisSchema = z.object({
+  sections: z.array(z.object({
+    type: z.enum(['hero', 'features', 'pricing', 'testimonials', 'cta', 'faq', 'footer', 'other']),
+    headline: z.string().optional(),
+    description: z.string().optional(),
+    hasImage: z.boolean(),
+    hasCTA: z.boolean(),
+  })),
+  
+  navigation: z.object({
+    items: z.array(z.string()),
+    hasSearch: z.boolean(),
+    hasCTA: z.boolean(),
+  }),
+  
+  features: z.object({
+    hasLogin: z.boolean(),
+    hasSignup: z.boolean(),
+    hasCart: z.boolean(),
+    hasPricing: z.boolean(),
+    hasBlog: z.boolean(),
+    hasSearch: z.boolean(),
+    hasNewsletter: z.boolean(),
+  }),
+  
+  branding: z.object({
+    primaryColor: z.string().optional(),
+    secondaryColor: z.string().optional(),
+    fontStyle: z.enum(['modern', 'classic', 'playful', 'technical']),
+  }),
+});
+
+export type WebsiteAnalysis = z.infer<typeof websiteAnalysisSchema>;
+
+export async function extractWebsiteData(url: string): Promise<{
+  markdown: string;
+  screenshot?: string;  // base64
+  metadata: Record<string, unknown>;
+  structuredData: WebsiteAnalysis;
+  links: string[];
+}> {
+  try {
+    const result = await firecrawl.scrapeUrl(url, {
+      formats: ['markdown', 'screenshot@fullPage', 'links'],
+      extract: {
+        schema: websiteAnalysisSchema,
+        systemPrompt: `
+          Analyze this webpage as a product designer would.
+          Identify all distinct sections from top to bottom.
+          Look for common patterns: hero sections, feature grids, testimonials, pricing tables.
+          Detect if the site has authentication, e-commerce, or content features.
+          Identify the color scheme and typography style.
+        `,
+      },
+      timeout: 30000,
+    });
+    
+    return {
+      markdown: result.markdown || '',
+      screenshot: result.screenshot,
+      metadata: result.metadata || {},
+      structuredData: result.extract as WebsiteAnalysis,
+      links: result.links || [],
+    };
+  } catch (error) {
+    console.error('Firecrawl extraction failed:', error);
+    // Fallback to basic extraction
+    return await extractBasicContent(url);
+  }
+}
+```
+
+### 2. Multi-Page Analysis
+
+For deeper analysis, also analyze key subpages:
+
+```typescript
+// website/lib/multi-page-analyzer.ts
+
+export async function analyzeMultiplePages(baseUrl: string): Promise<{
+  homepage: WebsiteAnalysis;
+  subpages: Record<string, WebsiteAnalysis>;
+}> {
+  // First, get homepage
+  const homepage = await extractWebsiteData(baseUrl);
+  
+  // Identify important subpages from navigation
+  const importantPages = identifyImportantPages(homepage.links);
+  
+  // Analyze top 3-5 subpages
+  const subpages: Record<string, WebsiteAnalysis> = {};
+  
+  for (const page of importantPages.slice(0, 5)) {
+    try {
+      const analysis = await extractWebsiteData(page);
+      subpages[page] = analysis.structuredData;
+    } catch (e) {
+      // Skip failed pages
+    }
+  }
+  
+  return { homepage: homepage.structuredData, subpages };
+}
+
+function identifyImportantPages(links: string[]): string[] {
+  // Prioritize pages that indicate features
+  const priorityPatterns = [
+    /\/pricing/i,
+    /\/features/i,
+    /\/about/i,
+    /\/product/i,
+    /\/login/i,
+    /\/signup/i,
+    /\/blog/i,
+  ];
+  
+  return links
+    .filter(link => priorityPatterns.some(p => p.test(link)))
+    .slice(0, 5);
+}
+```
+
+### 3. Screenshot Analysis with Claude Vision
+
+Use the Firecrawl screenshot with Claude Vision:
+
+```typescript
+// website/lib/vision-analyzer.ts
+
+import Anthropic from '@anthropic-ai/sdk';
+
+const anthropic = new Anthropic();
+
+export async function analyzeScreenshotWithVision(
+  screenshot: string // base64
+): Promise<{
+  layout: PageLayout;
+  components: ComponentStyles;
+  colorPalette: ColorPalette;
+}> {
+  const response = await anthropic.messages.create({
+    model: 'claude-3-5-sonnet-20241022',
+    max_tokens: 3000,
+    messages: [{
+      role: 'user',
+      content: [
+        {
+          type: 'image',
+          source: {
+            type: 'base64',
+            media_type: 'image/png',
+            data: screenshot,
+          },
+        },
+        {
+          type: 'text',
+          text: VISION_ANALYSIS_PROMPT,
+        },
+      ],
+    }],
+  });
+  
+  return JSON.parse(response.content[0].text);
+}
+
+const VISION_ANALYSIS_PROMPT = `
+Analyze this website screenshot in detail.
+
+## Layout Analysis
+For each visible section (from top to bottom):
+1. Section type (hero, features, pricing, testimonials, cta, faq, footer)
+2. Layout pattern:
+   - "centered": Content centered, no side elements
+   - "split-left": Image/media on left, text on right
+   - "split-right": Text on left, image/media on right
+   - "grid-2": 2-column grid
+   - "grid-3": 3-column grid
+   - "grid-4": 4-column grid
+   - "alternating": Alternating left/right sections
+3. Background treatment (solid, gradient, image, pattern)
+4. Approximate height (vh units or "auto")
+
+## Component Styles
+Identify styles used for:
+- Buttons: shape (pill, rounded, square), style (solid, outline, gradient)
+- Cards: style (elevated, bordered, flat, glass), corners (rounded, sharp)
+- Images: treatment (rounded, sharp, circle, masked)
+- Icons: style (line, filled, duotone), size (sm, md, lg)
+
+## Color Palette
+Extract exact hex colors:
+- Primary (main brand color)
+- Secondary (supporting color)
+- Accent (highlights, CTAs)
+- Background (main bg)
+- Foreground (text)
+- Muted (secondary text, borders)
+
+Return JSON:
+{
+  "layout": {
+    "sections": [
+      { "type": "hero", "pattern": "split-right", "background": "gradient", "height": "100vh" },
+      { "type": "features", "pattern": "grid-3", "background": "solid", "height": "auto" },
+      ...
+    ]
+  },
+  "components": {
+    "buttons": { "shape": "pill", "style": "gradient" },
+    "cards": { "style": "elevated", "corners": "rounded" },
+    "images": { "treatment": "rounded" },
+    "icons": { "style": "duotone", "size": "md" }
+  },
+  "colorPalette": {
+    "primary": "#5E6AD2",
+    "secondary": "#3D4270",
+    "accent": "#FFD700",
+    "background": "#0D0E14",
+    "foreground": "#FFFFFF",
+    "muted": "#6B7280"
+  }
+}
+`;
+```
+
+### 4. Update Research API Route
+
+Integrate all enhanced extraction:
+
+```typescript
+// website/app/api/research/analyze/route.ts
+
+import { extractWebsiteData } from '@/lib/url-extractor';
+import { analyzeScreenshotWithVision } from '@/lib/vision-analyzer';
+
+export async function POST(request: NextRequest) {
+  const { urls, vision } = await request.json();
+  
+  const analyses: FullWebsiteAnalysis[] = [];
+  
+  for (const url of urls) {
+    // Step 1: Firecrawl extraction (text + screenshot + structured)
+    const firecrawlData = await extractWebsiteData(url);
+    
+    // Step 2: Vision analysis (layout + components + colors)
+    let visionAnalysis = null;
+    if (firecrawlData.screenshot) {
+      visionAnalysis = await analyzeScreenshotWithVision(firecrawlData.screenshot);
+    }
+    
+    // Step 3: Merge into comprehensive analysis
+    analyses.push({
+      url,
+      content: firecrawlData.markdown,
+      structure: firecrawlData.structuredData,
+      visual: visionAnalysis,
+      screenshot: firecrawlData.screenshot,
+    });
+  }
+  
+  // Step 4: Generate recommendations based on all analyses
+  const recommendations = await generateRecommendations(analyses, vision);
+  
+  return NextResponse.json({
+    success: true,
+    analyses,
+    recommendations,
+  });
+}
+```
+
+---
+
+## Files to Modify
+
+1. `website/lib/url-extractor.ts` - Enhanced Firecrawl schema
+2. `website/app/api/research/analyze/route.ts` - Full analysis pipeline
+
+## Files to Create
+
+1. `website/lib/multi-page-analyzer.ts`
+2. `website/lib/vision-analyzer.ts`
+
+---
+
+## Environment Variables
+
+```
+FIRECRAWL_API_KEY=xxx  # Already exists
+```
+
+---
+
+## Success Criteria
+
+- [ ] Firecrawl extracts structured section data
+- [ ] Screenshots captured for each URL
+- [ ] Claude Vision analyzes layout/components/colors
+- [ ] All data passed to preview/export systems
+

@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- c6f2c47 2026-01-05 fix: prevent AI from copying vision verbatim
 - 2e98dd3 2026-01-05 feat: integrate Flux image generation via Replicate
 - c99a478 2026-01-05 feat(colors): implement color extraction from inspiration URLs
 - 03d7a5f 2026-01-05 feat: pass Firecrawl research results to preview composer
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - a4709e4 2026-01-04 feat(marketplace): add C2C marketplace with auction system
 - b71f792 2026-01-04 docs(governance): add key rules checklist to fallback command
 - 59db00e 2026-01-04 feat(platform): implement project management data model & API routes
-- b4b0ef6 2026-01-04 test(platform): add comprehensive test plans for platform features
 
 ## Agent Governance Structure
 

@@ -1,0 +1,354 @@
+TASK: Apply Website Analysis to Export Generation
+PRIORITY: P0 (Uses Wave 1 Output)
+TYPE: Templates / Export
+AGENT: Template Agent
+PARALLEL: Yes - Wave 2 (Can run with Preview task)
+
+---
+
+## Objective
+
+When a user exports their project, the generated code should implement
+the features detected from their inspiration site.
+
+---
+
+## Current Export Problem
+
+Currently, exports are based on:
+- Selected template (SaaS, E-commerce, Blog)
+- Selected integrations (Stripe, Supabase, etc.)
+
+But NOT on the analyzed inspiration site's features.
+
+If user provides a pet costume sharing site with:
+- Photo uploads
+- User profiles
+- Social features (likes, comments)
+- Premium subscriptions
+
+The export should include components for ALL of these, not just generic SaaS components.
+
+---
+
+## Implementation
+
+### 1. Feature-to-Template Mapping
+
+Map detected features to specific code templates:
+
+```typescript
+// packages/templates/feature-mapper.ts
+
+interface FeatureTemplate {
+  files: string[];
+  dependencies: Record<string, string>;
+  envVars: string[];
+}
+
+const FEATURE_TEMPLATES: Record<string, FeatureTemplate> = {
+  // Auth Features
+  'auth.hasLogin': {
+    files: ['app/login/page.tsx', 'components/auth/LoginForm.tsx'],
+    dependencies: {},
+    envVars: [],
+  },
+  'auth.hasSocialAuth.google': {
+    files: ['app/api/auth/google/route.ts'],
+    dependencies: {},
+    envVars: ['GOOGLE_CLIENT_ID', 'GOOGLE_CLIENT_SECRET'],
+  },
+  
+  // E-commerce Features
+  'ecommerce.hasCart': {
+    files: [
+      'components/cart/CartDrawer.tsx',
+      'components/cart/CartItem.tsx',
+      'lib/cart/cart-store.ts',
+    ],
+    dependencies: { 'zustand': '^4.0.0' },
+    envVars: [],
+  },
+  'ecommerce.hasProducts': {
+    files: [
+      'components/products/ProductCard.tsx',
+      'components/products/ProductGrid.tsx',
+      'components/products/ProductFilters.tsx',
+      'lib/products/types.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  
+  // Social Features
+  'social.hasProfiles': {
+    files: [
+      'app/profile/[username]/page.tsx',
+      'components/profile/ProfileCard.tsx',
+      'components/profile/ProfileHeader.tsx',
+      'lib/profiles/types.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  'social.hasComments': {
+    files: [
+      'components/comments/CommentSection.tsx',
+      'components/comments/CommentItem.tsx',
+      'components/comments/CommentForm.tsx',
+      'app/api/comments/route.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  'social.hasLikes': {
+    files: [
+      'components/social/LikeButton.tsx',
+      'hooks/useLikes.ts',
+      'app/api/likes/route.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  
+  // Content Features
+  'content.hasBlog': {
+    files: [
+      'app/blog/page.tsx',
+      'app/blog/[slug]/page.tsx',
+      'components/blog/BlogCard.tsx',
+      'components/blog/BlogList.tsx',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  'content.hasSearch': {
+    files: [
+      'components/search/SearchBox.tsx',
+      'components/search/SearchResults.tsx',
+      'hooks/useSearch.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  
+  // Communication Features
+  'communication.hasContactForm': {
+    files: [
+      'app/contact/page.tsx',
+      'components/forms/ContactForm.tsx',
+      'app/api/contact/route.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+  'communication.hasNewsletter': {
+    files: [
+      'components/newsletter/NewsletterForm.tsx',
+      'app/api/newsletter/subscribe/route.ts',
+    ],
+    dependencies: {},
+    envVars: [],
+  },
+};
+```
+
+### 2. Dynamic Export Based on Analysis
+
+Update export generator to use detected features:
+
+```typescript
+// website/lib/generator/index.ts
+
+export async function generateProject(config: ProjectConfig): Promise<GeneratedProject> {
+  const { websiteAnalysis } = config;
+  
+  // Start with base template
+  const files = await getBaseTemplateFiles(config.template);
+  
+  // Add integration files (existing)
+  const integrationFiles = await getIntegrationFiles(config.integrations);
+  
+  // NEW: Add feature files based on analysis
+  if (websiteAnalysis?.features) {
+    const featureFiles = await getFeatureFiles(websiteAnalysis.features);
+    files.push(...featureFiles);
+  }
+  
+  return { files, ... };
+}
+
+async function getFeatureFiles(features: DetectedFeatures): Promise<GeneratedFile[]> {
+  const files: GeneratedFile[] = [];
+  
+  // Iterate through all detected features
+  for (const [category, categoryFeatures] of Object.entries(features)) {
+    for (const [feature, enabled] of Object.entries(categoryFeatures)) {
+      if (enabled) {
+        const templateKey = `${category}.${feature}`;
+        const template = FEATURE_TEMPLATES[templateKey];
+        
+        if (template) {
+          for (const filePath of template.files) {
+            const content = await loadFeatureTemplate(filePath);
+            files.push({ path: filePath, content });
+          }
+        }
+      }
+    }
+  }
+  
+  return files;
+}
+```
+
+### 3. Create Feature Component Templates
+
+Create actual component files for each feature:
+
+```
+packages/templates/features/
+├── auth/
+│   ├── login-form.tsx
+│   ├── signup-form.tsx
+│   └── social-auth-buttons.tsx
+├── ecommerce/
+│   ├── cart-drawer.tsx
+│   ├── cart-item.tsx
+│   ├── product-card.tsx
+│   ├── product-grid.tsx
+│   └── checkout-form.tsx
+├── social/
+│   ├── profile-card.tsx
+│   ├── comment-section.tsx
+│   ├── like-button.tsx
+│   └── share-buttons.tsx
+├── content/
+│   ├── blog-card.tsx
+│   ├── search-box.tsx
+│   └── pagination.tsx
+└── communication/
+    ├── contact-form.tsx
+    └── newsletter-form.tsx
+```
+
+### 4. Style Export Based on Analysis
+
+Apply detected styles to exported components:
+
+```typescript
+// website/lib/generator/style-generator.ts
+
+export function generateTailwindConfig(
+  websiteAnalysis: WebsiteAnalysis
+): string {
+  const { colors, typography, components } = websiteAnalysis.visual;
+  
+  return `
+import type { Config } from 'tailwindcss'
+
+const config: Config = {
+  content: ['./app/**/*.{ts,tsx}', './components/**/*.{ts,tsx}'],
+  theme: {
+    extend: {
+      colors: {
+        primary: '${colors.primary}',
+        secondary: '${colors.secondary}',
+        accent: '${colors.accent}',
+        background: '${colors.background}',
+        foreground: '${colors.foreground}',
+      },
+      fontFamily: {
+        heading: ['${typography.headingFont}', 'sans-serif'],
+        body: ['${typography.bodyFont}', 'sans-serif'],
+      },
+      borderRadius: {
+        DEFAULT: '${components.buttons.shape === 'pill' ? '9999px' : components.buttons.shape === 'rounded' ? '0.5rem' : '0'}',
+      },
+    },
+  },
+}
+
+export default config
+`;
+}
+```
+
+### 5. Structure Export Based on Analysis
+
+Generate page structure matching inspiration:
+
+```typescript
+// website/lib/generator/structure-generator.ts
+
+export function generatePageFromStructure(
+  structure: PageStructure,
+  projectName: string
+): string {
+  const imports: string[] = [];
+  const components: string[] = [];
+  
+  for (const section of structure.sections) {
+    const { componentName, importPath } = getComponentForSection(section);
+    imports.push(`import { ${componentName} } from '${importPath}'`);
+    components.push(`<${componentName} />`);
+  }
+  
+  return `
+${imports.join('\n')}
+
+export default function HomePage() {
+  return (
+    <main>
+      ${components.join('\n      ')}
+    </main>
+  )
+}
+`;
+}
+
+function getComponentForSection(section: PageStructure['sections'][0]): {
+  componentName: string;
+  importPath: string;
+} {
+  const mapping: Record<string, { componentName: string; importPath: string }> = {
+    hero: { componentName: 'Hero', importPath: '@/components/Hero' },
+    features: { componentName: 'Features', importPath: '@/components/Features' },
+    pricing: { componentName: 'Pricing', importPath: '@/components/Pricing' },
+    testimonials: { componentName: 'Testimonials', importPath: '@/components/Testimonials' },
+    cta: { componentName: 'CTA', importPath: '@/components/CTA' },
+    footer: { componentName: 'Footer', importPath: '@/components/Footer' },
+    // ... add more
+  };
+  
+  return mapping[section.type] || { 
+    componentName: 'Section', 
+    importPath: '@/components/Section' 
+  };
+}
+```
+
+---
+
+## Files to Create
+
+1. `packages/templates/feature-mapper.ts`
+2. `packages/templates/features/` (entire directory with components)
+3. `website/lib/generator/style-generator.ts`
+4. `website/lib/generator/structure-generator.ts`
+
+## Files to Modify
+
+1. `website/lib/generator/index.ts` - Add feature file generation
+2. `website/app/api/export/zip/route.ts` - Include feature files
+
+---
+
+## Success Criteria
+
+- [ ] Detected features result in matching components in export
+- [ ] Exported tailwind.config uses extracted colors
+- [ ] Exported page structure matches inspiration
+- [ ] All feature components are complete and functional
+- [ ] Dependencies are correctly included in package.json
+
