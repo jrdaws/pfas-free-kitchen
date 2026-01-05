@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 75c75ff 2026-01-05 feat: auto-compose preview when user has enough context
 - dbe8d70 2026-01-05 chore: mark pattern implementations task complete
 - 81b7e4b 2026-01-05 feat(patterns): implement 20 section pattern components
 - 3ec1c4c 2026-01-05 feat(preview): integrate Intelligent Preview with AI Composer
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
 - f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
 - 3ecb457 2026-01-04 feat: Complete Dashboard template with charts and data table
-- 0aa25e2 2026-01-04 feat: Complete Blog template with comments and related posts
 
 ## Agent Governance Structure
 
