@@ -22,6 +22,7 @@ export type FeatureCategory =
   | "product-database"
   | "search-filter"
   | "ecommerce"
+  | "marketplace"
   | "analytics"
   | "billing"
   | "enterprise";
@@ -58,6 +59,12 @@ export const FEATURE_CATEGORIES: FeatureCategoryDef[] = [
     label: "E-commerce Integration",
     description: "Shopping cart, checkout, and payments",
     icon: "shopping-cart",
+  },
+  {
+    id: "marketplace",
+    label: "C2C Marketplace",
+    description: "User listings, auctions, bidding, and seller profiles",
+    icon: "store",
   },
   {
     id: "analytics",
@@ -498,6 +505,82 @@ export const FEATURES: Feature[] = [
       "components/tenant/TenantSwitcher.tsx",
     ],
   },
+
+  // Marketplace Features
+  {
+    id: "user-listings",
+    label: "User Listings",
+    description: "Allow users to create and manage product listings",
+    category: "marketplace",
+    complexity: "complex",
+    dependencies: ["email-registration"],
+    codeTemplates: [
+      "lib/marketplace/listings.ts",
+      "lib/marketplace/listing-types.ts",
+      "components/marketplace/ListingCard.tsx",
+      "components/marketplace/ListingForm.tsx",
+      "components/marketplace/ListingFilters.tsx",
+      "components/marketplace/ListingGallery.tsx",
+      "app/listings/page.tsx",
+      "app/listings/[id]/page.tsx",
+      "app/listings/create/page.tsx",
+      "app/my-listings/page.tsx",
+    ],
+  },
+  {
+    id: "auction-bidding",
+    label: "Auction & Bidding",
+    description: "Real-time auctions with proxy bidding and auto-extend",
+    category: "marketplace",
+    complexity: "complex",
+    dependencies: ["user-listings"],
+    codeTemplates: [
+      "lib/marketplace/auction-engine.ts",
+      "lib/marketplace/auction-types.ts",
+      "hooks/useBidding.ts",
+      "hooks/useAuctionTimer.ts",
+      "components/marketplace/BidForm.tsx",
+      "components/marketplace/BidHistory.tsx",
+      "components/marketplace/AuctionTimer.tsx",
+      "components/marketplace/CurrentBidDisplay.tsx",
+      "components/marketplace/BuyItNowButton.tsx",
+      "components/marketplace/OutbidAlert.tsx",
+      "app/api/bids/route.ts",
+      "app/api/bids/[listingId]/route.ts",
+    ],
+  },
+  {
+    id: "seller-profiles",
+    label: "Seller Profiles",
+    description: "Seller pages with ratings, reviews, and reputation",
+    category: "marketplace",
+    complexity: "medium",
+    dependencies: ["user-listings"],
+    codeTemplates: [
+      "lib/marketplace/seller-ratings.ts",
+      "components/marketplace/SellerCard.tsx",
+      "components/marketplace/SellerRating.tsx",
+      "components/marketplace/SellerReviews.tsx",
+      "components/marketplace/RatingForm.tsx",
+      "app/seller/[id]/page.tsx",
+      "app/seller/settings/page.tsx",
+    ],
+  },
+  {
+    id: "marketplace-transactions",
+    label: "Marketplace Transactions",
+    description: "Order management, shipping tracking, and buyer/seller history",
+    category: "marketplace",
+    complexity: "medium",
+    dependencies: ["user-listings"],
+    codeTemplates: [
+      "lib/marketplace/transactions.ts",
+      "components/marketplace/TransactionCard.tsx",
+      "components/marketplace/TransactionStatus.tsx",
+      "app/my-purchases/page.tsx",
+      "app/my-sales/page.tsx",
+    ],
+  },
 ];
 
 // Get features by category
@@ -560,6 +643,13 @@ export function recommendFeatures(description: string): string[] {
   
   if (desc.includes("shop") || desc.includes("buy") || desc.includes("cart") || desc.includes("ecommerce")) {
     recommended.push("shopping-cart", "checkout-flow", "product-variants", "inventory-management");
+  }
+  
+  // Marketplace / Auction / C2C keywords
+  if (desc.includes("marketplace") || desc.includes("auction") || desc.includes("bid") || 
+      desc.includes("ebay") || desc.includes("c2c") || desc.includes("sell") || 
+      desc.includes("listing") || desc.includes("seller")) {
+    recommended.push("user-listings", "auction-bidding", "seller-profiles", "marketplace-transactions");
   }
   
   if (desc.includes("analytics") || desc.includes("track") || desc.includes("metric")) {

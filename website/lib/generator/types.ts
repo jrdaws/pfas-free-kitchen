@@ -25,6 +25,7 @@ export type FeatureCategory =
   | "product-database"
   | "search-filter"
   | "ecommerce"
+  | "marketplace"
   | "analytics"
   | "billing"
   | "enterprise";

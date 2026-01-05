@@ -1,0 +1,34 @@
+{
+  "name": "transactions",
+  "description": "Order management for buyers and sellers with shipping tracking",
+  "version": "1.0.0",
+  "category": "marketplace",
+  "dependencies": ["user-listings", "supabase-auth"],
+  "files": [
+    {
+      "source": "lib/transactions.ts",
+      "destination": "lib/marketplace/transactions.ts"
+    },
+    {
+      "source": "components/TransactionCard.tsx",
+      "destination": "components/marketplace/TransactionCard.tsx"
+    },
+    {
+      "source": "components/TransactionStatus.tsx",
+      "destination": "components/marketplace/TransactionStatus.tsx"
+    },
+    {
+      "source": "app/my-purchases/page.tsx",
+      "destination": "app/my-purchases/page.tsx"
+    },
+    {
+      "source": "app/my-sales/page.tsx",
+      "destination": "app/my-sales/page.tsx"
+    }
+  ],
+  "packages": {
+    "lucide-react": "^0.400.0"
+  },
+  "envVars": []
+}
+

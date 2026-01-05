@@ -1,0 +1,42 @@
+{
+  "name": "seller-profiles",
+  "description": "Seller profiles with ratings, reviews, and reputation management",
+  "version": "1.0.0",
+  "category": "marketplace",
+  "dependencies": ["user-listings", "supabase-auth"],
+  "files": [
+    {
+      "source": "lib/seller-ratings.ts",
+      "destination": "lib/marketplace/seller-ratings.ts"
+    },
+    {
+      "source": "components/SellerCard.tsx",
+      "destination": "components/marketplace/SellerCard.tsx"
+    },
+    {
+      "source": "components/SellerRating.tsx",
+      "destination": "components/marketplace/SellerRating.tsx"
+    },
+    {
+      "source": "components/SellerReviews.tsx",
+      "destination": "components/marketplace/SellerReviews.tsx"
+    },
+    {
+      "source": "components/RatingForm.tsx",
+      "destination": "components/marketplace/RatingForm.tsx"
+    },
+    {
+      "source": "app/seller/[id]/page.tsx",
+      "destination": "app/seller/[id]/page.tsx"
+    },
+    {
+      "source": "app/seller/settings/page.tsx",
+      "destination": "app/seller/settings/page.tsx"
+    }
+  ],
+  "packages": {
+    "lucide-react": "^0.400.0"
+  },
+  "envVars": []
+}
+

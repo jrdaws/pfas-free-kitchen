@@ -329,6 +329,15 @@ function getFeatureDependencies(featureId: string): {
         { name: "UPSTASH_REDIS_REST_TOKEN", description: "Upstash Redis token", required: false }
       );
       break;
+
+    // Marketplace features
+    case "user-listings":
+    case "auction-bidding":
+    case "seller-profiles":
+    case "marketplace-transactions":
+      deps["lucide-react"] = "^0.400.0";
+      // Uses built-in Supabase for database and realtime
+      break;
   }
 
   return { npm: deps, npmDev: devDeps, envVars };
@@ -367,6 +376,7 @@ export function getFeatureSummary(selectedFeatures: string[]): {
     "product-database": 0,
     "search-filter": 0,
     "ecommerce": 0,
+    "marketplace": 0,
     "analytics": 0,
     "billing": 0,
     "enterprise": 0,
