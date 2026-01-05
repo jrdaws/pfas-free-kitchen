@@ -19,6 +19,7 @@ import {
   Palette,
   Zap,
   AlertCircle,
+  FolderTree,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -222,6 +223,12 @@ export default function ProjectDetailPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <Link href={`/dashboard/projects/${project.id}/pages`}>
+            <Button variant="outline" className="gap-2">
+              <FolderTree className="w-4 h-4" />
+              Page Editor
+            </Button>
+          </Link>
           <Button variant="outline" className="gap-2">
             <Download className="w-4 h-4" />
             Export
@@ -272,6 +279,10 @@ export default function ProjectDetailPage() {
           <TabsTrigger value="details" className="gap-2">
             <Settings2 className="w-4 h-4" />
             Details
+          </TabsTrigger>
+          <TabsTrigger value="pages" className="gap-2">
+            <FolderTree className="w-4 h-4" />
+            Pages
           </TabsTrigger>
           <TabsTrigger value="integrations" className="gap-2">
             <Zap className="w-4 h-4" />
@@ -387,6 +398,53 @@ export default function ProjectDetailPage() {
                 <Trash2 className="w-4 h-4" />
                 Delete Project
               </Button>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pages" className="space-y-4">
+          <Card>
+            <CardHeader>
+              <CardTitle>Page Structure</CardTitle>
+              <CardDescription>
+                Design your application's page hierarchy and navigation.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between p-4 rounded-lg border bg-muted/30">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                    <FolderTree className="w-5 h-5 text-primary" />
+                  </div>
+                  <div>
+                    <p className="font-medium">Page Tree Editor</p>
+                    <p className="text-sm text-muted-foreground">
+                      Add, organize, and configure your app's pages
+                    </p>
+                  </div>
+                </div>
+                <Link href={`/dashboard/projects/${project.id}/pages`}>
+                  <Button className="gap-2">
+                    <FolderTree className="w-4 h-4" />
+                    Open Editor
+                  </Button>
+                </Link>
+              </div>
+              
+              <div className="grid gap-3 sm:grid-cols-3">
+                <div className="p-4 rounded-lg border bg-muted/20 text-center">
+                  <p className="text-2xl font-bold text-foreground">0</p>
+                  <p className="text-sm text-muted-foreground">Pages</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-muted/20 text-center">
+                  <p className="text-2xl font-bold text-foreground">0</p>
+                  <p className="text-sm text-muted-foreground">Layouts</p>
+                </div>
+                <div className="p-4 rounded-lg border bg-muted/20 text-center">
+                  <p className="text-2xl font-bold text-foreground">0</p>
+                  <p className="text-sm text-muted-foreground">API Routes</p>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

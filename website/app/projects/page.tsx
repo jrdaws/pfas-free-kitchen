@@ -1,40 +1,45 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { ProtectedRoute } from "@/components/auth/ProtectedRoute";
 import { useProject } from "@/lib/use-project";
 import { useAuth } from "@/lib/auth-context";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
 import type { UserProject } from "@/lib/supabase";
 import {
   Plus,
-  Loader2,
-  FolderOpen,
-  Trash2,
-  Clock,
-  CheckCircle2,
-  Archive,
-  AlertCircle,
-  Terminal,
-  Copy,
-  Check,
+  Search,
+  Command,
+  LayoutGrid,
+  List,
+  ArrowUpDown,
 } from "lucide-react";
-import { TerminalProjectCard } from "@/components/ui/terminal-project-card";
+import {
+  ProjectGrid,
+  ProjectSearch,
+  CreateProjectModal,
+} from "@/app/components/dashboard";
+
+type ViewMode = "grid" | "list";
+type SortBy = "updated" | "name" | "created";
 
 function ProjectsContent() {
   const router = useRouter();
   const { user } = useAuth();
-  const { listProjects, deleteProject, loadProject } = useProject();
-  
+  const { listProjects, deleteProject, loadProject, createProject } = useProject();
+
   const [projects, setProjects] = useState<UserProject[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [copiedToken, setCopiedToken] = useState<string | null>(null);
+
+  // UI State
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
+  const [viewMode, setViewMode] = useState<ViewMode>("grid");
+  const [sortBy, setSortBy] = useState<SortBy>("updated");
+  const [filterQuery, setFilterQuery] = useState("");
 
   // Fetch projects on mount
   useEffect(() => {
@@ -53,150 +58,234 @@ function ProjectsContent() {
     fetchProjects();
   }, [listProjects]);
 
+  // ⌘K shortcut for search
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, []);
+
   // Handle delete
-  const handleDelete = async (id: string, name: string) => {
+  const handleDelete = useCallback(async (id: string, name: string) => {
     if (!confirm(`Are you sure you want to delete "${name}"? This cannot be undone.`)) {
       return;
     }
-    
-    setDeletingId(id);
     const success = await deleteProject(id);
     if (success) {
-      setProjects(projects.filter(p => p.id !== id));
+      setProjects((prev) => prev.filter((p) => p.id !== id));
     }
-    setDeletingId(null);
-  };
+  }, [deleteProject]);
 
   // Handle open project
-  const handleOpen = async (id: string) => {
+  const handleOpen = useCallback(async (id: string) => {
     await loadProject(id);
     router.push("/configure");
-  };
+  }, [loadProject, router]);
 
-  // Copy NPX token
-  const handleCopyToken = async (token: string) => {
-    await navigator.clipboard.writeText(`npx @jrdaws/framework pull ${token}`);
-    setCopiedToken(token);
-    setTimeout(() => setCopiedToken(null), 2000);
-  };
+  // Handle clone project (stub)
+  const handleClone = useCallback(async (id: string) => {
+    const project = projects.find((p) => p.id === id);
+    if (!project) return;
+    
+    // Create a cloned project
+    const clonedName = `${project.name} (Copy)`;
+    alert(`Clone functionality coming soon. Would create: ${clonedName}`);
+  }, [projects]);
 
-  // Get status badge
-  const getStatusBadge = (status: string) => {
-    switch (status) {
-      case "active":
-        return (
-          <Badge variant="success" className="gap-1">
-            <CheckCircle2 className="h-3 w-3" />
-            Active
-          </Badge>
-        );
-      case "archived":
-        return (
-          <Badge variant="secondary" className="gap-1">
-            <Archive className="h-3 w-3" />
-            Archived
-          </Badge>
-        );
-      default:
-        return (
-          <Badge variant="outline" className="gap-1">
-            <Clock className="h-3 w-3" />
-            Draft
-          </Badge>
-        );
-    }
-  };
+  // Handle archive project (stub)
+  const handleArchive = useCallback(async (id: string) => {
+    alert("Archive functionality coming soon.");
+  }, []);
 
-  // Format date
-  const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+  // Handle create project
+  const handleCreate = useCallback(async (data: {
+    name: string;
+    description?: string;
+    template: string;
+  }) => {
+    // Navigate to configure page with pre-filled data
+    // For now, just navigate - the actual creation will happen in configure
+    router.push(`/configure?name=${encodeURIComponent(data.name)}&template=${data.template}`);
+  }, [router]);
+
+  // Filter and sort projects
+  const filteredProjects = projects
+    .filter((p) =>
+      p.name.toLowerCase().includes(filterQuery.toLowerCase())
+    )
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "created":
+          return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case "updated":
+        default:
+          return new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime();
+      }
     });
-  };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-4" />
-          <p className="text-foreground-muted">Loading projects...</p>
-        </div>
-      </div>
-    );
-  }
+  // Transform projects for grid
+  const gridProjects = filteredProjects.map((p) => ({
+    id: p.id,
+    name: p.name,
+    description: p.description || undefined,
+    template: p.template || undefined,
+    features: p.features || [],
+    status: (p.status || "draft") as "draft" | "active" | "archived",
+    npxToken: p.npx_token || undefined,
+    createdAt: p.created_at,
+    updatedAt: p.updated_at,
+  }));
+
+  // Search modal projects format
+  const searchProjects = projects.map((p) => ({
+    id: p.id,
+    name: p.name,
+    template: p.template || undefined,
+    status: (p.status || "draft") as "draft" | "active" | "archived",
+    updatedAt: p.updated_at,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="bg-background-alt border-b border-border">
-        <div className="max-w-6xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-sm border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-16">
+            {/* Left: Title */}
             <div>
-              <h1 className="text-2xl font-bold text-foreground">My Projects</h1>
-              <p className="text-foreground-muted mt-1">
-                {user?.email ? `Signed in as ${user.email}` : "Your saved projects"}
-              </p>
+              <h1 className="text-xl font-bold text-foreground">Projects</h1>
+              {user?.email && (
+                <p className="text-sm text-muted-foreground hidden sm:block">
+                  {projects.length} project{projects.length !== 1 ? "s" : ""}
+                </p>
+              )}
             </div>
-            <Link href="/configure">
-              <Button className="gap-2 bg-primary hover:bg-primary-hover text-primary-foreground">
-                <Plus className="h-4 w-4" />
-                New Project
+
+            {/* Right: Actions */}
+            <div className="flex items-center gap-3">
+              {/* Search button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSearchOpen(true)}
+                className="hidden sm:flex items-center gap-2 text-muted-foreground"
+              >
+                <Search className="w-4 h-4" />
+                <span>Search</span>
+                <kbd className="ml-2 hidden lg:inline-flex items-center gap-0.5 px-1.5 py-0.5 text-[10px] bg-muted rounded">
+                  <Command className="w-2.5 h-2.5" />K
+                </kbd>
               </Button>
-            </Link>
+
+              {/* New Project */}
+              <Button onClick={() => setCreateOpen(true)} className="gap-2">
+                <Plus className="w-4 h-4" />
+                <span className="hidden sm:inline">New Project</span>
+              </Button>
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="flex items-center justify-between gap-4 pb-4">
+            {/* Left: Filter Input */}
+            <div className="relative flex-1 max-w-sm">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                value={filterQuery}
+                onChange={(e) => setFilterQuery(e.target.value)}
+                placeholder="Filter projects..."
+                className="pl-9"
+              />
+            </div>
+
+            {/* Right: View/Sort Controls */}
+            <div className="flex items-center gap-2">
+              {/* Sort */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  const options: SortBy[] = ["updated", "name", "created"];
+                  const current = options.indexOf(sortBy);
+                  setSortBy(options[(current + 1) % options.length]);
+                }}
+                className="hidden sm:flex items-center gap-2"
+              >
+                <ArrowUpDown className="w-4 h-4" />
+                <span className="capitalize">{sortBy}</span>
+              </Button>
+
+              {/* View Toggle */}
+              <div className="flex border border-border rounded-md overflow-hidden">
+                <Button
+                  variant={viewMode === "grid" ? "secondary" : "ghost"}
+                  size="icon"
+                  className="h-8 w-8 rounded-none"
+                  onClick={() => setViewMode("grid")}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </Button>
+                <Button
+                  variant={viewMode === "list" ? "secondary" : "ghost"}
+                  size="icon"
+                  className="h-8 w-8 rounded-none"
+                  onClick={() => setViewMode("list")}
+                >
+                  <List className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
           </div>
         </div>
       </header>
 
       {/* Content */}
-      <main className="max-w-6xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {error && (
-          <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-lg flex items-center gap-2">
-            <AlertCircle className="h-5 w-5" />
+          <div className="mb-6 p-4 bg-destructive/10 text-destructive rounded-lg">
             {error}
           </div>
         )}
 
-        {projects.length === 0 ? (
-          <Card className="text-center py-16 bg-card border-border">
-            <CardContent>
-              <FolderOpen className="h-12 w-12 text-foreground-muted mx-auto mb-4" />
-              <h2 className="text-xl font-semibold text-foreground mb-2">No projects yet</h2>
-              <p className="text-foreground-muted mb-6">
-                Create your first project to get started
-              </p>
-              <Link href="/configure">
-                <Button className="gap-2 bg-primary hover:bg-primary-hover text-primary-foreground">
-                  <Plus className="h-4 w-4" />
-                  Create Project
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {projects.map((project) => (
-              <TerminalProjectCard
-                key={project.id}
-                id={project.id}
-                name={project.name}
-                description={project.description || undefined}
-                template={project.template || undefined}
-                features={project.features || []}
-                status={project.status as "draft" | "active" | "archived"}
-                npxToken={project.npx_token || undefined}
-                createdAt={project.created_at}
-                updatedAt={project.updated_at}
-                onOpen={handleOpen}
-                onDelete={handleDelete}
-                isDeleting={deletingId === project.id}
-              />
-            ))}
+        <ProjectGrid
+          projects={gridProjects}
+          onOpen={handleOpen}
+          onClone={handleClone}
+          onArchive={handleArchive}
+          onDelete={handleDelete}
+          onCreate={() => setCreateOpen(true)}
+          showCreateCard={!loading && projects.length > 0}
+          isLoading={loading}
+          loadingCount={6}
+        />
+
+        {!loading && projects.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-16">
+            {/* Empty state is handled by ProjectGrid when showCreateCard is false */}
           </div>
         )}
       </main>
+
+      {/* Modals */}
+      <ProjectSearch
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        projects={searchProjects}
+        onSelect={handleOpen}
+      />
+
+      <CreateProjectModal
+        open={createOpen}
+        onOpenChange={setCreateOpen}
+        onCreate={handleCreate}
+      />
     </div>
   );
 }
@@ -208,4 +297,3 @@ export default function ProjectsPage() {
     </ProtectedRoute>
   );
 }
-
