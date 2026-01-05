@@ -16,10 +16,24 @@ const AVAILABLE_FEATURES = {
 
 const AVAILABLE_TEMPLATES = ["saas", "ecommerce", "portfolio", "blog", "dashboard", "landing"];
 
+interface VisionDocument {
+  problem: string;
+  audience: {
+    type: "b2b" | "b2c" | "internal" | "mixed";
+    description?: string;
+  };
+  businessModel: "subscription" | "one-time" | "freemium" | "marketplace" | "free";
+  designStyle: "minimal" | "bold" | "playful" | "corporate" | "dark";
+  inspirations: string[];
+  requiredFeatures: string[];
+  niceToHaveFeatures: string[];
+}
+
 interface ResearchRequest {
   domain: string;
   inspirationUrls?: string[];
   vision?: string;
+  visionDocument?: VisionDocument;
 }
 
 interface UrlAnalysis {
@@ -61,7 +75,7 @@ interface ResearchResponse {
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
     const body: ResearchRequest = await request.json();
-    const { domain, inspirationUrls = [], vision } = body;
+    const { domain, inspirationUrls = [], vision, visionDocument } = body;
 
     if (!domain?.trim()) {
       return NextResponse.json(
@@ -69,6 +83,12 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
         { status: 400 }
       );
     }
+
+    // Merge inspiration URLs from visionDocument if present
+    const allInspirationUrls = [
+      ...inspirationUrls,
+      ...(visionDocument?.inspirations || []),
+    ].filter((url, i, arr) => arr.indexOf(url) === i); // dedupe
 
     // Check for API key
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -83,9 +103,9 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     // Extract content from inspiration URLs (if provided)
     let extractedContent: ExtractedContent[] = [];
-    if (inspirationUrls.length > 0) {
-      console.log(`[Research] Extracting content from ${inspirationUrls.length} URLs...`);
-      extractedContent = await extractMultipleUrls(inspirationUrls.slice(0, 5)); // Limit to 5 URLs
+    if (allInspirationUrls.length > 0) {
+      console.log(`[Research] Extracting content from ${allInspirationUrls.length} URLs...`);
+      extractedContent = await extractMultipleUrls(allInspirationUrls.slice(0, 5)); // Limit to 5 URLs
     }
 
     // Build context from extracted URLs (enhanced with Firecrawl structured data)
@@ -121,12 +141,26 @@ ${ec.description}`;
       })
       .join("\n\n");
 
+    // Build structured vision context if available
+    let visionContext = "";
+    if (visionDocument) {
+      visionContext = `
+## Structured Vision (from Guided Builder)
+- **Problem**: ${visionDocument.problem}
+- **Target Audience**: ${visionDocument.audience.type}${visionDocument.audience.description ? ` - ${visionDocument.audience.description}` : ""}
+- **Business Model**: ${visionDocument.businessModel}
+- **Design Style**: ${visionDocument.designStyle}
+- **Required Features**: ${visionDocument.requiredFeatures.join(", ") || "None specified"}
+- **Nice-to-Have Features**: ${visionDocument.niceToHaveFeatures.join(", ") || "None specified"}`;
+    }
+
     // Build the research prompt
     const prompt = `You are a product research analyst helping a developer build a new web application.
 
 ## Context
 - **Domain/Industry**: ${domain}
 - **User's Vision**: ${vision || "Not specified"}
+${visionContext}
 ${urlContext ? `\n## Inspiration Websites Analyzed\n${urlContext}` : ""}
 
 ## Your Task

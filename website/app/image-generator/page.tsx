@@ -28,7 +28,7 @@ export default function ImageGeneratorPage() {
 
         <ImageGeneratorPanel
           defaultPrompt=""
-          defaultStyle="modern"
+          defaultStyle="minimal"
           onImageGenerated={(url) => console.log("Generated:", url)}
         />
 

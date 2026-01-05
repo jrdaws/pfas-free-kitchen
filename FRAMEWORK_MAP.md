@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 2e98dd3 2026-01-05 feat: integrate Flux image generation via Replicate
 - c99a478 2026-01-05 feat(colors): implement color extraction from inspiration URLs
 - 03d7a5f 2026-01-05 feat: pass Firecrawl research results to preview composer
 - 2fef60f 2026-01-05 debug: add console logs to track auto-compose status
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - b71f792 2026-01-04 docs(governance): add key rules checklist to fallback command
 - 59db00e 2026-01-04 feat(platform): implement project management data model & API routes
 - b4b0ef6 2026-01-04 test(platform): add comprehensive test plans for platform features
-- e5c94b2 2026-01-04 feat(governance): add fallback command for old chats
 
 ## Agent Governance Structure
 

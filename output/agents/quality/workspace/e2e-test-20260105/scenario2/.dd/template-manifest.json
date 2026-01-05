@@ -1,0 +1,12 @@
+{
+  "template": "ecommerce",
+  "version": "1.0.0",
+  "generatedAt": "2026-01-05T22:01:42.856Z",
+  "generatedBy": "dawson-does-framework-configurator",
+  "integrations": {
+    "auth": "supabase",
+    "payments": "stripe",
+    "email": "resend",
+    "analytics": "posthog"
+  }
+}

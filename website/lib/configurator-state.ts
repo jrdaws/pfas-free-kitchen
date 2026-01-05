@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { DesignAnalysis } from './design-analyzer';
+import type { VisionDocument } from '@/app/components/configurator/vision/types';
 
 export type Mode = 'beginner' | 'advanced';
 
@@ -218,6 +219,9 @@ export interface ConfiguratorState {
   // Design analysis from inspiration screenshots
   designAnalysis: DesignAnalysis | null;
   
+  // Vision document from guided builder
+  visionDocument: VisionDocument | null;
+  
   // AI provider settings (5DS clone)
   aiProvider: string;
   aiApiKey: string;
@@ -287,6 +291,7 @@ export interface ConfiguratorState {
   setResearchDomain: (domain: string) => void;
   setInspirationUrls: (urls: string[]) => void;
   setDesignAnalysis: (analysis: DesignAnalysis | null) => void;
+  setVisionDocument: (doc: VisionDocument | null) => void;
   
   // AI provider actions
   setAiProvider: (provider: string) => void;
@@ -347,6 +352,7 @@ const initialState = {
   researchDomain: '',
   inspirationUrls: [],
   designAnalysis: null,
+  visionDocument: null,
   aiProvider: '',
   aiApiKey: '',
   colorScheme: 'sunset-orange',
@@ -485,6 +491,12 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       setDesignAnalysis: (analysis) => set({ designAnalysis: analysis }),
 
+      setVisionDocument: (doc) => set((state) => ({ 
+        visionDocument: doc,
+        // Also sync the text vision for backwards compatibility
+        vision: doc ? doc.problem : state.vision,
+      })),
+
       setAiProvider: (provider) => set((state) => ({ 
         aiProvider: provider,
         integrations: { ...state.integrations, ai: provider || '' }
@@ -593,6 +605,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         researchDomain: state.researchDomain,
         inspirationUrls: state.inspirationUrls,
         designAnalysis: state.designAnalysis,
+        visionDocument: state.visionDocument,
         aiProvider: state.aiProvider,
         colorScheme: state.colorScheme,
         customColors: state.customColors,

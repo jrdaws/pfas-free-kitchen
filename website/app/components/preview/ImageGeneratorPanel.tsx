@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { cn } from "@/lib/utils";
-import { useImageGeneration } from "@/hooks/useImageGeneration";
+import { useImageGeneration, type ImageStyle, type AspectRatio, type ModelTier } from "@/hooks/useImageGeneration";
 import { Loader2, Sparkles, Download, RefreshCw, Image as ImageIcon } from "lucide-react";
-import type { ImageStyle, AspectRatio } from "@/app/api/generate/image/route";
 
 interface ImageGeneratorPanelProps {
   defaultPrompt?: string;
@@ -19,20 +18,18 @@ const STYLE_OPTIONS: { value: ImageStyle; label: string; icon: string }[] = [
   { value: "illustration", label: "Illustration", icon: "🎨" },
   { value: "minimal", label: "Minimal", icon: "◻️" },
   { value: "abstract", label: "Abstract", icon: "🔷" },
-  { value: "modern", label: "Modern", icon: "✨" },
 ];
 
 const ASPECT_OPTIONS: { value: AspectRatio; label: string }[] = [
   { value: "16:9", label: "16:9 (Landscape)" },
   { value: "4:3", label: "4:3 (Standard)" },
   { value: "1:1", label: "1:1 (Square)" },
-  { value: "3:2", label: "3:2 (Photo)" },
   { value: "9:16", label: "9:16 (Portrait)" },
 ];
 
 export function ImageGeneratorPanel({
   defaultPrompt = "",
-  defaultStyle = "modern",
+  defaultStyle = "minimal",
   defaultColors = [],
   onImageGenerated,
   className,
@@ -40,7 +37,7 @@ export function ImageGeneratorPanel({
   const [prompt, setPrompt] = useState(defaultPrompt);
   const [style, setStyle] = useState<ImageStyle>(defaultStyle);
   const [aspectRatio, setAspectRatio] = useState<AspectRatio>("16:9");
-  const [quality, setQuality] = useState<"fast" | "high">("fast");
+  const [model, setModel] = useState<ModelTier>("schnell");
   const [colorPalette, setColorPalette] = useState<string[]>(defaultColors);
   const [colorInput, setColorInput] = useState("");
 
@@ -57,7 +54,7 @@ export function ImageGeneratorPanel({
       style,
       aspectRatio,
       colorPalette: colorPalette.length > 0 ? colorPalette : undefined,
-      quality,
+      model,
     });
   };
 
@@ -168,31 +165,31 @@ export function ImageGeneratorPanel({
         )}
       </div>
 
-      {/* Quality toggle */}
+      {/* Model toggle */}
       <div className="flex items-center gap-4">
-        <label className="text-sm text-slate-400">Quality:</label>
+        <label className="text-sm text-slate-400">Model:</label>
         <div className="flex gap-2">
           <button
-            onClick={() => setQuality("fast")}
+            onClick={() => setModel("schnell")}
             className={cn(
               "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-              quality === "fast"
+              model === "schnell"
                 ? "bg-green-600 text-white"
                 : "bg-slate-800 text-slate-400 hover:text-white"
             )}
           >
-            ⚡ Fast
+            ⚡ Schnell (Fast)
           </button>
           <button
-            onClick={() => setQuality("high")}
+            onClick={() => setModel("pro")}
             className={cn(
               "px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-              quality === "high"
+              model === "pro"
                 ? "bg-purple-600 text-white"
                 : "bg-slate-800 text-slate-400 hover:text-white"
             )}
           >
-            ✨ High
+            ✨ Pro (Quality)
           </button>
         </div>
       </div>

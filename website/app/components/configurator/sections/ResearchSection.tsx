@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { Plus, X, ExternalLink, Sparkles, Loader2, Check, Globe, FileText, Lightbulb, RotateCcw } from "lucide-react";
+import { Plus, X, ExternalLink, Sparkles, Loader2, Check, Globe, FileText, Lightbulb, RotateCcw, Wand2 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { VisionBuilder } from "../vision/VisionBuilder";
+import type { VisionDocument } from "../vision/types";
 
 export interface ResearchStats {
   sitesAnalyzed: number;
@@ -24,6 +26,9 @@ interface ResearchSectionProps {
   onDomainChange: (domain: string) => void;
   vision?: string;
   onVisionChange?: (vision: string) => void;
+  visionDocument?: VisionDocument | null;
+  onVisionDocumentChange?: (doc: VisionDocument | null) => void;
+  template?: string;
   inspirationUrls: string[];
   onInspirationUrlsChange: (urls: string[]) => void;
   onStartResearch?: () => void;
@@ -39,6 +44,9 @@ export function ResearchSection({
   onDomainChange,
   vision = "",
   onVisionChange,
+  visionDocument,
+  onVisionDocumentChange,
+  template,
   inspirationUrls,
   onInspirationUrlsChange,
   onStartResearch,
@@ -50,6 +58,7 @@ export function ResearchSection({
 }: ResearchSectionProps) {
   const [showInspiration, setShowInspiration] = useState(inspirationUrls.length > 0);
   const [showVision, setShowVision] = useState(!!vision);
+  const [useGuidedBuilder, setUseGuidedBuilder] = useState(false);
   const [newUrl, setNewUrl] = useState("");
 
   const addUrl = () => {
@@ -162,14 +171,80 @@ export function ResearchSection({
 
       {/* Vision Input */}
       {showVision && (
-        <div className="animate-in slide-in-from-top-2 duration-200">
-          <Textarea
-            value={vision}
-            onChange={(e) => onVisionChange?.(e.target.value)}
-            placeholder="Describe features, design style, user flows..."
-            className="min-h-[60px] text-xs bg-black/30 border-white/15 text-white placeholder:text-white/40 resize-none"
-            disabled={isLoading}
-          />
+        <div className="animate-in slide-in-from-top-2 duration-200 space-y-2">
+          {/* Mode Toggle */}
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setUseGuidedBuilder(false)}
+              className={cn(
+                "flex-1 text-[10px] py-1.5 px-2 rounded-md transition-colors",
+                !useGuidedBuilder
+                  ? "bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]/30"
+                  : "bg-black/20 text-white/50 border border-white/10 hover:text-white/70"
+              )}
+            >
+              Quick Input
+            </button>
+            <button
+              type="button"
+              onClick={() => setUseGuidedBuilder(true)}
+              className={cn(
+                "flex-1 flex items-center justify-center gap-1 text-[10px] py-1.5 px-2 rounded-md transition-colors",
+                useGuidedBuilder
+                  ? "bg-[var(--primary)]/20 text-[var(--primary)] border border-[var(--primary)]/30"
+                  : "bg-black/20 text-white/50 border border-white/10 hover:text-white/70"
+              )}
+            >
+              <Wand2 className="h-2.5 w-2.5" />
+              Guided Builder
+            </button>
+          </div>
+
+          {/* Quick Input Mode */}
+          {!useGuidedBuilder && (
+            <Textarea
+              value={vision}
+              onChange={(e) => onVisionChange?.(e.target.value)}
+              placeholder="Describe features, design style, user flows..."
+              className="min-h-[60px] text-xs bg-black/30 border-white/15 text-white placeholder:text-white/40 resize-none"
+              disabled={isLoading}
+            />
+          )}
+
+          {/* Guided Builder Mode */}
+          {useGuidedBuilder && (
+            <div className="bg-black/20 border border-white/10 rounded-lg p-3">
+              <VisionBuilder
+                template={template}
+                initialVision={visionDocument || undefined}
+                onComplete={(doc) => {
+                  onVisionDocumentChange?.(doc);
+                  // Also set the text vision for backwards compatibility
+                  onVisionChange?.(doc.problem);
+                }}
+                onVisionChange={(doc) => {
+                  onVisionDocumentChange?.(doc);
+                }}
+              />
+            </div>
+          )}
+
+          {/* Show VisionDocument summary if exists */}
+          {visionDocument && !useGuidedBuilder && (
+            <div className="bg-emerald-500/10 border border-emerald-500/20 rounded-md p-2 text-[10px]">
+              <div className="flex items-center gap-1 text-emerald-400 mb-1">
+                <Check className="h-2.5 w-2.5" />
+                <span className="font-medium">Guided vision complete</span>
+              </div>
+              <div className="text-white/50 space-y-0.5">
+                <div>Audience: <span className="text-white/70">{visionDocument.audience.type}</span></div>
+                <div>Model: <span className="text-white/70">{visionDocument.businessModel}</span></div>
+                <div>Style: <span className="text-white/70">{visionDocument.designStyle}</span></div>
+                <div>Features: <span className="text-white/70">{visionDocument.requiredFeatures.length} required</span></div>
+              </div>
+            </div>
+          )}
         </div>
       )}
 

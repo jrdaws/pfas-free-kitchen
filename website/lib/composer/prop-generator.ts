@@ -20,12 +20,16 @@ import { getPatternById } from "./selector";
 // Prompt Template
 // ============================================================================
 
-const PROP_GENERATOR_TEMPLATE = `You are generating personalized content for a {{patternId}} component.
+const PROP_GENERATOR_TEMPLATE = `You are a world-class copywriter generating content for a {{patternId}} component.
+
+## CRITICAL: DO NOT COPY THE DESCRIPTION
+The description below is CONTEXT to understand what to build - DO NOT copy it into the content.
+Analyze it, understand the product/audience, then write ORIGINAL marketing copy.
 
 ## User's Brand
 - Name: {{projectName}}
-- Description: {{description}}
-- Audience: {{audience}}
+- What they're building: {{description}}
+- Target Audience: {{audience}}
 - Tone: {{tone}}
 - Goals: {{goals}}
 
@@ -44,22 +48,34 @@ Category: {{category}}
 ## Slots to Fill
 {{slots}}
 
-## Task
-Generate compelling, personalized content for each slot.
-IMPORTANT: Use the research insights to inform your content. Reference specific features, patterns, and terminology from the research.
+## Your Task
+1. ANALYZE the description to understand what product/service this is
+2. IDENTIFY the core value proposition
+3. GENERATE original, compelling copy that SELLS the product
+4. DO NOT copy the description - write fresh marketing copy
 
-## Rules
-1. Use the ACTUAL brand name "{{projectName}}" - never use placeholders like "YourBrand"
-2. Match the tone to their audience ({{tone}})
-3. Keep copy concise but impactful
-4. Headlines should be benefit-focused, not feature-focused
-5. CTAs should create urgency or excitement
-6. If it's an array slot, generate 3-6 realistic items
+## Copy Writing Rules
+1. Headlines: 3-8 words MAX. Punchy. Benefit-focused. NOT a description.
+   - BAD: "A platform for sharing and celebrating your furry friends"
+   - GOOD: "Dress Up. Show Off. Win Hearts."
+   
+2. Subheadlines: 10-20 words. Expand on the headline with specific value.
+   - BAD: Copy of the vision statement
+   - GOOD: "Join 50,000+ pet parents showcasing their costumed companions"
+
+3. Features: Based on the RESEARCH insights, not generic features
+   - Use icons that match the actual feature (camera, heart, trophy, etc.)
+   
+4. CTAs: Action-oriented, specific to the product
+   - BAD: "Get Started"  
+   - GOOD: "Upload Your First Photo" or "Join the Pack"
+
+5. Testimonials: Make them specific to the product domain
 
 ## Tone Guidelines
 - professional: Clear, trustworthy, sophisticated
-- friendly: Warm, approachable, conversational
-- playful: Fun, energetic, creative
+- friendly: Warm, approachable, conversational  
+- playful: Fun, energetic, creative (BEST for pet/social apps)
 - luxurious: Elegant, exclusive, premium
 - technical: Precise, detailed, expert
 - casual: Relaxed, simple, direct
@@ -67,12 +83,11 @@ IMPORTANT: Use the research insights to inform your content. Reference specific 
 ## Output Format
 Return valid JSON with props for each slot:
 {
-  "headline": "Transform Your Business with {{projectName}}",
-  "subheadline": "...",
-  "ctaText": "Get Started Free",
+  "headline": "Short Punchy Headline",
+  "subheadline": "Slightly longer but still concise value proposition",
+  "ctaText": "Specific Action",
   "features": [
-    { "title": "...", "description": "...", "icon": "rocket" },
-    ...
+    { "title": "Feature Name", "description": "One line benefit", "icon": "relevant-icon" }
   ]
 }
 
@@ -199,15 +214,16 @@ function generateDefaultProps(pattern: Pattern, vision: VisionDocument): Record<
 function getDefaultText(slotName: string, vision: VisionDocument): string {
   const name = vision.projectName;
   
+  // Generate contextual defaults - DO NOT copy vision.description
   const defaults: Record<string, string> = {
     headline: `Welcome to ${name}`,
-    subheadline: vision.description || `Discover what ${name} can do for you`,
+    subheadline: `Start building something amazing today`,
     title: name,
     ctaText: "Get Started",
     ctaLink: "/signup",
     secondaryCta: "Learn More",
     projectName: name,
-    description: vision.description || "",
+    description: `Discover what ${name} can do for you`, // NOT the vision
     imageAlt: `${name} product image`,
   };
   
@@ -215,7 +231,8 @@ function getDefaultText(slotName: string, vision: VisionDocument): string {
 }
 
 function getDefaultRichText(slotName: string, vision: VisionDocument): string {
-  return vision.description || `Welcome to ${vision.projectName}`;
+  // DO NOT copy vision.description - generate generic fallback
+  return `Discover the power of ${vision.projectName}`;
 }
 
 function getDefaultArray(slotName: string, vision: VisionDocument): unknown[] {
