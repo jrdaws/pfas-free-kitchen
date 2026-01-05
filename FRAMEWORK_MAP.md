@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- ecbc45c 2026-01-04 feat(cli): add env pull and env check commands
 - 9a1bc2c 2026-01-04 docs(tasks): create agent task files for platform implementation
 - f7d5fcd 2026-01-04 docs(architecture): comprehensive platform research for admin dashboard & multi-page preview
 - 3ecb457 2026-01-04 feat: Complete Dashboard template with charts and data table
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 8ece2be 2026-01-03 feat(governance): add 'rr' shortcut for re-reading rules
 - f16cfb3 2026-01-03 feat(governance): add role-based SOP requirements
 - 1477da2 2026-01-03 feat(sops): add comprehensive Bug Prevention & Detection System
-- 5070a4d 2026-01-03 fix: resolve P0 export build failures for Stripe and Resend
 
 ## Agent Governance Structure
 
