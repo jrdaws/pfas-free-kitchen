@@ -129,7 +129,7 @@ export function FeatureBadges({
     return null;
   }
 
-  const color = primaryColor || "var(--preview-primary, #6366f1)";
+  const color = primaryColor || "var(--preview-primary, #F97316)";
 
   return (
     <div className={cn("flex flex-wrap gap-2", className)}>

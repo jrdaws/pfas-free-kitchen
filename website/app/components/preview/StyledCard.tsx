@@ -98,8 +98,8 @@ export function FeatureCard({
       <div
         className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
         style={{
-          backgroundColor: accentColor ? `${accentColor}20` : "var(--preview-primary, #6366f1)20",
-          color: accentColor || "var(--preview-primary, #6366f1)",
+          backgroundColor: accentColor ? `${accentColor}20` : "var(--preview-primary, #F97316)20",
+          color: accentColor || "var(--preview-primary, #F97316)",
         }}
       >
         {icon}
@@ -134,7 +134,7 @@ export function PricingCard({
   componentStyle,
   primaryColor,
 }: PricingCardProps) {
-  const color = primaryColor || "var(--preview-primary, #6366f1)";
+  const color = primaryColor || "var(--preview-primary, #F97316)";
   
   return (
     <StyledCard

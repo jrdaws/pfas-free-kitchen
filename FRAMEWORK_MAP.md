@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- ded6dcf 2026-01-06 feat: add service limit middleware to all Claude-based API endpoints
 - 6c5d94e 2026-01-06 feat: add service limit notifications and actionable error guidance
 - 239dfe5 2026-01-05 feat: unified preview system with AI image generation
 - b37218e 2026-01-05 chore(testing): close duplicate export clarity task
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - dbe8d70 2026-01-05 chore: mark pattern implementations task complete
 - 81b7e4b 2026-01-05 feat(patterns): implement 20 section pattern components
 - 3ec1c4c 2026-01-05 feat(preview): integrate Intelligent Preview with AI Composer
-- 72ba4b5 2026-01-05 feat(composer): implement AI Pattern Composer engine
 
 ## Agent Governance Structure
 

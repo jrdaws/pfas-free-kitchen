@@ -119,8 +119,9 @@ export function LivePreviewPanel({
       id: comp.projectId || "preview",
       projectName: projectName || "Preview",
       theme: {
-        primaryColor: colors?.primary || "#6366f1",
-        secondaryColor: colors?.secondary || "#8b5cf6",
+        // Default colors match globals.css --primary (orange) for consistency
+        primaryColor: colors?.primary || "#F97316",
+        secondaryColor: colors?.secondary || "#EA580C",
         backgroundColor: colors?.background || "#ffffff",
         textColor: colors?.foreground || "#1e293b",
         fontFamily: comp.globalStyles?.fontFamily?.body || "Inter, system-ui, sans-serif",

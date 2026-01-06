@@ -152,9 +152,10 @@ export function extractAppliedStyles(analysis?: WebsiteAnalysis): AppliedStyles 
 
   return {
     colors: {
-      primary: colorPalette.primary || "#6366f1",
-      secondary: colorPalette.secondary || "#8b5cf6",
-      accent: colorPalette.accent || "#f97316",
+      // Default colors match globals.css --primary (orange) for consistency
+      primary: colorPalette.primary || "#F97316",
+      secondary: colorPalette.secondary || "#EA580C",
+      accent: colorPalette.accent || "#FB923C",
       background: colorPalette.background || "#ffffff",
       foreground: colorPalette.foreground || "#1e293b",
       muted: colorPalette.muted || "#64748b",

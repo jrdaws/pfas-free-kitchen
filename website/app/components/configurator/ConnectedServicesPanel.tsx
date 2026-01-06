@@ -133,7 +133,7 @@ function ServiceCard({
         {/* Actions */}
         <div className="flex items-center gap-2">
           {isConnecting ? (
-            <Loader2 className="h-4 w-4 text-orange-400 animate-spin" />
+            <Loader2 className="h-4 w-4 text-primary animate-spin" />
           ) : isConnected ? (
             <Button
               variant="ghost"
@@ -147,7 +147,7 @@ function ServiceCard({
           ) : (
             <Button
               size="sm"
-              className="bg-orange-500 hover:bg-orange-600 text-white"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground"
               onClick={() => onConnect(service.id)}
             >
               Connect
@@ -182,7 +182,7 @@ function ServiceCard({
                   href={service.docsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-xs text-white/50 hover:text-orange-400"
+                  className="flex items-center gap-1 text-xs text-white/50 hover:text-primary"
                 >
                   <ExternalLink className="h-3 w-3" />
                   Documentation
@@ -193,7 +193,7 @@ function ServiceCard({
                   href={service.connectUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1 text-xs text-white/50 hover:text-orange-400"
+                  className="flex items-center gap-1 text-xs text-white/50 hover:text-primary"
                 >
                   <ExternalLink className="h-3 w-3" />
                   Dashboard
@@ -325,7 +325,7 @@ export function ConnectedServicesPanel({
       {connectedCount < services.length && (
         <Button
           variant="outline"
-          className="w-full border-white/20 text-white/70 hover:text-white hover:border-orange-500/50"
+          className="w-full border-white/20 text-white/70 hover:text-white hover:border-primary/50"
           onClick={() => {
             // Connect all disconnected services
             services

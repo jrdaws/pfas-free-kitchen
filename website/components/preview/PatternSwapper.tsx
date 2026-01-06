@@ -95,7 +95,7 @@ export function PatternSwapper({
                 className={cn(
                   "relative p-4 rounded-lg border transition-all text-left",
                   selectedPattern === pattern.id
-                    ? "bg-orange-500/20 border-orange-500"
+                    ? "bg-primary/20 border-primary"
                     : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
                 )}
               >
@@ -129,14 +129,14 @@ export function PatternSwapper({
                 {/* Loading state */}
                 {isSwapping && selectedPattern === pattern.id && (
                   <div className="absolute inset-0 flex items-center justify-center bg-black/50 rounded-lg">
-                    <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+                    <Loader2 className="w-5 h-5 text-primary animate-spin" />
                   </div>
                 )}
                 
                 {/* Selected indicator */}
                 {selectedPattern === pattern.id && !isSwapping && (
                   <div className="absolute top-2 right-2">
-                    <Check className="w-4 h-4 text-orange-500" />
+                    <Check className="w-4 h-4 text-primary" />
                   </div>
                 )}
               </button>

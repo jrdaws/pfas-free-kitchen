@@ -49,7 +49,7 @@ export function PreviewSection({
       {/* Section content */}
       <div className={cn(
         "transition-all duration-200",
-        isHovered && "ring-2 ring-orange-500/50 ring-inset",
+        isHovered && "ring-2 ring-primary/50 ring-inset",
         isRegenerating && "opacity-50 pointer-events-none"
       )}>
         {children}
@@ -59,7 +59,7 @@ export function PreviewSection({
       {isRegenerating && (
         <div className="absolute inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-10">
           <div className="flex items-center gap-2 px-4 py-2 bg-black/80 rounded-lg">
-            <Loader2 className="w-4 h-4 text-orange-500 animate-spin" />
+            <Loader2 className="w-4 h-4 text-primary animate-spin" />
             <span className="text-white text-sm">Regenerating...</span>
           </div>
         </div>
@@ -79,7 +79,7 @@ export function PreviewSection({
             className={cn(
               "p-1.5 rounded-lg transition-colors",
               showFeedback 
-                ? "bg-orange-500 text-white" 
+                ? "bg-primary text-primary-foreground" 
                 : "bg-black/80 text-white/80 hover:text-white hover:bg-black"
             )}
             title="Add feedback for regeneration"
@@ -124,11 +124,11 @@ export function PreviewSection({
               value={feedback}
               onChange={(e) => setFeedback(e.target.value)}
               placeholder="Make it more bold, add urgency..."
-              className="w-full h-16 px-2 py-1.5 text-xs text-white bg-white/5 border border-white/10 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-orange-500"
+              className="w-full h-16 px-2 py-1.5 text-xs text-white bg-white/5 border border-white/10 rounded-md resize-none focus:outline-none focus:ring-1 focus:ring-primary"
             />
             <button
               onClick={handleRegenerate}
-              className="w-full mt-2 px-3 py-1.5 bg-orange-500 hover:bg-orange-600 text-white text-xs rounded-md transition-colors"
+              className="w-full mt-2 px-3 py-1.5 bg-primary hover:bg-primary/90 text-primary-foreground text-xs rounded-md transition-colors"
             >
               Regenerate with feedback
             </button>
@@ -139,7 +139,7 @@ export function PreviewSection({
       {/* Section index indicator */}
       {isHovered && (
         <div className="absolute top-2 left-2 z-20">
-          <span className="px-2 py-1 bg-orange-500 text-white text-[10px] font-medium rounded">
+          <span className="px-2 py-1 bg-primary text-primary-foreground text-[10px] font-medium rounded">
             Section {index + 1}
           </span>
         </div>

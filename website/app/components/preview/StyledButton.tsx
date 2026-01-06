@@ -64,15 +64,15 @@ export function StyledButton({
     inlineStyle.color = primaryColor;
   }
 
-  // Default colors if none provided
+  // Default colors if none provided - fallback matches globals.css --primary (orange)
   if (!primaryColor) {
     if (style === "solid") {
-      inlineStyle.backgroundColor = variant === "primary" ? "var(--preview-primary, #6366f1)" : "var(--preview-secondary, #64748b)";
+      inlineStyle.backgroundColor = variant === "primary" ? "var(--preview-primary, #F97316)" : "var(--preview-secondary, #64748b)";
     } else if (style === "gradient") {
-      inlineStyle.background = `linear-gradient(135deg, var(--preview-primary, #6366f1) 0%, var(--preview-secondary, #8b5cf6) 100%)`;
+      inlineStyle.background = `linear-gradient(135deg, var(--preview-primary, #F97316) 0%, var(--preview-secondary, #EA580C) 100%)`;
     } else if (style === "outline") {
-      inlineStyle.borderColor = "var(--preview-primary, #6366f1)";
-      inlineStyle.color = "var(--preview-primary, #6366f1)";
+      inlineStyle.borderColor = "var(--preview-primary, #F97316)";
+      inlineStyle.color = "var(--preview-primary, #F97316)";
     }
   }
 

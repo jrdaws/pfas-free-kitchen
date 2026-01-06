@@ -83,7 +83,7 @@ function SectionLoader({ height = "100px" }: { height?: string }) {
       className="w-full bg-[#111111] flex items-center justify-center"
       style={{ height }}
     >
-      <Loader2 className="w-5 h-5 text-orange-500 animate-spin" />
+      <Loader2 className="w-5 h-5 text-primary animate-spin" />
     </div>
   );
 }
@@ -166,7 +166,7 @@ function PreviewNav({ pages, current, onChange }: PreviewNavProps) {
             className={cn(
               "px-3 py-1.5 text-xs rounded-md transition-colors whitespace-nowrap",
               page.pageId === current.pageId
-                ? "bg-orange-500 text-white"
+                ? "bg-primary text-primary-foreground"
                 : "bg-white/5 text-white/70 hover:bg-white/10 hover:text-white"
             )}
           >

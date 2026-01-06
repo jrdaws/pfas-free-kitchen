@@ -135,7 +135,7 @@ export function ImageGeneratorPanel({
             type="text"
             value={colorInput}
             onChange={(e) => setColorInput(e.target.value)}
-            placeholder="#6366f1"
+            placeholder="#F97316"
             className="flex-1 px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           />
           <button
