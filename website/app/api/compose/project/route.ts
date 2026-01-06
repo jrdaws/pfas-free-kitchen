@@ -7,6 +7,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { composeProject, ComposerInput, ComposerOutput } from "@/lib/composer";
+import type { ComposerMode, ComposerModeConfig } from "@/lib/configurator-state";
 
 interface ComposeProjectRequest {
   vision: {
@@ -32,6 +33,7 @@ interface ComposeProjectRequest {
   preferences?: {
     generateImages?: boolean;
   };
+  composerConfig?: ComposerModeConfig;
 }
 
 function validateRequest(body: unknown): body is ComposeProjectRequest {
@@ -78,6 +80,19 @@ export async function POST(request: NextRequest) {
       })),
     } : undefined;
 
+    // Get composer config with defaults
+    const composerConfig = body.composerConfig || {
+      mode: 'hybrid' as ComposerMode,
+      strictPatterns: false,
+      maxPatterns: 10,
+      useInspirationStructure: true,
+      enableGapFiller: true,
+      styleInheritance: 'full' as const,
+      preferRegistry: true,
+    };
+
+    console.log(`[API] Composing with mode: ${composerConfig.mode}`);
+
     const input: ComposerInput = {
       vision: {
         projectName: body.vision.projectName,
@@ -98,9 +113,17 @@ export async function POST(request: NextRequest) {
       integrations: body.integrations || {},
       preferences: body.preferences ? {
         generateImages: body.preferences.generateImages,
+        // Pass composer config settings as preferences
+        maxSections: composerConfig.maxPatterns,
+        customInstructions: composerConfig.mode === 'registry' 
+          ? 'Only use existing patterns from the registry. Do not generate custom sections.'
+          : composerConfig.mode === 'hybrid'
+          ? 'Use patterns where available. Generate custom sections for unique requirements.'
+          : undefined,
       } : undefined,
     };
     
+    // Compose based on mode
     const result = await composeProject(input);
     
     return NextResponse.json({

@@ -19,5 +19,7 @@ export { StyledButton, type ComponentStyleButton } from "./StyledButton";
 export { StyledCard, FeatureCard, PricingCard, type ComponentStyleCard } from "./StyledCard";
 export { FeatureBadges, IntegrationBadges, type DetectedFeatures } from "./FeatureBadges";
 export { ComparisonView } from "./ComparisonView";
+export { PreviewWithImages } from "./PreviewWithImages";
+export { ImagePlaceholder, ImageSkeletonGrid, GeneratingOverlay } from "./ImagePlaceholder";
 export * from "./analysis-types";
 

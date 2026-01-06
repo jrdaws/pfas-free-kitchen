@@ -1,7 +1,9 @@
 "use client";
 
-import { MultiPagePreview } from "@/app/components/preview";
+import { useState } from "react";
+import { MultiPagePreview, PreviewWithImages } from "@/app/components/preview";
 import type { PreviewComposition } from "@/app/components/preview/types";
+import type { WebsiteAnalysis } from "@/app/components/preview/analysis-types";
 
 // Demo composition data
 const DEMO_COMPOSITION: PreviewComposition = {
@@ -278,18 +280,141 @@ const DEMO_COMPOSITION: PreviewComposition = {
   ],
 };
 
+// Demo website analysis (simulating inspiration site analysis)
+const DEMO_ANALYSIS: WebsiteAnalysis = {
+  url: "https://demo.taskflow.app",
+  title: "TaskFlow - Project Management",
+  structure: {
+    sections: [
+      { type: "hero", layout: "split", position: 0 },
+      { type: "features", layout: "grid", position: 1 },
+      { type: "cta", layout: "centered", position: 2 },
+    ],
+    navigation: {
+      items: ["Home", "Features", "Pricing", "About", "Login"],
+      style: "top",
+    },
+  },
+  features: {
+    auth: {
+      hasLogin: true,
+      hasSignup: true,
+    },
+    content: {
+      hasSearch: false,
+    },
+  },
+  visual: {
+    layout: {
+      overallStyle: "modern",
+      sections: [
+        { type: "hero", pattern: "split", position: 0, hasImage: true },
+        { type: "features", pattern: "grid", position: 1 },
+        { type: "cta", pattern: "centered", position: 2 },
+      ],
+    },
+    colorPalette: {
+      primary: "#6366f1",
+      secondary: "#8b5cf6",
+      accent: "#22c55e",
+      background: "#ffffff",
+      foreground: "#1e293b",
+    },
+    typography: {
+      headingStyle: "bold",
+      bodyStyle: "default",
+    },
+    components: {
+      buttons: {
+        shape: "rounded",
+        style: "solid",
+        hasShadow: true,
+      },
+      cards: {
+        corners: "rounded",
+        style: "elevated",
+        hasShadow: true,
+      },
+      navigation: {
+        style: "solid",
+        position: "top",
+        hasSearch: false,
+      },
+    },
+  },
+};
+
+// Demo vision data
+const DEMO_VISION = {
+  projectName: "TaskFlow",
+  description: "A SaaS project management tool for modern teams to collaborate and track work",
+  audience: "B2B, small to medium businesses, startup teams",
+  tone: "professional",
+};
+
+type PreviewMode = "standard" | "with-images";
+
 export default function PreviewDemoPage() {
+  const [mode, setMode] = useState<PreviewMode>("standard");
+  const [currentPath, setCurrentPath] = useState("/");
+
   return (
-    <div className="h-screen bg-slate-950 p-4">
-      <MultiPagePreview
-        composition={DEMO_COMPOSITION}
-        initialPath="/"
-        initialDevice="desktop"
-        showMinimap={true}
-        showFlowDiagram={true}
-        className="h-full"
-      />
+    <div className="h-screen bg-slate-950 flex flex-col">
+      {/* Mode Toggle Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-slate-900 border-b border-slate-800">
+        <h1 className="text-lg font-semibold text-white">Preview Demo</h1>
+        
+        <div className="flex items-center gap-2">
+          <span className="text-sm text-slate-400 mr-2">Mode:</span>
+          <div className="flex bg-slate-800 rounded-lg p-1">
+            <button
+              onClick={() => setMode("standard")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                mode === "standard"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              Standard
+            </button>
+            <button
+              onClick={() => setMode("with-images")}
+              className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
+                mode === "with-images"
+                  ? "bg-indigo-600 text-white"
+                  : "text-slate-400 hover:text-white"
+              }`}
+            >
+              With AI Images
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Preview Content */}
+      <div className="flex-1 p-4 overflow-hidden">
+        {mode === "standard" ? (
+          <MultiPagePreview
+            composition={DEMO_COMPOSITION}
+            initialPath="/"
+            initialDevice="desktop"
+            showMinimap={true}
+            showFlowDiagram={true}
+            className="h-full"
+          />
+        ) : (
+          <div className="h-full bg-slate-900 rounded-xl overflow-hidden border border-slate-800">
+            <PreviewWithImages
+              composition={DEMO_COMPOSITION}
+              websiteAnalysis={DEMO_ANALYSIS}
+              vision={DEMO_VISION}
+              currentPath={currentPath}
+              onNavigate={setCurrentPath}
+              className="h-full"
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
-

@@ -86,6 +86,32 @@ export const COLOR_SCHEMES: ColorScheme[] = [
 
 export type ModelTier = 'fast' | 'balanced' | 'quality';
 
+// Composer mode determines how AI composes the preview
+export type ComposerMode = 'registry' | 'hybrid' | 'auto';
+
+export interface ComposerModeConfig {
+  mode: ComposerMode;
+  // Registry mode settings
+  strictPatterns: boolean;      // Only use known patterns
+  maxPatterns: number;          // Limit pattern count per page
+  // Hybrid mode settings
+  useInspirationStructure: boolean;  // Map inspiration to layout
+  enableGapFiller: boolean;          // Generate custom components
+  styleInheritance: 'full' | 'colors-only' | 'none';
+  // Auto mode settings
+  preferRegistry: boolean;      // Start with registry, fall back to hybrid
+}
+
+export const DEFAULT_COMPOSER_CONFIG: ComposerModeConfig = {
+  mode: 'hybrid',
+  strictPatterns: false,
+  maxPatterns: 10,
+  useInspirationStructure: true,
+  enableGapFiller: true,
+  styleInheritance: 'full',
+  preferRegistry: true,
+};
+
 export type PhaseId = 'setup' | 'configure' | 'launch';
 
 // Phase definitions
@@ -225,6 +251,9 @@ export interface ConfiguratorState {
   // AI provider settings (5DS clone)
   aiProvider: string;
   aiApiKey: string;
+  
+  // Composer mode settings
+  composerConfig: ComposerModeConfig;
 
   // Branding settings
   colorScheme: string; // ColorScheme id
@@ -297,6 +326,10 @@ export interface ConfiguratorState {
   setAiProvider: (provider: string) => void;
   setAiApiKey: (key: string) => void;
   
+  // Composer mode actions
+  setComposerMode: (mode: ComposerMode) => void;
+  setComposerConfig: (config: Partial<ComposerModeConfig>) => void;
+  
   // Branding actions
   setColorScheme: (schemeId: string) => void;
   setCustomColor: (colorKey: keyof ConfiguratorState['customColors'], value: string) => void;
@@ -355,6 +388,7 @@ const initialState = {
   visionDocument: null,
   aiProvider: '',
   aiApiKey: '',
+  composerConfig: DEFAULT_COMPOSER_CONFIG,
   colorScheme: 'sunset-orange',
   customColors: {
     primary: '#F97316',
@@ -504,6 +538,14 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
 
       setAiApiKey: (key) => set({ aiApiKey: key }),
 
+      setComposerMode: (mode) => set((state) => ({
+        composerConfig: { ...state.composerConfig, mode },
+      })),
+
+      setComposerConfig: (config) => set((state) => ({
+        composerConfig: { ...state.composerConfig, ...config },
+      })),
+
       setColorScheme: (schemeId) => {
         const scheme = COLOR_SCHEMES.find(s => s.id === schemeId);
         if (scheme && schemeId !== 'custom') {
@@ -607,6 +649,7 @@ export const useConfiguratorStore = create<ConfiguratorState>()(
         designAnalysis: state.designAnalysis,
         visionDocument: state.visionDocument,
         aiProvider: state.aiProvider,
+        composerConfig: state.composerConfig,
         colorScheme: state.colorScheme,
         customColors: state.customColors,
         paymentProvider: state.paymentProvider,

@@ -20,8 +20,14 @@ import {
   ChevronRight,
   Sparkles,
   Loader2,
-  Wand2
+  Wand2,
+  ImageIcon
 } from "lucide-react";
+import { PreviewWithImages } from "@/app/components/preview";
+import type { PreviewComposition } from "@/app/components/preview/types";
+import type { WebsiteAnalysis } from "@/app/components/preview/analysis-types";
+import { ComposerModeToggle } from "./ComposerModeToggle";
+import { useConfiguratorStore } from "@/lib/configurator-state";
 
 interface LivePreviewPanelProps {
   template: string;
@@ -55,6 +61,9 @@ export function LivePreviewPanel({
   onToggle,
   research,
 }: LivePreviewPanelProps) {
+  // Get composer config from store
+  const { composerConfig } = useConfiguratorStore();
+  
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isExpanded, setIsExpanded] = useState(false);
   const [hasPendingChanges, setHasPendingChanges] = useState(false);
@@ -63,6 +72,9 @@ export function LivePreviewPanel({
   const [componentProps, setComponentProps] = useState<Record<string, Record<string, unknown>>>({});
   const [composition, setComposition] = useState<ProjectComposition | null>(null);
   const [generateImages, setGenerateImages] = useState(false);
+  const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
+  const [currentPreviewPath, setCurrentPreviewPath] = useState("/");
+  const [websiteAnalysis, setWebsiteAnalysis] = useState<WebsiteAnalysis | null>(null);
   
   // Track last rendered values to detect changes
   const [lastRendered, setLastRendered] = useState({
@@ -73,6 +85,53 @@ export function LivePreviewPanel({
   });
 
   const selectedTemplate = TEMPLATES[template as keyof typeof TEMPLATES];
+
+  // Convert ProjectComposition to PreviewComposition for PreviewWithImages
+  const convertToPreviewComposition = useCallback((comp: ProjectComposition): PreviewComposition => {
+    const colors = comp.globalStyles?.colorScheme;
+    
+    // Extract page name from pageId (e.g., "home" -> "Home")
+    const formatPageName = (pageId: string) => 
+      pageId.charAt(0).toUpperCase() + pageId.slice(1).replace(/-/g, ' ');
+    
+    // Infer page type from layout or pageId
+    const inferPageType = (page: { pageId: string; layout: string }) => {
+      if (page.layout?.includes("dashboard")) return "dashboard";
+      if (page.layout?.includes("blog")) return "blog";
+      if (page.pageId === "home" || page.pageId === "/") return "home";
+      if (page.pageId.includes("pricing")) return "pricing";
+      if (page.pageId.includes("about")) return "about";
+      return "landing";
+    };
+    
+    return {
+      id: comp.projectId || "preview",
+      projectName: projectName || "Preview",
+      theme: {
+        primaryColor: colors?.primary || "#6366f1",
+        secondaryColor: colors?.secondary || "#8b5cf6",
+        backgroundColor: colors?.background || "#ffffff",
+        textColor: colors?.foreground || "#1e293b",
+        fontFamily: comp.globalStyles?.fontFamily?.body || "Inter, system-ui, sans-serif",
+        borderRadius: "0.5rem",
+      },
+      navigation: comp.pages?.map(p => ({
+        label: formatPageName(p.pageId),
+        path: p.path || `/${p.pageId}`,
+      })) || [],
+      pages: comp.pages?.map(p => ({
+        id: p.pageId,
+        path: p.path || `/${p.pageId}`,
+        name: formatPageName(p.pageId),
+        type: inferPageType(p),
+        components: p.sections?.map((s, i) => ({
+          id: `${p.pageId}-section-${i}`,
+          type: s.patternId || "hero",
+          props: s.props || {},
+        })) || [],
+      })) || [],
+    };
+  }, [projectName]);
   
   // Count configured integrations and features
   const configuredIntegrations = Object.values(integrations).filter(Boolean).length;
@@ -189,8 +248,11 @@ export function LivePreviewPanel({
           preferences: {
             generateImages,
           },
+          composerConfig,
         }),
       });
+
+      console.log("[Preview] Using composer mode:", composerConfig.mode);
 
       if (response.ok) {
         const data = await response.json();
@@ -212,7 +274,7 @@ export function LivePreviewPanel({
     } finally {
       setIsComposing(false);
     }
-  }, [projectName, description, vision, template, integrations, featureCount, research, generateImages]);
+  }, [projectName, description, vision, template, integrations, featureCount, research, generateImages, composerConfig]);
 
   // Auto-compose when user has provided enough context
   const hasEnoughContext = projectName && projectName.length > 2 && template;
@@ -332,6 +394,9 @@ export function LivePreviewPanel({
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
+          {/* Composer Mode Toggle */}
+          <ComposerModeToggle compact />
+
           {/* AI Compose Button (new pattern-based) */}
           <Button
             variant={composition ? "secondary" : "default"}
@@ -366,18 +431,27 @@ export function LivePreviewPanel({
           </Button>
 
           {/* AI Images Toggle */}
-          <label 
-            className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer hover:text-foreground transition-colors"
-            title="Generate AI images for preview (requires Replicate API)"
+          <button
+            onClick={() => {
+              if (!showAIImagesPreview) {
+                setGenerateImages(true);
+              }
+              setShowAIImagesPreview(!showAIImagesPreview);
+            }}
+            disabled={!composition}
+            className={cn(
+              "flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
+              showAIImagesPreview
+                ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white"
+                : composition
+                  ? "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+                  : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
+            )}
+            title={composition ? "Toggle AI-generated images preview" : "Compose first to enable AI images"}
           >
-            <input
-              type="checkbox"
-              checked={generateImages}
-              onChange={(e) => setGenerateImages(e.target.checked)}
-              className="w-3.5 h-3.5 rounded border-border accent-primary"
-            />
-            <span className="hidden lg:inline">AI Images</span>
-          </label>
+            <ImageIcon className="h-3.5 w-3.5" />
+            <span className="hidden lg:inline">{showAIImagesPreview ? "AI Images On" : "AI Images"}</span>
+          </button>
 
           {/* Viewport Toggle */}
           <div className="flex items-center gap-1 p-1 rounded-lg bg-muted/50">
@@ -432,9 +506,23 @@ export function LivePreviewPanel({
         </div>
       </div>
 
-      {/* Preview Frame - Using PreviewRenderer */}
+      {/* Preview Frame - Using PreviewRenderer or PreviewWithImages */}
       <div className="flex-1 bg-stone-900 p-4 overflow-auto">
-        {viewport === "mobile" ? (
+        {showAIImagesPreview && composition ? (
+          <PreviewWithImages
+            composition={convertToPreviewComposition(composition)}
+            websiteAnalysis={websiteAnalysis || undefined}
+            vision={{
+              projectName: projectName || "My Project",
+              description: description || vision || "A modern web application",
+              audience: "modern users",
+              tone: "professional",
+            }}
+            currentPath={currentPreviewPath}
+            onNavigate={setCurrentPreviewPath}
+            className="h-full"
+          />
+        ) : viewport === "mobile" ? (
           <div className="flex justify-center">
             <MobilePreviewFrame
               template={template}

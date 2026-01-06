@@ -40,36 +40,112 @@ export function GenerationProgress() {
     (a) => a.status === "complete" || a.status === "reviewing" || a.status === "approved"
   );
 
-  // Simulate generation (in real implementation, this would call the API)
+  // Real generation via API
   const handleStartGeneration = async () => {
     setGenerating(true);
 
-    for (const asset of pendingAssets) {
-      setCurrentlyGenerating(asset.id);
-      updateAsset(asset.id, { status: "generating" });
+    try {
+      // Prepare assets for API
+      const assetRequests = pendingAssets.map((asset) => ({
+        id: asset.id,
+        prompt: asset.prompt?.composedPrompt || asset.description,
+        negativePrompt: asset.prompt?.negativePrompt,
+        width: asset.dimensions.width,
+        height: asset.dimensions.height,
+        model: asset.model === "dall-e-3" ? "flux" as const : asset.model, // Map DALL-E to Flux
+      }));
 
-      // Simulate progress updates
-      for (let percent = 0; percent <= 100; percent += 10) {
-        updateProgress({
-          assetId: asset.id,
-          percent,
-          stage: percent < 30 ? "Loading model" : percent < 80 ? "Generating" : "Optimizing",
-          message: `Generating ${asset.name}...`,
-        });
-        await new Promise((resolve) => setTimeout(resolve, 300));
+      // Start generation job
+      const response = await fetch("/api/media/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          assets: assetRequests,
+          projectName: useMediaStudioStore.getState().projectName,
+          assetTarget: useMediaStudioStore.getState().assetTarget,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!data.success) {
+        // Fallback to simulation if API not available
+        console.warn("API not available, using simulation:", data.error);
+        await runSimulatedGeneration();
+        return;
       }
 
-      // Simulate completion with a placeholder image
-      // In real implementation, this would be the actual generated image URL
-      const placeholderUrl = `https://placehold.co/${asset.dimensions.width}x${asset.dimensions.height}/1a1a2e/6366f1?text=${encodeURIComponent(asset.name)}`;
-      
-      markAssetComplete(asset.id, placeholderUrl);
+      // Poll for status
+      const jobId = data.jobId;
+      let jobComplete = false;
+
+      while (!jobComplete) {
+        await new Promise((resolve) => setTimeout(resolve, 2000));
+
+        const statusResponse = await fetch(`/api/media/status/${jobId}`);
+        const statusData = await statusResponse.json();
+
+        if (!statusData.success) {
+          console.error("Status check failed:", statusData.error);
+          break;
+        }
+
+        const job = statusData.job;
+
+        // Update asset statuses
+        for (const jobAsset of job.assets) {
+          const asset = assets.find((a) => a.id === jobAsset.id);
+          if (!asset) continue;
+
+          if (jobAsset.status === "generating") {
+            setCurrentlyGenerating(jobAsset.id);
+            updateAsset(jobAsset.id, { status: "generating" });
+            updateProgress({
+              assetId: jobAsset.id,
+              percent: jobAsset.progress,
+              stage: jobAsset.progress < 30 ? "Loading model" : jobAsset.progress < 80 ? "Generating" : "Optimizing",
+              message: `Generating ${asset.name}...`,
+            });
+          } else if (jobAsset.status === "complete" && jobAsset.imageUrl) {
+            markAssetComplete(jobAsset.id, jobAsset.imageUrl);
+          } else if (jobAsset.status === "failed") {
+            markAssetFailed(jobAsset.id, jobAsset.error || "Generation failed");
+          }
+        }
+
+        jobComplete = job.status === "complete" || job.status === "failed";
+      }
+    } catch (error) {
+      console.error("Generation error:", error);
+      // Fallback to simulation
+      await runSimulatedGeneration();
     }
 
     setCurrentlyGenerating(null);
     updateProgress(null);
     setGenerating(false);
     updateCosts(estimatedCost, actualCost + pendingAssets.reduce((sum, a) => sum + getModelCost(a.model), 0));
+  };
+
+  // Fallback simulation when API is not available
+  const runSimulatedGeneration = async () => {
+    for (const asset of pendingAssets) {
+      setCurrentlyGenerating(asset.id);
+      updateAsset(asset.id, { status: "generating" });
+
+      for (let percent = 0; percent <= 100; percent += 10) {
+        updateProgress({
+          assetId: asset.id,
+          percent,
+          stage: percent < 30 ? "Loading model" : percent < 80 ? "Generating" : "Optimizing",
+          message: `Generating ${asset.name}... (simulated)`,
+        });
+        await new Promise((resolve) => setTimeout(resolve, 300));
+      }
+
+      const placeholderUrl = `https://placehold.co/${asset.dimensions.width}x${asset.dimensions.height}/1a1a2e/6366f1?text=${encodeURIComponent(asset.name)}`;
+      markAssetComplete(asset.id, placeholderUrl);
+    }
   };
 
   const handleStopGeneration = () => {

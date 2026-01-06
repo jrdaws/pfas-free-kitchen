@@ -523,6 +523,12 @@
   51%, 100% { opacity: 0; }
 }
 
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -530,5 +536,9 @@
   
   .animate-blink {
     animation: blink 1s step-end infinite;
+  }
+  
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
   }
 }

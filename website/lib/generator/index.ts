@@ -199,7 +199,8 @@ function applyBranding(
 export * from "./types";
 export { getIntegrationManifest, checkIntegrationDependencies } from "./integration-loader";
 export { getFeatureFiles, validateFeatureSelection, resolveFeatureDependencies, getFeatureSummary } from "./feature-loader";
-export { processAnalysisForExport, getAnalysisExportSummary, WebsiteAnalysis } from "./analysis-loader";
+export { processAnalysisForExport, getAnalysisExportSummary } from "./analysis-loader";
+export type { WebsiteAnalysis } from "./analysis-loader";
 export { generateStyleFiles, generateTailwindConfig, generateGlobalsCss } from "./style-generator";
 export { generateStructureFiles, generateSectionComponents, generatePageFromStructure } from "./structure-generator";
 

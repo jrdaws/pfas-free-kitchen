@@ -1,0 +1,443 @@
+Next Agent: Website Agent
+
+Confirm you are the Website Agent.
+
+---
+
+# Task: Image Generation Integration with Pattern Props
+
+## Priority: P2
+## Estimated Time: 3-4 hours
+## Dependencies: Section CRUD, Pattern Expansion
+
+---
+
+## Context
+
+Flux image generation exists (`/api/generate/image`) but doesn't flow into composition props. Pattern slots define image requirements, but we generate placeholder URLs instead of actual images.
+
+**Goal**: Automatically generate Flux images for each pattern's image slots based on context.
+
+---
+
+## Requirements
+
+### 1. Pattern Image Slot Detection
+
+**File**: `website/lib/image/slot-detector.ts`
+
+Identify which pattern slots need images:
+
+```typescript
+export interface ImageSlot {
+  patternId: string;
+  slotName: string;
+  context: ImageContext;
+  priority: 'high' | 'medium' | 'low';
+}
+
+export interface ImageContext {
+  section: 'hero' | 'features' | 'testimonials' | 'product' | 'team';
+  purpose: string;           // "hero background", "team member avatar"
+  aspectRatio: '1:1' | '16:9' | '4:3' | '3:2' | '21:9';
+  style: 'photo' | 'illustration' | '3d' | 'abstract';
+}
+
+export function detectImageSlots(
+  composition: ProjectComposition,
+  patterns: Pattern[]
+): ImageSlot[] {
+  const slots: ImageSlot[] = [];
+  
+  for (const page of composition.pages) {
+    for (const section of page.sections) {
+      const pattern = patterns.find(p => p.id === section.patternId);
+      if (!pattern) continue;
+      
+      for (const slot of pattern.slots) {
+        if (slot.type === 'image') {
+          slots.push({
+            patternId: section.patternId,
+            slotName: slot.name,
+            context: inferImageContext(section, slot),
+            priority: inferPriority(section.patternId, slot.name),
+          });
+        }
+      }
+    }
+  }
+  
+  // Sort by priority (hero images first)
+  return slots.sort((a, b) => 
+    PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority]
+  );
+}
+
+function inferImageContext(
+  section: SectionComposition,
+  slot: PatternSlot
+): ImageContext {
+  const category = section.patternId.split('-')[0]; // e.g., "hero" from "hero-split-image"
+  
+  const contextMap: Record<string, Partial<ImageContext>> = {
+    hero: { section: 'hero', aspectRatio: '16:9', style: 'photo' },
+    features: { section: 'features', aspectRatio: '1:1', style: 'illustration' },
+    testimonials: { section: 'testimonials', aspectRatio: '1:1', style: 'photo' },
+    product: { section: 'product', aspectRatio: '4:3', style: 'photo' },
+    team: { section: 'team', aspectRatio: '1:1', style: 'photo' },
+  };
+  
+  return {
+    section: category as ImageContext['section'],
+    purpose: `${slot.name} for ${section.patternId}`,
+    aspectRatio: contextMap[category]?.aspectRatio || '16:9',
+    style: contextMap[category]?.style || 'photo',
+    ...contextMap[category],
+  };
+}
+
+function inferPriority(patternId: string, slotName: string): ImageSlot['priority'] {
+  if (patternId.startsWith('hero')) return 'high';
+  if (slotName.includes('avatar') || slotName.includes('profile')) return 'medium';
+  return 'low';
+}
+```
+
+---
+
+### 2. Context-Aware Prompt Builder
+
+**File**: `website/lib/image/prompt-builder.ts`
+
+Build prompts that incorporate user context:
+
+```typescript
+export interface PromptContext {
+  slot: ImageSlot;
+  vision: {
+    projectName: string;
+    description: string;
+    audience: string;
+    tone: string;
+  };
+  style: {
+    colorPalette: string[];
+    aesthetic: string;
+    imagery: 'photography' | 'illustrations' | '3d' | 'abstract';
+  };
+}
+
+export function buildImagePrompt(context: PromptContext): string {
+  const { slot, vision, style } = context;
+  
+  // Base prompt by section type
+  const basePrompts: Record<string, string> = {
+    hero: `${vision.description} - professional hero image showcasing the core value proposition`,
+    features: `Icon or illustration representing a key feature of ${vision.projectName}`,
+    testimonials: `Professional headshot of a ${vision.audience} persona, approachable and trustworthy`,
+    product: `Product showcase for ${vision.projectName}, clean modern presentation`,
+    team: `Professional portrait photo suitable for a team page`,
+  };
+  
+  let prompt = basePrompts[slot.context.section] || slot.context.purpose;
+  
+  // Add style modifiers
+  const styleModifiers: Record<string, string> = {
+    photography: 'professional photography, 8k, high detail, shallow depth of field',
+    illustrations: 'modern flat illustration, vector art, clean lines, minimalist',
+    '3d': '3D render, isometric, modern lighting, soft shadows',
+    abstract: 'abstract shapes, geometric patterns, gradients, modern',
+  };
+  
+  prompt += `, ${styleModifiers[style.imagery] || styleModifiers.photography}`;
+  
+  // Add color palette
+  if (style.colorPalette.length > 0) {
+    prompt += `, color scheme: ${style.colorPalette.slice(0, 3).join(', ')}`;
+  }
+  
+  // Add mood based on tone
+  const moodMap: Record<string, string> = {
+    professional: 'corporate, trustworthy, sophisticated',
+    friendly: 'warm, approachable, inviting',
+    playful: 'fun, energetic, colorful, whimsical',
+    luxurious: 'elegant, premium, exclusive, refined',
+    technical: 'precise, modern, technological',
+  };
+  
+  prompt += `, ${moodMap[vision.tone] || moodMap.professional}`;
+  
+  // Quality suffix
+  prompt += ', high quality, no text, no watermarks';
+  
+  // Negative prompt for cleaner results
+  const negativePrompt = 'blurry, low quality, text, watermark, logo, signature, distorted';
+  
+  return prompt;
+}
+```
+
+---
+
+### 3. Batch Generation with Caching
+
+**File**: `website/lib/image/batch-generator.ts`
+
+Generate all images for a composition:
+
+```typescript
+import { generateImageWithCache } from '@/lib/image-cache';
+
+export interface BatchGenerationResult {
+  images: Map<string, string>;  // slotKey -> imageUrl
+  timing: {
+    total: number;
+    cached: number;
+    generated: number;
+  };
+  errors: Array<{ slotKey: string; error: string }>;
+}
+
+export async function generateCompositionImages(
+  composition: ProjectComposition,
+  patterns: Pattern[],
+  vision: VisionDocument,
+  styles: ExtractedStyles,
+  options: {
+    maxConcurrent?: number;
+    skipLowPriority?: boolean;
+    modelTier?: 'fast' | 'balanced' | 'quality';
+  } = {}
+): Promise<BatchGenerationResult> {
+  const startTime = Date.now();
+  const {
+    maxConcurrent = 3,
+    skipLowPriority = false,
+    modelTier = 'balanced',
+  } = options;
+  
+  // Detect all image slots
+  let slots = detectImageSlots(composition, patterns);
+  
+  if (skipLowPriority) {
+    slots = slots.filter(s => s.priority !== 'low');
+  }
+  
+  const images = new Map<string, string>();
+  const errors: BatchGenerationResult['errors'] = [];
+  let cachedCount = 0;
+  let generatedCount = 0;
+  
+  // Process in batches
+  for (let i = 0; i < slots.length; i += maxConcurrent) {
+    const batch = slots.slice(i, i + maxConcurrent);
+    
+    const results = await Promise.allSettled(
+      batch.map(async (slot) => {
+        const slotKey = `${slot.patternId}-${slot.slotName}`;
+        
+        const prompt = buildImagePrompt({
+          slot,
+          vision: {
+            projectName: vision.projectName,
+            description: vision.description,
+            audience: vision.audience || 'general audience',
+            tone: vision.tone || 'professional',
+          },
+          style: {
+            colorPalette: [styles.colors.primary, styles.colors.secondary],
+            aesthetic: 'modern',
+            imagery: styles.imagery || 'photography',
+          },
+        });
+        
+        const { url, cached } = await generateImageWithCache({
+          prompt,
+          aspectRatio: slot.context.aspectRatio,
+          model: modelTier,
+          style: slot.context.style as any,
+        });
+        
+        if (cached) cachedCount++;
+        else generatedCount++;
+        
+        return { slotKey, url };
+      })
+    );
+    
+    for (const result of results) {
+      if (result.status === 'fulfilled') {
+        images.set(result.value.slotKey, result.value.url);
+      } else {
+        errors.push({
+          slotKey: batch[results.indexOf(result)].patternId,
+          error: result.reason?.message || 'Unknown error',
+        });
+      }
+    }
+  }
+  
+  return {
+    images,
+    timing: {
+      total: Date.now() - startTime,
+      cached: cachedCount,
+      generated: generatedCount,
+    },
+    errors,
+  };
+}
+```
+
+---
+
+### 4. Props Injection
+
+**File**: `website/lib/image/props-injector.ts`
+
+Inject generated image URLs into composition props:
+
+```typescript
+export function injectImageProps(
+  composition: ProjectComposition,
+  images: Map<string, string>
+): ProjectComposition {
+  return {
+    ...composition,
+    pages: composition.pages.map(page => ({
+      ...page,
+      sections: page.sections.map(section => {
+        const updatedProps = { ...section.props };
+        
+        // Find all image slots for this section
+        for (const [slotKey, url] of images.entries()) {
+          if (slotKey.startsWith(section.patternId)) {
+            const slotName = slotKey.replace(`${section.patternId}-`, '');
+            updatedProps[slotName] = url;
+          }
+        }
+        
+        return { ...section, props: updatedProps };
+      }),
+    })),
+  };
+}
+```
+
+---
+
+### 5. Integration with Compose API
+
+Update `website/app/api/compose/project/route.ts`:
+
+```typescript
+// After composition, optionally generate images
+if (body.preferences?.generateImages) {
+  console.log("[API] Generating images for composition...");
+  
+  const imageResult = await generateCompositionImages(
+    result.composition,
+    getAvailablePatterns(),
+    input.vision,
+    result.composition.globalStyles,
+    {
+      modelTier: body.preferences.modelTier || 'balanced',
+      skipLowPriority: body.preferences.fastMode,
+    }
+  );
+  
+  console.log(`[API] Generated ${imageResult.images.size} images (${imageResult.timing.cached} cached)`);
+  
+  // Inject images into composition
+  result.composition = injectImageProps(result.composition, imageResult.images);
+  
+  // Add image generation stats to response
+  result.imageGeneration = {
+    count: imageResult.images.size,
+    timing: imageResult.timing,
+    errors: imageResult.errors,
+  };
+}
+```
+
+---
+
+### 6. Progress UI
+
+Update preview panel to show image generation progress:
+
+```tsx
+{isGeneratingImages && (
+  <div className="absolute inset-0 bg-stone-900/80 flex items-center justify-center">
+    <div className="text-center space-y-4">
+      <Loader2 className="h-8 w-8 animate-spin mx-auto text-primary" />
+      <div>
+        <p className="text-sm font-medium">Generating custom images...</p>
+        <p className="text-xs text-muted-foreground">
+          {imageProgress.current} of {imageProgress.total} images
+        </p>
+      </div>
+      <Progress value={(imageProgress.current / imageProgress.total) * 100} />
+    </div>
+  </div>
+)}
+```
+
+---
+
+## Dependencies
+
+Ensure `REPLICATE_API_TOKEN` is set in `.env.local`.
+
+---
+
+## Testing Requirements
+
+1. **Manual Testing**:
+   - Compose with images enabled → Images appear in preview
+   - Check hero image → Matches project description
+   - Check team avatars → Appropriate for audience
+   - Compose again → Cached images used
+
+2. **Edge Cases**:
+   - No API token → Graceful fallback to placeholders
+   - Generation fails → Individual error handling
+   - Mixed success → Some images, some placeholders
+
+---
+
+## Acceptance Criteria
+
+- [ ] Image slots detected from patterns
+- [ ] Prompts incorporate user context
+- [ ] Batch generation with concurrency limit
+- [ ] Caching prevents redundant API calls
+- [ ] Props injection updates composition
+- [ ] Progress UI shows generation status
+- [ ] Fallback to placeholders on failure
+- [ ] Build passes with no errors
+
+---
+
+## Output Files
+
+1. `website/lib/image/slot-detector.ts`
+2. `website/lib/image/prompt-builder.ts`
+3. `website/lib/image/batch-generator.ts`
+4. `website/lib/image/props-injector.ts`
+5. `website/lib/image/index.ts`
+6. Updated: `website/app/api/compose/project/route.ts`
+7. Updated: `website/app/components/configurator/LivePreviewPanel.tsx`
+
+---
+
+## Handoff
+
+When complete, create file:
+`output/agents/website/outbox/20260105-image-generation-integration-complete.md`
+
+Include:
+- Prompt examples for different section types
+- Caching statistics from testing
+- Cost estimation per composition
+
