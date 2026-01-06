@@ -17,6 +17,7 @@ import type {
   LayoutType,
 } from "./types";
 import { mapAestheticToVariant, mapLayoutType, type DesignAnalysis } from "../design-analyzer";
+import type { InspirationComposition } from "../inspiration/types";
 
 // ============================================================================
 // Pattern Registry - Loaded from JSON registry (42 patterns)
@@ -163,6 +164,75 @@ function getFallbackSelection(pageType: PageType): PatternSelection[] {
 }
 
 // ============================================================================
+// Inspiration Composition Integration
+// ============================================================================
+
+/**
+ * Convert inspiration composition to pattern selections
+ * This uses detected sections from inspiration sites mapped to our patterns
+ */
+function selectFromInspiration(
+  composition: InspirationComposition,
+  pageType: PageType
+): SelectorOutput {
+  const sections: PatternSelection[] = composition.sections.map((mapping) => ({
+    patternId: mapping.patternId,
+    reason: `Matched from inspiration site (${mapping.source}, ${Math.round(mapping.confidence * 100)}% confidence)`,
+    variant: mapping.variant,
+    order: mapping.sectionIndex + 1,
+    confidenceScore: Math.round(mapping.confidence * 100),
+  }));
+
+  // Map layout type
+  const layoutMap: Record<string, LayoutType> = {
+    marketing: "layout-marketing",
+    dashboard: "layout-dashboard",
+    blog: "layout-blog",
+    ecommerce: "layout-ecommerce",
+    portfolio: "layout-marketing",
+  };
+
+  const layoutRecommendation = layoutMap[composition.layout.type] || "layout-marketing";
+
+  // Ensure we have navigation and footer
+  const hasNav = sections.some((s) => s.patternId.includes("nav"));
+  const hasFooter = sections.some((s) => s.patternId.includes("footer"));
+
+  if (!hasNav) {
+    const navVariant = composition.layout.navigation === "transparent" ? "transparent" : "solid";
+    sections.unshift({
+      patternId: "nav-standard",
+      reason: "Navigation added for page structure",
+      variant: navVariant as "light" | "dark" | "gradient",
+      order: 0,
+      confidenceScore: 100,
+    });
+  }
+
+  if (!hasFooter) {
+    sections.push({
+      patternId: "footer-multi-column",
+      reason: "Footer added for page structure",
+      variant: "dark",
+      order: sections.length + 1,
+      confidenceScore: 100,
+    });
+  }
+
+  // Renumber orders
+  sections.forEach((s, i) => (s.order = i + 1));
+
+  console.log(
+    `[Selector] Using inspiration composition - ${sections.length} patterns, layout: ${layoutRecommendation}, confidence: ${Math.round(composition.metadata.overallConfidence * 100)}%`
+  );
+
+  return {
+    sections,
+    layoutRecommendation,
+  };
+}
+
+// ============================================================================
 // Design Analysis Integration
 // ============================================================================
 
@@ -233,7 +303,13 @@ function selectFromDesignAnalysis(
 // ============================================================================
 
 export async function selectPatterns(input: SelectorInput): Promise<SelectorOutput> {
-  // If we have design analysis with pattern recommendations, use it directly
+  // Priority 1: Use inspiration composition if available (from analyzed inspiration URLs)
+  if (input.inspirationComposition?.sections?.length) {
+    console.log("[Selector] Using inspiration-driven pattern selection");
+    return selectFromInspiration(input.inspirationComposition, input.pageType);
+  }
+
+  // Priority 2: Use design analysis with pattern recommendations
   if (input.designAnalysis?.patternRecommendations?.length) {
     console.log("[Selector] Using design analysis for pattern selection");
     return selectFromDesignAnalysis(input.designAnalysis, input.pageType);

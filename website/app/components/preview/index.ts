@@ -23,3 +23,10 @@ export { PreviewWithImages } from "./PreviewWithImages";
 export { ImagePlaceholder, ImageSkeletonGrid, GeneratingOverlay } from "./ImagePlaceholder";
 export * from "./analysis-types";
 
+// Section CRUD components
+export { SectionToolbar } from "./SectionToolbar";
+export { PatternPicker } from "./PatternPicker";
+export { InlineEditor, HeadlineEditor, ParagraphEditor } from "./InlineEditor";
+export { PropEditor } from "./PropEditor";
+export { EditablePreview } from "./EditablePreview";
+

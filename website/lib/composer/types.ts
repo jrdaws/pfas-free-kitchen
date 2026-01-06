@@ -249,6 +249,7 @@ export interface SelectorInput {
   vision: VisionDocument;
   research?: ResearchResult;
   designAnalysis?: import('../design-analyzer').DesignAnalysis;
+  inspirationComposition?: import('../inspiration/types').InspirationComposition;
   availablePatterns: Pattern[];
   pageType: PageType;
   existingSections?: SectionComposition[];

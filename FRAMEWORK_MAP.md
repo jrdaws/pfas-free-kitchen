@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- ac79f12 2026-01-05 feat(ai): implement AI-powered configuration suggester
 - 65eb901 2026-01-05 chore: complete pattern expansion task - handoff document created
 - 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
 - 0b8aa2c 2026-01-05 feat(generator): apply website analysis to export generation
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 1d29667 2026-01-05 feat: complete configurator optimization - 6 agent tasks
 - a00718d 2026-01-05 chore: mark dynamic templates task complete
 - 4c0611a 2026-01-05 feat(patterns): add dynamic AI-composed template system
-- e7e7bea 2026-01-05 feat(dashboard): add project dashboard UI and page editor components
 
 ## Agent Governance Structure
 
