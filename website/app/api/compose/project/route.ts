@@ -3,11 +3,18 @@
  * 
  * POST /api/compose/project
  * Composes a complete project with all pages based on user vision and requirements.
+ * Optionally generates AI images for all image slots.
  */
 
 import { NextRequest, NextResponse } from "next/server";
-import { composeProject, ComposerInput, ComposerOutput } from "@/lib/composer";
+import { composeProject, ComposerInput, ComposerOutput, getAvailablePatterns } from "@/lib/composer";
 import type { ComposerMode, ComposerModeConfig } from "@/lib/configurator-state";
+import {
+  generateCompositionImages,
+  injectImageProps,
+  type ModelTier,
+  type BatchGenerationResult,
+} from "@/lib/image";
 
 interface ComposeProjectRequest {
   vision: {
@@ -32,8 +39,15 @@ interface ComposeProjectRequest {
   integrations?: Record<string, string>;
   preferences?: {
     generateImages?: boolean;
+    modelTier?: ModelTier;
+    skipLowPriorityImages?: boolean;
   };
   composerConfig?: ComposerModeConfig;
+  styleContext?: {
+    colorPalette?: string[];
+    aesthetic?: string;
+    imagery?: "photography" | "illustrations" | "3d" | "abstract" | "minimal";
+  };
 }
 
 function validateRequest(body: unknown): body is ComposeProjectRequest {
@@ -126,9 +140,92 @@ export async function POST(request: NextRequest) {
     // Compose based on mode
     const result = await composeProject(input);
     
+    // Response data
+    let responseData: {
+      composition: typeof result.composition;
+      confidence: number;
+      imageGeneration?: {
+        count: number;
+        timing: BatchGenerationResult["timing"];
+        errors: BatchGenerationResult["errors"];
+      };
+    } = {
+      composition: result.composition,
+      confidence: result.confidence,
+    };
+
+    // Generate images if requested
+    if (body.preferences?.generateImages && result.composition) {
+      console.log("[API] Generating images for composition...");
+      
+      // Get patterns for slot detection
+      const patterns = getAvailablePatterns();
+      
+      // Build vision context
+      const visionContext = {
+        projectName: body.vision.projectName,
+        description: body.vision.description,
+        audience: body.vision.audience,
+        tone: body.vision.tone,
+        industry: undefined, // Will be inferred from description
+      };
+      
+      // Build style context
+      const styleContext = {
+        colorPalette: body.styleContext?.colorPalette || [
+          result.composition.globalStyles?.colorScheme?.primary || "#6366f1",
+          result.composition.globalStyles?.colorScheme?.accent || "#8b5cf6",
+        ],
+        aesthetic: body.styleContext?.aesthetic || "modern",
+        imagery: body.styleContext?.imagery || "photography",
+      };
+      
+      try {
+        const imageResult = await generateCompositionImages(
+          result.composition,
+          patterns,
+          visionContext,
+          styleContext,
+          {
+            modelTier: body.preferences.modelTier || "balanced",
+            skipLowPriority: body.preferences.skipLowPriorityImages,
+          }
+        );
+        
+        console.log(
+          `[API] Generated ${imageResult.stats.generated} images ` +
+          `(${imageResult.stats.cached} cached, ${imageResult.stats.failed} failed) ` +
+          `in ${imageResult.timing.total}ms`
+        );
+        
+        // Inject images into composition
+        if (imageResult.images.size > 0) {
+          responseData.composition = injectImageProps(
+            result.composition,
+            imageResult.images
+          );
+        }
+        
+        // Add image generation stats to response
+        responseData.imageGeneration = {
+          count: imageResult.images.size,
+          timing: imageResult.timing,
+          errors: imageResult.errors,
+        };
+      } catch (imageError) {
+        console.error("[API] Image generation failed:", imageError);
+        // Continue without images - don't fail the whole request
+        responseData.imageGeneration = {
+          count: 0,
+          timing: { total: 0, cached: 0, generated: 0, avgPerImage: 0 },
+          errors: [{ slotKey: "all", error: imageError instanceof Error ? imageError.message : "Unknown error" }],
+        };
+      }
+    }
+    
     return NextResponse.json({
       success: true,
-      data: result,
+      data: responseData,
     });
   } catch (error) {
     console.error("[API] Compose project error:", error);

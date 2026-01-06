@@ -408,14 +408,19 @@ Ensure `REPLICATE_API_TOKEN` is set in `.env.local`.
 
 ## Acceptance Criteria
 
-- [ ] Image slots detected from patterns
-- [ ] Prompts incorporate user context
-- [ ] Batch generation with concurrency limit
-- [ ] Caching prevents redundant API calls
-- [ ] Props injection updates composition
-- [ ] Progress UI shows generation status
-- [ ] Fallback to placeholders on failure
-- [ ] Build passes with no errors
+- [x] Image slots detected from patterns
+- [x] Prompts incorporate user context
+- [x] Batch generation with concurrency limit
+- [x] Caching prevents redundant API calls
+- [x] Props injection updates composition
+- [x] Progress UI shows generation status
+- [x] Fallback to placeholders on failure
+- [x] Build passes with no errors
+
+## Completion Notes (2026-01-05)
+
+Task completed. See handoff document at:
+`output/agents/website/outbox/20260105-image-generation-integration-complete.md`
 
 ---
 

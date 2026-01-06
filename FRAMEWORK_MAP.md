@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- c53bc8d 2026-01-05 feat(inspiration): implement inspiration → layout mapping system
 - ac79f12 2026-01-05 feat(ai): implement AI-powered configuration suggester
 - 65eb901 2026-01-05 chore: complete pattern expansion task - handoff document created
 - 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - c2d0981 2026-01-05 docs: update PROJECT_PRIORITIES.md and add integration test task
 - 1d29667 2026-01-05 feat: complete configurator optimization - 6 agent tasks
 - a00718d 2026-01-05 chore: mark dynamic templates task complete
-- 4c0611a 2026-01-05 feat(patterns): add dynamic AI-composed template system
 
 ## Agent Governance Structure
 

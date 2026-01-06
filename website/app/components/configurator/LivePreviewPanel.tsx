@@ -21,8 +21,11 @@ import {
   Sparkles,
   Loader2,
   Wand2,
-  ImageIcon
+  ImageIcon,
+  CheckCircle,
+  AlertCircle
 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 import { PreviewWithImages } from "@/app/components/preview";
 import type { PreviewComposition } from "@/app/components/preview/types";
 import type { WebsiteAnalysis } from "@/app/components/preview/analysis-types";
@@ -75,6 +78,15 @@ export function LivePreviewPanel({
   const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
   const [currentPreviewPath, setCurrentPreviewPath] = useState("/");
   const [websiteAnalysis, setWebsiteAnalysis] = useState<WebsiteAnalysis | null>(null);
+  
+  // Image generation progress state
+  const [imageGenStats, setImageGenStats] = useState<{
+    count: number;
+    generated: number;
+    cached: number;
+    failed: number;
+    timing: number;
+  } | null>(null);
   
   // Track last rendered values to detect changes
   const [lastRendered, setLastRendered] = useState({
@@ -262,6 +274,21 @@ export function LivePreviewPanel({
           setComposition(data.data.composition);
           setLastRendered({ template, integrations, projectName, featureCount });
           setHasPendingChanges(false);
+          
+          // Update image generation stats if available
+          if (data.data.imageGeneration) {
+            const imgStats = data.data.imageGeneration;
+            setImageGenStats({
+              count: imgStats.count,
+              generated: imgStats.timing?.generated || 0,
+              cached: imgStats.timing?.cached || 0,
+              failed: imgStats.errors?.length || 0,
+              timing: imgStats.timing?.total || 0,
+            });
+            console.log("[Preview] 🖼️ Images generated:", imgStats.count, "in", imgStats.timing?.total, "ms");
+          } else {
+            setImageGenStats(null);
+          }
         } else {
           console.warn("[Preview] ⚠️ Composition failed:", data.error || "Unknown error");
         }
@@ -547,12 +574,48 @@ export function LivePreviewPanel({
         )}
       </div>
 
+      {/* Image Generation Progress Overlay */}
+      {isComposing && generateImages && (
+        <div className="absolute inset-0 bg-stone-900/80 flex items-center justify-center z-50">
+          <div className="bg-card rounded-lg p-6 text-center space-y-4 shadow-xl max-w-sm">
+            <div className="flex justify-center">
+              <Loader2 className="h-10 w-10 animate-spin text-primary" />
+            </div>
+            <div>
+              <p className="font-medium">Composing with AI Images...</p>
+              <p className="text-sm text-muted-foreground mt-1">
+                This may take a moment as we generate custom images for your preview
+              </p>
+            </div>
+            <Progress value={30} className="h-2" />
+          </div>
+        </div>
+      )}
+
       {/* Status Bar */}
       <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-card/80 text-xs text-muted-foreground">
         <div className="flex items-center gap-4">
           <span>Template: {selectedTemplate?.name || "None"}</span>
           <span>•</span>
           <span>Project: {projectName || "Untitled"}</span>
+          {imageGenStats && imageGenStats.count > 0 && (
+            <>
+              <span>•</span>
+              <span className="flex items-center gap-1">
+                <ImageIcon className="h-3 w-3" />
+                {imageGenStats.count} images
+                {imageGenStats.cached > 0 && (
+                  <span className="text-muted-foreground">({imageGenStats.cached} cached)</span>
+                )}
+                {imageGenStats.failed > 0 && (
+                  <span className="text-amber-500 flex items-center gap-0.5">
+                    <AlertCircle className="h-3 w-3" />
+                    {imageGenStats.failed} failed
+                  </span>
+                )}
+              </span>
+            </>
+          )}
         </div>
         <div className="flex items-center gap-2">
           {hasPendingChanges ? (
@@ -565,6 +628,13 @@ export function LivePreviewPanel({
               >
                 Update
               </button>
+            </>
+          ) : imageGenStats && imageGenStats.count > 0 ? (
+            <>
+              <CheckCircle className="h-3.5 w-3.5 text-emerald-500" />
+              <span className="text-emerald-500">
+                Generated in {(imageGenStats.timing / 1000).toFixed(1)}s
+              </span>
             </>
           ) : (
             <>

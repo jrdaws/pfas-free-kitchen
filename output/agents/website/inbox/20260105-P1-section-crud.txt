@@ -532,14 +532,19 @@ npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
 
 ## Acceptance Criteria
 
-- [ ] Zustand store manages composition state
-- [ ] Undo/redo works with 20-step history
-- [ ] SectionToolbar appears on hover
-- [ ] PatternPicker shows all patterns
-- [ ] Inline text editing works
-- [ ] Drag and drop reorders sections
-- [ ] API endpoints for section operations work
-- [ ] Build passes with no errors
+- [x] Zustand store manages composition state
+- [x] Undo/redo works with 20-step history
+- [x] SectionToolbar appears on hover
+- [x] PatternPicker shows all patterns
+- [x] Inline text editing works
+- [x] Drag and drop reorders sections
+- [x] API endpoints for section operations work
+- [x] Build passes with no errors
+
+## Completion Notes (2026-01-05)
+
+Task completed. See handoff document at:
+`output/agents/website/outbox/20260105-section-crud-complete.md`
 
 ---
 
