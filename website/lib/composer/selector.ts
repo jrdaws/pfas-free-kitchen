@@ -19,153 +19,13 @@ import type {
 import { mapAestheticToVariant, mapLayoutType, type DesignAnalysis } from "../design-analyzer";
 
 // ============================================================================
-// Pattern Registry (will be expanded by Template Agent)
+// Pattern Registry - Loaded from JSON registry (42 patterns)
 // ============================================================================
 
-const AVAILABLE_PATTERNS: Pattern[] = [
-  {
-    id: "hero-centered",
-    name: "Centered Hero",
-    category: "hero",
-    variants: ["dark", "light", "gradient"],
-    tags: ["minimal", "professional", "clean"],
-    slots: [
-      { name: "headline", type: "text", required: true, maxLength: 80 },
-      { name: "subheadline", type: "text", required: false, maxLength: 160 },
-      { name: "ctaText", type: "text", required: true, maxLength: 30 },
-      { name: "ctaLink", type: "text", required: true },
-      { name: "secondaryCta", type: "text", required: false },
-    ],
-  },
-  {
-    id: "hero-split-image",
-    name: "Split Hero with Image",
-    category: "hero",
-    variants: ["dark", "light", "gradient"],
-    tags: ["product", "visual", "showcase"],
-    slots: [
-      { name: "headline", type: "text", required: true, maxLength: 80 },
-      { name: "subheadline", type: "text", required: false, maxLength: 200 },
-      { name: "ctaText", type: "text", required: true, maxLength: 30 },
-      { name: "image", type: "image", required: true },
-      { name: "imageAlt", type: "text", required: true },
-    ],
-  },
-  {
-    id: "features-grid",
-    name: "Features Grid",
-    category: "features",
-    variants: ["dark", "light", "cards"],
-    tags: ["3-column", "icons", "benefits"],
-    slots: [
-      { name: "title", type: "text", required: true, maxLength: 60 },
-      { name: "subtitle", type: "text", required: false, maxLength: 120 },
-      { name: "features", type: "array", required: true },
-    ],
-  },
-  {
-    id: "features-alternating",
-    name: "Alternating Features",
-    category: "features",
-    variants: ["dark", "light"],
-    tags: ["detailed", "images", "storytelling"],
-    slots: [
-      { name: "features", type: "array", required: true },
-    ],
-  },
-  {
-    id: "pricing-three-tier",
-    name: "Three Tier Pricing",
-    category: "pricing",
-    variants: ["dark", "light", "gradient"],
-    tags: ["saas", "comparison", "popular"],
-    slots: [
-      { name: "title", type: "text", required: true },
-      { name: "plans", type: "array", required: true },
-      { name: "showToggle", type: "boolean", required: false, defaultValue: true },
-    ],
-  },
-  {
-    id: "testimonials-grid",
-    name: "Testimonials Grid",
-    category: "testimonials",
-    variants: ["dark", "light"],
-    tags: ["social-proof", "reviews", "trust"],
-    slots: [
-      { name: "title", type: "text", required: true },
-      { name: "testimonials", type: "array", required: true },
-    ],
-  },
-  {
-    id: "testimonials-carousel",
-    name: "Testimonials Carousel",
-    category: "testimonials",
-    variants: ["dark", "light"],
-    tags: ["dynamic", "featured", "quotes"],
-    slots: [
-      { name: "testimonials", type: "array", required: true },
-    ],
-  },
-  {
-    id: "cta-simple",
-    name: "Simple CTA",
-    category: "cta",
-    variants: ["dark", "light", "gradient"],
-    tags: ["conversion", "action", "minimal"],
-    slots: [
-      { name: "headline", type: "text", required: true, maxLength: 60 },
-      { name: "subheadline", type: "text", required: false },
-      { name: "ctaText", type: "text", required: true },
-      { name: "ctaLink", type: "text", required: true },
-    ],
-  },
-  {
-    id: "faq-accordion",
-    name: "FAQ Accordion",
-    category: "faq",
-    variants: ["dark", "light"],
-    tags: ["questions", "support", "expandable"],
-    slots: [
-      { name: "title", type: "text", required: true },
-      { name: "items", type: "array", required: true },
-    ],
-  },
-  {
-    id: "footer-multi-column",
-    name: "Multi-Column Footer",
-    category: "footer",
-    variants: ["dark", "light"],
-    tags: ["links", "comprehensive", "social"],
-    slots: [
-      { name: "projectName", type: "text", required: true },
-      { name: "description", type: "text", required: false },
-      { name: "links", type: "array", required: true },
-      { name: "showSocial", type: "boolean", required: false, defaultValue: true },
-    ],
-  },
-  {
-    id: "nav-standard",
-    name: "Standard Navigation",
-    category: "navigation",
-    variants: ["solid", "transparent"],
-    tags: ["header", "menu", "auth"],
-    slots: [
-      { name: "projectName", type: "text", required: true },
-      { name: "links", type: "array", required: true },
-      { name: "showAuth", type: "boolean", required: false, defaultValue: true },
-    ],
-  },
-  {
-    id: "stats-simple",
-    name: "Stats Section",
-    category: "stats",
-    variants: ["dark", "light", "gradient"],
-    tags: ["numbers", "metrics", "social-proof"],
-    slots: [
-      { name: "stats", type: "array", required: true },
-    ],
-  },
-];
+import { getAllSelectorPatterns, getPatternById as getRegistryPattern, getPatternsByCategory as getRegistryPatternsByCategory } from "./patterns";
+
+// Convert registry patterns to selector format
+const AVAILABLE_PATTERNS: Pattern[] = getAllSelectorPatterns();
 
 // ============================================================================
 // Selector Implementation
@@ -427,10 +287,26 @@ export function getAvailablePatterns(): Pattern[] {
 }
 
 export function getPatternById(id: string): Pattern | undefined {
-  return AVAILABLE_PATTERNS.find(p => p.id === id);
+  const pattern = getRegistryPattern(id);
+  if (!pattern) return undefined;
+  return {
+    id: pattern.id,
+    name: pattern.name,
+    category: pattern.category,
+    variants: pattern.variants,
+    tags: pattern.tags,
+    slots: pattern.slots,
+  };
 }
 
 export function getPatternsByCategory(category: string): Pattern[] {
-  return AVAILABLE_PATTERNS.filter(p => p.category === category);
+  return getRegistryPatternsByCategory(category).map(p => ({
+    id: p.id,
+    name: p.name,
+    category: p.category,
+    variants: p.variants,
+    tags: p.tags,
+    slots: p.slots,
+  }));
 }
 
