@@ -197,14 +197,45 @@ export function PreviewWithImages({
         </div>
       </div>
 
-      {/* Error messages */}
+      {/* Error messages with actionable guidance */}
       {state.errors.length > 0 && (
-        <div className="p-2 bg-red-500/10 border-b border-red-500/30">
-          {state.errors.map((error, i) => (
-            <p key={i} className="text-xs text-red-400">
-              {error}
-            </p>
-          ))}
+        <div className="p-3 bg-red-500/10 border-b border-red-500/30 space-y-1">
+          {state.errors.map((error, i) => {
+            // Check for specific error codes and provide helpful actions
+            const isRateLimit = error.includes("Rate limit") || error.includes("429");
+            const isCredits = error.includes("credit") || error.includes("billing") || error.includes("402");
+            const isApiKey = error.includes("API key") || error.includes("401") || error.includes("unauthorized");
+            
+            return (
+              <div key={i} className="text-xs">
+                <p className="text-red-400 font-medium">{error}</p>
+                {isRateLimit && (
+                  <p className="text-amber-400 mt-1">
+                    💡 Wait 1-2 minutes, then click Regenerate. For higher limits, upgrade at{" "}
+                    <a href="https://replicate.com/account/billing" target="_blank" rel="noopener" className="underline hover:text-amber-300">
+                      replicate.com/account/billing
+                    </a>
+                  </p>
+                )}
+                {isCredits && (
+                  <p className="text-amber-400 mt-1">
+                    💳 Add credits to continue generating images:{" "}
+                    <a href="https://replicate.com/account/billing" target="_blank" rel="noopener" className="underline hover:text-amber-300">
+                      replicate.com/account/billing
+                    </a>
+                  </p>
+                )}
+                {isApiKey && (
+                  <p className="text-amber-400 mt-1">
+                    🔑 Check your REPLICATE_API_TOKEN in .env.local or get a new key at{" "}
+                    <a href="https://replicate.com/account/api-tokens" target="_blank" rel="noopener" className="underline hover:text-amber-300">
+                      replicate.com/account/api-tokens
+                    </a>
+                  </p>
+                )}
+              </div>
+            );
+          })}
         </div>
       )}
 

@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 239dfe5 2026-01-05 feat: unified preview system with AI image generation
 - b37218e 2026-01-05 chore(testing): close duplicate export clarity task
 - 557ac47 2026-01-05 chore: remove completed pattern expansion task file
 - 7310eff 2026-01-05 chore: move completed ai-config-suggester task to done
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 3ec1c4c 2026-01-05 feat(preview): integrate Intelligent Preview with AI Composer
 - 72ba4b5 2026-01-05 feat(composer): implement AI Pattern Composer engine
 - 0e13af2 2026-01-05 chore: mark modular pattern library task complete
-- f963bb1 2026-01-05 feat(patterns): add modular pattern library architecture
 
 ## Agent Governance Structure
 

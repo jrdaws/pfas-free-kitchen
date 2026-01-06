@@ -175,10 +175,71 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("[ImageGen] ❌ Generation failed:", error);
+    
+    // Detect specific error types for better user guidance
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    const errorLower = errorMessage.toLowerCase();
+    
+    // Rate limit detection
+    if (errorLower.includes("rate") || errorLower.includes("429") || errorLower.includes("too many")) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Rate limit reached. Please wait a few minutes before generating more images.",
+          code: "RATE_LIMITED",
+          action: "Wait 1-2 minutes and try again. Consider upgrading to a paid Replicate plan for higher limits."
+        },
+        { status: 429 }
+      );
+    }
+    
+    // Payment/credits required
+    if (errorLower.includes("payment") || errorLower.includes("credit") || errorLower.includes("billing") || 
+        errorLower.includes("402") || errorLower.includes("quota") || errorLower.includes("insufficient")) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Image generation credits exhausted. Please add credits to your Replicate account.",
+          code: "CREDITS_EXHAUSTED",
+          action: "Visit replicate.com/account/billing to add credits or upgrade your plan."
+        },
+        { status: 402 }
+      );
+    }
+    
+    // Invalid/expired API key
+    if (errorLower.includes("unauthorized") || errorLower.includes("401") || errorLower.includes("invalid") && errorLower.includes("key")) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Invalid or expired Replicate API key. Please check your configuration.",
+          code: "INVALID_API_KEY",
+          action: "Verify your REPLICATE_API_TOKEN in .env.local is correct and not expired."
+        },
+        { status: 401 }
+      );
+    }
+    
+    // Model unavailable
+    if (errorLower.includes("model") && (errorLower.includes("not found") || errorLower.includes("unavailable"))) {
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: "Image generation model temporarily unavailable. Please try again later.",
+          code: "MODEL_UNAVAILABLE",
+          action: "This is usually temporary. Try again in a few minutes."
+        },
+        { status: 503 }
+      );
+    }
+    
+    // Generic fallback
     return NextResponse.json(
       { 
         success: false, 
-        error: error instanceof Error ? error.message : "Image generation failed" 
+        error: errorMessage,
+        code: "GENERATION_FAILED",
+        action: "Check your Replicate account status at replicate.com/account"
       },
       { status: 500 }
     );
