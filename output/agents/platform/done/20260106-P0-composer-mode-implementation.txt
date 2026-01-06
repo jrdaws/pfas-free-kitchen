@@ -1,0 +1,162 @@
+# Task: Implement Proper Composer Mode Differentiation
+# Priority: P0 (Critical - Core feature not working)
+# Agent: Platform Agent
+# Estimated: 45-60 minutes
+
+## Context
+
+The three composer modes (Pattern Library, AI Hybrid, Smart Auto) currently produce 
+IDENTICAL results because the mode setting is never passed to or used by the 
+pattern selection logic.
+
+## Root Cause Analysis
+
+1. API Route (app/api/compose/project/route.ts) sets composerConfig.mode
+2. composerConfig.mode creates customInstructions text
+3. BUT: customInstructions is NEVER passed to composeProject() or selectPatterns()
+4. Result: All modes use identical AI prompts and selection logic
+
+## Evidence
+
+```typescript
+// route.ts line 133-137 - mode is set but...
+customInstructions: composerConfig.mode === 'registry' 
+  ? 'Only use existing patterns...'
+  : composerConfig.mode === 'hybrid'
+  ? 'Use patterns where available...'
+  : undefined,
+
+// composer/index.ts - selectPatterns receives NO mode!
+const selection = await selectPatterns({
+  vision: input.vision,
+  research: input.research,
+  availablePatterns: patterns,
+  pageType: page.type,
+  // ❌ NO mode parameter!
+});
+```
+
+## Implementation Requirements
+
+### 1. Update Types (lib/composer/types.ts)
+
+Add mode to ComposerInput and SelectorInput:
+```typescript
+interface ComposerInput {
+  // ... existing
+  composerMode?: 'registry' | 'hybrid' | 'auto';
+  customInstructions?: string;
+}
+```
+
+### 2. Update Selector (lib/composer/selector.ts)
+
+Add mode to SelectorInput interface:
+```typescript
+interface SelectorInput {
+  // ... existing
+  composerMode?: 'registry' | 'hybrid' | 'auto';
+}
+```
+
+Implement mode-specific selection:
+```typescript
+export async function selectPatterns(input: SelectorInput): Promise<SelectorOutput> {
+  const mode = input.composerMode || 'hybrid';
+  
+  switch (mode) {
+    case 'registry':
+      // ONLY use patterns from registry
+      // NO gap-filler, NO AI generation
+      return selectFromRegistryStrict(input);
+      
+    case 'hybrid':
+      // Use registry patterns first, fill gaps with AI
+      return selectWithGapFilling(input);
+      
+    case 'auto':
+      // Full AI control - can generate custom layouts
+      return selectWithFullAI(input);
+  }
+}
+```
+
+### 3. Create Mode-Specific Prompt Variations
+
+```typescript
+const MODE_SYSTEM_PROMPTS = {
+  registry: `You are selecting patterns for a web page.
+STRICT RULE: Only select from the provided pattern IDs.
+Do NOT suggest custom sections or patterns not in the registry.
+If no pattern fits, skip that section type.`,
+
+  hybrid: `You are selecting patterns for a web page.
+Prefer patterns from the registry where they fit well.
+Generate custom sections only for unique requirements not covered by patterns.
+Balance between consistency (patterns) and customization (AI sections).`,
+
+  auto: `You are designing an optimal web page layout.
+You have full creative control over the structure.
+Use patterns where they add value, but feel free to suggest:
+- Custom section structures
+- Novel component arrangements  
+- Unique layout variations
+Prioritize the best user experience over pattern reuse.`,
+};
+```
+
+### 4. Update API Route
+
+Pass mode through to composer:
+```typescript
+const input: ComposerInput = {
+  // ... existing
+  composerMode: composerConfig.mode,
+  customInstructions: composerConfig.mode === 'registry' 
+    ? 'Only use existing patterns...'
+    : composerConfig.mode === 'hybrid'
+    ? 'Use patterns where available...'
+    : 'Design the optimal layout freely.',
+};
+```
+
+### 5. Update composeProject and composePage
+
+Thread mode through to selectPatterns:
+```typescript
+const selection = await selectPatterns({
+  vision: input.vision,
+  research: input.research,
+  availablePatterns: patterns,
+  pageType: page.type,
+  composerMode: input.composerMode || 'hybrid',
+});
+```
+
+## Testing Requirements
+
+After implementation:
+1. Set mode to "Pattern Library" - should ONLY use registered patterns
+2. Set mode to "AI Hybrid" - should use patterns + fill gaps
+3. Set mode to "Smart Auto" - should produce more varied/creative layouts
+
+## Files to Modify
+
+- lib/composer/types.ts
+- lib/composer/selector.ts
+- lib/composer/index.ts
+- app/api/compose/project/route.ts
+
+## Success Criteria
+
+- [ ] Different modes produce visibly different outputs
+- [ ] "Pattern Library" mode never generates custom sections
+- [ ] "Smart Auto" mode shows more variety/creativity
+- [ ] Console logs show which mode is active
+- [ ] No regressions in existing functionality
+
+## Handoff
+
+When complete, commit with message:
+"feat: implement composer mode differentiation - registry/hybrid/auto"
+

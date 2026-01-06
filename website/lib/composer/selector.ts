@@ -15,9 +15,40 @@ import type {
   ResearchResult,
   PageType,
   LayoutType,
+  ComposerMode,
 } from "./types";
 import { mapAestheticToVariant, mapLayoutType, type DesignAnalysis } from "../design-analyzer";
 import type { InspirationComposition } from "../inspiration/types";
+
+// ============================================================================
+// Mode-Specific System Prompts
+// ============================================================================
+
+const MODE_SYSTEM_PROMPTS: Record<ComposerMode, string> = {
+  registry: `You are selecting patterns for a web page.
+STRICT RULE: Only select from the provided pattern IDs.
+Do NOT suggest custom sections or patterns not in the registry.
+If no pattern fits a section type, SKIP that section entirely.
+Prioritize using established patterns for consistency.
+Your selections must ONLY use patterns from the "Available Patterns" list.`,
+
+  hybrid: `You are selecting patterns for a web page.
+Prefer patterns from the registry where they fit well.
+For unique requirements not covered by registry patterns, you may suggest custom section structures.
+Mark custom sections with patternId starting with "custom-".
+Balance between consistency (patterns) and customization (custom sections).
+Aim for 70-80% registry patterns, 20-30% custom if needed.`,
+
+  auto: `You are designing an optimal web page layout with full creative control.
+You can freely combine registry patterns with custom designs.
+Feel free to suggest:
+- Novel section arrangements
+- Creative component combinations
+- Unique layout variations
+- Custom section structures (use patternId: "custom-*")
+Prioritize the best user experience over pattern reuse.
+Be creative and don't feel constrained by the pattern library.`,
+};
 
 // ============================================================================
 // Pattern Registry - Loaded from JSON registry (42 patterns)
@@ -102,9 +133,12 @@ function formatResearch(research?: ResearchResult): string {
 }
 
 function buildPrompt(input: SelectorInput): string {
-  const { vision, research, pageType } = input;
+  const { vision, research, pageType, composerMode = "hybrid" } = input;
   
-  return SELECTOR_PROMPT_TEMPLATE
+  // Get mode-specific instructions
+  const modeInstructions = MODE_SYSTEM_PROMPTS[composerMode];
+  
+  const basePrompt = SELECTOR_PROMPT_TEMPLATE
     .replace(/\{\{projectName\}\}/g, vision.projectName)
     .replace(/\{\{vision\}\}/g, vision.description)
     .replace(/\{\{audience\}\}/g, vision.audience || "general audience")
@@ -113,6 +147,12 @@ function buildPrompt(input: SelectorInput): string {
     .replace(/\{\{pageType\}\}/g, pageType)
     .replace(/\{\{research\}\}/g, formatResearch(research))
     .replace(/\{\{patterns\}\}/g, formatPatterns(input.availablePatterns));
+  
+  // Prepend mode-specific system instructions
+  return `## Mode: ${composerMode.toUpperCase()}
+${modeInstructions}
+
+${basePrompt}`;
 }
 
 function parseResponse(response: string): SelectorOutput {
@@ -299,10 +339,68 @@ function selectFromDesignAnalysis(
 }
 
 // ============================================================================
+// Mode-Specific Selection Functions
+// ============================================================================
+
+/**
+ * Registry mode: ONLY use patterns from the registry, no custom sections
+ */
+function selectFromRegistryStrict(
+  input: SelectorInput,
+  aiResult: SelectorOutput
+): SelectorOutput {
+  // Filter out any custom patterns (those starting with "custom-")
+  const filteredSections = aiResult.sections.filter(
+    (s) => !s.patternId.startsWith("custom-")
+  );
+
+  // Ensure all patterns exist in registry
+  const validPatterns = AVAILABLE_PATTERNS.map((p) => p.id);
+  const validSections = filteredSections.filter((s) =>
+    validPatterns.includes(s.patternId)
+  );
+
+  console.log(
+    `[Selector] Registry mode: ${validSections.length} patterns (filtered ${aiResult.sections.length - validSections.length} custom/invalid)`
+  );
+
+  return {
+    sections: validSections,
+    layoutRecommendation: aiResult.layoutRecommendation,
+  };
+}
+
+/**
+ * Auto mode: Allow more creative sections, mark AI-generated ones
+ */
+function enhanceForAutoMode(aiResult: SelectorOutput): SelectorOutput {
+  // In auto mode, we accept all results including custom sections
+  const enhancedSections = aiResult.sections.map((s) => ({
+    ...s,
+    // Mark custom sections for the UI
+    reason: s.patternId.startsWith("custom-")
+      ? `[AI Generated] ${s.reason}`
+      : s.reason,
+  }));
+
+  console.log(
+    `[Selector] Auto mode: ${enhancedSections.length} patterns (${enhancedSections.filter((s) => s.patternId.startsWith("custom-")).length} custom)`
+  );
+
+  return {
+    sections: enhancedSections,
+    layoutRecommendation: aiResult.layoutRecommendation,
+  };
+}
+
+// ============================================================================
 // Main Export
 // ============================================================================
 
 export async function selectPatterns(input: SelectorInput): Promise<SelectorOutput> {
+  const mode = input.composerMode || "hybrid";
+  console.log(`[Selector] Mode: ${mode.toUpperCase()}`);
+
   // Priority 1: Use inspiration composition if available (from analyzed inspiration URLs)
   if (input.inspirationComposition?.sections?.length) {
     console.log("[Selector] Using inspiration-driven pattern selection");
@@ -329,6 +427,7 @@ export async function selectPatterns(input: SelectorInput): Promise<SelectorOutp
   const client = new Anthropic({ apiKey });
   const prompt = buildPrompt({
     ...input,
+    composerMode: mode,
     availablePatterns: input.availablePatterns.length > 0 
       ? input.availablePatterns 
       : AVAILABLE_PATTERNS,
@@ -348,7 +447,20 @@ export async function selectPatterns(input: SelectorInput): Promise<SelectorOutp
       throw new Error("Unexpected response type");
     }
     
-    return parseResponse(content.text);
+    const aiResult = parseResponse(content.text);
+    
+    // Apply mode-specific post-processing
+    switch (mode) {
+      case "registry":
+        return selectFromRegistryStrict(input, aiResult);
+      case "auto":
+        return enhanceForAutoMode(aiResult);
+      case "hybrid":
+      default:
+        // Hybrid mode: use AI result as-is but log it
+        console.log(`[Selector] Hybrid mode: ${aiResult.sections.length} patterns`);
+        return aiResult;
+    }
   } catch (error) {
     console.error("[Selector] AI selection failed, using fallback:", error);
     return {

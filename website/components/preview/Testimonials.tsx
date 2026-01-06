@@ -9,25 +9,38 @@ interface Testimonial {
   role?: string;
   company?: string;
   avatarIndex?: number;
+  avatar?: string; // Direct avatar URL (overrides avatarIndex)
+  image?: string; // Alias for avatar
 }
 
 interface TestimonialsProps {
   testimonials: Testimonial[];
   layout?: "grid" | "carousel" | "stacked";
   title?: string;
+  sectionImage?: string; // Background image for section
+  previewMode?: boolean;
 }
 
 export function Testimonials({
   testimonials = [],
   layout = "grid",
   title = "What Our Customers Say",
+  sectionImage,
+  previewMode = true,
 }: TestimonialsProps) {
   if (!testimonials || testimonials.length === 0) {
     return null;
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-background">
+    <section 
+      className="w-full px-6 py-16 bg-background relative"
+      style={sectionImage ? {
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.9), rgba(10,10,10,0.95)), url(${sectionImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      } : undefined}
+    >
       <div className="max-w-6xl mx-auto">
         <h2 className="text-3xl font-bold text-foreground mb-12 text-center">
           {title}
@@ -61,7 +74,24 @@ export function Testimonials({
               {/* Author */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-gradient-to-br from-primary to-primary-hover flex items-center justify-center">
-                  {testimonial.avatarIndex ? (
+                  {(testimonial.avatar || testimonial.image) ? (
+                    <img
+                      src={testimonial.avatar || testimonial.image}
+                      alt={testimonial.author}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        // On error, replace with initials
+                        const parent = e.currentTarget.parentElement;
+                        if (parent) {
+                          e.currentTarget.style.display = 'none';
+                          const fallback = document.createElement('span');
+                          fallback.className = 'text-primary-foreground font-medium text-sm';
+                          fallback.textContent = testimonial.author.charAt(0);
+                          parent.appendChild(fallback);
+                        }
+                      }}
+                    />
+                  ) : testimonial.avatarIndex ? (
                     <Image
                       src={`/images/redesign/avatars/avatar-placeholder-${testimonial.avatarIndex}.webp`}
                       alt={testimonial.author}

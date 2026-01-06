@@ -7,6 +7,7 @@ interface Feature {
   title: string;
   description: string;
   iconName?: string;
+  image?: string; // Optional feature image (overrides icon when provided)
 }
 
 interface FeatureCardsProps {
@@ -14,6 +15,8 @@ interface FeatureCardsProps {
   columns?: number;
   variant?: "cards" | "minimal" | "icons-left";
   title?: string;
+  sectionImage?: string; // Background image for section
+  previewMode?: boolean;
 }
 
 const ICONS: Record<string, React.ReactNode> = {
@@ -65,6 +68,8 @@ export function FeatureCards({
   columns = 3,
   variant = "cards",
   title,
+  sectionImage,
+  previewMode = true,
 }: FeatureCardsProps) {
   // Return null if no features
   if (!features || features.length === 0) {
@@ -73,8 +78,15 @@ export function FeatureCards({
 
   return (
     <section 
-      className="w-full px-6 py-16"
-      style={{ backgroundColor: 'var(--preview-background, #0A0A0A)' }}
+      className="w-full px-6 py-16 relative"
+      style={{ 
+        backgroundColor: 'var(--preview-background, #0A0A0A)',
+        ...(sectionImage && {
+          backgroundImage: `linear-gradient(rgba(10,10,10,0.85), rgba(10,10,10,0.95)), url(${sectionImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }),
+      }}
     >
       <div className="max-w-7xl mx-auto">
         {title && (
@@ -110,15 +122,26 @@ export function FeatureCards({
             >
               {variant === "icons-left" ? (
                 <>
-                  <div 
-                    className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
-                    style={{ 
-                      backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
-                      color: 'var(--preview-primary, #F97316)'
-                    }}
-                  >
-                    {getIcon(feature.iconName)}
-                  </div>
+                  {feature.image ? (
+                    <div className="w-16 h-16 rounded-lg overflow-hidden shrink-0">
+                      <img 
+                        src={feature.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                      />
+                    </div>
+                  ) : (
+                    <div 
+                      className="w-12 h-12 rounded-lg flex items-center justify-center shrink-0"
+                      style={{ 
+                        backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
+                        color: 'var(--preview-primary, #F97316)'
+                      }}
+                    >
+                      {getIcon(feature.iconName)}
+                    </div>
+                  )}
                   <div>
                     <h3 
                       className="font-semibold mb-2"
@@ -136,15 +159,26 @@ export function FeatureCards({
                 </>
               ) : (
                 <>
-                  <div 
-                    className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
-                    style={{ 
-                      backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
-                      color: 'var(--preview-primary, #F97316)'
-                    }}
-                  >
-                    {getIcon(feature.iconName)}
-                  </div>
+                  {feature.image ? (
+                    <div className="w-full h-32 rounded-lg overflow-hidden mb-4">
+                      <img 
+                        src={feature.image}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => { e.currentTarget.parentElement!.style.display = 'none'; }}
+                      />
+                    </div>
+                  ) : (
+                    <div 
+                      className="w-12 h-12 rounded-lg flex items-center justify-center mb-4"
+                      style={{ 
+                        backgroundColor: 'color-mix(in srgb, var(--preview-primary, #F97316) 10%, transparent)',
+                        color: 'var(--preview-primary, #F97316)'
+                      }}
+                    >
+                      {getIcon(feature.iconName)}
+                    </div>
+                  )}
                   <h3 
                     className="font-semibold mb-2"
                     style={{ color: 'var(--preview-foreground, #FFFFFF)' }}

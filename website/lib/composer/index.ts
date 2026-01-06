@@ -67,12 +67,13 @@ export async function composePage(
   const startTime = Date.now();
   const patterns = getAvailablePatterns();
   
-  // Step 1: Select patterns for this page
+  // Step 1: Select patterns for this page (pass composer mode!)
   const selection = await selectPatterns({
     vision: input.vision,
     research: input.research,
     availablePatterns: patterns,
     pageType: page.type,
+    composerMode: input.composerMode,
   });
   
   // Step 2: Generate props for each selected pattern
@@ -120,6 +121,9 @@ export async function composeProject(
   input: ComposerInput
 ): Promise<ComposerOutput> {
   const startTime = Date.now();
+  const mode = input.composerMode || "hybrid";
+  console.log(`[Composer] Mode: ${mode.toUpperCase()} | Pages: ${input.pages.length}`);
+  
   const pages: PageComposition[] = [];
   const allReasoning: PatternReasoning[] = [];
   const warnings: string[] = [];
@@ -130,13 +134,14 @@ export async function composeProject(
       const pageComposition = await composePage(input, page);
       pages.push(pageComposition);
       
-      // Collect reasoning (from selection step)
+      // Collect reasoning (from selection step - use cached mode)
       const patterns = getAvailablePatterns();
       const selection = await selectPatterns({
         vision: input.vision,
         research: input.research,
         availablePatterns: patterns,
         pageType: page.type,
+        composerMode: input.composerMode,
       });
       
       for (const selected of selection.sections) {

@@ -126,6 +126,8 @@ export async function POST(request: NextRequest) {
         priority: p.priority,
       })),
       integrations: body.integrations || {},
+      // Pass composer mode directly to the composer
+      composerMode: composerConfig.mode as ComposerInput["composerMode"],
       preferences: body.preferences ? {
         generateImages: body.preferences.generateImages,
         // Pass composer config settings as preferences
@@ -134,7 +136,7 @@ export async function POST(request: NextRequest) {
           ? 'Only use existing patterns from the registry. Do not generate custom sections.'
           : composerConfig.mode === 'hybrid'
           ? 'Use patterns where available. Generate custom sections for unique requirements.'
-          : undefined,
+          : 'Design the optimal layout freely with full creative control.',
       } : undefined,
     };
     

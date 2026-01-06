@@ -92,6 +92,8 @@ export interface CompositionMetadata {
 // Composer Input Types
 // ============================================================================
 
+export type ComposerMode = "registry" | "hybrid" | "auto";
+
 export interface ComposerInput {
   vision: VisionDocument;
   research?: ResearchResult;
@@ -99,6 +101,7 @@ export interface ComposerInput {
   pages: PageConfig[];
   integrations: Record<string, string>;
   preferences?: ComposerPreferences;
+  composerMode?: ComposerMode;
 }
 
 export interface VisionDocument {
@@ -254,6 +257,7 @@ export interface SelectorInput {
   availablePatterns: Pattern[];
   pageType: PageType;
   existingSections?: SectionComposition[];
+  composerMode?: ComposerMode;
 }
 
 export interface SelectorOutput {

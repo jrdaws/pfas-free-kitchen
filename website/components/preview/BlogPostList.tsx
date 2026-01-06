@@ -8,6 +8,8 @@ interface Post {
   author?: string;
   date?: string;
   category?: string;
+  image?: string; // Featured image
+  featuredImage?: string; // Alias for image
 }
 
 interface BlogPostListProps {
@@ -15,6 +17,8 @@ interface BlogPostListProps {
   columns?: number;
   showExcerpt?: boolean;
   title?: string;
+  sectionImage?: string; // Background image for section
+  previewMode?: boolean;
 }
 
 export function BlogPostList({
@@ -22,13 +26,22 @@ export function BlogPostList({
   columns = 3,
   showExcerpt = true,
   title,
+  sectionImage,
+  previewMode = true,
 }: BlogPostListProps) {
   if (!posts || posts.length === 0) {
     return null;
   }
 
   return (
-    <section className="w-full px-6 py-16 bg-[#0A0A0A]">
+    <section 
+      className="w-full px-6 py-16 bg-[#0A0A0A] relative"
+      style={sectionImage ? {
+        backgroundImage: `linear-gradient(rgba(10,10,10,0.92), rgba(10,10,10,0.98)), url(${sectionImage})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      } : undefined}
+    >
       <div className="max-w-7xl mx-auto">
         {title && (
           <h2 className="text-3xl font-bold text-white mb-10 text-center">
@@ -48,11 +61,34 @@ export function BlogPostList({
               key={i}
               className="group bg-[#111111] rounded-xl overflow-hidden border border-white/5 hover:border-orange-500/30 transition-all"
             >
-              {/* Image Placeholder */}
-              <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center">
-                <svg className="w-12 h-12 text-foreground" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+              {/* Featured Image */}
+              <div className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 flex items-center justify-center relative overflow-hidden">
+                {(post.image || post.featuredImage) ? (
+                  <>
+                    <img 
+                      src={post.image || post.featuredImage}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-transform group-hover:scale-105"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                        const placeholder = e.currentTarget.nextElementSibling;
+                        if (placeholder) {
+                          (placeholder as HTMLElement).style.display = 'flex';
+                        }
+                      }}
+                    />
+                    {/* Fallback placeholder (hidden by default) */}
+                    <div className="hidden absolute inset-0 items-center justify-center">
+                      <svg className="w-12 h-12 text-foreground-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  </>
+                ) : (
+                  <svg className="w-12 h-12 text-foreground-secondary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                )}
               </div>
 
               <div className="p-5">
