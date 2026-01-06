@@ -197,6 +197,7 @@ function normalizeSlot(raw: RawPatternSlot): PatternSlot {
     maxLength: raw.maxLength,
     defaultValue: raw.defaultValue,
     description: raw.description,
+    aspectRatio: raw.aspectRatio, // Preserve for image slot detection
   };
 }
 

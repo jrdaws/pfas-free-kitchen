@@ -92,10 +92,7 @@ export function ComposerModeToggle({
             <button
               className={cn(
                 "flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
-                "bg-gradient-to-r hover:shadow-md",
-                composerConfig.mode === "registry" && "from-blue-500/20 to-blue-600/20 text-blue-400 border border-blue-500/30",
-                composerConfig.mode === "hybrid" && "from-purple-500/20 to-indigo-600/20 text-purple-400 border border-purple-500/30",
-                composerConfig.mode === "auto" && "from-amber-500/20 to-orange-600/20 text-amber-400 border border-amber-500/30",
+                "bg-primary/10 text-primary border border-primary/30 hover:bg-primary/20 hover:shadow-md",
                 className
               )}
             >

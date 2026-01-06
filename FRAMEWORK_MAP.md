@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- b37218e 2026-01-05 chore(testing): close duplicate export clarity task
 - 557ac47 2026-01-05 chore: remove completed pattern expansion task file
 - 7310eff 2026-01-05 chore: move completed ai-config-suggester task to done
 - c53bc8d 2026-01-05 feat(inspiration): implement inspiration → layout mapping system
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 72ba4b5 2026-01-05 feat(composer): implement AI Pattern Composer engine
 - 0e13af2 2026-01-05 chore: mark modular pattern library task complete
 - f963bb1 2026-01-05 feat(patterns): add modular pattern library architecture
-- c2d0981 2026-01-05 docs: update PROJECT_PRIORITIES.md and add integration test task
 
 ## Agent Governance Structure
 

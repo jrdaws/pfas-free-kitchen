@@ -104,21 +104,69 @@ export async function POST(request: NextRequest) {
     });
     
     // Extract image URL from output
-    let imageUrl: string;
+    // Replicate SDK returns FileOutput objects (ReadableStream with url() method)
+    let imageUrl: string | undefined;
     
-    if (Array.isArray(output) && output.length > 0) {
-      // Output is array of URLs or FileOutput objects
-      const firstOutput = output[0];
-      imageUrl = typeof firstOutput === "string" 
-        ? firstOutput 
-        : (firstOutput as { url?: () => string })?.url?.() || String(firstOutput);
-    } else if (typeof output === "object" && output !== null && "url" in output) {
-      imageUrl = (output as { url: () => string }).url();
-    } else {
-      imageUrl = String(output);
+    try {
+      if (Array.isArray(output) && output.length > 0) {
+        const firstOutput = output[0];
+        
+        if (typeof firstOutput === "string") {
+          // Direct string URL
+          imageUrl = firstOutput;
+        } else if (firstOutput && typeof firstOutput === "object") {
+          // FileOutput object - try various extraction methods
+          const fo = firstOutput as { 
+            url?: () => Promise<string> | string; 
+            href?: string;
+            toString?: () => string;
+          };
+          
+          // Method 1: Check for url() method (may be async in newer SDK)
+          if (typeof fo.url === "function") {
+            const urlResult = fo.url();
+            if (urlResult instanceof Promise) {
+              imageUrl = await urlResult;
+            } else if (typeof urlResult === "string") {
+              imageUrl = urlResult;
+            }
+          }
+          
+          // Method 2: Check href property
+          if (!imageUrl && typeof fo.href === "string") {
+            imageUrl = fo.href;
+          }
+          
+          // Method 3: toString() - FileOutput extends URL which has toString
+          if (!imageUrl && fo.toString) {
+            const str = fo.toString();
+            if (str && str.startsWith && str.startsWith("http")) {
+              imageUrl = str;
+            }
+          }
+          
+          // Method 4: Check if it's a URL object directly
+          if (!imageUrl && firstOutput instanceof URL) {
+            imageUrl = firstOutput.toString();
+          }
+        }
+      } else if (typeof output === "string") {
+        imageUrl = output;
+      }
+    } catch (extractError) {
+      console.error("[ImageGen] Error extracting URL:", extractError);
     }
     
-    console.log("[ImageGen] ✅ Generated image:", imageUrl.substring(0, 50) + "...");
+    // Validate the URL
+    if (!imageUrl || typeof imageUrl !== "string" || !imageUrl.startsWith("http")) {
+      console.error("[ImageGen] Invalid or missing URL. Got:", typeof imageUrl, imageUrl ? String(imageUrl).substring(0, 100) : "undefined");
+      return NextResponse.json(
+        { success: false, error: "Could not extract valid image URL from Replicate response" },
+        { status: 500 }
+      );
+    }
+    
+    console.log("[ImageGen] ✅ Generated:", imageUrl.substring(0, 80) + "...");
     
     return NextResponse.json({
       success: true,

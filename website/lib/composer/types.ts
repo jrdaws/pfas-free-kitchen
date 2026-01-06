@@ -231,6 +231,7 @@ export interface PatternSlot {
   description?: string;
   maxLength?: number;
   defaultValue?: unknown;
+  aspectRatio?: string;
 }
 
 // ============================================================================

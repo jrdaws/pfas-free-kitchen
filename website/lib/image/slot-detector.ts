@@ -95,11 +95,20 @@ export function detectImageSlots(
   patterns: RegistryPattern[]
 ): ImageSlot[] {
   const slots: ImageSlot[] = [];
+  
+  // Debug logging
+  console.log("[SlotDetector] Pages:", composition.pages?.length || 0);
+  console.log("[SlotDetector] Patterns with image slots:", 
+    patterns.filter(p => p.slots.some(s => s.type === "image")).map(p => p.id).slice(0, 10).join(", "));
 
   for (const page of composition.pages) {
+    console.log(`[SlotDetector] Page ${page.pageId}: ${page.sections?.length || 0} sections`);
     for (let sectionIndex = 0; sectionIndex < page.sections.length; sectionIndex++) {
       const section = page.sections[sectionIndex];
       const pattern = patterns.find((p) => p.id === section.patternId);
+      
+      const imageSlotCount = pattern?.slots.filter(s => s.type === "image").length || 0;
+      console.log(`[SlotDetector]   Section ${sectionIndex}: patternId="${section.patternId}" → matched=${!!pattern}, imageSlots=${imageSlotCount}`);
 
       if (!pattern) continue;
 

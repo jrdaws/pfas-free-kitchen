@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { TEMPLATES } from "@/lib/templates";
-import { PreviewFrame, MobilePreviewFrame } from "@/components/preview/PreviewRenderer";
 import { generateFallbackProps, UserConfig } from "@/lib/ai/preview-generator";
 import type { ProjectComposition } from "@/lib/composer/types";
 import type { ResearchResult } from "@/lib/research-client";
@@ -29,8 +28,8 @@ import { Progress } from "@/components/ui/progress";
 import { PreviewWithImages } from "@/app/components/preview";
 import type { PreviewComposition } from "@/app/components/preview/types";
 import type { WebsiteAnalysis } from "@/app/components/preview/analysis-types";
-import { ComposerModeToggle } from "./ComposerModeToggle";
 import { useConfiguratorStore } from "@/lib/configurator-state";
+import { ComposerModeToggle } from "./ComposerModeToggle";
 
 interface LivePreviewPanelProps {
   template: string;
@@ -403,61 +402,39 @@ export function LivePreviewPanel({
       )}
     >
       {/* Header */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card/80 backdrop-blur overflow-hidden">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-card/80 backdrop-blur">
+        <div className="flex items-center gap-2 min-w-0">
           <button
             onClick={onToggle}
-            className="p-1.5 rounded hover:bg-muted transition-colors flex-shrink-0"
+            className="p-1 rounded hover:bg-muted transition-colors"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <Sparkles className="h-4 w-4 text-primary" />
-            <span className="font-medium text-sm whitespace-nowrap">Live Preview</span>
-          </div>
-          <Badge variant="secondary" className="text-xs flex-shrink-0 hidden sm:inline-flex">
-            {featureCount + configuredIntegrations} integration{(featureCount + configuredIntegrations) !== 1 ? 's' : ''}
-          </Badge>
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="font-medium text-sm">Preview</span>
         </div>
 
-        <div className="flex items-center gap-2 flex-shrink-0">
-          {/* Composer Mode Toggle */}
-          <ComposerModeToggle compact />
+        <div className="flex items-center gap-1.5 flex-shrink-0">
+          {/* Mode Toggle - Shows current mode */}
+          <ComposerModeToggle compact className="hidden sm:flex" />
 
-          {/* AI Compose Button (new pattern-based) */}
+          {/* AI Compose Button - Primary action */}
           <Button
             variant={composition ? "secondary" : "default"}
             size="sm"
             onClick={handleCompose}
             disabled={isComposing}
-            className="h-8 px-3 text-xs gap-1.5"
+            className="h-7 px-2.5 text-xs gap-1"
           >
             {isComposing ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+              <Loader2 className="h-3 w-3 animate-spin" />
             ) : (
-              <Wand2 className="h-3.5 w-3.5" />
+              <Wand2 className="h-3 w-3" />
             )}
-            {isComposing ? "Composing..." : composition ? "Recompose" : "AI Compose"}
+            <span className="hidden sm:inline">{isComposing ? "..." : composition ? "Redo" : "Compose"}</span>
           </Button>
 
-          {/* AI Enhance Button (legacy) */}
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleAIEnhance}
-            disabled={isEnhancing || !!composition}
-            className="h-8 px-3 text-xs gap-1.5"
-            title={composition ? "Using composed preview" : "Enhance with AI"}
-          >
-            {isEnhancing ? (
-              <Loader2 className="h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Sparkles className="h-3.5 w-3.5" />
-            )}
-            {isEnhancing ? "Enhancing..." : "Enhance"}
-          </Button>
-
-          {/* AI Images Toggle */}
+          {/* AI Images Toggle - Clear ON/OFF state */}
           <button
             onClick={() => {
               if (!showAIImagesPreview) {
@@ -467,75 +444,85 @@ export function LivePreviewPanel({
             }}
             disabled={!composition}
             className={cn(
-              "flex items-center gap-1.5 px-2 py-1.5 rounded-md text-xs font-medium transition-colors",
+              "h-7 px-2.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5",
               showAIImagesPreview
-                ? "bg-gradient-to-r from-purple-500 to-indigo-500 text-white"
+                ? "bg-primary text-primary-foreground shadow-sm"
                 : composition
-                  ? "bg-muted hover:bg-muted/80 text-muted-foreground hover:text-foreground"
+                  ? "bg-muted hover:bg-muted/80 text-muted-foreground border border-transparent hover:border-muted-foreground/20"
                   : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
             )}
-            title={composition ? "Toggle AI-generated images preview" : "Compose first to enable AI images"}
+            title={!composition ? "Compose first to enable AI images" : showAIImagesPreview ? "AI Images enabled - click to disable" : "Click to enable AI-generated images"}
           >
             <ImageIcon className="h-3.5 w-3.5" />
-            <span className="hidden lg:inline">{showAIImagesPreview ? "AI Images On" : "AI Images"}</span>
+            <span className="hidden sm:inline">
+              {showAIImagesPreview ? "AI Images ON" : "AI Images"}
+            </span>
+            {showAIImagesPreview && (
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+            )}
           </button>
 
           {/* Viewport Toggle */}
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-muted/50">
+          <div className="flex items-center p-0.5 rounded-md bg-muted/50">
             <button
               onClick={() => setViewport("desktop")}
               className={cn(
-                "p-1.5 rounded transition-colors",
+                "p-1 rounded transition-colors",
                 viewport === "desktop" ? "bg-background shadow-sm" : "hover:bg-muted"
               )}
             >
-              <Monitor className="h-4 w-4" />
+              <Monitor className="h-3.5 w-3.5" />
             </button>
             <button
               onClick={() => setViewport("mobile")}
               className={cn(
-                "p-1.5 rounded transition-colors",
+                "p-1 rounded transition-colors",
                 viewport === "mobile" ? "bg-background shadow-sm" : "hover:bg-muted"
               )}
             >
-              <Smartphone className="h-4 w-4" />
+              <Smartphone className="h-3.5 w-3.5" />
             </button>
           </div>
 
-          {/* Update Preview */}
+          {/* Refresh */}
           <button
             onClick={handleUpdatePreview}
             className={cn(
               "p-1.5 rounded transition-colors relative",
               hasPendingChanges 
-                ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                ? "bg-primary text-primary-foreground" 
                 : "hover:bg-muted"
             )}
-            title={hasPendingChanges ? "Update preview with latest changes" : "Refresh preview"}
+            title="Refresh"
           >
-            <RefreshCw className="h-4 w-4" />
-            {hasPendingChanges && (
-              <span className="absolute -top-1 -right-1 w-2 h-2 bg-amber-500 rounded-full animate-pulse" />
-            )}
+            <RefreshCw className="h-3.5 w-3.5" />
           </button>
 
-          {/* Expand/Collapse */}
+          {/* Expand */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="p-1.5 rounded hover:bg-muted transition-colors"
           >
-            {isExpanded ? (
-              <Minimize2 className="h-4 w-4" />
-            ) : (
-              <Maximize2 className="h-4 w-4" />
-            )}
+            {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
           </button>
         </div>
       </div>
 
-      {/* Preview Frame - Using PreviewRenderer or PreviewWithImages */}
+      {/* Preview Frame - Single unified preview system */}
       <div className="flex-1 bg-stone-900 p-4 overflow-auto">
-        {showAIImagesPreview && composition ? (
+        {/* Show composing state */}
+        {isComposing ? (
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center space-y-4">
+              <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
+              <div>
+                <p className="text-white font-medium">Creating your preview...</p>
+                <p className="text-stone-400 text-sm mt-1">AI is composing sections based on your inputs</p>
+              </div>
+            </div>
+          </div>
+        ) : composition ? (
+          /* Use ComposedPreview-based system when composition exists */
           <PreviewWithImages
             composition={convertToPreviewComposition(composition)}
             websiteAnalysis={websiteAnalysis || undefined}
@@ -549,48 +536,38 @@ export function LivePreviewPanel({
             onNavigate={setCurrentPreviewPath}
             className="h-full"
           />
-        ) : viewport === "mobile" ? (
-          <div className="flex justify-center">
-            <MobilePreviewFrame
-              template={template}
-              componentProps={componentProps}
-              integrations={integrations}
-              selectedFeatures={selectedFeatures}
-              branding={branding}
-              composition={composition || undefined}
-            />
-          </div>
         ) : (
-          <PreviewFrame
-            template={template}
-            componentProps={componentProps}
-            integrations={integrations}
-            selectedFeatures={selectedFeatures}
-            branding={branding}
-            composition={composition || undefined}
-            editable={!!composition}
-            onRegenerateSection={composition ? handleRegenerateSection : undefined}
-          />
+          /* No composition yet - show prompt to compose */
+          <div className="h-full flex items-center justify-center">
+            <div className="text-center space-y-6 max-w-md px-6">
+              <div className="w-20 h-20 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto">
+                <Wand2 className="h-10 w-10 text-primary" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-white mb-2">Ready to Preview</h3>
+                <p className="text-stone-400">
+                  Click <span className="text-primary font-medium">Compose</span> to generate 
+                  an AI-powered preview based on your project configuration.
+                </p>
+              </div>
+              
+              {/* Show mode selector in empty state */}
+              <div className="flex flex-col items-center gap-3">
+                <ComposerModeToggle className="mx-auto" />
+                <Button
+                  onClick={handleCompose}
+                  disabled={isComposing}
+                  className="bg-primary hover:bg-primary/90"
+                >
+                  <Wand2 className="h-4 w-4 mr-2" />
+                  Generate Preview
+                </Button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
 
-      {/* Image Generation Progress Overlay */}
-      {isComposing && generateImages && (
-        <div className="absolute inset-0 bg-stone-900/80 flex items-center justify-center z-50">
-          <div className="bg-card rounded-lg p-6 text-center space-y-4 shadow-xl max-w-sm">
-            <div className="flex justify-center">
-              <Loader2 className="h-10 w-10 animate-spin text-primary" />
-            </div>
-            <div>
-              <p className="font-medium">Composing with AI Images...</p>
-              <p className="text-sm text-muted-foreground mt-1">
-                This may take a moment as we generate custom images for your preview
-              </p>
-            </div>
-            <Progress value={30} className="h-2" />
-          </div>
-        </div>
-      )}
 
       {/* Status Bar */}
       <div className="flex items-center justify-between px-4 py-2 border-t border-border bg-card/80 text-xs text-muted-foreground">

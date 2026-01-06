@@ -223,12 +223,27 @@ export function PreviewWithImages({
 
 // Helper functions
 
+// Extract base type from pattern ID (e.g., "hero-split-image" -> "hero")
+function getBaseType(type: string): string {
+  const prefixes = ["hero", "features", "pricing", "testimonials", "cta", "footer", "faq", "navigation", "stats", "team", "product", "blog", "about"];
+  
+  for (const prefix of prefixes) {
+    if (type.startsWith(prefix)) {
+      return prefix;
+    }
+  }
+  
+  return type.split("-")[0];
+}
+
 function componentNeedsImage(componentType: string): boolean {
+  const baseType = getBaseType(componentType);
   const imageComponents = ["hero", "features", "testimonials", "product", "about", "team"];
-  return imageComponents.includes(componentType);
+  return imageComponents.includes(baseType);
 }
 
 function componentToSectionType(componentType: string): SectionType {
+  const baseType = getBaseType(componentType);
   const mapping: Record<string, SectionType> = {
     hero: "hero",
     features: "features",
@@ -239,10 +254,11 @@ function componentToSectionType(componentType: string): SectionType {
     about: "about",
     team: "team",
   };
-  return mapping[componentType] || "features";
+  return mapping[baseType] || "features";
 }
 
 function inferImageSlot(componentType: string): ImageSlot {
+  const baseType = getBaseType(componentType);
   const mapping: Record<string, ImageSlot> = {
     hero: "hero",
     features: "feature",
@@ -253,6 +269,6 @@ function inferImageSlot(componentType: string): ImageSlot {
     pricing: "background",
     cta: "background",
   };
-  return mapping[componentType] || "feature";
+  return mapping[baseType] || "feature";
 }
 

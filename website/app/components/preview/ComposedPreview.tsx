@@ -181,6 +181,21 @@ interface PreviewComponentRendererProps {
   appliedStyles?: AppliedStyles | null;
 }
 
+// Extract base type from pattern ID (e.g., "hero-split-image" -> "hero")
+function getBaseType(type: string): string {
+  // Common pattern prefixes
+  const prefixes = ["hero", "features", "pricing", "testimonials", "cta", "footer", "faq", "navigation", "stats", "team", "product", "blog"];
+  
+  for (const prefix of prefixes) {
+    if (type.startsWith(prefix)) {
+      return prefix;
+    }
+  }
+  
+  // Fallback: take the first part before any dash
+  return type.split("-")[0];
+}
+
 function PreviewComponentRenderer({
   component,
   onNavigate,
@@ -194,10 +209,13 @@ function PreviewComponentRenderer({
   const cardStyle = appliedStyles?.components.card;
   const renderComponent = useCallback(() => {
     const { type, props } = component;
+    
+    // Get base type from pattern ID (e.g., "hero-split-image" -> "hero")
+    const baseType = getBaseType(type);
 
     // Basic component rendering - in a real implementation, 
     // these would be actual component imports from a pattern library
-    switch (type) {
+    switch (baseType) {
       case "hero":
         return (
           <section
@@ -246,11 +264,19 @@ function PreviewComponentRenderer({
         );
 
       case "features":
-        const features = (props.features as { title: string; description: string; icon: string }[]) || [
+        const defaultFeatures = [
           { title: "Fast", description: "Lightning quick performance", icon: "⚡" },
           { title: "Secure", description: "Enterprise-grade security", icon: "🔒" },
           { title: "Scalable", description: "Grows with your business", icon: "📈" },
         ];
+        const rawFeatures = (props.features as { title?: string; description?: string; icon?: string }[]);
+        const features = Array.isArray(rawFeatures) && rawFeatures.length > 0
+          ? rawFeatures.map((f, idx) => ({
+              title: f.title || defaultFeatures[idx]?.title || `Feature ${idx + 1}`,
+              description: f.description || defaultFeatures[idx]?.description || "Description",
+              icon: f.icon || defaultFeatures[idx]?.icon || "✨",
+            }))
+          : defaultFeatures;
         return (
           <section className="px-6 py-16">
             <h2 className={cn(
@@ -282,11 +308,18 @@ function PreviewComponentRenderer({
         );
 
       case "pricing":
-        const plans = (props.plans as { name: string; price: string; features: string[] }[]) || [
+        const defaultPlans = [
           { name: "Starter", price: "$9", features: ["5 projects", "Basic support"] },
           { name: "Pro", price: "$29", features: ["Unlimited projects", "Priority support", "API access"] },
           { name: "Enterprise", price: "Custom", features: ["Everything in Pro", "Dedicated support", "SLA"] },
         ];
+        // Normalize plans to ensure each has a features array
+        const rawPlans = (props.plans as { name?: string; price?: string; features?: string[] }[]) || defaultPlans;
+        const plans = rawPlans.map((p, idx) => ({
+          name: p.name || defaultPlans[idx]?.name || `Plan ${idx + 1}`,
+          price: p.price || defaultPlans[idx]?.price || "$0",
+          features: Array.isArray(p.features) ? p.features : (defaultPlans[idx]?.features || ["Feature included"]),
+        }));
         return (
           <section className="px-6 py-16 bg-slate-50">
             <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
@@ -356,10 +389,18 @@ function PreviewComponentRenderer({
         );
 
       case "testimonials":
-        const testimonials = (props.testimonials as { quote: string; author: string; role: string }[]) || [
+        const defaultTestimonials = [
           { quote: "This product changed how we work.", author: "Jane Doe", role: "CEO" },
           { quote: "Best decision we ever made.", author: "John Smith", role: "CTO" },
         ];
+        const rawTestimonials = (props.testimonials as { quote?: string; author?: string; role?: string }[]);
+        const testimonials = Array.isArray(rawTestimonials) && rawTestimonials.length > 0
+          ? rawTestimonials.map((t, idx) => ({
+              quote: t.quote || defaultTestimonials[idx]?.quote || "Great product!",
+              author: t.author || defaultTestimonials[idx]?.author || "Customer",
+              role: t.role || defaultTestimonials[idx]?.role || "User",
+            }))
+          : defaultTestimonials;
         return (
           <section className="px-6 py-16">
             <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
@@ -379,14 +420,153 @@ function PreviewComponentRenderer({
           </section>
         );
 
-      default:
+      case "footer":
+        // Footer is already rendered in the parent, skip rendering
+        return null;
+
+      case "navigation":
+        // Navigation is already rendered in the parent, skip rendering
+        return null;
+
+      case "product":
+        const defaultProducts = [
+          { name: "Product One", price: "$99" },
+          { name: "Product Two", price: "$149" },
+          { name: "Product Three", price: "$199" },
+          { name: "Product Four", price: "$249" },
+        ];
+        const rawProducts = (props.products as { name?: string; price?: string; image?: string }[]);
+        const products = Array.isArray(rawProducts) && rawProducts.length > 0
+          ? rawProducts.map((p, idx) => ({
+              name: p.name || defaultProducts[idx]?.name || `Product ${idx + 1}`,
+              price: p.price || defaultProducts[idx]?.price || "$0",
+              image: p.image,
+            }))
+          : defaultProducts;
         return (
-          <div className="p-6 bg-slate-100 text-center text-slate-500">
-            <p>Unknown component: {type}</p>
-          </div>
+          <section className="px-6 py-16">
+            <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
+              {(props.title as string) || "Featured Products"}
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+              {products.map((product, i) => (
+                <StyledCard key={i} componentStyle={cardStyle} className="text-center p-4">
+                  <div 
+                    className="w-full aspect-square mb-4 rounded-lg flex items-center justify-center"
+                    style={{ backgroundColor: `${primaryColor}10` }}
+                  >
+                    <span className="text-3xl">🛍️</span>
+                  </div>
+                  <h3 className="font-semibold text-slate-900">{product.name}</h3>
+                  <p className="text-lg font-bold" style={{ color: primaryColor }}>{product.price}</p>
+                </StyledCard>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "stats":
+        const defaultStats = [
+          { value: "10K+", label: "Customers" },
+          { value: "99.9%", label: "Uptime" },
+          { value: "24/7", label: "Support" },
+        ];
+        const rawStats = (props.stats as { value?: string; label?: string }[]);
+        const stats = Array.isArray(rawStats) && rawStats.length > 0
+          ? rawStats.map((s, idx) => ({
+              value: s.value || defaultStats[idx]?.value || "0",
+              label: s.label || defaultStats[idx]?.label || "Stat",
+            }))
+          : defaultStats;
+        return (
+          <section className="px-6 py-16 bg-slate-50">
+            <div className="grid grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
+              {stats.map((stat, i) => (
+                <div key={i}>
+                  <div className="text-4xl font-bold" style={{ color: primaryColor }}>{stat.value}</div>
+                  <div className="text-slate-600 mt-1">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "faq":
+        const defaultFaqs = [
+          { question: "How do I get started?", answer: "Simply sign up and follow our onboarding guide." },
+          { question: "What payment methods do you accept?", answer: "We accept all major credit cards and PayPal." },
+        ];
+        const rawFaqs = (props.faqs as { question?: string; answer?: string }[]);
+        const faqs = Array.isArray(rawFaqs) && rawFaqs.length > 0
+          ? rawFaqs.map((f, idx) => ({
+              question: f.question || defaultFaqs[idx]?.question || "Question?",
+              answer: f.answer || defaultFaqs[idx]?.answer || "Answer here.",
+            }))
+          : defaultFaqs;
+        return (
+          <section className="px-6 py-16">
+            <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
+              Frequently Asked Questions
+            </h2>
+            <div className="max-w-2xl mx-auto space-y-4">
+              {faqs.map((faq, i) => (
+                <div key={i} className="p-4 bg-slate-50 rounded-lg">
+                  <h3 className="font-semibold text-slate-900 mb-2">{faq.question}</h3>
+                  <p className="text-slate-600">{faq.answer}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+        );
+
+      case "team":
+        const defaultMembers = [
+          { name: "Alex Johnson", role: "CEO" },
+          { name: "Sarah Miller", role: "CTO" },
+          { name: "Mike Chen", role: "Designer" },
+        ];
+        const rawMembers = (props.members as { name?: string; role?: string }[]);
+        const members = Array.isArray(rawMembers) && rawMembers.length > 0
+          ? rawMembers.map((m, idx) => ({
+              name: m.name || defaultMembers[idx]?.name || "Team Member",
+              role: m.role || defaultMembers[idx]?.role || "Role",
+            }))
+          : defaultMembers;
+        return (
+          <section className="px-6 py-16">
+            <h2 className="text-3xl font-bold text-center text-slate-900 mb-12">
+              Our Team
+            </h2>
+            <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+              {members.map((member, i) => (
+                <StyledCard key={i} componentStyle={cardStyle} className="text-center p-6">
+                  <div 
+                    className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center"
+                    style={{ backgroundColor: `${primaryColor}15` }}
+                  >
+                    <span className="text-2xl">👤</span>
+                  </div>
+                  <h3 className="font-semibold text-slate-900">{member.name}</h3>
+                  <p className="text-slate-600">{member.role}</p>
+                </StyledCard>
+              ))}
+            </div>
+          </section>
+        );
+
+      default:
+        // For unknown components, render a subtle placeholder
+        return (
+          <section className="px-6 py-12 bg-slate-50 border-y border-slate-200">
+            <div className="max-w-4xl mx-auto text-center">
+              <p className="text-slate-400 text-sm">
+                Section: {type}
+              </p>
+            </div>
+          </section>
         );
     }
-  }, [component, theme, onNavigate]);
+  }, [component, theme, onNavigate, primaryColor, secondaryColor, buttonStyle, cardStyle, appliedStyles]);
 
   return <>{renderComponent()}</>;
 }

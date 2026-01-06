@@ -206,7 +206,7 @@ export function AccordionSidebar({
 
   if (!mounted) {
     return (
-      <aside className={cn("hidden md:flex flex-col w-[340px] min-w-[340px] bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]", className)}>
+      <aside className={cn("hidden md:flex flex-col w-[380px] min-w-[380px] bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)]", className)}>
         <div className="h-14 flex items-center px-6 border-b border-[var(--sidebar-border)]">
           <div className="flex items-center gap-2">
             <div className="w-10 h-10 bg-[var(--primary)] rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-[0_4px_12px_rgba(249,115,22,0.25)]">D</div>
@@ -220,7 +220,7 @@ export function AccordionSidebar({
   return (
     <aside
       className={cn(
-        "hidden md:flex flex-col w-[340px] min-w-[340px] bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] h-screen overflow-hidden",
+        "hidden md:flex flex-col w-[380px] min-w-[380px] bg-[var(--sidebar-bg)] border-r border-[var(--sidebar-border)] h-screen overflow-hidden",
         className
       )}
     >
