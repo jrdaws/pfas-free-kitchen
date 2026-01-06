@@ -22,7 +22,7 @@ import { mapAestheticToVariant, mapLayoutType, type DesignAnalysis } from "../de
 // Pattern Registry - Loaded from JSON registry (42 patterns)
 // ============================================================================
 
-import { getAllSelectorPatterns, getPatternById as getRegistryPattern, getPatternsByCategory as getRegistryPatternsByCategory } from "./patterns";
+import { getAllSelectorPatterns, getPatternById as getRegistryPattern, getPatternsByCategory as getRegistryPatternsByCategory, toSelectorPattern } from "./patterns";
 
 // Convert registry patterns to selector format
 const AVAILABLE_PATTERNS: Pattern[] = getAllSelectorPatterns();
@@ -289,24 +289,10 @@ export function getAvailablePatterns(): Pattern[] {
 export function getPatternById(id: string): Pattern | undefined {
   const pattern = getRegistryPattern(id);
   if (!pattern) return undefined;
-  return {
-    id: pattern.id,
-    name: pattern.name,
-    category: pattern.category,
-    variants: pattern.variants,
-    tags: pattern.tags,
-    slots: pattern.slots,
-  };
+  return toSelectorPattern(pattern) as Pattern;
 }
 
 export function getPatternsByCategory(category: string): Pattern[] {
-  return getRegistryPatternsByCategory(category).map(p => ({
-    id: p.id,
-    name: p.name,
-    category: p.category,
-    variants: p.variants,
-    tags: p.tags,
-    slots: p.slots,
-  }));
+  return getRegistryPatternsByCategory(category).map(p => toSelectorPattern(p) as Pattern);
 }
 

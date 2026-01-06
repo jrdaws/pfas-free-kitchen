@@ -11,7 +11,29 @@ import registryData from "./registry.json";
 // Types
 // ============================================================================
 
+// Slot type matching types.ts
+type SlotType = "text" | "richText" | "image" | "array" | "boolean" | "number";
+
 export interface PatternSlot {
+  name: string;
+  type: SlotType;
+  required: boolean;
+  maxLength?: number;
+  minItems?: number;
+  maxItems?: number;
+  defaultValue?: unknown;
+  options?: string[];
+  aiPrompt?: string;
+  validation?: string;
+  aspectRatio?: string;
+  min?: number;
+  max?: number;
+  description?: string;
+  itemSchema?: Record<string, string | { type: string; options?: string[] }>;
+}
+
+// Raw pattern from JSON (before type narrowing)
+interface RawPatternSlot {
   name: string;
   type: string;
   required: boolean;
@@ -25,7 +47,8 @@ export interface PatternSlot {
   aspectRatio?: string;
   min?: number;
   max?: number;
-  itemSchema?: Record<string, string | { type: string; options?: string[] }>;
+  description?: string;
+  itemSchema?: Record<string, unknown>;
 }
 
 export interface RegistryPattern {
@@ -34,7 +57,7 @@ export interface RegistryPattern {
   category: string;
   variants: string[];
   tags: string[];
-  slots: PatternSlot[];
+  slots: RawPatternSlot[];
   aiGuidance: string;
   inspirationSources: string[];
 }
@@ -150,24 +173,64 @@ export function getPatternsByInspiration(source: string): RegistryPattern[] {
   );
 }
 
+// PatternCategory type (matching types.ts)
+type PatternCategory = 
+  | "hero" | "features" | "pricing" | "testimonials" | "cta" | "faq" 
+  | "footer" | "navigation" | "blog" | "product" | "stats" | "team";
+
+// Map slot type strings to valid SlotType values
+function normalizeSlotType(type: string): SlotType {
+  const validTypes: SlotType[] = ["text", "richText", "image", "array", "boolean", "number"];
+  if (validTypes.includes(type as SlotType)) {
+    return type as SlotType;
+  }
+  // Default fallback for unknown types
+  return "text";
+}
+
+// Convert raw slot to typed slot
+function normalizeSlot(raw: RawPatternSlot): PatternSlot {
+  return {
+    name: raw.name,
+    type: normalizeSlotType(raw.type),
+    required: raw.required,
+    maxLength: raw.maxLength,
+    defaultValue: raw.defaultValue,
+    description: raw.description,
+  };
+}
+
 /**
  * Convert registry pattern to the selector format
+ * Category is cast to PatternCategory for type compatibility
  */
 export function toSelectorPattern(pattern: RegistryPattern): {
   id: string;
   name: string;
-  category: string;
+  category: PatternCategory;
   variants: string[];
   tags: string[];
   slots: PatternSlot[];
 } {
+  // Map extended categories to base categories
+  const categoryMap: Record<string, PatternCategory> = {
+    'how-it-works': 'features',
+    'integrations': 'features',
+    'content': 'features',
+    'auth': 'navigation',
+    'dashboard': 'stats',
+    'commerce': 'product',
+  };
+  
+  const mappedCategory = categoryMap[pattern.category] || pattern.category as PatternCategory;
+  
   return {
     id: pattern.id,
     name: pattern.name,
-    category: pattern.category,
+    category: mappedCategory,
     variants: pattern.variants,
     tags: pattern.tags,
-    slots: pattern.slots,
+    slots: pattern.slots.map(normalizeSlot),
   };
 }
 

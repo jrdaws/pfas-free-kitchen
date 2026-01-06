@@ -1,0 +1,220 @@
+Next Agent: Template Agent
+
+Confirm you are the Template Agent.
+
+---
+
+# Task: Pattern Library Expansion (42 Total Patterns)
+
+## Priority: P1
+## Estimated Time: 4-6 hours
+## Dependencies: None
+
+---
+
+## Context
+
+The current pattern library has only 12 patterns, limiting the variety and accuracy of AI compositions. Users want more design options, and the AI composer needs more patterns to match inspiration sites effectively.
+
+Current patterns are defined in:
+- `website/lib/composer/selector.ts` (lines 25-168)
+
+---
+
+## Requirements
+
+### Expand the pattern registry from 12 to 42 patterns covering:
+
+### 1. Hero Variants (5 more = 7 total)
+- `hero-video-bg` - Full-screen background video hero
+- `hero-parallax` - Parallax scrolling image layers
+- `hero-carousel` - Multi-slide hero with dots/arrows
+- `hero-animated-gradient` - Animated gradient mesh background
+- `hero-minimal-text` - Text-only, no images, max impact
+
+### 2. Features Variants (4 more = 6 total)
+- `features-bento-grid` - Bento-style asymmetric grid (like Linear)
+- `features-icon-only` - Icon-focused with minimal text
+- `features-comparison-table` - Side-by-side comparison table
+- `features-timeline` - Vertical timeline with milestones
+
+### 3. Pricing Variants (3 more = 4 total)
+- `pricing-calculator` - Interactive pricing calculator
+- `pricing-feature-matrix` - Full feature comparison matrix
+- `pricing-single-tier` - Simple one-price offering
+
+### 4. Testimonials Variants (3 more = 5 total)
+- `testimonials-logo-wall` - Client logos in scrolling marquee
+- `testimonials-video` - Video testimonials with playback
+- `testimonials-twitter-embed` - Twitter/X style quote cards
+
+### 5. Content Sections (5 new = 5 total)
+- `how-it-works` - Numbered steps with icons/images
+- `team-grid` - Team member cards with photos/roles
+- `case-studies` - Case study cards with metrics
+- `integrations-grid` - Partner/integration logo grid
+- `blog-preview` - Latest blog posts preview
+
+### 6. Commerce Patterns (4 new = 4 total)
+- `product-card` - Individual product card component
+- `cart-preview` - Mini cart dropdown/panel
+- `checkout-summary` - Order summary component
+- `product-gallery` - Product image gallery with thumbnails
+
+### 7. Dashboard Patterns (3 new = 3 total)
+- `stats-cards` - Metric cards with trends
+- `chart-panel` - Chart wrapper with controls
+- `activity-feed` - Activity/notification feed
+
+### 8. Auth Patterns (3 new = 3 total)
+- `auth-login-split` - Login with side image
+- `auth-signup-minimal` - Minimal signup form
+- `auth-magic-link` - Magic link login flow
+
+---
+
+## Pattern Schema
+
+Each pattern MUST include:
+
+```typescript
+interface Pattern {
+  id: string;              // Unique identifier (e.g., "hero-video-bg")
+  name: string;            // Display name (e.g., "Video Background Hero")
+  category: PatternCategory; // hero, features, pricing, etc.
+  variants: string[];      // ["dark", "light", "gradient"]
+  tags: string[];          // For AI matching (e.g., ["dynamic", "modern", "video"])
+  slots: PatternSlot[];    // Props definition
+  aiGuidance: string;      // When to use this pattern (1-2 sentences)
+  inspirationSources?: string[]; // Sites known for this pattern (e.g., ["stripe.com", "linear.app"])
+}
+
+interface PatternSlot {
+  name: string;
+  type: "text" | "richText" | "image" | "array" | "boolean" | "number";
+  required: boolean;
+  description?: string;
+  maxLength?: number;
+  defaultValue?: unknown;
+}
+```
+
+---
+
+## Output Files
+
+1. **Pattern Registry JSON**
+   `website/lib/composer/patterns/registry.json`
+   
+   ```json
+   {
+     "version": "2.0.0",
+     "patterns": [
+       { /* pattern definition */ }
+     ]
+   }
+   ```
+
+2. **Updated Selector**
+   `website/lib/composer/selector.ts`
+   
+   - Import patterns from JSON
+   - Update `AVAILABLE_PATTERNS` to use new registry
+   - Maintain backwards compatibility
+
+3. **Pattern Loader**
+   `website/lib/composer/patterns/loader.ts`
+   
+   ```typescript
+   import patternData from './registry.json';
+   
+   export function getPatterns(): Pattern[] { ... }
+   export function getPatternById(id: string): Pattern | undefined { ... }
+   export function getPatternsByCategory(category: string): Pattern[] { ... }
+   export function searchPatterns(query: string): Pattern[] { ... }
+   ```
+
+---
+
+## Pattern Examples
+
+### Example 1: hero-video-bg
+```json
+{
+  "id": "hero-video-bg",
+  "name": "Video Background Hero",
+  "category": "hero",
+  "variants": ["dark", "light", "muted"],
+  "tags": ["video", "dynamic", "immersive", "modern", "premium"],
+  "slots": [
+    { "name": "headline", "type": "text", "required": true, "maxLength": 60 },
+    { "name": "subheadline", "type": "text", "required": false, "maxLength": 120 },
+    { "name": "ctaText", "type": "text", "required": true, "maxLength": 20 },
+    { "name": "ctaLink", "type": "text", "required": true },
+    { "name": "videoUrl", "type": "text", "required": true },
+    { "name": "posterImage", "type": "image", "required": false },
+    { "name": "overlayOpacity", "type": "number", "required": false, "defaultValue": 0.5 }
+  ],
+  "aiGuidance": "Use for premium brands wanting cinematic impact. Best for landing pages where video conveys the product experience.",
+  "inspirationSources": ["apple.com", "tesla.com", "slack.com"]
+}
+```
+
+### Example 2: features-bento-grid
+```json
+{
+  "id": "features-bento-grid",
+  "name": "Bento Features Grid",
+  "category": "features",
+  "variants": ["dark", "light", "glass"],
+  "tags": ["bento", "asymmetric", "modern", "tech", "startup"],
+  "slots": [
+    { "name": "title", "type": "text", "required": true, "maxLength": 60 },
+    { "name": "subtitle", "type": "text", "required": false, "maxLength": 120 },
+    { "name": "features", "type": "array", "required": true, "description": "Array of { title, description, icon, size: 'sm' | 'md' | 'lg' }" }
+  ],
+  "aiGuidance": "Use for tech startups wanting a modern, Linear-style aesthetic. Features should vary in importance (size).",
+  "inspirationSources": ["linear.app", "vercel.com", "raycast.com"]
+}
+```
+
+---
+
+## Testing Requirements
+
+After completing:
+
+1. Build should pass: `npm run build`
+2. Verify patterns load: Check console for pattern count
+3. Test composition: Create test project using new patterns
+4. Check fallbacks: Verify composition works without API key
+
+---
+
+## Acceptance Criteria
+
+- [x] 42 patterns total in registry
+- [x] All patterns have complete slot definitions
+- [x] All patterns have aiGuidance for AI selection
+- [x] Pattern loader exports work correctly
+- [x] Selector uses new registry
+- [x] Build passes with no errors
+- [x] At least 2 patterns per category have inspirationSources
+
+## Completion Notes (2026-01-05)
+
+Task completed. See handoff document at:
+`output/agents/template/outbox/20260105-pattern-expansion-complete.md`
+
+---
+
+## Handoff
+
+When complete, create file:
+`output/agents/template/outbox/20260105-pattern-expansion-complete.md`
+
+Include:
+- Pattern count summary by category
+- Any patterns that need future component implementation
+- Suggestions for highest-impact patterns to render first
+

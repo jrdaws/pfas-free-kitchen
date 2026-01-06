@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
 - 0b8aa2c 2026-01-05 feat(generator): apply website analysis to export generation
 - cf24487 2026-01-05 feat: complete deep website analysis system (Waves 1-3)
 - 9c9c4cd 2026-01-05 feat(research): enhance Firecrawl with screenshots + Claude Vision analysis
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 4c0611a 2026-01-05 feat(patterns): add dynamic AI-composed template system
 - e7e7bea 2026-01-05 feat(dashboard): add project dashboard UI and page editor components
 - 70eb8f1 2026-01-04 test: complete validation of new platform features
-- 5a8eba5 2026-01-04 chore: mark slot templates task complete
 
 ## Agent Governance Structure
 
