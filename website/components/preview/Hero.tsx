@@ -9,11 +9,18 @@ interface HeroProps {
   ctaSecondaryText?: string;
   backgroundStyle?: "gradient" | "mesh" | "solid" | "image";
   alignment?: "center" | "left";
+  // Image props - injected by PreviewWithImages
+  image?: string;
+  heroImage?: string;
+  backgroundImage?: string;
+  variant?: string;
+  previewMode?: boolean;
 }
 
 /**
  * Hero component that uses CSS custom properties for branding
  * Colors are set by PreviewRenderer via --preview-* variables
+ * Supports AI-generated images when available
  */
 export function Hero({
   title,
@@ -22,18 +29,41 @@ export function Hero({
   ctaSecondaryText,
   backgroundStyle = "gradient",
   alignment = "center",
+  image,
+  heroImage,
+  backgroundImage,
+  variant,
 }: HeroProps) {
+  // Use any available image prop
+  const imageUrl = heroImage || image || backgroundImage;
+  const hasImage = !!imageUrl;
+  
+  // If we have an image, use "image" background style
+  const effectiveStyle = hasImage ? "image" : backgroundStyle;
+  
   return (
     <section
       className={cn(
-        "relative w-full min-h-[600px] flex items-center justify-center px-6 py-24"
+        "relative w-full min-h-[600px] flex items-center justify-center px-6 py-24 overflow-hidden",
+        variant === "split" && "md:flex-row"
       )}
       style={{
         backgroundColor: 'var(--preview-background, #0A0A0A)',
       }}
     >
+      {/* Background Image - shows when we have an AI-generated image */}
+      {effectiveStyle === "image" && imageUrl && (
+        <>
+          <div 
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+            style={{ backgroundImage: `url(${imageUrl})` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30" />
+        </>
+      )}
+      
       {/* Mesh overlay for mesh style */}
-      {backgroundStyle === "mesh" && (
+      {effectiveStyle === "mesh" && (
         <div 
           className="absolute inset-0 opacity-30"
           style={{
@@ -44,7 +74,7 @@ export function Hero({
       )}
 
       {/* Gradient orbs for gradient style - uses branding colors */}
-      {backgroundStyle === "gradient" && (
+      {effectiveStyle === "gradient" && (
         <>
           <div 
             className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full blur-3xl opacity-20"

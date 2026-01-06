@@ -402,30 +402,33 @@ export function LivePreviewPanel({
         isExpanded ? "w-[60vw]" : "w-[450px]"
       )}
     >
-      {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-card/80 backdrop-blur">
-        <div className="flex items-center gap-2 min-w-0">
+      {/* Header - Responsive with overflow handling */}
+      <div className="flex items-center justify-between px-2 py-1.5 border-b border-border bg-card/80 backdrop-blur min-h-[44px]">
+        {/* Left: Toggle + Title - Always visible */}
+        <div className="flex items-center gap-1.5 flex-shrink-0">
           <button
             onClick={onToggle}
             className="p-1 rounded hover:bg-muted transition-colors"
+            title="Hide preview"
           >
             <ChevronRight className="h-4 w-4" />
           </button>
-          <Sparkles className="h-3.5 w-3.5 text-primary" />
-          <span className="font-medium text-sm">Preview</span>
+          <Sparkles className="h-3 w-3 text-primary" />
+          <span className="font-medium text-xs">Preview</span>
         </div>
 
-        <div className="flex items-center gap-1.5 flex-shrink-0">
+        {/* Right: Controls - Scrollable on small screens */}
+        <div className="flex items-center gap-1 overflow-x-auto scrollbar-hide">
           {/* Mode Toggle - Shows current mode */}
-          <ComposerModeToggle compact className="hidden sm:flex" />
+          <ComposerModeToggle compact className="hidden md:flex flex-shrink-0" />
 
-          {/* AI Compose Button - Primary action */}
+          {/* AI Compose Button */}
           <Button
             variant={composition ? "secondary" : "default"}
             size="sm"
             onClick={handleCompose}
             disabled={isComposing}
-            className="h-7 px-2.5 text-xs gap-1"
+            className="h-6 px-2 text-xs gap-1 flex-shrink-0"
           >
             {isComposing ? (
               <Loader2 className="h-3 w-3 animate-spin" />
@@ -435,7 +438,7 @@ export function LivePreviewPanel({
             <span className="hidden sm:inline">{isComposing ? "..." : composition ? "Redo" : "Compose"}</span>
           </Button>
 
-          {/* AI Images Toggle - Clear ON/OFF state */}
+          {/* AI Images Toggle */}
           <button
             onClick={() => {
               if (!showAIImagesPreview) {
@@ -445,43 +448,40 @@ export function LivePreviewPanel({
             }}
             disabled={!composition}
             className={cn(
-              "h-7 px-2.5 rounded-md text-xs font-medium transition-all flex items-center gap-1.5",
+              "h-6 px-2 rounded text-xs font-medium transition-all flex items-center gap-1 flex-shrink-0",
               showAIImagesPreview
-                ? "bg-primary text-primary-foreground shadow-sm"
+                ? "bg-primary text-primary-foreground"
                 : composition
-                  ? "bg-muted hover:bg-muted/80 text-muted-foreground border border-transparent hover:border-muted-foreground/20"
+                  ? "bg-muted hover:bg-muted/80 text-muted-foreground"
                   : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
             )}
-            title={!composition ? "Compose first to enable AI images" : showAIImagesPreview ? "AI Images enabled - click to disable" : "Click to enable AI-generated images"}
+            title={!composition ? "Compose first" : showAIImagesPreview ? "AI Images ON" : "Enable AI Images"}
           >
-            <ImageIcon className="h-3.5 w-3.5" />
-            <span className="hidden sm:inline">
-              {showAIImagesPreview ? "AI Images ON" : "AI Images"}
-            </span>
+            <ImageIcon className="h-3 w-3" />
             {showAIImagesPreview && (
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
             )}
           </button>
 
-          {/* Viewport Toggle */}
-          <div className="flex items-center p-0.5 rounded-md bg-muted/50">
+          {/* Viewport Toggle - Hidden on very small screens */}
+          <div className="hidden sm:flex items-center p-0.5 rounded bg-muted/50 flex-shrink-0">
             <button
               onClick={() => setViewport("desktop")}
               className={cn(
-                "p-1 rounded transition-colors",
+                "p-0.5 rounded transition-colors",
                 viewport === "desktop" ? "bg-background shadow-sm" : "hover:bg-muted"
               )}
             >
-              <Monitor className="h-3.5 w-3.5" />
+              <Monitor className="h-3 w-3" />
             </button>
             <button
               onClick={() => setViewport("mobile")}
               className={cn(
-                "p-1 rounded transition-colors",
+                "p-0.5 rounded transition-colors",
                 viewport === "mobile" ? "bg-background shadow-sm" : "hover:bg-muted"
               )}
             >
-              <Smartphone className="h-3.5 w-3.5" />
+              <Smartphone className="h-3 w-3" />
             </button>
           </div>
 
@@ -489,22 +489,23 @@ export function LivePreviewPanel({
           <button
             onClick={handleUpdatePreview}
             className={cn(
-              "p-1.5 rounded transition-colors relative",
+              "p-1 rounded transition-colors flex-shrink-0",
               hasPendingChanges 
                 ? "bg-primary text-primary-foreground" 
                 : "hover:bg-muted"
             )}
             title="Refresh"
           >
-            <RefreshCw className="h-3.5 w-3.5" />
+            <RefreshCw className="h-3 w-3" />
           </button>
 
-          {/* Expand */}
+          {/* Expand - Always visible */}
           <button
             onClick={() => setIsExpanded(!isExpanded)}
-            className="p-1.5 rounded hover:bg-muted transition-colors"
+            className="p-1 rounded hover:bg-muted transition-colors flex-shrink-0"
+            title={isExpanded ? "Collapse" : "Expand"}
           >
-            {isExpanded ? <Minimize2 className="h-3.5 w-3.5" /> : <Maximize2 className="h-3.5 w-3.5" />}
+            {isExpanded ? <Minimize2 className="h-3 w-3" /> : <Maximize2 className="h-3 w-3" />}
           </button>
         </div>
       </div>
