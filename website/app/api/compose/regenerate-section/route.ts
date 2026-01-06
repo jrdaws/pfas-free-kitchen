@@ -13,6 +13,7 @@ import {
   ProjectComposition,
   SectionComposition,
 } from "@/lib/composer";
+import { handleApiError } from "@/lib/api-wrapper";
 
 interface RegenerateSectionRequest {
   composition: ProjectComposition;
@@ -106,14 +107,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("[API] Regenerate section error:", error);
-    
-    return NextResponse.json(
-      {
-        error: "Regeneration failed",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, "anthropic");
   }
 }
 

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { apiError, apiSuccess, ErrorCodes } from "@/lib/api-errors";
 import { buildPreviewPrompt, parsePreviewResponse, mergeWithDefaults, generateFallbackProps, UserConfig } from "@/lib/ai/preview-generator";
 import { getTemplateComposition } from "@/lib/preview/template-compositions";
+import { handleApiError } from "@/lib/api-wrapper";
 
 /**
  * POST /api/preview/enhance
@@ -110,13 +111,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     console.error("[Preview Enhance Error]", error);
-    return apiError(
-      ErrorCodes.INTERNAL_ERROR,
-      "Failed to enhance preview",
-      500,
-      undefined,
-      "Try again or proceed with default preview"
-    );
+    return handleApiError(error, "anthropic");
   }
 }
 

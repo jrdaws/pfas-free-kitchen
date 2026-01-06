@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { handleApiError } from "@/lib/api-wrapper";
 import { 
   extractMultipleUrls, 
   type ExtractedContent,
@@ -415,13 +416,7 @@ Important:
 
   } catch (error) {
     console.error("[Research] Error:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "Research failed",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, "anthropic");
   }
 }
 

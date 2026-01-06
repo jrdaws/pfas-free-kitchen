@@ -15,6 +15,7 @@ import {
   type ModelTier,
   type BatchGenerationResult,
 } from "@/lib/image";
+import { handleApiError } from "@/lib/api-wrapper";
 
 interface ComposeProjectRequest {
   vision: {
@@ -229,13 +230,6 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("[API] Compose project error:", error);
-    
-    return NextResponse.json(
-      {
-        error: "Composition failed",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, "anthropic");
   }
 }

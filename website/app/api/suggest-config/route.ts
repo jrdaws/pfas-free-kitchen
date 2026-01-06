@@ -7,6 +7,7 @@ import {
   SuggestConfigRequest,
   SuggestConfigResponse,
 } from "@/lib/ai/config-suggester-types"
+import { handleApiError } from "@/lib/api-wrapper"
 
 export async function POST(request: NextRequest) {
   const startTime = Date.now()
@@ -82,17 +83,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(response)
   } catch (error) {
     console.error("Config suggestion error:", error)
-
-    const processingTime = Date.now() - startTime
-
-    return NextResponse.json(
-      {
-        success: false,
-        error: error instanceof Error ? error.message : "Failed to generate suggestions",
-        processingTime,
-      },
-      { status: 500 }
-    )
+    return handleApiError(error, "anthropic")
   }
 }
 

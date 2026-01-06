@@ -8,6 +8,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getPatternById } from "@/lib/composer/selector";
 import { generatePatternProps } from "@/lib/composer/prop-generator";
 import type { ComposerInput, SectionComposition } from "@/lib/composer/types";
+import { handleApiError } from "@/lib/api-wrapper";
 
 interface AddSectionRequest {
   patternId: string;
@@ -78,14 +79,7 @@ export async function POST(request: NextRequest) {
     });
   } catch (error) {
     console.error("[API] Section generation error:", error);
-    
-    return NextResponse.json(
-      {
-        error: "Section generation failed",
-        message: error instanceof Error ? error.message : "Unknown error",
-      },
-      { status: 500 }
-    );
+    return handleApiError(error, "anthropic");
   }
 }
 
