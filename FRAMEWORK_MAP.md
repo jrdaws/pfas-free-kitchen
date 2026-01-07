@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 827b8b2 2026-01-06 docs(research): ML battle system for preview/export optimization
 - 0438260 2026-01-06 feat(mvp): add task to strip framework to MVP scope
 - f971367 2026-01-06 docs(audit): add codebase bloat and MVP scope analysis
 - b9d26e5 2026-01-06 chore: add pattern library v2 completion summary
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
 - 0b8aa2c 2026-01-05 feat(generator): apply website analysis to export generation
 - cf24487 2026-01-05 feat: complete deep website analysis system (Waves 1-3)
-- 9c9c4cd 2026-01-05 feat(research): enhance Firecrawl with screenshots + Claude Vision analysis
 
 ## Agent Governance Structure
 
