@@ -113,6 +113,8 @@ export function ComposedPreview({
             onNavigate={onNavigate}
             theme={composition.theme}
             appliedStyles={appliedStyles}
+            editable={editable}
+            onEdit={onComponentEdit ? (updates) => onComponentEdit(component.id, updates) : undefined}
           />
         ))}
       </main>
@@ -185,6 +187,8 @@ interface PreviewComponentRendererProps {
   onNavigate: (path: string) => void;
   theme: PreviewComposition["theme"];
   appliedStyles?: AppliedStyles | null;
+  editable?: boolean;
+  onEdit?: (updates: Record<string, unknown>) => void;
 }
 
 // Extract base type from pattern ID (e.g., "hero-split-image" -> "hero")
@@ -207,12 +211,19 @@ function PreviewComponentRenderer({
   onNavigate,
   theme,
   appliedStyles,
+  editable = false,
+  onEdit,
 }: PreviewComponentRendererProps) {
   // Use applied styles colors or fall back to theme
   const primaryColor = appliedStyles?.colors.primary || theme.primaryColor;
   const secondaryColor = appliedStyles?.colors.secondary || theme.secondaryColor;
   const buttonStyle = appliedStyles?.components.button;
   const cardStyle = appliedStyles?.components.card;
+  
+  // Helper for editing props
+  const handleEdit = (field: string, value: unknown) => {
+    onEdit?.({ [field]: value });
+  };
   const renderComponent = useCallback(() => {
     const { type, props } = component;
     
@@ -238,45 +249,60 @@ function PreviewComponentRenderer({
             }}
           >
             <div className={cn(hasHeroImage && "order-1")}>
-              <h1 className={cn(
-                "text-4xl md:text-5xl text-slate-900 mb-4",
-                appliedStyles?.typography.headingClass || "font-bold",
-                !hasHeroImage && "max-w-3xl mx-auto"
-              )}>
-                {(props.headline as string) || "Welcome to Our Platform"}
-              </h1>
-              <p className={cn(
-                "text-xl text-slate-600 mb-8",
-                !hasHeroImage && "max-w-2xl mx-auto"
-              )}>
-                {(props.subheadline as string) || "Build something amazing with our tools."}
-              </p>
+              <EditableText
+                value={(props.headline as string) || "Welcome to Our Platform"}
+                onChange={(v) => handleEdit("headline", v)}
+                as="h1"
+                className={cn(
+                  "text-4xl md:text-5xl text-slate-900 mb-4",
+                  appliedStyles?.typography.headingClass || "font-bold",
+                  !hasHeroImage && "max-w-3xl mx-auto"
+                )}
+                editable={editable}
+                placeholder="Enter headline..."
+              />
+              <EditableText
+                value={(props.subheadline as string) || "Build something amazing with our tools."}
+                onChange={(v) => handleEdit("subheadline", v)}
+                as="p"
+                className={cn(
+                  "text-xl text-slate-600 mb-8",
+                  !hasHeroImage && "max-w-2xl mx-auto"
+                )}
+                editable={editable}
+                placeholder="Enter subheadline..."
+                multiline
+              />
               <div className={cn("flex gap-4", !hasHeroImage && "justify-center")}>
-                <PreviewLink
-                  href={(props.ctaLink as string) || "/signup"}
-                  onNavigate={onNavigate}
-                >
-                  <StyledButton
-                    componentStyle={buttonStyle}
-                    primaryColor={primaryColor}
-                    secondaryColor={secondaryColor}
-                    variant="primary"
+                <EditableWrapper editable={editable} label="Primary CTA" onEdit={() => {}}>
+                  <PreviewLink
+                    href={(props.ctaLink as string) || "/signup"}
+                    onNavigate={onNavigate}
                   >
-                    {(props.ctaText as string) || "Get Started"}
-                  </StyledButton>
-                </PreviewLink>
-                <PreviewLink
-                  href={(props.secondaryLink as string) || "/features"}
-                  onNavigate={onNavigate}
-                >
-                  <StyledButton
-                    componentStyle={{ ...buttonStyle, style: "outline" }}
-                    primaryColor={primaryColor}
-                    variant="secondary"
+                    <StyledButton
+                      componentStyle={buttonStyle}
+                      primaryColor={primaryColor}
+                      secondaryColor={secondaryColor}
+                      variant="primary"
+                    >
+                      {(props.ctaText as string) || "Get Started"}
+                    </StyledButton>
+                  </PreviewLink>
+                </EditableWrapper>
+                <EditableWrapper editable={editable} label="Secondary CTA" onEdit={() => {}}>
+                  <PreviewLink
+                    href={(props.secondaryLink as string) || "/features"}
+                    onNavigate={onNavigate}
                   >
-                    Learn More
-                  </StyledButton>
-                </PreviewLink>
+                    <StyledButton
+                      componentStyle={{ ...buttonStyle, style: "outline" }}
+                      primaryColor={primaryColor}
+                      variant="secondary"
+                    >
+                      Learn More
+                    </StyledButton>
+                  </PreviewLink>
+                </EditableWrapper>
               </div>
             </div>
             {hasHeroImage && (
@@ -308,37 +334,51 @@ function PreviewComponentRenderer({
           : defaultFeatures;
         return (
           <section className="px-6 py-16">
-            <h2 className={cn(
-              "text-3xl text-center text-slate-900 mb-12",
-              appliedStyles?.typography.headingClass || "font-bold"
-            )}>
-              {(props.title as string) || "Features"}
-            </h2>
+            <EditableText
+              value={(props.title as string) || "Features"}
+              onChange={(v) => handleEdit("title", v)}
+              as="h2"
+              className={cn(
+                "text-3xl text-center text-slate-900 mb-12",
+                appliedStyles?.typography.headingClass || "font-bold"
+              )}
+              editable={editable}
+              placeholder="Section title..."
+            />
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {features.map((feature, i) => (
-                <StyledCard key={i} componentStyle={cardStyle} className="text-center">
-                  {feature.image && feature.image.startsWith("http") ? (
-                    <img
-                      src={feature.image}
-                      alt={feature.title}
-                      className="w-16 h-16 mx-auto mb-4 rounded-lg object-cover"
-                    />
-                  ) : (
-                    <div 
-                      className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
-                      style={{ 
-                        backgroundColor: `${primaryColor}15`,
-                        color: primaryColor,
-                      }}
-                    >
-                      {feature.icon}
-                    </div>
-                  )}
-                  <h3 className="text-lg font-semibold text-slate-900 mb-2">
-                    {feature.title}
-                  </h3>
-                  <p className="text-slate-600">{feature.description}</p>
-                </StyledCard>
+                <EditableWrapper 
+                  key={i} 
+                  editable={editable} 
+                  label={`Feature ${i + 1}`}
+                  onEdit={() => {
+                    // Open feature editor modal
+                  }}
+                >
+                  <StyledCard componentStyle={cardStyle} className="text-center">
+                    {feature.image && feature.image.startsWith("http") ? (
+                      <img
+                        src={feature.image}
+                        alt={feature.title}
+                        className="w-16 h-16 mx-auto mb-4 rounded-lg object-cover"
+                      />
+                    ) : (
+                      <div 
+                        className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
+                        style={{ 
+                          backgroundColor: `${primaryColor}15`,
+                          color: primaryColor,
+                        }}
+                      >
+                        {feature.icon}
+                      </div>
+                    )}
+                    <h3 className="text-lg font-semibold text-slate-900 mb-2">
+                      {feature.title}
+                    </h3>
+                    <p className="text-slate-600">{feature.description}</p>
+                  </StyledCard>
+                </EditableWrapper>
               ))}
             </div>
           </section>
@@ -407,21 +447,34 @@ function PreviewComponentRenderer({
             className="px-6 py-16 text-center"
             style={{ backgroundColor: theme.primaryColor }}
           >
-            <h2 className="text-3xl font-bold text-white mb-4">
-              {(props.headline as string) || "Ready to Get Started?"}
-            </h2>
-            <p className="text-white/80 max-w-xl mx-auto mb-8">
-              {(props.subheadline as string) || "Join thousands of satisfied customers today."}
-            </p>
-            <PreviewLink
-              href={(props.ctaLink as string) || "/signup"}
-              onNavigate={onNavigate}
-              className="inline-block px-8 py-3 bg-white rounded-lg font-medium"
-            >
-              <span style={{ color: theme.primaryColor }}>
-                {(props.ctaText as string) || "Start Free Trial"}
-              </span>
-            </PreviewLink>
+            <EditableText
+              value={(props.headline as string) || "Ready to Get Started?"}
+              onChange={(v) => handleEdit("headline", v)}
+              as="h2"
+              className="text-3xl font-bold text-white mb-4"
+              editable={editable}
+              placeholder="CTA headline..."
+            />
+            <EditableText
+              value={(props.subheadline as string) || "Join thousands of satisfied customers today."}
+              onChange={(v) => handleEdit("subheadline", v)}
+              as="p"
+              className="text-white/80 max-w-xl mx-auto mb-8"
+              editable={editable}
+              placeholder="CTA subheadline..."
+              multiline
+            />
+            <EditableWrapper editable={editable} label="CTA Button" onEdit={() => {}}>
+              <PreviewLink
+                href={(props.ctaLink as string) || "/signup"}
+                onNavigate={onNavigate}
+                className="inline-block px-8 py-3 bg-white rounded-lg font-medium"
+              >
+                <span style={{ color: theme.primaryColor }}>
+                  {(props.ctaText as string) || "Start Free Trial"}
+                </span>
+              </PreviewLink>
+            </EditableWrapper>
           </section>
         );
 

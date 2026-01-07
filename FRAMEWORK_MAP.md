@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 5b5f0ae 2026-01-06 chore: cleanup 16GB test artifacts + update MVP strip approach
 - b56fdcf 2026-01-06 feat: add pattern swapping UI with section toolbar
 - 1c1ec92 2026-01-06 feat(patterns): complete pattern showcase page with all 15 patterns
 - 02ec926 2026-01-06 docs(research): add detailed MVP strip analysis with risk assessment
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 7310eff 2026-01-05 chore: move completed ai-config-suggester task to done
 - c53bc8d 2026-01-05 feat(inspiration): implement inspiration → layout mapping system
 - ac79f12 2026-01-05 feat(ai): implement AI-powered configuration suggester
-- 65eb901 2026-01-05 chore: complete pattern expansion task - handoff document created
 
 ## Agent Governance Structure
 

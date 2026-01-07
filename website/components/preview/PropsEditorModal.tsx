@@ -278,10 +278,10 @@ function renderField(
             placeholder="Image URL..."
             className={baseInputClasses}
           />
-          {value && (
+          {typeof value === "string" && value && (
             <div className="relative w-full h-32 rounded-lg overflow-hidden bg-muted">
               <img
-                src={value as string}
+                src={value}
                 alt="Preview"
                 className="w-full h-full object-cover"
                 onError={(e) => {
