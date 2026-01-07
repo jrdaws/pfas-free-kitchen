@@ -1,0 +1,604 @@
+# TASK: Branding Customization Panel in Preview
+
+**Priority**: P0
+**Wave**: 3 (After Wave 2)
+**Assigned To**: Website Agent
+**Estimated Effort**: 4 hours
+**Dependencies**: WAVE1-B-viewport-switching.txt
+
+---
+
+## Objective
+
+Add a slide-out branding panel that lets users customize colors, fonts, and spacing for their preview. Changes should reflect immediately in the preview via CSS variables.
+
+---
+
+## Current State
+
+- DynamicPreviewRenderer applies branding as CSS variables
+- BrandingConfig type exists with colors, fonts, spacing, borderRadius
+- No UI to customize branding
+- Branding comes from inspiration analysis or defaults
+
+---
+
+## Implementation
+
+### 1. Branding Panel Component
+
+**File**: `website/components/preview/BrandingPanel.tsx`
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import type { BrandingConfig } from '@/lib/patterns/types';
+
+interface BrandingPanelProps {
+  isOpen: boolean;
+  onClose: () => void;
+  branding: BrandingConfig;
+  onChange: (branding: BrandingConfig) => void;
+}
+
+export function BrandingPanel({
+  isOpen,
+  onClose,
+  branding,
+  onChange,
+}: BrandingPanelProps) {
+  const [activeTab, setActiveTab] = useState<'colors' | 'fonts' | 'spacing'>('colors');
+
+  if (!isOpen) return null;
+
+  return (
+    <>
+      {/* Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/50 z-40"
+        onClick={onClose}
+      />
+
+      {/* Panel */}
+      <div className="fixed right-0 top-0 bottom-0 w-80 bg-slate-900 border-l border-white/10 z-50 flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between p-4 border-b border-white/10">
+          <h2 className="text-lg font-semibold text-white">Branding</h2>
+          <button
+            onClick={onClose}
+            className="p-1.5 hover:bg-white/5 rounded-lg"
+          >
+            <XIcon className="w-5 h-5 text-white/60" />
+          </button>
+        </div>
+
+        {/* Tabs */}
+        <div className="flex border-b border-white/10">
+          {(['colors', 'fonts', 'spacing'] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`flex-1 py-2 text-sm capitalize ${
+                activeTab === tab
+                  ? 'text-orange-400 border-b-2 border-orange-400'
+                  : 'text-white/60 hover:text-white'
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto p-4">
+          {activeTab === 'colors' && (
+            <ColorsTab branding={branding} onChange={onChange} />
+          )}
+          {activeTab === 'fonts' && (
+            <FontsTab branding={branding} onChange={onChange} />
+          )}
+          {activeTab === 'spacing' && (
+            <SpacingTab branding={branding} onChange={onChange} />
+          )}
+        </div>
+
+        {/* Footer with presets */}
+        <div className="p-4 border-t border-white/10">
+          <p className="text-xs text-white/40 mb-2">Quick Presets</p>
+          <div className="flex gap-2">
+            <PresetButton
+              label="Dark"
+              colors={['#0A0A0A', '#1E293B', '#F97316']}
+              onClick={() => applyPreset('dark', onChange)}
+            />
+            <PresetButton
+              label="Light"
+              colors={['#FFFFFF', '#F8FAFC', '#3B82F6']}
+              onClick={() => applyPreset('light', onChange)}
+            />
+            <PresetButton
+              label="Vibrant"
+              colors={['#1A1A2E', '#16213E', '#E94560']}
+              onClick={() => applyPreset('vibrant', onChange)}
+            />
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+function ColorsTab({
+  branding,
+  onChange,
+}: {
+  branding: BrandingConfig;
+  onChange: (b: BrandingConfig) => void;
+}) {
+  const updateColor = (key: keyof BrandingConfig['colors'], value: string) => {
+    onChange({
+      ...branding,
+      colors: {
+        ...branding.colors,
+        [key]: value,
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-4">
+      <ColorPicker
+        label="Primary Color"
+        value={branding.colors.primary}
+        onChange={(v) => updateColor('primary', v)}
+        description="Main brand color for buttons and accents"
+      />
+      <ColorPicker
+        label="Secondary Color"
+        value={branding.colors.secondary}
+        onChange={(v) => updateColor('secondary', v)}
+        description="Supporting color for secondary elements"
+      />
+      <ColorPicker
+        label="Accent Color"
+        value={branding.colors.accent}
+        onChange={(v) => updateColor('accent', v)}
+        description="Highlight color for important elements"
+      />
+      <ColorPicker
+        label="Background"
+        value={branding.colors.background}
+        onChange={(v) => updateColor('background', v)}
+        description="Page background color"
+      />
+      <ColorPicker
+        label="Surface"
+        value={branding.colors.surface}
+        onChange={(v) => updateColor('surface', v)}
+        description="Card and container backgrounds"
+      />
+      <ColorPicker
+        label="Text"
+        value={branding.colors.text}
+        onChange={(v) => updateColor('text', v)}
+        description="Primary text color"
+      />
+      <ColorPicker
+        label="Text Muted"
+        value={branding.colors.textMuted}
+        onChange={(v) => updateColor('textMuted', v)}
+        description="Secondary/muted text color"
+      />
+    </div>
+  );
+}
+
+function ColorPicker({
+  label,
+  value,
+  onChange,
+  description,
+}: {
+  label: string;
+  value: string;
+  onChange: (value: string) => void;
+  description?: string;
+}) {
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-1">
+        <label className="text-sm text-white">{label}</label>
+        <div className="flex items-center gap-2">
+          <input
+            type="color"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-8 h-8 rounded border border-white/10 cursor-pointer"
+          />
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            className="w-20 px-2 py-1 bg-slate-800 border border-white/10 rounded text-xs text-white font-mono"
+          />
+        </div>
+      </div>
+      {description && (
+        <p className="text-xs text-white/40">{description}</p>
+      )}
+    </div>
+  );
+}
+
+function FontsTab({
+  branding,
+  onChange,
+}: {
+  branding: BrandingConfig;
+  onChange: (b: BrandingConfig) => void;
+}) {
+  const updateFont = (key: keyof BrandingConfig['fonts'], value: string) => {
+    onChange({
+      ...branding,
+      fonts: {
+        ...branding.fonts,
+        [key]: value,
+      },
+    });
+  };
+
+  const fontOptions = [
+    'Inter',
+    'Plus Jakarta Sans',
+    'DM Sans',
+    'Outfit',
+    'Space Grotesk',
+    'Poppins',
+    'Montserrat',
+    'Playfair Display',
+    'Lora',
+    'Merriweather',
+    'Roboto Mono',
+    'JetBrains Mono',
+  ];
+
+  return (
+    <div className="space-y-6">
+      <FontSelector
+        label="Heading Font"
+        value={branding.fonts.heading}
+        options={fontOptions}
+        onChange={(v) => updateFont('heading', v)}
+        preview="The Quick Brown Fox"
+      />
+      <FontSelector
+        label="Body Font"
+        value={branding.fonts.body}
+        options={fontOptions}
+        onChange={(v) => updateFont('body', v)}
+        preview="The quick brown fox jumps over the lazy dog."
+      />
+
+      {/* Font Scale */}
+      <div>
+        <label className="text-sm text-white mb-2 block">Font Scale</label>
+        <select
+          value={branding.fonts.scale || 'default'}
+          onChange={(e) => updateFont('scale', e.target.value)}
+          className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-white"
+        >
+          <option value="compact">Compact</option>
+          <option value="default">Default</option>
+          <option value="large">Large</option>
+          <option value="xlarge">Extra Large</option>
+        </select>
+      </div>
+    </div>
+  );
+}
+
+function FontSelector({
+  label,
+  value,
+  options,
+  onChange,
+  preview,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+  preview: string;
+}) {
+  return (
+    <div>
+      <label className="text-sm text-white mb-2 block">{label}</label>
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="w-full px-3 py-2 bg-slate-800 border border-white/10 rounded-lg text-white mb-2"
+      >
+        {options.map((font) => (
+          <option key={font} value={font}>
+            {font}
+          </option>
+        ))}
+      </select>
+      <div
+        className="p-3 bg-slate-800/50 rounded text-white/80"
+        style={{ fontFamily: value }}
+      >
+        {preview}
+      </div>
+    </div>
+  );
+}
+
+function SpacingTab({
+  branding,
+  onChange,
+}: {
+  branding: BrandingConfig;
+  onChange: (b: BrandingConfig) => void;
+}) {
+  const updateSpacing = (key: keyof BrandingConfig['spacing'], value: string) => {
+    onChange({
+      ...branding,
+      spacing: {
+        ...branding.spacing,
+        [key]: value,
+      },
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <SpacingSlider
+        label="Section Padding"
+        value={branding.spacing.sectionY}
+        options={['compact', 'comfortable', 'spacious']}
+        onChange={(v) => updateSpacing('sectionY', v)}
+      />
+      <SpacingSlider
+        label="Container Width"
+        value={branding.spacing.containerWidth}
+        options={['narrow', 'default', 'wide', 'full']}
+        onChange={(v) => updateSpacing('containerWidth', v)}
+      />
+      <SpacingSlider
+        label="Border Radius"
+        value={branding.borderRadius || 'medium'}
+        options={['none', 'small', 'medium', 'large', 'full']}
+        onChange={(v) =>
+          onChange({
+            ...branding,
+            borderRadius: v,
+          })
+        }
+      />
+    </div>
+  );
+}
+
+function SpacingSlider({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: string[];
+  onChange: (value: string) => void;
+}) {
+  const currentIndex = options.indexOf(value) ?? 0;
+
+  return (
+    <div>
+      <div className="flex justify-between mb-2">
+        <label className="text-sm text-white">{label}</label>
+        <span className="text-sm text-white/60 capitalize">{value}</span>
+      </div>
+      <input
+        type="range"
+        min={0}
+        max={options.length - 1}
+        value={currentIndex}
+        onChange={(e) => onChange(options[parseInt(e.target.value)])}
+        className="w-full"
+      />
+      <div className="flex justify-between text-xs text-white/40 mt-1">
+        <span>{options[0]}</span>
+        <span>{options[options.length - 1]}</span>
+      </div>
+    </div>
+  );
+}
+
+function PresetButton({
+  label,
+  colors,
+  onClick,
+}: {
+  label: string;
+  colors: string[];
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-white/10 rounded-lg text-sm text-white"
+    >
+      <div className="flex -space-x-1">
+        {colors.map((c, i) => (
+          <div
+            key={i}
+            className="w-3 h-3 rounded-full border border-slate-900"
+            style={{ backgroundColor: c }}
+          />
+        ))}
+      </div>
+      {label}
+    </button>
+  );
+}
+
+function applyPreset(preset: 'dark' | 'light' | 'vibrant', onChange: (b: BrandingConfig) => void) {
+  const presets: Record<string, BrandingConfig> = {
+    dark: {
+      colors: {
+        primary: '#F97316',
+        secondary: '#3B82F6',
+        accent: '#8B5CF6',
+        background: '#0A0A0A',
+        surface: '#1E293B',
+        text: '#FFFFFF',
+        textMuted: '#94A3B8',
+      },
+      fonts: {
+        heading: 'Inter',
+        body: 'Inter',
+        scale: 'default',
+      },
+      spacing: {
+        sectionY: 'comfortable',
+        containerWidth: 'default',
+      },
+      borderRadius: 'medium',
+    },
+    light: {
+      colors: {
+        primary: '#3B82F6',
+        secondary: '#10B981',
+        accent: '#8B5CF6',
+        background: '#FFFFFF',
+        surface: '#F8FAFC',
+        text: '#0F172A',
+        textMuted: '#64748B',
+      },
+      fonts: {
+        heading: 'Plus Jakarta Sans',
+        body: 'Inter',
+        scale: 'default',
+      },
+      spacing: {
+        sectionY: 'comfortable',
+        containerWidth: 'default',
+      },
+      borderRadius: 'medium',
+    },
+    vibrant: {
+      colors: {
+        primary: '#E94560',
+        secondary: '#0F3460',
+        accent: '#16C79A',
+        background: '#1A1A2E',
+        surface: '#16213E',
+        text: '#FFFFFF',
+        textMuted: '#A0AEC0',
+      },
+      fonts: {
+        heading: 'Space Grotesk',
+        body: 'DM Sans',
+        scale: 'large',
+      },
+      spacing: {
+        sectionY: 'spacious',
+        containerWidth: 'default',
+      },
+      borderRadius: 'large',
+    },
+  };
+
+  onChange(presets[preset]);
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  );
+}
+```
+
+### 2. Add Branding Button to Preview Header
+
+**File**: Update `website/components/configurator/LivePreviewPanel.tsx`
+
+```tsx
+const [isBrandingOpen, setIsBrandingOpen] = useState(false);
+
+// In header:
+<button
+  onClick={() => setIsBrandingOpen(true)}
+  className="flex items-center gap-2 px-3 py-1.5 bg-slate-800 hover:bg-slate-700 border border-white/10 rounded-lg text-sm text-white"
+>
+  <PaletteIcon className="w-4 h-4" />
+  Branding
+</button>
+
+<BrandingPanel
+  isOpen={isBrandingOpen}
+  onClose={() => setIsBrandingOpen(false)}
+  branding={definition.branding}
+  onChange={(newBranding) => {
+    onDefinitionChange?.({
+      ...definition,
+      branding: newBranding,
+    });
+  }}
+/>
+```
+
+---
+
+## CSS Variables Applied
+
+The branding panel updates these CSS variables (handled by DynamicPreviewRenderer):
+
+```css
+:root {
+  --color-primary: #F97316;
+  --color-secondary: #3B82F6;
+  --color-accent: #8B5CF6;
+  --color-background: #0A0A0A;
+  --color-surface: #1E293B;
+  --color-text: #FFFFFF;
+  --color-text-muted: #94A3B8;
+  --font-heading: 'Inter', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --spacing-section: 80px;
+  --container-width: 1280px;
+  --radius: 8px;
+}
+```
+
+---
+
+## Success Criteria
+
+- [ ] Branding button opens side panel
+- [ ] Color pickers update preview in real-time
+- [ ] Font selectors show preview text
+- [ ] Spacing sliders adjust section padding
+- [ ] Presets apply complete themes
+- [ ] Changes persist in project definition
+- [ ] Panel closes on outside click
+
+---
+
+## Testing
+
+1. Open preview in editable mode
+2. Click Branding button
+3. Change primary color - preview updates immediately
+4. Try different fonts
+5. Apply a preset
+6. Close panel - changes persist
+
+---
+
+*Created by Documentation Agent*
+

@@ -1,0 +1,499 @@
+# TASK: AI Content Generation for Pattern Fields
+
+**Priority**: P0
+**Wave**: 3 (After Wave 2)
+**Assigned To**: Website Agent
+**Estimated Effort**: 4-5 hours
+**Dependencies**: WAVE2-A-click-to-edit-preview.txt
+
+---
+
+## Objective
+
+Add AI-powered content generation for any text field in the preview. Users can click "Generate with AI" to create contextual headlines, descriptions, feature lists, FAQ answers, etc. based on their project context.
+
+---
+
+## Current State
+
+- Project context available (industry, projectType, inspirationUrl)
+- No AI text generation in preview
+- User must manually type all content
+
+---
+
+## Implementation
+
+### 1. AI Content Generation API
+
+**File**: `website/app/api/generate/content/route.ts`
+
+```typescript
+import { NextRequest, NextResponse } from 'next/server';
+import { generateText } from '@/lib/ai/generate';
+
+export async function POST(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const {
+      fieldType,       // 'headline' | 'subheadline' | 'feature' | 'faq' | etc.
+      context,         // Project context
+      currentValue,    // Existing value to improve
+      tone,            // 'professional' | 'casual' | 'bold' | 'friendly'
+      length,          // 'short' | 'medium' | 'long'
+    } = body;
+
+    const prompt = buildPrompt(fieldType, context, currentValue, tone, length);
+    
+    const result = await generateText({
+      prompt,
+      maxTokens: getMaxTokens(fieldType, length),
+      temperature: 0.7,
+    });
+
+    return NextResponse.json({
+      success: true,
+      content: result.text,
+      alternatives: result.alternatives || [],
+    });
+  } catch (error) {
+    return NextResponse.json(
+      { success: false, error: 'Generation failed' },
+      { status: 500 }
+    );
+  }
+}
+
+function buildPrompt(
+  fieldType: string,
+  context: any,
+  currentValue: string,
+  tone: string,
+  length: string
+): string {
+  const toneGuide = {
+    professional: 'Use formal, authoritative language',
+    casual: 'Use friendly, approachable language',
+    bold: 'Use confident, impactful language with strong verbs',
+    friendly: 'Use warm, personable language',
+  };
+
+  const lengthGuide = {
+    short: '5-10 words',
+    medium: '15-25 words',
+    long: '30-50 words',
+  };
+
+  const baseContext = `
+You are writing copy for a ${context.projectType || 'business'} website in the ${context.industry || 'general'} industry.
+Business name: ${context.projectName || 'the business'}
+${context.targetAudience ? `Target audience: ${context.targetAudience}` : ''}
+${context.uniqueValue ? `Key value proposition: ${context.uniqueValue}` : ''}
+
+Tone: ${toneGuide[tone] || toneGuide.professional}
+Length: ${lengthGuide[length] || lengthGuide.medium}
+`;
+
+  const fieldPrompts: Record<string, string> = {
+    headline: `Write a compelling hero headline that captures attention and communicates the main value proposition.
+${currentValue ? `Current headline to improve: "${currentValue}"` : 'Create a new headline from scratch.'}
+Return ONLY the headline text, no quotes or explanation.`,
+
+    subheadline: `Write a supporting subheadline that expands on the value proposition and encourages action.
+${currentValue ? `Current subheadline to improve: "${currentValue}"` : 'Create a new subheadline from scratch.'}
+Return ONLY the subheadline text, no quotes or explanation.`,
+
+    'feature-title': `Write a concise feature title that highlights a key benefit.
+${currentValue ? `Current title to improve: "${currentValue}"` : 'Create a new feature title.'}
+Return ONLY the title text, 3-6 words.`,
+
+    'feature-description': `Write a brief feature description that explains the benefit clearly.
+${currentValue ? `Current description to improve: "${currentValue}"` : 'Create a new feature description.'}
+Return ONLY the description text, 15-30 words.`,
+
+    'testimonial-quote': `Write a realistic customer testimonial quote.
+${currentValue ? `Current quote to improve: "${currentValue}"` : 'Create a new testimonial quote.'}
+Return ONLY the quote text, 20-40 words. Make it sound authentic and specific.`,
+
+    'faq-question': `Write a frequently asked question that potential customers might have.
+${currentValue ? `Current question to improve: "${currentValue}"` : 'Create a new FAQ question.'}
+Return ONLY the question text.`,
+
+    'faq-answer': `Write a clear, helpful answer to a FAQ.
+${currentValue ? `Current answer to improve: "${currentValue}"` : 'Create a new FAQ answer.'}
+Return ONLY the answer text, 30-60 words.`,
+
+    'cta-text': `Write compelling call-to-action button text.
+${currentValue ? `Current CTA to improve: "${currentValue}"` : 'Create a new CTA.'}
+Return ONLY the button text, 2-5 words. Make it action-oriented.`,
+
+    'pricing-description': `Write a brief pricing tier description.
+${currentValue ? `Current description to improve: "${currentValue}"` : 'Create a new pricing description.'}
+Return ONLY the description text, 10-20 words.`,
+  };
+
+  return baseContext + '\n\n' + (fieldPrompts[fieldType] || fieldPrompts.headline);
+}
+
+function getMaxTokens(fieldType: string, length: string): number {
+  const base = {
+    short: 20,
+    medium: 50,
+    long: 100,
+  };
+  return base[length] || 50;
+}
+```
+
+### 2. AI Generate Button Component
+
+**File**: `website/components/preview/AIGenerateButton.tsx`
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+interface AIGenerateButtonProps {
+  fieldType: string;
+  currentValue: string;
+  onGenerate: (newValue: string) => void;
+  context: {
+    projectName?: string;
+    industry?: string;
+    projectType?: string;
+  };
+  className?: string;
+}
+
+export function AIGenerateButton({
+  fieldType,
+  currentValue,
+  onGenerate,
+  context,
+  className = '',
+}: AIGenerateButtonProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [showOptions, setShowOptions] = useState(false);
+  const [tone, setTone] = useState<'professional' | 'casual' | 'bold' | 'friendly'>('professional');
+  const [alternatives, setAlternatives] = useState<string[]>([]);
+
+  const generate = async () => {
+    setIsGenerating(true);
+    try {
+      const response = await fetch('/api/generate/content', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          fieldType,
+          currentValue,
+          context,
+          tone,
+          length: 'medium',
+        }),
+      });
+
+      const data = await response.json();
+      if (data.success) {
+        onGenerate(data.content);
+        setAlternatives(data.alternatives || []);
+      }
+    } catch (error) {
+      console.error('Generation failed:', error);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
+  return (
+    <div className={`relative inline-flex ${className}`}>
+      <button
+        onClick={generate}
+        disabled={isGenerating}
+        className="flex items-center gap-1.5 px-2 py-1 text-xs bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white rounded-lg disabled:opacity-50"
+      >
+        {isGenerating ? (
+          <>
+            <SpinnerIcon className="w-3 h-3 animate-spin" />
+            Generating...
+          </>
+        ) : (
+          <>
+            <SparklesIcon className="w-3 h-3" />
+            AI Generate
+          </>
+        )}
+      </button>
+
+      {/* Tone selector dropdown */}
+      <button
+        onClick={() => setShowOptions(!showOptions)}
+        className="ml-1 p-1 hover:bg-white/10 rounded"
+      >
+        <ChevronDownIcon className="w-3 h-3 text-white" />
+      </button>
+
+      {showOptions && (
+        <div className="absolute top-full left-0 mt-1 bg-slate-900 border border-white/10 rounded-lg p-2 z-50">
+          <p className="text-xs text-white/40 mb-2">Tone</p>
+          {(['professional', 'casual', 'bold', 'friendly'] as const).map((t) => (
+            <button
+              key={t}
+              onClick={() => {
+                setTone(t);
+                setShowOptions(false);
+              }}
+              className={`block w-full text-left px-2 py-1 text-sm rounded ${
+                tone === t ? 'bg-purple-500/20 text-purple-400' : 'text-white hover:bg-white/5'
+              }`}
+            >
+              {t.charAt(0).toUpperCase() + t.slice(1)}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Show alternatives if available */}
+      {alternatives.length > 0 && (
+        <div className="absolute top-full left-0 mt-1 bg-slate-900 border border-white/10 rounded-lg p-2 z-50 w-64">
+          <p className="text-xs text-white/40 mb-2">Try another option:</p>
+          {alternatives.map((alt, i) => (
+            <button
+              key={i}
+              onClick={() => onGenerate(alt)}
+              className="block w-full text-left px-2 py-1 text-sm text-white hover:bg-white/5 rounded truncate"
+            >
+              {alt}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SparklesIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+    </svg>
+  );
+}
+
+function SpinnerIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24">
+      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  );
+}
+```
+
+### 3. Integrate with EditableText
+
+**File**: Update `website/components/preview/EditableText.tsx`
+
+Add AI generate button alongside editable text:
+
+```tsx
+export function EditableText({
+  value,
+  onChange,
+  fieldType,   // NEW: for AI generation
+  context,     // NEW: project context
+  // ... other props
+}) {
+  return (
+    <div className="relative group/editable inline-block">
+      {/* Existing editable text */}
+      <Component
+        className={`${className} cursor-text hover:outline ...`}
+        onClick={() => setIsEditing(true)}
+      >
+        {value || <span className="opacity-50">{placeholder}</span>}
+      </Component>
+
+      {/* AI Generate button - shows on hover */}
+      {editable && fieldType && (
+        <div className="absolute -top-8 left-0 opacity-0 group-hover/editable:opacity-100 transition-opacity">
+          <AIGenerateButton
+            fieldType={fieldType}
+            currentValue={value}
+            onGenerate={onChange}
+            context={context}
+          />
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### 4. Bulk Generate Feature
+
+Add "Generate All Content" for a section:
+
+**File**: `website/components/preview/BulkGenerateButton.tsx`
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+
+interface BulkGenerateButtonProps {
+  section: SectionConfig;
+  context: any;
+  onUpdate: (updatedProps: Record<string, any>) => void;
+}
+
+export function BulkGenerateButton({
+  section,
+  context,
+  onUpdate,
+}: BulkGenerateButtonProps) {
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [progress, setProgress] = useState(0);
+
+  const generateAll = async () => {
+    setIsGenerating(true);
+    setProgress(0);
+
+    const fieldsToGenerate = getFieldsForPattern(section.patternId);
+    const total = fieldsToGenerate.length;
+    const results: Record<string, any> = {};
+
+    for (let i = 0; i < fieldsToGenerate.length; i++) {
+      const field = fieldsToGenerate[i];
+      setProgress(((i + 1) / total) * 100);
+
+      try {
+        const response = await fetch('/api/generate/content', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            fieldType: field.type,
+            context,
+            currentValue: section.props?.[field.key] || '',
+            tone: 'professional',
+            length: field.length || 'medium',
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          results[field.key] = data.content;
+        }
+      } catch (error) {
+        console.error(`Failed to generate ${field.key}:`, error);
+      }
+    }
+
+    onUpdate(results);
+    setIsGenerating(false);
+    setProgress(0);
+  };
+
+  return (
+    <button
+      onClick={generateAll}
+      disabled={isGenerating}
+      className="flex items-center gap-2 px-3 py-1.5 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white text-sm rounded-lg disabled:opacity-50"
+    >
+      {isGenerating ? (
+        <>
+          <div className="w-16 h-1.5 bg-white/20 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-white rounded-full transition-all"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          {Math.round(progress)}%
+        </>
+      ) : (
+        <>
+          <SparklesIcon className="w-4 h-4" />
+          Generate All Content
+        </>
+      )}
+    </button>
+  );
+}
+
+function getFieldsForPattern(patternId: string) {
+  const fieldMappings: Record<string, Array<{ key: string; type: string; length?: string }>> = {
+    'hero-centered-gradient': [
+      { key: 'headline', type: 'headline' },
+      { key: 'subheadline', type: 'subheadline' },
+    ],
+    'features-icon-grid': [
+      { key: 'title', type: 'headline' },
+      { key: 'subtitle', type: 'subheadline' },
+      // Features would need special handling for arrays
+    ],
+    'faq-accordion': [
+      // FAQ items would need array handling
+    ],
+    // ... more patterns
+  };
+
+  return fieldMappings[patternId] || [];
+}
+```
+
+---
+
+## AI Context Sources
+
+Pull context from multiple sources:
+
+1. **Project Definition**: `projectName`, `domain`
+2. **Configurator State**: `industry`, `projectType`
+3. **Inspiration Analysis**: Extracted from crawled competitor
+4. **Section-specific**: What section type we're generating for
+
+---
+
+## Rate Limiting & Costs
+
+- Limit: 10 generations per minute per session
+- Show warning at 80% usage
+- Cache recent generations for same context
+- Use cheaper model (GPT-3.5) for bulk generation
+
+---
+
+## Success Criteria
+
+- [ ] AI Generate button appears on text hover
+- [ ] Generates contextual content based on project
+- [ ] Tone selector changes output style
+- [ ] Alternatives offered after generation
+- [ ] Bulk generate works for entire section
+- [ ] Loading states shown during generation
+- [ ] Errors handled gracefully
+
+---
+
+## Testing
+
+1. Load project in configurator
+2. Open preview in editable mode
+3. Hover over headline - see AI button
+4. Click generate - new headline appears
+5. Try different tones
+6. Use bulk generate on features section
+
+---
+
+*Created by Documentation Agent*
+

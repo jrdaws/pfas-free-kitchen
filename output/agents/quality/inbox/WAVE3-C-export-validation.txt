@@ -1,0 +1,520 @@
+# TASK: Export Validation & Quality Gate
+
+**Priority**: P0
+**Wave**: 3 (After Wave 2)
+**Assigned To**: Quality Agent
+**Estimated Effort**: 3 hours
+**Dependencies**: Pattern library complete
+
+---
+
+## Objective
+
+Implement a pre-export validation system that checks the project definition for completeness, accessibility, and best practices before allowing export. Show users what needs to be fixed.
+
+---
+
+## Current State
+
+- `validation.ts` exists with basic validators
+- No integration with export flow
+- No UI for validation results
+
+---
+
+## Implementation
+
+### 1. Enhanced Validation Rules
+
+**File**: `website/lib/patterns/validation.ts`
+
+Add comprehensive validation:
+
+```typescript
+export interface ValidationRule {
+  id: string;
+  name: string;
+  category: 'content' | 'branding' | 'accessibility' | 'seo' | 'performance';
+  severity: 'error' | 'warning' | 'info';
+  check: (definition: ProjectDefinition) => ValidationResult;
+}
+
+export const VALIDATION_RULES: ValidationRule[] = [
+  // Content Rules
+  {
+    id: 'hero-headline-exists',
+    name: 'Hero has headline',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const hero = def.pages[0]?.sections.find(s => s.patternId.includes('hero'));
+      if (!hero?.props?.headline) {
+        return {
+          valid: false,
+          errors: ['Hero section is missing a headline'],
+          warnings: [],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'hero-headline-length',
+    name: 'Hero headline is optimal length',
+    category: 'content',
+    severity: 'warning',
+    check: (def) => {
+      const hero = def.pages[0]?.sections.find(s => s.patternId.includes('hero'));
+      const headline = hero?.props?.headline || '';
+      if (headline.length > 60) {
+        return {
+          valid: false,
+          errors: [],
+          warnings: [`Hero headline is ${headline.length} chars (recommended: under 60)`],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'cta-has-action',
+    name: 'CTA buttons have URLs',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const errors: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          if (section.props?.primaryCTA && !section.props.primaryCTA.href) {
+            errors.push(`${section.patternId}: Primary CTA missing URL`);
+          }
+        });
+      });
+      return { valid: errors.length === 0, errors, warnings: [] };
+    },
+  },
+  {
+    id: 'features-have-content',
+    name: 'Features sections have items',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const errors: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          if (section.patternId.includes('features')) {
+            const features = section.props?.features || [];
+            if (features.length === 0) {
+              errors.push('Features section has no feature items');
+            }
+            features.forEach((f: any, i: number) => {
+              if (!f.title) errors.push(`Feature ${i + 1} missing title`);
+              if (!f.description) errors.push(`Feature ${i + 1} missing description`);
+            });
+          }
+        });
+      });
+      return { valid: errors.length === 0, errors, warnings: [] };
+    },
+  },
+
+  // Branding Rules
+  {
+    id: 'colors-contrast',
+    name: 'Text/background contrast meets WCAG AA',
+    category: 'accessibility',
+    severity: 'error',
+    check: (def) => {
+      const { text, background } = def.branding.colors;
+      const ratio = getContrastRatio(text, background);
+      if (ratio < 4.5) {
+        return {
+          valid: false,
+          errors: [`Text/background contrast is ${ratio.toFixed(1)}:1 (minimum 4.5:1 required)`],
+          warnings: [],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'fonts-loaded',
+    name: 'Custom fonts are web-safe',
+    category: 'performance',
+    severity: 'warning',
+    check: (def) => {
+      const webSafe = ['Arial', 'Helvetica', 'Georgia', 'Times New Roman', 'Courier New'];
+      const { heading, body } = def.branding.fonts;
+      const warnings: string[] = [];
+      
+      if (!webSafe.includes(heading) && !heading.includes('sans-serif')) {
+        warnings.push(`Heading font "${heading}" requires Google Fonts - add to <head>`);
+      }
+      if (!webSafe.includes(body) && !body.includes('sans-serif')) {
+        warnings.push(`Body font "${body}" requires Google Fonts - add to <head>`);
+      }
+      
+      return { valid: true, errors: [], warnings };
+    },
+  },
+
+  // SEO Rules
+  {
+    id: 'meta-title',
+    name: 'Page has meta title',
+    category: 'seo',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        if (!page.meta?.title) {
+          warnings.push(`Page "${page.path}" missing meta title`);
+        }
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+  {
+    id: 'meta-description',
+    name: 'Page has meta description',
+    category: 'seo',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        if (!page.meta?.description) {
+          warnings.push(`Page "${page.path}" missing meta description`);
+        }
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+
+  // Accessibility Rules
+  {
+    id: 'images-alt',
+    name: 'Images have alt text',
+    category: 'accessibility',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          if (section.props?.media?.src && !section.props.media.alt) {
+            warnings.push(`${section.patternId}: Image missing alt text`);
+          }
+          // Check features with images
+          (section.props?.features || []).forEach((f: any, i: number) => {
+            if (f.image && !f.imageAlt) {
+              warnings.push(`Feature ${i + 1} image missing alt text`);
+            }
+          });
+        });
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+];
+
+// Contrast ratio helper
+function getContrastRatio(foreground: string, background: string): number {
+  const getLuminance = (hex: string) => {
+    const rgb = hexToRgb(hex);
+    const [r, g, b] = rgb.map((c) => {
+      c = c / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  const l1 = getLuminance(foreground);
+  const l2 = getLuminance(background);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+    : [0, 0, 0];
+}
+
+export function runAllValidations(definition: ProjectDefinition): {
+  passed: number;
+  failed: number;
+  warnings: number;
+  results: Array<{
+    rule: ValidationRule;
+    result: ValidationResult;
+  }>;
+} {
+  const results = VALIDATION_RULES.map((rule) => ({
+    rule,
+    result: rule.check(definition),
+  }));
+
+  return {
+    passed: results.filter((r) => r.result.valid && r.result.warnings.length === 0).length,
+    failed: results.filter((r) => !r.result.valid).length,
+    warnings: results.filter((r) => r.result.warnings.length > 0).length,
+    results,
+  };
+}
+```
+
+### 2. Validation Panel Component
+
+**File**: `website/components/preview/ValidationPanel.tsx`
+
+```tsx
+'use client';
+
+import { useMemo } from 'react';
+import { runAllValidations, ValidationRule, ValidationResult } from '@/lib/patterns/validation';
+import type { ProjectDefinition } from '@/lib/patterns/types';
+
+interface ValidationPanelProps {
+  definition: ProjectDefinition;
+  onFix?: (ruleId: string) => void;
+}
+
+export function ValidationPanel({ definition, onFix }: ValidationPanelProps) {
+  const validation = useMemo(() => runAllValidations(definition), [definition]);
+
+  const canExport = validation.failed === 0;
+
+  return (
+    <div className="bg-slate-900 border border-white/10 rounded-xl p-4">
+      {/* Summary */}
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-lg font-semibold text-white">Export Readiness</h3>
+        <div className="flex items-center gap-3">
+          <span className="flex items-center gap-1 text-sm">
+            <CheckIcon className="w-4 h-4 text-green-400" />
+            {validation.passed} passed
+          </span>
+          {validation.failed > 0 && (
+            <span className="flex items-center gap-1 text-sm text-red-400">
+              <XIcon className="w-4 h-4" />
+              {validation.failed} errors
+            </span>
+          )}
+          {validation.warnings > 0 && (
+            <span className="flex items-center gap-1 text-sm text-yellow-400">
+              <AlertIcon className="w-4 h-4" />
+              {validation.warnings} warnings
+            </span>
+          )}
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="h-2 bg-slate-800 rounded-full overflow-hidden mb-4">
+        <div
+          className={`h-full transition-all ${
+            canExport ? 'bg-green-500' : 'bg-red-500'
+          }`}
+          style={{
+            width: `${(validation.passed / validation.results.length) * 100}%`,
+          }}
+        />
+      </div>
+
+      {/* Issues list */}
+      {(validation.failed > 0 || validation.warnings > 0) && (
+        <div className="space-y-2 max-h-60 overflow-y-auto">
+          {validation.results
+            .filter((r) => !r.result.valid || r.result.warnings.length > 0)
+            .map((item) => (
+              <ValidationItem
+                key={item.rule.id}
+                rule={item.rule}
+                result={item.result}
+                onFix={onFix}
+              />
+            ))}
+        </div>
+      )}
+
+      {/* Export button */}
+      <button
+        disabled={!canExport}
+        className={`w-full mt-4 py-3 rounded-lg font-medium transition-all ${
+          canExport
+            ? 'bg-green-500 hover:bg-green-600 text-white'
+            : 'bg-slate-800 text-white/40 cursor-not-allowed'
+        }`}
+      >
+        {canExport ? '✓ Ready to Export' : `Fix ${validation.failed} error(s) to export`}
+      </button>
+    </div>
+  );
+}
+
+function ValidationItem({
+  rule,
+  result,
+  onFix,
+}: {
+  rule: ValidationRule;
+  result: ValidationResult;
+  onFix?: (ruleId: string) => void;
+}) {
+  const isError = !result.valid;
+  const messages = [...result.errors, ...result.warnings];
+
+  return (
+    <div
+      className={`p-3 rounded-lg border ${
+        isError
+          ? 'bg-red-500/10 border-red-500/20'
+          : 'bg-yellow-500/10 border-yellow-500/20'
+      }`}
+    >
+      <div className="flex items-start justify-between">
+        <div className="flex items-center gap-2">
+          {isError ? (
+            <XIcon className="w-4 h-4 text-red-400 flex-shrink-0" />
+          ) : (
+            <AlertIcon className="w-4 h-4 text-yellow-400 flex-shrink-0" />
+          )}
+          <div>
+            <p className="text-sm text-white">{rule.name}</p>
+            <p className="text-xs text-white/50 mt-0.5">{rule.category}</p>
+          </div>
+        </div>
+        {onFix && (
+          <button
+            onClick={() => onFix(rule.id)}
+            className="text-xs px-2 py-1 bg-white/10 hover:bg-white/20 rounded text-white"
+          >
+            Fix
+          </button>
+        )}
+      </div>
+      {messages.length > 0 && (
+        <ul className="mt-2 pl-6 text-xs text-white/60 space-y-0.5">
+          {messages.map((msg, i) => (
+            <li key={i}>• {msg}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+// Icons
+function CheckIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+    </svg>
+  );
+}
+
+function XIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+    </svg>
+  );
+}
+
+function AlertIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+    </svg>
+  );
+}
+```
+
+### 3. Integrate with Export Flow
+
+**File**: `website/app/api/export/route.ts`
+
+Add validation check before export:
+
+```typescript
+import { runAllValidations } from '@/lib/patterns/validation';
+
+export async function POST(request: NextRequest) {
+  const { definition } = await request.json();
+
+  // Run validation
+  const validation = runAllValidations(definition);
+
+  if (validation.failed > 0) {
+    return NextResponse.json({
+      success: false,
+      error: 'Validation failed',
+      validation: {
+        errors: validation.results
+          .filter((r) => !r.result.valid)
+          .flatMap((r) => r.result.errors),
+      },
+    }, { status: 400 });
+  }
+
+  // Proceed with export...
+}
+```
+
+---
+
+## Auto-Fix Suggestions
+
+For certain issues, provide automatic fixes:
+
+```typescript
+export const AUTO_FIXES: Record<string, (def: ProjectDefinition) => ProjectDefinition> = {
+  'hero-headline-exists': (def) => {
+    const hero = def.pages[0]?.sections.find(s => s.patternId.includes('hero'));
+    if (hero && !hero.props?.headline) {
+      hero.props = { ...hero.props, headline: 'Welcome to ' + def.projectName };
+    }
+    return def;
+  },
+  'meta-title': (def) => {
+    def.pages.forEach(page => {
+      if (!page.meta) page.meta = {};
+      if (!page.meta.title) {
+        page.meta.title = `${def.projectName} | ${page.path === '/' ? 'Home' : page.path}`;
+      }
+    });
+    return def;
+  },
+  // ... more auto-fixes
+};
+```
+
+---
+
+## Success Criteria
+
+- [ ] All validation rules run on definition
+- [ ] Errors block export
+- [ ] Warnings shown but don't block
+- [ ] Validation panel shows clear status
+- [ ] Fix buttons trigger auto-fixes where available
+- [ ] Export button disabled until errors fixed
+
+---
+
+## Testing
+
+1. Create project with missing headline
+2. Check validation panel shows error
+3. Try to export - should fail
+4. Click "Fix" on headline error
+5. Headline auto-generated
+6. Export now succeeds
+
+---
+
+*Created by Quality Agent*
+
