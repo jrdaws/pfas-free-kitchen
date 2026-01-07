@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 9a67c90 2026-01-06 feat: implement ProjectDefinition type system
 - 03590ea 2026-01-06 feat(research): create website analysis script + pattern library specs
 - 9ed157a 2026-01-06 chore: move completed tasks to done folder
 - 1aee286 2026-01-06 feat(patterns): create pattern library foundation
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - c6f2c47 2026-01-05 fix: prevent AI from copying vision verbatim
 - 2e98dd3 2026-01-05 feat: integrate Flux image generation via Replicate
 - c99a478 2026-01-05 feat(colors): implement color extraction from inspiration URLs
-- 03d7a5f 2026-01-05 feat: pass Firecrawl research results to preview composer
 
 ## Agent Governance Structure
 

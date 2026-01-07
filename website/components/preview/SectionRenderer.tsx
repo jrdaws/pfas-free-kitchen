@@ -21,6 +21,17 @@ import {
   FeaturesCards,
 } from "@/lib/patterns/patterns/features";
 
+import {
+  LogoWall,
+  TestimonialCards,
+} from "@/lib/patterns/patterns/social-proof";
+
+import { PricingTable3Tier } from "@/lib/patterns/patterns/pricing";
+
+import { CTASection } from "@/lib/patterns/patterns/cta";
+
+import { FAQAccordion } from "@/lib/patterns/patterns/faq";
+
 // Component registry maps pattern IDs to React components
 const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   // Heroes
@@ -28,6 +39,7 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   "hero-centered": HeroSimpleCentered,
   "hero-split-image": HeroSplitImage,
   "hero-video-bg": HeroVideoBackground,
+  "hero-video-background": HeroVideoBackground, // Alias
   "hero-animated-gradient": HeroAnimatedText,
   
   // Features
@@ -40,6 +52,28 @@ const COMPONENT_MAP: Record<string, React.ComponentType<any>> = {
   "features-comparison": FeaturesComparisonTable,
   "features-comparison-table": FeaturesComparisonTable, // Alias
   "features-cards": FeaturesCards,
+  
+  // Social Proof
+  "logos-simple": LogoWall,
+  "logos-wall": LogoWall, // Alias
+  "logo-wall": LogoWall, // Alias
+  "testimonials-grid": TestimonialCards,
+  "testimonials-carousel": TestimonialCards, // Uses same component with variant
+  "testimonials-cards": TestimonialCards, // Alias
+  
+  // Pricing
+  "pricing-three-tier": PricingTable3Tier,
+  "pricing-3-tier": PricingTable3Tier, // Alias
+  "pricing-table": PricingTable3Tier, // Alias
+  
+  // CTA
+  "cta-simple": CTASection,
+  "cta-section": CTASection, // Alias
+  "cta-centered": CTASection, // Alias
+  
+  // FAQ
+  "faq-accordion": FAQAccordion,
+  "faq-simple": FAQAccordion, // Alias
 };
 
 /**

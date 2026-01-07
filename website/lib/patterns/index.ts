@@ -58,3 +58,17 @@ export {
   FeaturesCards,
 } from "./patterns/features";
 
+// Social proof patterns
+export {
+  LogoWall,
+  TestimonialCards,
+} from "./patterns/social-proof";
+
+// Pricing patterns
+export { PricingTable3Tier } from "./patterns/pricing";
+
+// CTA patterns
+export { CTASection } from "./patterns/cta";
+
+// FAQ patterns
+export { FAQAccordion } from "./patterns/faq";
