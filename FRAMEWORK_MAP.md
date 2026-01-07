@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- f971367 2026-01-06 docs(audit): add codebase bloat and MVP scope analysis
 - b9d26e5 2026-01-06 chore: add pattern library v2 completion summary
 - 814fa76 2026-01-06 feat(patterns): implement 8 pattern library components
 - 9a67c90 2026-01-06 feat: implement ProjectDefinition type system
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - cf24487 2026-01-05 feat: complete deep website analysis system (Waves 1-3)
 - 9c9c4cd 2026-01-05 feat(research): enhance Firecrawl with screenshots + Claude Vision analysis
 - 4e4cf1c 2026-01-05 feat(analysis): implement deep website analysis from inspiration URLs
-- c6f2c47 2026-01-05 fix: prevent AI from copying vision verbatim
 
 ## Agent Governance Structure
 
