@@ -286,7 +286,7 @@ function PreviewComponentRenderer({
         );
 
       case "features":
-        const defaultFeatures = [
+        const defaultFeatures: { title: string; description: string; icon: string; image?: string }[] = [
           { title: "Fast", description: "Lightning quick performance", icon: "⚡" },
           { title: "Secure", description: "Enterprise-grade security", icon: "🔒" },
           { title: "Scalable", description: "Grows with your business", icon: "📈" },
@@ -420,7 +420,7 @@ function PreviewComponentRenderer({
         );
 
       case "testimonials":
-        const defaultTestimonials = [
+        const defaultTestimonials: { quote: string; author: string; role: string; avatar?: string }[] = [
           { quote: "This product changed how we work.", author: "Jane Doe", role: "CEO" },
           { quote: "Best decision we ever made.", author: "John Smith", role: "CTO" },
         ];
@@ -477,7 +477,7 @@ function PreviewComponentRenderer({
         return null;
 
       case "product":
-        const defaultProducts = [
+        const defaultProducts: { name: string; price: string; image?: string }[] = [
           { name: "Product One", price: "$99" },
           { name: "Product Two", price: "$149" },
           { name: "Product Three", price: "$199" },
@@ -576,7 +576,7 @@ function PreviewComponentRenderer({
         );
 
       case "team":
-        const defaultMembers = [
+        const defaultMembers: { name: string; role: string; avatar?: string }[] = [
           { name: "Alex Johnson", role: "CEO" },
           { name: "Sarah Miller", role: "CTO" },
           { name: "Mike Chen", role: "Designer" },
