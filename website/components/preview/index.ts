@@ -26,6 +26,9 @@ export { PatternSwapper } from "./PatternSwapper";
 // Branding customization
 export { BrandingPanel } from "./BrandingPanel";
 
+// History controls for undo/redo
+export { HistoryControls } from "./HistoryControls";
+
 // Inline editing components
 export { EditableText } from "./EditableText";
 export { EditableWrapper, EditableArrayItem } from "./EditableWrapper";

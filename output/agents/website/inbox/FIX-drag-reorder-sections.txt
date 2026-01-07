@@ -1,0 +1,245 @@
+# FIX: Drag-to-Reorder Sections Not Functioning
+
+**Priority**: P0 (Blocking Wave 4)
+**Assigned To**: Website Agent
+**Estimated Effort**: 1-2 hours
+
+---
+
+## Problem
+
+Drag-to-reorder sections was implemented but is not working. Text editing (click-to-edit) IS working, so the editable infrastructure is in place.
+
+---
+
+## Debugging Checklist
+
+### 1. Check if @dnd-kit is installed
+
+```bash
+cd website && npm list @dnd-kit/core @dnd-kit/sortable
+```
+
+If not installed:
+```bash
+npm install @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
+```
+
+### 2. Check for Console Errors
+
+Open browser DevTools → Console. Look for:
+- Import errors related to @dnd-kit
+- "Cannot read property" errors during drag
+- React hydration mismatches
+
+### 3. Verify Component Integration
+
+Check these files exist and are properly imported:
+
+| File | Purpose |
+|------|---------|
+| `components/preview/DraggableSectionList.tsx` | DndContext wrapper |
+| `components/preview/SortableSection.tsx` | useSortable hook wrapper |
+| `hooks/useSortable.ts` (if custom) | Sortable hook |
+
+### 4. Check DynamicPreviewRenderer Integration
+
+**File**: `website/components/preview/DynamicPreviewRenderer.tsx`
+
+Verify it's using DraggableSectionList when editable:
+
+```tsx
+// Should be something like:
+{editable ? (
+  <DraggableSectionList
+    sections={page.sections}
+    onSectionsChange={handleSectionsChange}
+    // ...
+  />
+) : (
+  // Regular section rendering
+  {page.sections.map((section) => (
+    <SectionRenderer key={section.id} section={section} />
+  ))}
+)}
+```
+
+### 5. Check Drag Handle Visibility
+
+The drag handle (grip icon) should appear in the SectionToolbar when hovering a section.
+
+If toolbar shows but no drag handle:
+- Check SectionToolbar.tsx for GripVerticalIcon
+- Verify `dragHandleProps` are being passed through
+
+### 6. Common Issues & Fixes
+
+#### Issue A: DndContext not at right level
+The DndContext must wrap ALL sortable items. If it's inside each section, it won't work.
+
+**Fix**: Move DndContext to wrap the entire section list.
+
+#### Issue B: Missing unique IDs
+Each section needs a unique `id` for @dnd-kit to track.
+
+**Check**:
+```tsx
+// In SortableContext
+<SortableContext items={sections.map(s => s.id)}>
+```
+
+Each section.id must be unique and stable.
+
+#### Issue C: useSortable not connected to DOM
+The `setNodeRef` from useSortable must be attached to the DOM element.
+
+**Check SortableSection.tsx**:
+```tsx
+const { setNodeRef, transform, transition } = useSortable({ id: section.id });
+
+return (
+  <div ref={setNodeRef} style={{ transform: CSS.Transform.toString(transform), transition }}>
+    {/* section content */}
+  </div>
+);
+```
+
+#### Issue D: Pointer events blocked
+If sections have `pointer-events: none` or overlays blocking, drag won't work.
+
+**Check**: Ensure drag handle has `pointer-events: auto` if parent has it disabled.
+
+---
+
+## Quick Fix Approach
+
+If the above doesn't work, here's a minimal working implementation:
+
+**File**: `website/components/preview/SimpleDraggableSections.tsx`
+
+```tsx
+'use client';
+
+import {
+  DndContext,
+  closestCenter,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
+import { SectionRenderer } from './SectionRenderer';
+import type { SectionConfig, ProjectDefinition } from '@/lib/patterns/types';
+
+interface Props {
+  sections: SectionConfig[];
+  definition: ProjectDefinition;
+  onReorder: (newSections: SectionConfig[]) => void;
+}
+
+export function SimpleDraggableSections({ sections, definition, onReorder }: Props) {
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 10 } })
+  );
+
+  function handleDragEnd(event: any) {
+    const { active, over } = event;
+    if (over && active.id !== over.id) {
+      const oldIndex = sections.findIndex(s => s.id === active.id);
+      const newIndex = sections.findIndex(s => s.id === over.id);
+      onReorder(arrayMove(sections, oldIndex, newIndex));
+    }
+  }
+
+  return (
+    <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+      <SortableContext items={sections.map(s => s.id)} strategy={verticalListSortingStrategy}>
+        {sections.map((section, index) => (
+          <DraggableSection key={section.id} section={section} definition={definition} />
+        ))}
+      </SortableContext>
+    </DndContext>
+  );
+}
+
+function DraggableSection({ section, definition }: { section: SectionConfig; definition: ProjectDefinition }) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+    id: section.id,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    position: 'relative' as const,
+  };
+
+  return (
+    <div ref={setNodeRef} style={style}>
+      {/* Drag handle - always visible for testing */}
+      <div
+        {...attributes}
+        {...listeners}
+        className="absolute top-4 left-4 z-50 p-2 bg-orange-500 rounded cursor-grab active:cursor-grabbing"
+        style={{ touchAction: 'none' }}
+      >
+        <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d="M4 8h16M4 16h16" />
+        </svg>
+      </div>
+
+      <SectionRenderer section={section} definition={definition} editable={true} />
+    </div>
+  );
+}
+```
+
+Then in DynamicPreviewRenderer:
+```tsx
+import { SimpleDraggableSections } from './SimpleDraggableSections';
+
+// Replace section rendering with:
+<SimpleDraggableSections
+  sections={page.sections}
+  definition={definition}
+  onReorder={(newSections) => {
+    onDefinitionChange?.({
+      ...definition,
+      pages: [{ ...page, sections: newSections }, ...definition.pages.slice(1)],
+    });
+  }}
+/>
+```
+
+---
+
+## Verification Steps
+
+1. Reload the page
+2. Look for orange drag handles on each section
+3. Click and drag a handle
+4. Section should move with cursor
+5. Drop in new position
+6. Order should update
+
+---
+
+## Success Criteria
+
+- [ ] Drag handle visible on section hover (or always for debugging)
+- [ ] Clicking and dragging moves the section
+- [ ] Dropping in new position reorders sections
+- [ ] Console shows no errors during drag
+- [ ] Order persists after drop
+
+---
+
+*Fix task created by Website Agent*
+

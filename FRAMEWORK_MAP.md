@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 6ab246e 2026-01-06 feat: add branding customization panel for preview
 - d0e70a8 2026-01-06 feat(preview): add drag-and-drop section reordering
 - 5b5f0ae 2026-01-06 chore: cleanup 16GB test artifacts + update MVP strip approach
 - b56fdcf 2026-01-06 feat: add pattern swapping UI with section toolbar
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - b37218e 2026-01-05 chore(testing): close duplicate export clarity task
 - 557ac47 2026-01-05 chore: remove completed pattern expansion task file
 - 7310eff 2026-01-05 chore: move completed ai-config-suggester task to done
-- c53bc8d 2026-01-05 feat(inspiration): implement inspiration → layout mapping system
 
 ## Agent Governance Structure
 

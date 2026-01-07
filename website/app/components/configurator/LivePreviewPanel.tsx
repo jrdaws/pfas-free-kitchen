@@ -31,6 +31,9 @@ import type { PreviewComposition } from "@/app/components/preview/types";
 import type { WebsiteAnalysis } from "@/app/components/preview/analysis-types";
 import { useConfiguratorStore } from "@/lib/configurator-state";
 import { ComposerModeToggle } from "./ComposerModeToggle";
+import { useHistory } from "@/hooks/useHistory";
+import { useUndoRedoShortcuts } from "@/hooks/useUndoRedoShortcuts";
+import { HistoryControls } from "@/components/preview/HistoryControls";
 
 interface LivePreviewPanelProps {
   template: string;
@@ -73,8 +76,28 @@ export function LivePreviewPanel({
   const [isEnhancing, setIsEnhancing] = useState(false);
   const [isComposing, setIsComposing] = useState(false);
   const [componentProps, setComponentProps] = useState<Record<string, Record<string, unknown>>>({});
-  const [composition, setComposition] = useState<ProjectComposition | null>(null);
   const [generateImages, setGenerateImages] = useState(false);
+  
+  // Use history for undo/redo on composition
+  const {
+    state: composition,
+    setState: setComposition,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    reset: resetHistory,
+    historyLength,
+  } = useHistory<ProjectComposition | null>(null);
+  
+  // Enable keyboard shortcuts for undo/redo when in edit mode
+  useUndoRedoShortcuts({
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    enabled: isEditMode && !!composition,
+  });
   const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentPreviewPath, setCurrentPreviewPath] = useState("/");
@@ -273,7 +296,8 @@ export function LivePreviewPanel({
         console.log("[Preview] Compose API response:", data);
         if (data.success && data.data?.composition) {
           console.log("[Preview] ✅ Composition received:", data.data.composition.pages?.length, "pages");
-          setComposition(data.data.composition);
+          // Reset history when a new composition is generated (starts fresh)
+          resetHistory(data.data.composition);
           setLastRendered({ template, integrations, projectName, featureCount });
           setHasPendingChanges(false);
           
@@ -482,6 +506,18 @@ export function LivePreviewPanel({
             <Pencil className="h-3 w-3" />
             {isEditMode && <span className="hidden sm:inline">Edit</span>}
           </button>
+
+          {/* Undo/Redo Controls - Only show in edit mode */}
+          {isEditMode && composition && (
+            <HistoryControls
+              canUndo={canUndo}
+              canRedo={canRedo}
+              onUndo={undo}
+              onRedo={redo}
+              historyLength={historyLength}
+              className="flex-shrink-0"
+            />
+          )}
 
           {/* Viewport Toggle - Hidden on very small screens */}
           <div className="hidden sm:flex items-center p-0.5 rounded bg-muted/50 flex-shrink-0">

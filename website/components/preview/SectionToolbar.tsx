@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PatternSwapDropdown } from "./PatternSwapDropdown";
+import { BulkGenerateButton } from "./BulkGenerateButton";
 import type { SectionConfig, PatternCategory } from "@/lib/patterns/types";
 
 interface SectionToolbarProps {
@@ -13,7 +14,16 @@ interface SectionToolbarProps {
   onMoveDown: () => void;
   onDuplicate: () => void;
   onDelete: () => void;
+  onPropsUpdate?: (updates: Record<string, unknown>) => void;
   dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
+  projectContext?: {
+    projectName?: string;
+    industry?: string;
+    projectType?: string;
+    targetAudience?: string;
+    uniqueValue?: string;
+    domain?: string;
+  };
 }
 
 export function SectionToolbar({
@@ -25,9 +35,12 @@ export function SectionToolbar({
   onMoveDown,
   onDuplicate,
   onDelete,
+  onPropsUpdate,
   dragHandleProps,
+  projectContext,
 }: SectionToolbarProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [showAIMenu, setShowAIMenu] = useState(false);
 
   // Extract category from pattern ID
   const category = getPatternCategory(section.patternId);
@@ -70,6 +83,34 @@ export function SectionToolbar({
       />
 
       <div className="w-px h-6 bg-white/10" />
+
+      {/* AI Generate All Content button */}
+      {projectContext && onPropsUpdate && (
+        <>
+          <div className="relative">
+            <button
+              onClick={() => setShowAIMenu(!showAIMenu)}
+              className="p-1.5 hover:bg-purple-500/20 rounded transition-colors"
+              title="AI Generate Content"
+            >
+              <SparklesIcon className="w-4 h-4 text-purple-400" />
+            </button>
+            {showAIMenu && (
+              <div className="absolute top-full left-0 mt-1 p-2 bg-slate-900 border border-white/10 rounded-lg shadow-xl z-50">
+                <BulkGenerateButton
+                  section={section}
+                  context={projectContext}
+                  onUpdate={(updates) => {
+                    onPropsUpdate(updates);
+                    setShowAIMenu(false);
+                  }}
+                />
+              </div>
+            )}
+          </div>
+          <div className="w-px h-6 bg-white/10" />
+        </>
+      )}
 
       {/* Move buttons */}
       <button
@@ -227,6 +268,24 @@ function GripVerticalIcon({ className }: { className?: string }) {
         strokeLinejoin="round"
         strokeWidth={2}
         d="M8 6h.01M8 12h.01M8 18h.01M16 6h.01M16 12h.01M16 18h.01"
+      />
+    </svg>
+  );
+}
+
+function SparklesIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={2}
+        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
       />
     </svg>
   );

@@ -2,8 +2,68 @@ import { NextRequest, NextResponse } from "next/server";
 import * as fs from "fs";
 import * as path from "path";
 import JSZip from "jszip";
-import { apiError, ErrorCodes } from "@/lib/api-errors";
+import { apiError, apiSuccess, ErrorCodes } from "@/lib/api-errors";
 import { generateProject, type ProjectConfig, type IntegrationCategory } from "@/lib/generator";
+
+// ============================================================================
+// Export Validation
+// ============================================================================
+
+interface ExportValidationResult {
+  valid: boolean;
+  canExport: boolean;
+  errors: string[];
+  warnings: string[];
+}
+
+/**
+ * Validate an export request before generating
+ */
+function validateExportRequest(body: ExportRequest): ExportValidationResult {
+  const errors: string[] = [];
+  const warnings: string[] = [];
+
+  // Required fields
+  if (!body.projectName || body.projectName.trim().length < 2) {
+    errors.push("Project name is required (minimum 2 characters)");
+  }
+
+  if (!body.template) {
+    errors.push("Template selection is required");
+  } else if (!TEMPLATE_COMPONENTS[body.template]) {
+    errors.push(`Invalid template: ${body.template}`);
+  }
+
+  // Check for missing integrations that are commonly needed
+  if (!body.integrations?.auth) {
+    warnings.push("No authentication configured - users won't be able to sign in");
+  }
+
+  if (body.template === "ecommerce" && !body.integrations?.payments) {
+    warnings.push("E-commerce template without payment integration");
+  }
+
+  // Check for missing vision/mission
+  if (!body.vision?.trim()) {
+    warnings.push("No project vision provided - AI composition may be less personalized");
+  }
+
+  // Validate integration combinations
+  const auth = body.integrations?.auth;
+  const payments = body.integrations?.payments;
+
+  // Stripe requires auth for customer management
+  if (payments === "stripe" && !auth) {
+    warnings.push("Stripe payments work best with authentication enabled");
+  }
+
+  return {
+    valid: errors.length === 0,
+    canExport: errors.length === 0,
+    errors,
+    warnings,
+  };
+}
 
 // Template-specific auto-included features based on template type
 const TEMPLATE_AUTO_FEATURES: Record<string, string[]> = {
@@ -715,6 +775,33 @@ export async function POST(request: NextRequest) {
   try {
     const body: ExportRequest = await request.json();
     const { template, projectName, integrations, vision, mission, successCriteria, inspiration, envKeys } = body;
+
+    // Check if this is a validation-only request
+    const validateOnly = request.nextUrl.searchParams.get("validateOnly") === "true";
+
+    // Run validation
+    const validation = validateExportRequest(body);
+
+    // If validation-only mode, return validation results
+    if (validateOnly) {
+      return apiSuccess({
+        validation,
+        message: validation.canExport 
+          ? "Project is ready for export" 
+          : "Please fix errors before exporting",
+      });
+    }
+
+    // Block export if validation errors
+    if (!validation.valid) {
+      return apiError(
+        ErrorCodes.INVALID_INPUT,
+        "Export validation failed",
+        400,
+        { validation },
+        "Fix the listed errors before exporting"
+      );
+    }
 
     if (!template || !projectName) {
       return apiError(

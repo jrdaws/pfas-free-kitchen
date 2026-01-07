@@ -8,9 +8,19 @@ import { StyledCard, type ComponentStyleCard } from "./StyledCard";
 import { FeatureBadges, type DetectedFeatures } from "./FeatureBadges";
 import { EditableText } from "@/components/preview/EditableText";
 import { EditableWrapper } from "@/components/preview/EditableWrapper";
+import { SectionToolbar } from "./SectionToolbar";
 import type { PreviewComposition, PreviewPage, PreviewComponent } from "./types";
 import type { WebsiteAnalysis, AppliedStyles } from "./analysis-types";
 import { extractAppliedStyles } from "./analysis-types";
+
+interface ProjectContext {
+  projectName?: string;
+  industry?: string;
+  projectType?: string;
+  targetAudience?: string;
+  uniqueValue?: string;
+  domain?: string;
+}
 
 interface ComposedPreviewProps {
   composition: PreviewComposition;
@@ -20,6 +30,7 @@ interface ComposedPreviewProps {
   className?: string;
   editable?: boolean;
   onComponentEdit?: (componentId: string, updates: Record<string, unknown>) => void;
+  projectContext?: ProjectContext;
 }
 
 export function ComposedPreview({
@@ -30,7 +41,17 @@ export function ComposedPreview({
   className,
   editable = false,
   onComponentEdit,
+  projectContext,
 }: ComposedPreviewProps) {
+  // Build AI context from project info
+  const aiContext = useMemo<ProjectContext>(() => ({
+    projectName: projectContext?.projectName || composition.projectName,
+    industry: projectContext?.industry,
+    projectType: projectContext?.projectType,
+    targetAudience: projectContext?.targetAudience,
+    uniqueValue: projectContext?.uniqueValue,
+    domain: projectContext?.domain,
+  }), [projectContext, composition.projectName]);
   const currentPage = composition.pages.find((p) => p.path === currentPath);
   
   // Extract applied styles from analysis
@@ -115,6 +136,7 @@ export function ComposedPreview({
             appliedStyles={appliedStyles}
             editable={editable}
             onEdit={onComponentEdit ? (updates) => onComponentEdit(component.id, updates) : undefined}
+            aiContext={aiContext}
           />
         ))}
       </main>
@@ -189,6 +211,7 @@ interface PreviewComponentRendererProps {
   appliedStyles?: AppliedStyles | null;
   editable?: boolean;
   onEdit?: (updates: Record<string, unknown>) => void;
+  aiContext?: ProjectContext;
 }
 
 // Extract base type from pattern ID (e.g., "hero-split-image" -> "hero")
@@ -213,6 +236,7 @@ function PreviewComponentRenderer({
   appliedStyles,
   editable = false,
   onEdit,
+  aiContext,
 }: PreviewComponentRendererProps) {
   // Use applied styles colors or fall back to theme
   const primaryColor = appliedStyles?.colors.primary || theme.primaryColor;
@@ -260,6 +284,8 @@ function PreviewComponentRenderer({
                 )}
                 editable={editable}
                 placeholder="Enter headline..."
+                fieldType="headline"
+                context={aiContext}
               />
               <EditableText
                 value={(props.subheadline as string) || "Build something amazing with our tools."}
@@ -272,6 +298,8 @@ function PreviewComponentRenderer({
                 editable={editable}
                 placeholder="Enter subheadline..."
                 multiline
+                fieldType="subheadline"
+                context={aiContext}
               />
               <div className={cn("flex gap-4", !hasHeroImage && "justify-center")}>
                 <EditableWrapper editable={editable} label="Primary CTA" onEdit={() => {}}>
@@ -344,6 +372,8 @@ function PreviewComponentRenderer({
               )}
               editable={editable}
               placeholder="Section title..."
+              fieldType="section-title"
+              context={aiContext}
             />
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {features.map((feature, i) => (
@@ -454,6 +484,8 @@ function PreviewComponentRenderer({
               className="text-3xl font-bold text-white mb-4"
               editable={editable}
               placeholder="CTA headline..."
+              fieldType="headline"
+              context={aiContext}
             />
             <EditableText
               value={(props.subheadline as string) || "Join thousands of satisfied customers today."}
@@ -463,6 +495,8 @@ function PreviewComponentRenderer({
               editable={editable}
               placeholder="CTA subheadline..."
               multiline
+              fieldType="cta-subtext"
+              context={aiContext}
             />
             <EditableWrapper editable={editable} label="CTA Button" onEdit={() => {}}>
               <PreviewLink
@@ -692,6 +726,54 @@ function PreviewComponentRenderer({
     }
   }, [component, theme, onNavigate, primaryColor, secondaryColor, buttonStyle, cardStyle, appliedStyles]);
 
-  return <>{renderComponent()}</>;
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <div
+      className={cn("relative group", editable && "cursor-pointer")}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Section toolbar - shows on hover in editable mode */}
+      {editable && isHovered && (
+        <SectionToolbar
+          pageId="/"
+          sectionIndex={0}
+          totalSections={1}
+          patternName={component.type}
+          onMoveUp={() => {
+            console.log('[Preview] Move up clicked for:', component.type);
+            alert('Move Up - Full reordering coming in Wave 4!');
+          }}
+          onMoveDown={() => {
+            console.log('[Preview] Move down clicked for:', component.type);
+            alert('Move Down - Full reordering coming in Wave 4!');
+          }}
+          onDuplicate={() => {
+            console.log('[Preview] Duplicate clicked for:', component.type);
+            alert('Duplicate - Coming in Wave 4!');
+          }}
+          onDelete={() => {
+            console.log('[Preview] Delete clicked for:', component.type);
+            alert('Delete - Coming in Wave 4!');
+          }}
+          onEdit={() => {
+            console.log('[Preview] Edit clicked for:', component.type);
+          }}
+          onRegenerate={() => {
+            console.log('[Preview] Regenerate clicked for:', component.type);
+            alert('Regenerate - Regenerating section content...');
+          }}
+        />
+      )}
+
+      {/* Section outline on hover */}
+      {editable && isHovered && (
+        <div className="absolute inset-0 border-2 border-dashed border-orange-500/30 pointer-events-none z-30" />
+      )}
+
+      {renderComponent()}
+    </div>
+  );
 }
 

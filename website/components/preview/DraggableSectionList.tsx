@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   DndContext,
   closestCenter,
@@ -20,6 +20,7 @@ import {
 } from "@dnd-kit/sortable";
 import { SortableSection } from "./SortableSection";
 import { SectionRenderer } from "./SectionRenderer";
+import { AddSectionButton } from "./AddSectionButton";
 import type { SectionConfig, BrandingConfig } from "@/lib/patterns/types";
 
 interface DraggableSectionListProps {
@@ -30,6 +31,7 @@ interface DraggableSectionListProps {
   onSectionChange: (index: number, section: SectionConfig) => void;
   onSectionDuplicate: (index: number) => void;
   onSectionDelete: (index: number) => void;
+  onAddSection?: (insertIndex: number) => void;
 }
 
 /**
@@ -46,6 +48,7 @@ export function DraggableSectionList({
   onSectionChange,
   onSectionDuplicate,
   onSectionDelete,
+  onAddSection,
 }: DraggableSectionListProps) {
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -122,18 +125,34 @@ export function DraggableSectionList({
         strategy={verticalListSortingStrategy}
       >
         {sections.map((section, index) => (
-          <SortableSection
-            key={section.id}
-            section={section}
-            index={index}
-            totalSections={sections.length}
-            branding={branding}
-            onSectionChange={(s) => onSectionChange(index, s)}
-            onSectionMove={handleSectionMove}
-            onSectionDuplicate={onSectionDuplicate}
-            onSectionDelete={onSectionDelete}
-          />
+          <React.Fragment key={section.id}>
+            {/* Add section button before this section */}
+            {onAddSection && (
+              <AddSectionButton
+                position="between"
+                onClick={() => onAddSection(index)}
+              />
+            )}
+            <SortableSection
+              section={section}
+              index={index}
+              totalSections={sections.length}
+              branding={branding}
+              onSectionChange={(s) => onSectionChange(index, s)}
+              onSectionMove={handleSectionMove}
+              onSectionDuplicate={onSectionDuplicate}
+              onSectionDelete={onSectionDelete}
+            />
+          </React.Fragment>
         ))}
+
+        {/* Add section button at the end */}
+        {onAddSection && sections.length > 0 && (
+          <AddSectionButton
+            position="end"
+            onClick={() => onAddSection(sections.length)}
+          />
+        )}
       </SortableContext>
 
       {/* Drag overlay - shows preview of dragged section */}

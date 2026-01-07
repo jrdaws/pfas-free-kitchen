@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { 
   DynamicPreviewRendererProps, 
   BrandingConfig, 
   PageConfig,
+  SectionConfig,
   DEFAULT_BRANDING 
 } from "@/lib/patterns/types";
 import { SectionRenderer } from "./SectionRenderer";
+import { DraggableSectionList } from "./DraggableSectionList";
+import { SectionPickerModal } from "./SectionPickerModal";
+import { AddSectionButton } from "./AddSectionButton";
 
 /**
  * ThemeProvider
@@ -97,6 +101,8 @@ export function DynamicPreviewRenderer({
   onDefinitionChange,
 }: DynamicPreviewRendererProps) {
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [insertIndex, setInsertIndex] = useState(0);
 
   // Find the current page
   const page = useMemo(() => {
@@ -132,28 +138,108 @@ export function DynamicPreviewRenderer({
     });
   };
 
-  // Handle section reorder (for future drag-drop support)
-  const handleSectionReorder = (sectionId: string, newOrder: number) => {
+  // Handle sections reorder via drag-drop
+  const handleSectionsChange = useCallback((newSections: SectionConfig[]) => {
     if (!onDefinitionChange) return;
 
     const updatedPages = definition.pages.map((p) => {
       if (p.path !== currentPage) return p;
-
-      return {
-        ...p,
-        sections: p.sections.map((s) =>
-          s.id === sectionId
-            ? { ...s, customizations: { ...s.customizations, order: newOrder } }
-            : s
-        ),
-      };
+      return { ...p, sections: newSections };
     });
 
     onDefinitionChange({
       ...definition,
       pages: updatedPages,
     });
-  };
+  }, [definition, currentPage, onDefinitionChange]);
+
+  // Handle individual section change
+  const handleSectionChange = useCallback((index: number, section: SectionConfig) => {
+    if (!onDefinitionChange) return;
+
+    const updatedPages = definition.pages.map((p) => {
+      if (p.path !== currentPage) return p;
+      const newSections = [...p.sections];
+      newSections[index] = section;
+      return { ...p, sections: newSections };
+    });
+
+    onDefinitionChange({
+      ...definition,
+      pages: updatedPages,
+    });
+  }, [definition, currentPage, onDefinitionChange]);
+
+  // Handle section duplicate
+  const handleSectionDuplicate = useCallback((index: number) => {
+    if (!onDefinitionChange || !page) return;
+
+    const sectionToDupe = page.sections[index];
+    const duplicated: SectionConfig = {
+      ...sectionToDupe,
+      id: `${sectionToDupe.id}-copy-${Date.now()}`,
+    };
+
+    const newSections = [...page.sections];
+    newSections.splice(index + 1, 0, duplicated);
+
+    const updatedPages = definition.pages.map((p) => {
+      if (p.path !== currentPage) return p;
+      return { ...p, sections: newSections };
+    });
+
+    onDefinitionChange({
+      ...definition,
+      pages: updatedPages,
+    });
+  }, [definition, currentPage, page, onDefinitionChange]);
+
+  // Handle section delete
+  const handleSectionDelete = useCallback((index: number) => {
+    if (!onDefinitionChange || !page) return;
+
+    const newSections = page.sections.filter((_, i) => i !== index);
+
+    const updatedPages = definition.pages.map((p) => {
+      if (p.path !== currentPage) return p;
+      return { ...p, sections: newSections };
+    });
+
+    onDefinitionChange({
+      ...definition,
+      pages: updatedPages,
+    });
+  }, [definition, currentPage, page, onDefinitionChange]);
+
+  // Handle opening add section picker
+  const handleOpenAddSection = useCallback((index: number) => {
+    setInsertIndex(index);
+    setPickerOpen(true);
+  }, []);
+
+  // Handle adding a new section
+  const handleAddSection = useCallback((patternId: string, defaultProps?: Record<string, unknown>) => {
+    if (!onDefinitionChange || !page) return;
+
+    const newSection: SectionConfig = {
+      id: `section-${Date.now()}`,
+      patternId,
+      props: defaultProps || {},
+    };
+
+    const newSections = [...page.sections];
+    newSections.splice(insertIndex, 0, newSection);
+
+    const updatedPages = definition.pages.map((p) => {
+      if (p.path !== currentPage) return p;
+      return { ...p, sections: newSections };
+    });
+
+    onDefinitionChange({
+      ...definition,
+      pages: updatedPages,
+    });
+  }, [definition, currentPage, page, insertIndex, onDefinitionChange]);
 
   if (!page) {
     return (
@@ -196,17 +282,26 @@ export function DynamicPreviewRenderer({
 
         {/* Page Sections */}
         <main>
-          {sortedSections.map((section) => (
-            <SectionRenderer
-              key={section.id}
-              section={section}
+          {editable ? (
+            <DraggableSectionList
+              sections={sortedSections}
               branding={definition.branding || DEFAULT_BRANDING}
               editable={editable}
-              isSelected={selectedSectionId === section.id}
-              onSelect={() => setSelectedSectionId(section.id)}
-              onPropsChange={(newProps) => handleSectionPropsChange(section.id, newProps)}
+              onSectionsChange={handleSectionsChange}
+              onSectionChange={handleSectionChange}
+              onSectionDuplicate={handleSectionDuplicate}
+              onSectionDelete={handleSectionDelete}
             />
-          ))}
+          ) : (
+            sortedSections.map((section) => (
+              <SectionRenderer
+                key={section.id}
+                section={section}
+                branding={definition.branding || DEFAULT_BRANDING}
+                editable={false}
+              />
+            ))
+          )}
         </main>
 
         {/* Footer (if defined) */}

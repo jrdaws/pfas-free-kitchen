@@ -203,7 +203,8 @@ export function SectionRenderer({
       data-pattern-id={section.patternId}
     >
       {/* Section toolbar - shows on hover in editable mode */}
-      {editable && isHovered && (
+      {/* DEBUG: Always show toolbar when editable */}
+      {editable && (
         <SectionToolbar
           section={section}
           index={index}
