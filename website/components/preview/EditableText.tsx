@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import { cn } from "@/lib/utils";
+import { AIGenerateButton } from "./AIGenerateButton";
 
 interface EditableTextProps {
   value: string;
@@ -12,6 +13,17 @@ interface EditableTextProps {
   editable?: boolean;
   multiline?: boolean;
   maxLength?: number;
+  // AI generation props
+  fieldType?: string;
+  context?: {
+    projectName?: string;
+    industry?: string;
+    projectType?: string;
+    targetAudience?: string;
+    uniqueValue?: string;
+    domain?: string;
+  };
+  showAIButton?: boolean;
 }
 
 export function EditableText({
@@ -23,10 +35,14 @@ export function EditableText({
   editable = true,
   multiline = false,
   maxLength,
+  fieldType,
+  context,
+  showAIButton = true,
 }: EditableTextProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const [isSaving, setIsSaving] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const inputRef = useRef<HTMLTextAreaElement | HTMLInputElement>(null);
 
   // Focus and select text when entering edit mode
@@ -73,6 +89,16 @@ export function EditableText({
     [handleSave, handleCancel, multiline]
   );
 
+  const handleAIGenerate = useCallback(
+    (newValue: string) => {
+      setEditValue(newValue);
+      onChange(newValue);
+      setIsSaving(true);
+      setTimeout(() => setIsSaving(false), 300);
+    },
+    [onChange]
+  );
+
   // Not editable - render as static
   if (!editable) {
     return <Component className={className}>{value || placeholder}</Component>;
@@ -115,20 +141,43 @@ export function EditableText({
     );
   }
 
-  // Display mode with hover effect
+  // Display mode with hover effect and AI button
+  const canShowAI = showAIButton && fieldType && context;
+
   return (
-    <Component
-      className={cn(
-        className,
-        "cursor-text transition-all duration-150",
-        "hover:outline hover:outline-2 hover:outline-primary/50 hover:outline-offset-2 hover:rounded",
-        isSaving && "animate-pulse"
-      )}
-      onClick={() => setIsEditing(true)}
-      title="Click to edit"
+    <div
+      className="relative inline-block group/editable"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {value || <span className="opacity-50 italic">{placeholder}</span>}
-    </Component>
+      <Component
+        className={cn(
+          className,
+          "cursor-text transition-all duration-150",
+          "hover:outline hover:outline-2 hover:outline-primary/50 hover:outline-offset-2 hover:rounded",
+          isSaving && "animate-pulse"
+        )}
+        onClick={() => setIsEditing(true)}
+        title="Click to edit"
+      >
+        {value || <span className="opacity-50 italic">{placeholder}</span>}
+      </Component>
+
+      {/* AI Generate button - shows on hover */}
+      {canShowAI && isHovered && !isEditing && (
+        <div
+          className="absolute -top-9 left-0 z-20 opacity-0 group-hover/editable:opacity-100 transition-opacity duration-200"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <AIGenerateButton
+            fieldType={fieldType}
+            currentValue={value}
+            onGenerate={handleAIGenerate}
+            context={context}
+            compact
+          />
+        </div>
+      )}
+    </div>
   );
 }
-

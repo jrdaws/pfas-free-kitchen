@@ -25,6 +25,29 @@ export interface ValidationResult {
 }
 
 // ============================================================================
+// Validation Rule Types (NEW)
+// ============================================================================
+
+export interface ValidationRule {
+  id: string;
+  name: string;
+  category: 'content' | 'branding' | 'accessibility' | 'seo' | 'performance';
+  severity: 'error' | 'warning' | 'info';
+  check: (definition: ProjectDefinition) => ValidationResult;
+}
+
+export interface ValidationSummary {
+  passed: number;
+  failed: number;
+  warnings: number;
+  results: Array<{
+    rule: ValidationRule;
+    result: ValidationResult;
+  }>;
+  canExport: boolean;
+}
+
+// ============================================================================
 // Color Validation
 // ============================================================================
 
@@ -486,5 +509,368 @@ export function suggestFixes(result: ValidationResult): string[] {
   }
 
   return [...new Set(suggestions)]; // Remove duplicates
+}
+
+// ============================================================================
+// ENHANCED VALIDATION RULES (Content, SEO, Accessibility)
+// ============================================================================
+
+/**
+ * Calculate WCAG contrast ratio between two colors
+ */
+export function getContrastRatio(foreground: string, background: string): number {
+  const getLuminance = (hex: string) => {
+    const rgb = hexToRgb(hex);
+    const [r, g, b] = rgb.map((c) => {
+      c = c / 255;
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    });
+    return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+  };
+
+  const l1 = getLuminance(foreground);
+  const l2 = getLuminance(background);
+  const lighter = Math.max(l1, l2);
+  const darker = Math.min(l1, l2);
+
+  return (lighter + 0.05) / (darker + 0.05);
+}
+
+function hexToRgb(hex: string): [number, number, number] {
+  const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+  return result
+    ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)]
+    : [0, 0, 0];
+}
+
+/**
+ * Content validation rules
+ */
+const CONTENT_RULES: ValidationRule[] = [
+  {
+    id: 'hero-headline-exists',
+    name: 'Hero has headline',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const homePage = def.pages.find(p => p.path === '/');
+      if (!homePage) return { valid: true, errors: [], warnings: [] };
+      
+      const hero = homePage.sections.find(s => s.patternId.includes('hero'));
+      if (hero && !hero.props?.headline) {
+        return {
+          valid: false,
+          errors: ['Hero section is missing a headline'],
+          warnings: [],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'hero-headline-length',
+    name: 'Hero headline is optimal length',
+    category: 'content',
+    severity: 'warning',
+    check: (def) => {
+      const homePage = def.pages.find(p => p.path === '/');
+      if (!homePage) return { valid: true, errors: [], warnings: [] };
+      
+      const hero = homePage.sections.find(s => s.patternId.includes('hero'));
+      const headline = (hero?.props?.headline as string) || '';
+      if (headline.length > 60) {
+        return {
+          valid: true,
+          errors: [],
+          warnings: [`Hero headline is ${headline.length} chars (recommended: under 60)`],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'cta-has-action',
+    name: 'CTA buttons have URLs',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const errors: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          const primaryCTA = section.props?.primaryCTA as { href?: string } | undefined;
+          const primaryCta = section.props?.primaryCta as { href?: string } | undefined;
+          const cta = primaryCTA || primaryCta;
+          if (cta && !cta.href) {
+            errors.push(`${section.patternId}: Primary CTA missing URL`);
+          }
+        });
+      });
+      return { valid: errors.length === 0, errors, warnings: [] };
+    },
+  },
+  {
+    id: 'features-have-content',
+    name: 'Features sections have items',
+    category: 'content',
+    severity: 'error',
+    check: (def) => {
+      const errors: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          if (section.patternId.includes('features')) {
+            const features = section.props?.features as Array<{ title?: string; description?: string }> || [];
+            if (features.length === 0) {
+              errors.push('Features section has no feature items');
+            }
+            features.forEach((f, i: number) => {
+              if (!f.title) errors.push(`Feature ${i + 1} missing title`);
+              if (!f.description) errors.push(`Feature ${i + 1} missing description`);
+            });
+          }
+        });
+      });
+      return { valid: errors.length === 0, errors, warnings: [] };
+    },
+  },
+];
+
+/**
+ * Accessibility validation rules
+ */
+const ACCESSIBILITY_RULES: ValidationRule[] = [
+  {
+    id: 'colors-contrast',
+    name: 'Text/background contrast meets WCAG AA',
+    category: 'accessibility',
+    severity: 'error',
+    check: (def) => {
+      const { foreground, background } = def.branding.colors;
+      // Skip if using CSS variables
+      if (foreground.startsWith('var(') || background.startsWith('var(')) {
+        return { valid: true, errors: [], warnings: [] };
+      }
+      const ratio = getContrastRatio(foreground, background);
+      if (ratio < 4.5) {
+        return {
+          valid: false,
+          errors: [`Text/background contrast is ${ratio.toFixed(1)}:1 (minimum 4.5:1 required)`],
+          warnings: [],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+  {
+    id: 'images-alt',
+    name: 'Images have alt text',
+    category: 'accessibility',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        page.sections.forEach(section => {
+          const media = section.props?.media as { src?: string; alt?: string } | undefined;
+          if (media?.src && !media.alt) {
+            warnings.push(`${section.patternId}: Image missing alt text`);
+          }
+          // Check features with images
+          const features = section.props?.features as Array<{ image?: string; imageAlt?: string }> || [];
+          features.forEach((f, i: number) => {
+            if (f.image && !f.imageAlt) {
+              warnings.push(`Feature ${i + 1} image missing alt text`);
+            }
+          });
+        });
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+];
+
+/**
+ * SEO validation rules
+ */
+const SEO_RULES: ValidationRule[] = [
+  {
+    id: 'meta-title',
+    name: 'Page has meta title',
+    category: 'seo',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        if (!page.title) {
+          warnings.push(`Page "${page.path}" missing meta title`);
+        }
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+  {
+    id: 'meta-description',
+    name: 'Page has meta description',
+    category: 'seo',
+    severity: 'warning',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        if (!page.description) {
+          warnings.push(`Page "${page.path}" missing meta description`);
+        }
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+  {
+    id: 'project-name',
+    name: 'Project has name',
+    category: 'seo',
+    severity: 'error',
+    check: (def) => {
+      if (!def.meta?.name || def.meta.name.length < 2) {
+        return {
+          valid: false,
+          errors: ['Project name is required for SEO'],
+          warnings: [],
+        };
+      }
+      return { valid: true, errors: [], warnings: [] };
+    },
+  },
+];
+
+/**
+ * Performance validation rules
+ */
+const PERFORMANCE_RULES: ValidationRule[] = [
+  {
+    id: 'fonts-loaded',
+    name: 'Custom fonts are web-safe or from Google Fonts',
+    category: 'performance',
+    severity: 'warning',
+    check: (def) => {
+      const webSafe = ['Arial', 'Helvetica', 'Georgia', 'Times New Roman', 'Courier New', 'Inter', 'system-ui', '-apple-system'];
+      const { heading, body } = def.branding.fonts;
+      const warnings: string[] = [];
+      
+      if (heading && !webSafe.some(f => heading.includes(f)) && !heading.includes('sans-serif')) {
+        warnings.push(`Heading font "${heading}" may require Google Fonts`);
+      }
+      if (body && !webSafe.some(f => body.includes(f)) && !body.includes('sans-serif')) {
+        warnings.push(`Body font "${body}" may require Google Fonts`);
+      }
+      
+      return { valid: true, errors: [], warnings };
+    },
+  },
+  {
+    id: 'section-count',
+    name: 'Page not overloaded with sections',
+    category: 'performance',
+    severity: 'info',
+    check: (def) => {
+      const warnings: string[] = [];
+      def.pages.forEach(page => {
+        if (page.sections.length > 12) {
+          warnings.push(`Page "${page.path}" has ${page.sections.length} sections (may affect load time)`);
+        }
+      });
+      return { valid: true, errors: [], warnings };
+    },
+  },
+];
+
+/**
+ * All validation rules combined
+ */
+export const VALIDATION_RULES: ValidationRule[] = [
+  ...CONTENT_RULES,
+  ...ACCESSIBILITY_RULES,
+  ...SEO_RULES,
+  ...PERFORMANCE_RULES,
+];
+
+/**
+ * Run all validation rules against a project definition
+ */
+export function runAllValidations(definition: ProjectDefinition): ValidationSummary {
+  const results = VALIDATION_RULES.map((rule) => ({
+    rule,
+    result: rule.check(definition),
+  }));
+
+  const failed = results.filter((r) => !r.result.valid).length;
+  const warnings = results.filter((r) => r.result.valid && r.result.warnings.length > 0).length;
+  const passed = results.filter((r) => r.result.valid && r.result.warnings.length === 0).length;
+
+  return {
+    passed,
+    failed,
+    warnings,
+    results,
+    canExport: failed === 0,
+  };
+}
+
+// ============================================================================
+// AUTO-FIX FUNCTIONS
+// ============================================================================
+
+/**
+ * Auto-fix functions for common validation issues
+ */
+export const AUTO_FIXES: Record<string, (def: ProjectDefinition) => ProjectDefinition> = {
+  'hero-headline-exists': (def) => {
+    const homePage = def.pages.find(p => p.path === '/');
+    if (!homePage) return def;
+    
+    const hero = homePage.sections.find(s => s.patternId.includes('hero'));
+    if (hero && !hero.props?.headline) {
+      hero.props = { ...hero.props, headline: `Welcome to ${def.meta.name}` };
+    }
+    return def;
+  },
+  'meta-title': (def) => {
+    def.pages.forEach(page => {
+      if (!page.title) {
+        page.title = page.path === '/' 
+          ? `${def.meta.name} | Home`
+          : `${def.meta.name} | ${page.path.slice(1).charAt(0).toUpperCase() + page.path.slice(2)}`;
+      }
+    });
+    return def;
+  },
+  'meta-description': (def) => {
+    def.pages.forEach(page => {
+      if (!page.description) {
+        page.description = def.meta.description || `Learn more about ${def.meta.name}`;
+      }
+    });
+    return def;
+  },
+  'project-name': (def) => {
+    if (!def.meta.name) {
+      def.meta.name = 'My Project';
+    }
+    return def;
+  },
+};
+
+/**
+ * Check if an auto-fix is available for a rule
+ */
+export function hasAutoFix(ruleId: string): boolean {
+  return ruleId in AUTO_FIXES;
+}
+
+/**
+ * Apply auto-fix for a specific rule
+ */
+export function applyAutoFix(ruleId: string, definition: ProjectDefinition): ProjectDefinition {
+  const fix = AUTO_FIXES[ruleId];
+  if (fix) {
+    return fix(JSON.parse(JSON.stringify(definition))); // Deep clone to avoid mutations
+  }
+  return definition;
 }
 

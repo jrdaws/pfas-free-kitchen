@@ -22,7 +22,8 @@ import {
   Wand2,
   ImageIcon,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Pencil,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { PreviewWithImages } from "@/app/components/preview";
@@ -75,6 +76,7 @@ export function LivePreviewPanel({
   const [composition, setComposition] = useState<ProjectComposition | null>(null);
   const [generateImages, setGenerateImages] = useState(false);
   const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
   const [currentPreviewPath, setCurrentPreviewPath] = useState("/");
   const [websiteAnalysis, setWebsiteAnalysis] = useState<WebsiteAnalysis | null>(null);
   
@@ -463,6 +465,24 @@ export function LivePreviewPanel({
             )}
           </button>
 
+          {/* Edit Mode Toggle */}
+          <button
+            onClick={() => setIsEditMode(!isEditMode)}
+            disabled={!composition}
+            className={cn(
+              "h-6 px-2 rounded text-xs font-medium transition-all flex items-center gap-1 flex-shrink-0",
+              isEditMode
+                ? "bg-amber-500 text-white"
+                : composition
+                  ? "bg-muted hover:bg-muted/80 text-muted-foreground"
+                  : "bg-muted/50 text-muted-foreground/50 cursor-not-allowed"
+            )}
+            title={!composition ? "Compose first" : isEditMode ? "Exit Edit Mode" : "Edit Content"}
+          >
+            <Pencil className="h-3 w-3" />
+            {isEditMode && <span className="hidden sm:inline">Edit</span>}
+          </button>
+
           {/* Viewport Toggle - Hidden on very small screens */}
           <div className="hidden sm:flex items-center p-0.5 rounded bg-muted/50 flex-shrink-0">
             <button
@@ -537,6 +557,24 @@ export function LivePreviewPanel({
             currentPath={currentPreviewPath}
             onNavigate={setCurrentPreviewPath}
             autoGenerate={showAIImagesPreview}
+            editable={isEditMode}
+            onComponentEdit={(componentId, updates) => {
+              // Update the composition with the edited props
+              if (composition) {
+                const updatedComposition = {
+                  ...composition,
+                  pages: composition.pages.map(page => ({
+                    ...page,
+                    sections: page.sections.map(section => 
+                      section.patternId === componentId || section.patternId.includes(componentId.split('-')[0])
+                        ? { ...section, props: { ...section.props, ...updates } }
+                        : section
+                    ),
+                  })),
+                };
+                setComposition(updatedComposition);
+              }
+            }}
             className="h-full"
           />
         ) : (

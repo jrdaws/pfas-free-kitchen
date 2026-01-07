@@ -27,6 +27,8 @@ interface PreviewWithImagesProps {
   onNavigate: (path: string) => void;
   autoGenerate?: boolean;
   className?: string;
+  editable?: boolean;
+  onComponentEdit?: (componentId: string, updates: Record<string, unknown>) => void;
 }
 
 interface GenerationState {
@@ -49,6 +51,8 @@ export function PreviewWithImages({
   vision,
   currentPath,
   onNavigate,
+  editable = false,
+  onComponentEdit,
   autoGenerate = false,
   className,
 }: PreviewWithImagesProps) {
@@ -290,6 +294,8 @@ export function PreviewWithImages({
           currentPath={currentPath}
           onNavigate={onNavigate}
           websiteAnalysis={websiteAnalysis}
+          editable={editable}
+          onComponentEdit={onComponentEdit}
         />
       </div>
     </div>

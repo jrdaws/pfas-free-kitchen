@@ -23,8 +23,15 @@ export { SectionToolbar } from "./SectionToolbar";
 export { PatternSwapDropdown } from "./PatternSwapDropdown";
 export { PatternSwapper } from "./PatternSwapper";
 
+// Branding customization
+export { BrandingPanel } from "./BrandingPanel";
+
 // Inline editing components
 export { EditableText } from "./EditableText";
 export { EditableWrapper, EditableArrayItem } from "./EditableWrapper";
 export { PropsEditorModal, usePropsEditor, type EditorField } from "./PropsEditorModal";
+
+// AI content generation
+export { AIGenerateButton } from "./AIGenerateButton";
+export { BulkGenerateButton } from "./BulkGenerateButton";
 
