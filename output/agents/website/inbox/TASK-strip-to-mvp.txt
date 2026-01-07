@@ -108,14 +108,16 @@ export const FEATURES: Feature[] = [
 4. Export Method (new simplified step)
 5. Download/Deploy (Step 10 → becomes Step 5)
 
-**Remove/Defer:**
-- Step 2: Research/Inspiration (AI-heavy, complex)
-- Step 3: Core Features (simplify to auto-include based on template)
-- Step 4: AI Integration (defer)
-- Step 6: Cursor Setup (defer)
-- Step 7: GitHub Setup (defer)
-- Step 8: Supabase Setup (defer)
-- Step 9: Vercel Setup (defer)
+**HIDE (keep for future, not remove):**
+- Step 2: Research/Inspiration → Move to "Advanced" mode toggle
+- Step 3: Core Features → Simplify to auto-include based on template
+- Step 4: AI Integration → Move to "Advanced" mode toggle
+- Step 6: Cursor Setup → Move to "Advanced" mode toggle
+- Step 7: GitHub Setup → Move to "Advanced" mode toggle
+- Step 8: Supabase Setup → Move to "Advanced" mode toggle
+- Step 9: Vercel Setup → Move to "Advanced" mode toggle
+
+> ⚠️ **IMPORTANT**: These steps should be HIDDEN behind an "Advanced Mode" toggle, NOT permanently removed. They represent key differentiating features (Firecrawl research, AI preview, tool integrations) that will be re-enabled when those systems are production-ready.
 
 ### Update `website/app/configure/page.tsx`
 

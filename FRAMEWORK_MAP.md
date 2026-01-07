@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- b56fdcf 2026-01-06 feat: add pattern swapping UI with section toolbar
 - 1c1ec92 2026-01-06 feat(patterns): complete pattern showcase page with all 15 patterns
 - 02ec926 2026-01-06 docs(research): add detailed MVP strip analysis with risk assessment
 - 827b8b2 2026-01-06 docs(research): ML battle system for preview/export optimization
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - c53bc8d 2026-01-05 feat(inspiration): implement inspiration → layout mapping system
 - ac79f12 2026-01-05 feat(ai): implement AI-powered configuration suggester
 - 65eb901 2026-01-05 chore: complete pattern expansion task - handoff document created
-- 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
 
 ## Agent Governance Structure
 

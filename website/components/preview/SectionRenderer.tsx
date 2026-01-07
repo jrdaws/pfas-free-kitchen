@@ -118,6 +118,7 @@ export function SectionRenderer({
   onSectionDelete,
   onSelect,
   isSelected = false,
+  dragHandleProps,
 }: SectionRendererProps) {
   const [isHovered, setIsHovered] = useState(false);
   const Component = COMPONENT_MAP[section.patternId];
@@ -212,6 +213,7 @@ export function SectionRenderer({
           onMoveDown={handleMoveDown}
           onDuplicate={handleDuplicate}
           onDelete={handleDelete}
+          dragHandleProps={dragHandleProps}
         />
       )}
 

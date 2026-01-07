@@ -1,11 +1,13 @@
 "use client";
 
-import { useCallback, useMemo } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { PreviewLink } from "./PreviewLink";
 import { StyledButton, type ComponentStyleButton } from "./StyledButton";
 import { StyledCard, type ComponentStyleCard } from "./StyledCard";
 import { FeatureBadges, type DetectedFeatures } from "./FeatureBadges";
+import { EditableText } from "@/components/preview/EditableText";
+import { EditableWrapper } from "@/components/preview/EditableWrapper";
 import type { PreviewComposition, PreviewPage, PreviewComponent } from "./types";
 import type { WebsiteAnalysis, AppliedStyles } from "./analysis-types";
 import { extractAppliedStyles } from "./analysis-types";
@@ -16,6 +18,8 @@ interface ComposedPreviewProps {
   onNavigate: (path: string) => void;
   websiteAnalysis?: WebsiteAnalysis;
   className?: string;
+  editable?: boolean;
+  onComponentEdit?: (componentId: string, updates: Record<string, unknown>) => void;
 }
 
 export function ComposedPreview({
@@ -24,6 +28,8 @@ export function ComposedPreview({
   onNavigate,
   websiteAnalysis,
   className,
+  editable = false,
+  onComponentEdit,
 }: ComposedPreviewProps) {
   const currentPage = composition.pages.find((p) => p.path === currentPath);
   

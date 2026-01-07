@@ -276,7 +276,7 @@ export interface PatternRegistryInterface {
 
 export interface SectionRendererProps {
   section: SectionConfig;
-  branding: BrandingConfig;
+  branding?: BrandingConfig;
   editable?: boolean;
   index?: number;
   totalSections?: number;
@@ -287,6 +287,8 @@ export interface SectionRendererProps {
   onSectionDelete?: (index: number) => void;
   onSelect?: () => void;
   isSelected?: boolean;
+  /** Props for drag handle (from @dnd-kit/sortable) */
+  dragHandleProps?: React.HTMLAttributes<HTMLButtonElement>;
 }
 
 export interface DynamicPreviewRendererProps {

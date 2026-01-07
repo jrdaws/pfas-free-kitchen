@@ -236,6 +236,8 @@ TEMPLATE-SPECIFIC FEATURES:
 | Cursor Setup | Post-export instructions | Already in README |
 | GitHub/Supabase/Vercel | Post-export onboarding | Could be separate flow |
 
+> ⚠️ **NOTE FOR FUTURE**: These steps (Research, AI Integration, Cursor/GitHub/Supabase/Vercel setup) should be **KEPT for the future**. They represent valuable functionality that differentiates the framework. The recommendation is to HIDE them in an "Advanced" mode, not permanently remove them. When Firecrawl, pattern library, and other advanced features are ready, these steps should be re-enabled.
+
 ---
 
 ## Part 5: Benefits vs Risks Analysis

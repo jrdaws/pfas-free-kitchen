@@ -23,3 +23,8 @@ export { SectionToolbar } from "./SectionToolbar";
 export { PatternSwapDropdown } from "./PatternSwapDropdown";
 export { PatternSwapper } from "./PatternSwapper";
 
+// Inline editing components
+export { EditableText } from "./EditableText";
+export { EditableWrapper, EditableArrayItem } from "./EditableWrapper";
+export { PropsEditorModal, usePropsEditor, type EditorField } from "./PropsEditorModal";
+

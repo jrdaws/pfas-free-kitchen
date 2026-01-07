@@ -34,3 +34,9 @@ test-results/
 test-saas-project/
 .vercel
 .env*.local
+
+# Test artifacts - prevent bloat
+output/agents/*/workspace/**/node_modules
+output/agents/*/workspace/**/.next
+output/agents/*/workspace/export-tests-run
+output/agents/*/workspace/e2e-test-*
