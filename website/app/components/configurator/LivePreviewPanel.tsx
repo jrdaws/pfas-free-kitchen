@@ -90,6 +90,9 @@ export function LivePreviewPanel({
     historyLength,
   } = useHistory<ProjectComposition | null>(null);
   
+  const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  
   // Enable keyboard shortcuts for undo/redo when in edit mode
   useUndoRedoShortcuts({
     undo,
@@ -98,8 +101,6 @@ export function LivePreviewPanel({
     canRedo,
     enabled: isEditMode && !!composition,
   });
-  const [showAIImagesPreview, setShowAIImagesPreview] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [currentPreviewPath, setCurrentPreviewPath] = useState("/");
   const [websiteAnalysis, setWebsiteAnalysis] = useState<WebsiteAnalysis | null>(null);
   

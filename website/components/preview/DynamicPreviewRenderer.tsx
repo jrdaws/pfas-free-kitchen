@@ -291,6 +291,7 @@ export function DynamicPreviewRenderer({
               onSectionChange={handleSectionChange}
               onSectionDuplicate={handleSectionDuplicate}
               onSectionDelete={handleSectionDelete}
+              onAddSection={handleOpenAddSection}
             />
           ) : (
             sortedSections.map((section) => (
@@ -303,6 +304,13 @@ export function DynamicPreviewRenderer({
             ))
           )}
         </main>
+
+        {/* Section Picker Modal */}
+        <SectionPickerModal
+          isOpen={pickerOpen}
+          onClose={() => setPickerOpen(false)}
+          onSelect={handleAddSection}
+        />
 
         {/* Footer (if defined) */}
         {definition.footer && (
@@ -335,7 +343,16 @@ export function DynamicPreviewRenderer({
                 />
               </svg>
               <p>No sections defined for this page</p>
-              {editable && <p className="text-sm mt-2">Add sections from the pattern library</p>}
+              {editable && (
+                <div className="mt-4">
+                  <button
+                    onClick={() => handleOpenAddSection(0)}
+                    className="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white rounded-lg transition-colors"
+                  >
+                    Add Your First Section
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}
