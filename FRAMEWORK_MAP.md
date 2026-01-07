@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 1aee286 2026-01-06 feat(patterns): create pattern library foundation
 - 943b048 2026-01-06 feat(patterns): add Firecrawl + WYSIWYG preview integration plan
 - e494025 2026-01-06 feat: implement composer mode differentiation - registry/hybrid/auto
 - 4f96a29 2026-01-06 fix: preview header overflow + Hero image support
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 03d7a5f 2026-01-05 feat: pass Firecrawl research results to preview composer
 - 2fef60f 2026-01-05 debug: add console logs to track auto-compose status
 - b6f0545 2026-01-05 chore: remove completed task file for optimization tests
-- dc44dc6 2026-01-05 test: add integration tests for 6 optimization features
 
 ## Agent Governance Structure
 
