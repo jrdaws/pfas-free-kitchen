@@ -271,13 +271,38 @@ export interface PatternRegistryInterface {
 }
 
 // ============================================
-// WEBSITE ANALYSIS (from Firecrawl/Inspiration)
+// RENDERER PROPS
+// ============================================
+
+export interface SectionRendererProps {
+  section: SectionConfig;
+  branding: BrandingConfig;
+  editable?: boolean;
+  onPropsChange?: (newProps: Record<string, unknown>) => void;
+  onSelect?: () => void;
+  isSelected?: boolean;
+}
+
+export interface DynamicPreviewRendererProps {
+  definition: ProjectDefinition;
+  currentPage?: string;
+  viewport?: "desktop" | "tablet" | "mobile";
+  editable?: boolean;
+  onDefinitionChange?: (newDef: ProjectDefinition) => void;
+}
+
+// ============================================
+// DEFAULT BRANDING
+// ============================================
+
+// ============================================
+// WEBSITE ANALYSIS (from Firecrawl/inspiration)
 // ============================================
 
 export interface WebsiteAnalysis {
   url: string;
   analyzedAt: string;
-  
+
   design: {
     colorPalette: {
       primary: string;
@@ -301,7 +326,7 @@ export interface WebsiteAnalysis {
       animations: boolean;
     };
   };
-  
+
   layout: {
     headerStyle: "sticky" | "fixed" | "static";
     navigationPattern: "horizontal" | "sidebar" | "hamburger" | "mega-menu";
@@ -309,48 +334,27 @@ export interface WebsiteAnalysis {
     heroPattern: "centered" | "split" | "video" | "gradient" | "image";
     contentWidth: "full" | "contained" | "narrow";
   };
-  
-  sections: {
+
+  sections: Array<{
     type: PatternCategory;
     layout: "grid" | "list" | "carousel" | "split" | "stacked";
     itemCount: number;
     hasAnimations: boolean;
     order: number;
-  }[];
-  
+  }>;
+
   conversion: {
     ctaPlacements: string[];
     trustSignals: string[];
     socialProof: boolean;
     pricingTiers: number;
   };
-  
+
   tech: {
     framework: "next" | "react" | "vue" | "astro" | "unknown";
     uiLibrary: "tailwind" | "shadcn" | "chakra" | "material" | "custom";
     animations: "framer" | "gsap" | "css" | "none";
   };
-}
-
-// ============================================
-// RENDERER PROPS
-// ============================================
-
-export interface SectionRendererProps {
-  section: SectionConfig;
-  branding: BrandingConfig;
-  editable?: boolean;
-  onPropsChange?: (newProps: Record<string, unknown>) => void;
-  onSelect?: () => void;
-  isSelected?: boolean;
-}
-
-export interface DynamicPreviewRendererProps {
-  definition: ProjectDefinition;
-  currentPage?: string;
-  viewport?: "desktop" | "tablet" | "mobile";
-  editable?: boolean;
-  onDefinitionChange?: (newDef: ProjectDefinition) => void;
 }
 
 // ============================================
