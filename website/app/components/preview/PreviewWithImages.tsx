@@ -4,13 +4,13 @@ import { useState, useCallback, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { ComposedPreview } from "./ComposedPreview";
 import {
-  generatePreviewImages,
-  type PreviewImageRequest,
-} from "@/lib/preview-image-generator";
-import type { PreviewComposition } from "./types";
+  generatePatternImages,
+  patternNeedsImages,
+  type ImageGenerationContext,
+} from "@/lib/patterns/image-generator";
+import type { PreviewComposition, PreviewComponent } from "./types";
 import type { WebsiteAnalysis } from "./analysis-types";
 import { Loader2, Sparkles, Image as ImageIcon, RefreshCw, CheckCircle } from "lucide-react";
-import type { SectionType, ImageSlot } from "@/lib/image-prompt-builder";
 
 interface ProjectVision {
   projectName: string;
@@ -31,10 +31,16 @@ interface PreviewWithImagesProps {
 
 interface GenerationState {
   isGenerating: boolean;
-  progress: number;
+  progress: { current: number; total: number };
   generatedCount: number;
   cachedCount: number;
+  failedCount: number;
   errors: string[];
+}
+
+// Store enhanced components with generated images
+interface EnhancedComponents {
+  [componentId: string]: Record<string, unknown>;
 }
 
 export function PreviewWithImages({
@@ -46,71 +52,101 @@ export function PreviewWithImages({
   autoGenerate = false,
   className,
 }: PreviewWithImagesProps) {
-  const [images, setImages] = useState<Map<string, string>>(new Map());
+  const [enhancedProps, setEnhancedProps] = useState<EnhancedComponents>({});
   const [state, setState] = useState<GenerationState>({
     isGenerating: false,
-    progress: 0,
+    progress: { current: 0, total: 0 },
     generatedCount: 0,
     cachedCount: 0,
+    failedCount: 0,
     errors: [],
   });
 
-  // Extract sections needing images from composition
-  const getSectionsNeedingImages = useCallback(() => {
-    const sections: PreviewImageRequest["sections"] = [];
+  // Count components needing images
+  const componentsNeedingImages = composition.pages.flatMap(page =>
+    page.components.filter(c => patternNeedsImages(c.type))
+  );
+
+  const handleGenerateImages = useCallback(async () => {
+    setState(s => ({
+      ...s,
+      isGenerating: true,
+      progress: { current: 0, total: componentsNeedingImages.length },
+      errors: [],
+    }));
+
+    const context: ImageGenerationContext = {
+      projectName: vision.projectName,
+      domain: vision.description,
+      industry: extractIndustry(vision.description),
+      primaryColor: websiteAnalysis?.visual?.colorPalette?.primary,
+      audience: vision.audience,
+    };
+
+    const newEnhancedProps: EnhancedComponents = {};
+    let generatedCount = 0;
+    let cachedCount = 0;
+    let failedCount = 0;
+    const allErrors: string[] = [];
+
+    let componentIndex = 0;
 
     for (const page of composition.pages) {
       for (const component of page.components) {
-        const needsImage = componentNeedsImage(component.type);
-        if (needsImage) {
-          sections.push({
-            type: componentToSectionType(component.type),
-            needsImage: true,
-            imageSlot: inferImageSlot(component.type),
-          });
+        if (patternNeedsImages(component.type)) {
+          componentIndex++;
+          setState(s => ({
+            ...s,
+            progress: { current: componentIndex, total: componentsNeedingImages.length },
+          }));
+
+          try {
+            const result = await generatePatternImages(
+              component.type,
+              component.props,
+              context,
+              {
+                skipLowPriority: false,
+                maxConcurrent: 2,
+              }
+            );
+
+            newEnhancedProps[component.id] = result.props;
+
+            // Count stats
+            for (const img of result.generatedImages) {
+              if (img.cached) {
+                cachedCount++;
+              } else {
+                generatedCount++;
+              }
+            }
+            if (result.errors.length > 0) {
+              failedCount += result.errors.length;
+              allErrors.push(...result.errors);
+            }
+          } catch (error) {
+            failedCount++;
+            allErrors.push(
+              `${component.type}: ${error instanceof Error ? error.message : "Unknown error"}`
+            );
+          }
         }
       }
     }
 
-    return sections;
-  }, [composition.pages]);
-
-  const handleGenerateImages = useCallback(async () => {
-    setState((s) => ({
-      ...s,
-      isGenerating: true,
-      progress: 0,
-      errors: [],
-    }));
-
-    try {
-      const sections = getSectionsNeedingImages();
-
-      const result = await generatePreviewImages({
-        sections,
-        websiteAnalysis,
-        vision,
-      });
-
-      setImages(result.images);
-      setState({
-        isGenerating: false,
-        progress: 100,
-        generatedCount: result.generatedCount,
-        cachedCount: result.cachedCount,
-        errors: result.errors,
-      });
-    } catch (error) {
-      setState((s) => ({
-        ...s,
-        isGenerating: false,
-        errors: [error instanceof Error ? error.message : "Generation failed"],
-      }));
-    }
-  }, [getSectionsNeedingImages, websiteAnalysis, vision]);
+    setEnhancedProps(newEnhancedProps);
+    setState({
+      isGenerating: false,
+      progress: { current: componentsNeedingImages.length, total: componentsNeedingImages.length },
+      generatedCount,
+      cachedCount,
+      failedCount,
+      errors: allErrors,
+    });
+  }, [composition, vision, websiteAnalysis, componentsNeedingImages.length]);
 
   // Auto-generate images when composition changes and autoGenerate is true
-  const hasAutoGeneratedRef = useRef(false);
   const compositionIdRef = useRef<string>("");
   
   useEffect(() => {
@@ -120,34 +156,21 @@ export function PreviewWithImages({
     // Only auto-generate once per composition and when autoGenerate is enabled
     if (autoGenerate && compositionId !== compositionIdRef.current && !state.isGenerating) {
       compositionIdRef.current = compositionId;
-      hasAutoGeneratedRef.current = true;
       handleGenerateImages();
     }
   }, [autoGenerate, composition, state.isGenerating, handleGenerateImages]);
 
-  // Get image for a component
-  const getImageForComponent = (componentType: string): string | undefined => {
-    const sectionType = componentToSectionType(componentType);
-    const slot = inferImageSlot(componentType);
-    return images.get(`${sectionType}-${slot}`);
-  };
-
-  // Add images to composition
+  // Add enhanced props (with generated images) to composition
   const compositionWithImages: PreviewComposition = {
     ...composition,
     pages: composition.pages.map((page) => ({
       ...page,
       components: page.components.map((component) => {
-        const imageUrl = getImageForComponent(component.type);
-        if (imageUrl && componentNeedsImage(component.type)) {
+        const enhanced = enhancedProps[component.id];
+        if (enhanced) {
           return {
             ...component,
-            props: {
-              ...component.props,
-              backgroundImage: imageUrl,
-              heroImage: imageUrl,
-              image: imageUrl,
-            },
+            props: { ...component.props, ...enhanced },
           };
         }
         return component;
@@ -155,8 +178,8 @@ export function PreviewWithImages({
     })),
   };
 
-  const hasImages = images.size > 0;
-  const sectionsCount = getSectionsNeedingImages().length;
+  const hasImages = Object.keys(enhancedProps).length > 0;
+  const totalImagesGenerated = state.generatedCount + state.cachedCount;
 
   return (
     <div className={cn("flex flex-col h-full", className)}>
@@ -165,18 +188,23 @@ export function PreviewWithImages({
         <div className="flex items-center gap-3">
           <ImageIcon className="w-4 h-4 text-slate-400" />
           <span className="text-sm text-slate-300">
-            {hasImages
-              ? `${images.size} images generated`
-              : `${sectionsCount} sections need images`}
+            {state.isGenerating
+              ? `Generating ${state.progress.current}/${state.progress.total}...`
+              : hasImages
+              ? `${totalImagesGenerated} images generated`
+              : `${componentsNeedingImages.length} sections need images`}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          {hasImages && (
+          {hasImages && !state.isGenerating && (
             <div className="flex items-center gap-1.5 px-2 py-1 bg-emerald-500/10 rounded-md">
               <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
               <span className="text-xs text-emerald-400">
                 {state.generatedCount} new, {state.cachedCount} cached
+                {state.failedCount > 0 && (
+                  <span className="text-amber-400">, {state.failedCount} failed</span>
+                )}
               </span>
             </div>
           )}
@@ -196,7 +224,7 @@ export function PreviewWithImages({
             {state.isGenerating ? (
               <>
                 <Loader2 className="w-4 h-4 animate-spin" />
-                Generating...
+                {state.progress.current}/{state.progress.total}
               </>
             ) : hasImages ? (
               <>
@@ -270,52 +298,30 @@ export function PreviewWithImages({
 
 // Helper functions
 
-// Extract base type from pattern ID (e.g., "hero-split-image" -> "hero")
-function getBaseType(type: string): string {
-  const prefixes = ["hero", "features", "pricing", "testimonials", "cta", "footer", "faq", "navigation", "stats", "team", "product", "blog", "about"];
+/**
+ * Extract industry from project description
+ */
+function extractIndustry(description: string): string {
+  const industries: Record<string, string[]> = {
+    ecommerce: ["shop", "store", "sell", "product", "cart", "checkout", "retail", "commerce"],
+    saas: ["software", "platform", "app", "tool", "service", "dashboard", "analytics"],
+    finance: ["bank", "finance", "money", "payment", "invest", "trading", "crypto"],
+    health: ["health", "medical", "doctor", "patient", "clinic", "fitness", "wellness"],
+    education: ["learn", "course", "school", "teach", "education", "training", "tutor"],
+    food: ["food", "restaurant", "recipe", "cook", "menu", "delivery", "catering"],
+    travel: ["travel", "hotel", "booking", "vacation", "trip", "tour", "flight"],
+    real_estate: ["property", "real estate", "house", "apartment", "rent", "mortgage"],
+    technology: ["tech", "software", "digital", "ai", "data", "cloud", "automation"],
+  };
+
+  const lowerDesc = description.toLowerCase();
   
-  for (const prefix of prefixes) {
-    if (type.startsWith(prefix)) {
-      return prefix;
+  for (const [industry, keywords] of Object.entries(industries)) {
+    if (keywords.some(kw => lowerDesc.includes(kw))) {
+      return industry;
     }
   }
   
-  return type.split("-")[0];
-}
-
-function componentNeedsImage(componentType: string): boolean {
-  const baseType = getBaseType(componentType);
-  const imageComponents = ["hero", "features", "testimonials", "product", "about", "team"];
-  return imageComponents.includes(baseType);
-}
-
-function componentToSectionType(componentType: string): SectionType {
-  const baseType = getBaseType(componentType);
-  const mapping: Record<string, SectionType> = {
-    hero: "hero",
-    features: "features",
-    testimonials: "testimonials",
-    product: "product",
-    pricing: "pricing",
-    cta: "cta",
-    about: "about",
-    team: "team",
-  };
-  return mapping[baseType] || "features";
-}
-
-function inferImageSlot(componentType: string): ImageSlot {
-  const baseType = getBaseType(componentType);
-  const mapping: Record<string, ImageSlot> = {
-    hero: "hero",
-    features: "feature",
-    testimonials: "avatar",
-    product: "product",
-    about: "feature",
-    team: "avatar",
-    pricing: "background",
-    cta: "background",
-  };
-  return mapping[baseType] || "feature";
+  return "technology"; // Default
 }
 

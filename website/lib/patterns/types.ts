@@ -278,7 +278,13 @@ export interface SectionRendererProps {
   section: SectionConfig;
   branding: BrandingConfig;
   editable?: boolean;
+  index?: number;
+  totalSections?: number;
   onPropsChange?: (newProps: Record<string, unknown>) => void;
+  onSectionChange?: (section: SectionConfig) => void;
+  onSectionMove?: (fromIndex: number, toIndex: number) => void;
+  onSectionDuplicate?: (index: number) => void;
+  onSectionDelete?: (index: number) => void;
   onSelect?: () => void;
   isSelected?: boolean;
 }

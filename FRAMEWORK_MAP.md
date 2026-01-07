@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- 02ec926 2026-01-06 docs(research): add detailed MVP strip analysis with risk assessment
 - 827b8b2 2026-01-06 docs(research): ML battle system for preview/export optimization
 - 0438260 2026-01-06 feat(mvp): add task to strip framework to MVP scope
 - f971367 2026-01-06 docs(audit): add codebase bloat and MVP scope analysis
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 65eb901 2026-01-05 chore: complete pattern expansion task - handoff document created
 - 2631969 2026-01-05 feat(patterns): expand pattern library to 42 patterns
 - 0b8aa2c 2026-01-05 feat(generator): apply website analysis to export generation
-- cf24487 2026-01-05 feat: complete deep website analysis system (Waves 1-3)
 
 ## Agent Governance Structure
 

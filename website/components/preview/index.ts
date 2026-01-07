@@ -17,3 +17,9 @@ export { FAQ } from "./FAQ";
 export { BlogPostList } from "./BlogPostList";
 export { DashboardPreview } from "./DashboardPreview";
 
+// Section editing components
+export { SectionRenderer } from "./SectionRenderer";
+export { SectionToolbar } from "./SectionToolbar";
+export { PatternSwapDropdown } from "./PatternSwapDropdown";
+export { PatternSwapper } from "./PatternSwapper";
+

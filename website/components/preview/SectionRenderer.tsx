@@ -1,8 +1,10 @@
 "use client";
 
-import React from "react";
-import { SectionRendererProps, BrandingConfig, DEFAULT_BRANDING } from "@/lib/patterns/types";
+import React, { useState } from "react";
+import { SectionRendererProps, BrandingConfig, DEFAULT_BRANDING, SectionConfig } from "@/lib/patterns/types";
 import { patternRegistry } from "@/lib/patterns/registry";
+import { SectionToolbar } from "./SectionToolbar";
+import { migratePatternProps, duplicateSection } from "@/lib/patterns/pattern-migration";
 
 // Import all pattern components
 import {
@@ -101,15 +103,23 @@ function PlaceholderSection({ patternId }: { patternId: string }) {
  * 
  * Renders a section from its configuration.
  * Maps pattern IDs to actual React components and merges props.
+ * Shows a toolbar on hover when in editable mode.
  */
 export function SectionRenderer({
   section,
   branding = DEFAULT_BRANDING,
   editable = false,
+  index = 0,
+  totalSections = 1,
   onPropsChange,
+  onSectionChange,
+  onSectionMove,
+  onSectionDuplicate,
+  onSectionDelete,
   onSelect,
   isSelected = false,
 }: SectionRendererProps) {
+  const [isHovered, setIsHovered] = useState(false);
   const Component = COMPONENT_MAP[section.patternId];
 
   // Check if section is hidden
@@ -127,8 +137,6 @@ export function SectionRenderer({
   // Find variant default props if specified
   let variantProps = {};
   if (section.variantId && pattern) {
-    // Currently patterns store variants as strings, not objects
-    // This is a simplified merge
     variantProps = { variant: section.variantId };
   }
 
@@ -146,34 +154,74 @@ export function SectionRenderer({
     }
   };
 
+  // Handle pattern swap
+  const handleSwap = (newPatternId: string) => {
+    if (onSectionChange) {
+      const migratedSection = migratePatternProps(section, newPatternId);
+      onSectionChange(migratedSection);
+    }
+  };
+
+  // Handle move up
+  const handleMoveUp = () => {
+    if (onSectionMove && index > 0) {
+      onSectionMove(index, index - 1);
+    }
+  };
+
+  // Handle move down
+  const handleMoveDown = () => {
+    if (onSectionMove && index < totalSections - 1) {
+      onSectionMove(index, index + 1);
+    }
+  };
+
+  // Handle duplicate
+  const handleDuplicate = () => {
+    if (onSectionDuplicate) {
+      onSectionDuplicate(index);
+    }
+  };
+
+  // Handle delete
+  const handleDelete = () => {
+    if (onSectionDelete) {
+      onSectionDelete(index);
+    }
+  };
+
   return (
     <div
       className={`relative group ${section.customizations?.className || ""} ${
         isSelected ? "ring-2 ring-primary ring-offset-2 ring-offset-background" : ""
       } ${editable ? "cursor-pointer" : ""}`}
       onClick={handleClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
       data-section-id={section.id}
       data-pattern-id={section.patternId}
     >
-      {/* Edit overlay when editable and selected */}
-      {editable && isSelected && (
-        <div className="absolute top-2 right-2 z-20 flex gap-2">
-          <button
-            className="p-2 rounded-lg bg-primary text-primary-foreground shadow-lg"
-            onClick={(e) => {
-              e.stopPropagation();
-              // TODO: Open props editor
-            }}
-          >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-            </svg>
-          </button>
-        </div>
+      {/* Section toolbar - shows on hover in editable mode */}
+      {editable && isHovered && (
+        <SectionToolbar
+          section={section}
+          index={index}
+          totalSections={totalSections}
+          onSwap={handleSwap}
+          onMoveUp={handleMoveUp}
+          onMoveDown={handleMoveDown}
+          onDuplicate={handleDuplicate}
+          onDelete={handleDelete}
+        />
       )}
 
-      {/* Hover indicator when editable */}
-      {editable && !isSelected && (
+      {/* Section outline on hover */}
+      {editable && isHovered && (
+        <div className="absolute inset-0 border-2 border-dashed border-orange-500/30 pointer-events-none z-30" />
+      )}
+
+      {/* Hover indicator when editable but not hovered */}
+      {editable && !isHovered && !isSelected && (
         <div className="absolute inset-0 border-2 border-transparent group-hover:border-muted-foreground/30 pointer-events-none rounded-lg transition-colors z-10" />
       )}
 

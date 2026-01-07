@@ -40,6 +40,13 @@ export {
   type ValidationResult,
 } from "./validation";
 
+// Pattern Migration (for swapping patterns)
+export {
+  migratePatternProps,
+  duplicateSection,
+  generateSectionId,
+} from "./pattern-migration";
+
 // Hero patterns
 export {
   HeroCenteredGradient,
@@ -72,3 +79,16 @@ export { CTASection } from "./patterns/cta";
 
 // FAQ patterns
 export { FAQAccordion } from "./patterns/faq";
+
+// Image generation for patterns
+export {
+  generatePatternImages,
+  generateCompositionSectionImages,
+  getPatternImageConfig,
+  patternNeedsImages,
+  getPatternsNeedingImages,
+  getImageGenerationStats,
+  type ImageGenerationContext,
+  type PatternImageGenerationResult,
+  type GeneratedImageResult,
+} from "./image-generator";
