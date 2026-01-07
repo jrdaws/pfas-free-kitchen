@@ -178,11 +178,12 @@ function parseResponse(response: string): SelectorOutput {
 // ============================================================================
 
 const PAGE_TYPE_PATTERNS: Record<PageType, string[]> = {
-  home: ["nav-standard", "hero-centered", "features-grid", "testimonials-grid", "cta-simple", "footer-multi-column"],
-  about: ["nav-standard", "hero-centered", "features-alternating", "footer-multi-column"],
+  // Use hero-split-image for home to enable image generation
+  home: ["nav-standard", "hero-split-image", "features-grid", "testimonials-grid", "cta-simple", "footer-multi-column"],
+  about: ["nav-standard", "hero-split-image", "features-alternating", "footer-multi-column"],
   pricing: ["nav-standard", "pricing-three-tier", "faq-accordion", "cta-simple", "footer-multi-column"],
-  features: ["nav-standard", "hero-centered", "features-alternating", "cta-simple", "footer-multi-column"],
-  blog: ["nav-standard", "hero-centered", "footer-multi-column"],
+  features: ["nav-standard", "hero-split-image", "features-alternating", "cta-simple", "footer-multi-column"],
+  blog: ["nav-standard", "hero-split-image", "footer-multi-column"],
   "blog-post": ["nav-standard", "footer-multi-column"],
   contact: ["nav-standard", "cta-simple", "footer-multi-column"],
   product: ["nav-standard", "hero-split-image", "features-grid", "testimonials-grid", "pricing-three-tier", "footer-multi-column"],

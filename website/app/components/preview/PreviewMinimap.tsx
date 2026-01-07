@@ -20,11 +20,11 @@ export function PreviewMinimap({
   return (
     <div
       className={cn(
-        "flex flex-col gap-2 p-3 bg-slate-900/80 backdrop-blur-sm border-l border-slate-700/50 w-48 overflow-y-auto",
+        "flex flex-col gap-2 p-3 bg-card/80 backdrop-blur-sm border-l border-border w-48 overflow-y-auto",
         className
       )}
     >
-      <div className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">
+      <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">
         Pages
       </div>
       {pages.map((page) => {
@@ -38,8 +38,8 @@ export function PreviewMinimap({
             className={cn(
               "group flex flex-col gap-1 p-2 rounded-lg transition-all duration-200",
               isActive
-                ? "bg-indigo-600/20 ring-2 ring-indigo-500"
-                : "hover:bg-slate-800"
+                ? "bg-primary/20 ring-2 ring-primary"
+                : "hover:bg-muted"
             )}
           >
             {/* Thumbnail placeholder */}
@@ -47,8 +47,8 @@ export function PreviewMinimap({
               className={cn(
                 "w-full aspect-[4/3] rounded-md flex items-center justify-center text-2xl transition-all",
                 isActive
-                  ? "bg-indigo-600/30"
-                  : "bg-slate-800 group-hover:bg-slate-700"
+                  ? "bg-primary/30"
+                  : "bg-muted group-hover:bg-muted/80"
               )}
             >
               {icon}
@@ -57,7 +57,7 @@ export function PreviewMinimap({
               <span
                 className={cn(
                   "text-xs font-medium truncate",
-                  isActive ? "text-indigo-300" : "text-slate-400"
+                  isActive ? "text-primary" : "text-muted-foreground"
                 )}
               >
                 {page.name}
@@ -66,7 +66,7 @@ export function PreviewMinimap({
                 <span className="text-xs opacity-60">🔒</span>
               )}
             </div>
-            <span className="text-[10px] text-slate-600 truncate">
+            <span className="text-[10px] text-muted-foreground/60 truncate">
               {page.path}
             </span>
           </button>

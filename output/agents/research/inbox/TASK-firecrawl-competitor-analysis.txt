@@ -1,0 +1,269 @@
+# TASK: Firecrawl Competitor Website Analysis
+
+**Priority**: P1
+**Assigned To**: Research Agent
+**Dependencies**: Firecrawl API key configured
+**Estimated Effort**: 4 hours
+
+---
+
+## Objective
+
+Use Firecrawl to analyze 15 top-performing websites and extract design patterns, layouts, and conversion strategies to populate the pattern library.
+
+---
+
+## Prerequisites
+
+1. Firecrawl API key must be set up
+2. Read `output/shared/research/FIRECRAWL-PREVIEW-INTEGRATION-PLAN.md`
+3. Understand the `WebsiteAnalysis` type from the technical spec
+
+---
+
+## Websites to Analyze
+
+### SaaS Landing Pages (5)
+| # | URL | Why | Focus |
+|---|-----|-----|-------|
+| 1 | linear.app | Best-in-class SaaS design | Hero, animations, dark mode |
+| 2 | vercel.com | Developer-focused, clean | Split hero, gradient text |
+| 3 | stripe.com | Premium, polished | Animations, trust signals |
+| 4 | notion.so | Modern, flexible | Bento layout, testimonials |
+| 5 | figma.com | Creative, dynamic | Video hero, features |
+
+### E-commerce (3)
+| # | URL | Why | Focus |
+|---|-----|-----|-------|
+| 6 | shopify.com/examples | Store showcases | Product grids, checkout |
+| 7 | gumroad.com | Creator economy | Simple pricing, CTAs |
+| 8 | lemonsqueezy.com | Modern payments | Pricing tables |
+
+### Dashboards (3)
+| # | URL | Why | Focus |
+|---|-----|-----|-------|
+| 9 | railway.app | Developer dashboard | Sidebar nav, settings |
+| 10 | planetscale.com | Database UI | Data tables, forms |
+| 11 | supabase.com | Backend UI | Dark mode, docs layout |
+
+### Directories (2)
+| # | URL | Why | Focus |
+|---|-----|-----|-------|
+| 12 | producthunt.com | Product discovery | Grid layouts, voting |
+| 13 | alternativeto.net | Software directory | Search, filtering |
+
+### Content/Blog (2)
+| # | URL | Why | Focus |
+|---|-----|-----|-------|
+| 14 | ghost.org | Publishing platform | Typography, readability |
+| 15 | hashnode.dev | Developer blogs | Content layout, social |
+
+---
+
+## Tasks
+
+### Task 1: Set Up Firecrawl
+
+Verify Firecrawl is working:
+
+```bash
+# Test API connection
+curl -X POST https://api.firecrawl.dev/v1/scrape \
+  -H "Authorization: Bearer $FIRECRAWL_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://linear.app", "formats": ["markdown"]}'
+```
+
+### Task 2: Create Analysis Script
+
+Create `scripts/analyze-websites.ts`:
+
+```typescript
+import Firecrawl from '@mendable/firecrawl-js';
+import { writeFileSync } from 'fs';
+
+const WEBSITES = [
+  { url: 'https://linear.app', category: 'saas' },
+  { url: 'https://vercel.com', category: 'saas' },
+  // ... all 15
+];
+
+async function analyzeWebsite(url: string) {
+  const app = new Firecrawl({ apiKey: process.env.FIRECRAWL_API_KEY });
+  
+  const result = await app.scrapeUrl(url, {
+    pageOptions: {
+      screenshot: true,
+      fullPageScreenshot: true,
+      waitFor: 2000,
+    },
+    extractorOptions: {
+      mode: 'llm-extraction',
+      extractionPrompt: ANALYSIS_PROMPT,
+      extractionSchema: ANALYSIS_SCHEMA,
+    },
+  });
+  
+  return {
+    url,
+    analyzedAt: new Date().toISOString(),
+    ...result.extraction,
+    screenshot: result.screenshot,
+  };
+}
+
+async function main() {
+  const results = [];
+  
+  for (const site of WEBSITES) {
+    console.log(`Analyzing ${site.url}...`);
+    try {
+      const analysis = await analyzeWebsite(site.url);
+      results.push(analysis);
+      
+      // Save individual result
+      const filename = site.url.replace(/https?:\/\//, '').replace(/[^a-z0-9]/g, '-');
+      writeFileSync(
+        `output/shared/research/website-analysis/${filename}.json`,
+        JSON.stringify(analysis, null, 2)
+      );
+      
+      // Rate limit
+      await new Promise(r => setTimeout(r, 2000));
+    } catch (error) {
+      console.error(`Failed to analyze ${site.url}:`, error);
+    }
+  }
+  
+  // Save combined results
+  writeFileSync(
+    'output/shared/research/website-analysis/all-analyses.json',
+    JSON.stringify(results, null, 2)
+  );
+}
+
+main();
+```
+
+### Task 3: Run Analysis
+
+Execute the analysis script:
+
+```bash
+cd /Users/joseph.dawson/Documents/dawson-does-framework && \
+  npx ts-node scripts/analyze-websites.ts
+```
+
+### Task 4: Extract Pattern Insights
+
+For each analyzed website, document:
+
+1. **Color Palette** - Primary, secondary, accent colors
+2. **Typography** - Heading font, body font, scale
+3. **Hero Pattern** - Type, layout, CTA placement
+4. **Section Order** - What sections appear and in what order
+5. **Conversion Elements** - Trust signals, social proof
+6. **Unique Features** - What makes this site stand out
+
+### Task 5: Create Pattern Recommendations
+
+Based on analysis, recommend patterns to add to library:
+
+```markdown
+## Pattern Recommendations from Analysis
+
+### High-Priority Patterns (seen in 3+ sites)
+1. [Pattern Name] - Seen in: linear.app, vercel.com, stripe.com
+   - Key elements: ...
+   - Recommended variant: ...
+
+2. [Pattern Name] - Seen in: ...
+```
+
+---
+
+## Output Format
+
+### Individual Analysis Files
+
+Save to `output/shared/research/website-analysis/[domain].json`:
+
+```json
+{
+  "url": "https://linear.app",
+  "analyzedAt": "2026-01-06T...",
+  "design": {
+    "colorPalette": { ... },
+    "typography": { ... }
+  },
+  "layout": { ... },
+  "sections": [ ... ],
+  "conversion": { ... },
+  "screenshot": "base64..."
+}
+```
+
+### Summary Report
+
+Create `output/shared/research/website-analysis/ANALYSIS_SUMMARY.md`:
+
+```markdown
+# Website Analysis Summary
+
+## Overview
+- Total sites analyzed: 15
+- Analysis date: 2026-01-06
+- Tool: Firecrawl API
+
+## Common Patterns Identified
+
+### Hero Sections
+| Pattern | Sites Using | Conversion Score |
+|---------|-------------|------------------|
+| Centered Gradient | 5 | 9/10 |
+| Split Image | 4 | 8/10 |
+...
+
+### Top Insights
+1. [Key insight about design trends]
+2. [Key insight about conversion patterns]
+3. [Key insight about tech stack choices]
+
+## Recommended Pattern Additions
+...
+```
+
+---
+
+## Success Criteria
+
+- [ ] All 15 websites successfully analyzed
+- [ ] JSON files saved for each site
+- [ ] Screenshots captured where possible
+- [ ] Summary report with actionable insights
+- [ ] Pattern recommendations documented
+
+---
+
+## Handoff
+
+When complete:
+1. Update `prompts/agents/memory/RESEARCH_MEMORY.md`
+2. Create `output/agents/research/outbox/firecrawl-analysis-complete.txt`
+3. Notify Website Agent to incorporate patterns
+
+---
+
+## Budget Consideration
+
+Firecrawl has usage limits. Prioritize:
+1. SaaS sites (highest relevance)
+2. E-commerce sites
+3. Others as budget allows
+
+If hitting limits, analyze top 5 SaaS sites first.
+
+---
+
+*Created by Documentation Agent*
+

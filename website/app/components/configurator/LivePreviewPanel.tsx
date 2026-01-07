@@ -511,15 +511,15 @@ export function LivePreviewPanel({
       </div>
 
       {/* Preview Frame - Single unified preview system */}
-      <div className="flex-1 bg-stone-900 p-4 overflow-auto">
+      <div className="flex-1 p-4 overflow-auto" style={{ backgroundColor: 'hsl(var(--background-alt))' }}>
         {/* Show composing state */}
         {isComposing ? (
           <div className="h-full flex items-center justify-center">
             <div className="text-center space-y-4">
               <Loader2 className="h-12 w-12 animate-spin text-primary mx-auto" />
               <div>
-                <p className="text-white font-medium">Creating your preview...</p>
-                <p className="text-stone-400 text-sm mt-1">AI is composing sections based on your inputs</p>
+                <p className="text-foreground font-medium">Creating your preview...</p>
+                <p className="text-muted-foreground text-sm mt-1">AI is composing sections based on your inputs</p>
               </div>
             </div>
           </div>
@@ -536,6 +536,7 @@ export function LivePreviewPanel({
             }}
             currentPath={currentPreviewPath}
             onNavigate={setCurrentPreviewPath}
+            autoGenerate={showAIImagesPreview}
             className="h-full"
           />
         ) : (
@@ -546,8 +547,8 @@ export function LivePreviewPanel({
                 <Wand2 className="h-10 w-10 text-primary" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold text-white mb-2">Ready to Preview</h3>
-                <p className="text-stone-400">
+                <h3 className="text-xl font-semibold text-foreground mb-2">Ready to Preview</h3>
+                <p className="text-muted-foreground">
                   Click <span className="text-primary font-medium">Compose</span> to generate 
                   an AI-powered preview based on your project configuration.
                 </p>

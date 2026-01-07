@@ -102,7 +102,7 @@ export function ComposerModeToggle({
             </button>
           </PopoverTrigger>
           <PopoverContent 
-            className="w-80 p-0 bg-stone-900 border-stone-700" 
+            className="w-80 p-0 bg-popover border-border" 
             align="end"
             sideOffset={8}
           >
@@ -113,7 +113,7 @@ export function ComposerModeToggle({
                 setShowSettings(false);
               }}
             />
-            <div className="border-t border-stone-700">
+            <div className="border-t border-border">
               <AdvancedSettings 
                 config={composerConfig}
                 onUpdate={setComposerConfig}
@@ -194,7 +194,7 @@ export function ComposerModeToggle({
             Advanced Settings
           </button>
         </PopoverTrigger>
-        <PopoverContent className="w-80 p-0 bg-stone-900 border-stone-700" align="start">
+        <PopoverContent className="w-80 p-0 bg-popover border-border" align="start">
           <AdvancedSettings 
             config={composerConfig}
             onUpdate={setComposerConfig}
@@ -226,7 +226,7 @@ function ModeSelector({
               "w-full flex items-start gap-3 p-3 rounded-lg text-left transition-all",
               isActive
                 ? "bg-primary/10 border border-primary/30"
-                : "hover:bg-stone-800 border border-transparent"
+                : "hover:bg-muted border border-transparent"
             )}
           >
             <Icon className={cn(
@@ -333,7 +333,7 @@ function AdvancedSettings({
                     "px-2 py-1.5 text-xs rounded transition-colors capitalize",
                     config.styleInheritance === style
                       ? "bg-primary text-primary-foreground"
-                      : "bg-stone-800 text-muted-foreground hover:bg-stone-700"
+                      : "bg-muted text-muted-foreground hover:bg-muted/80"
                   )}
                 >
                   {style === "colors-only" ? "Colors" : style}

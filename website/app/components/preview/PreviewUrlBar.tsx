@@ -35,7 +35,7 @@ export function PreviewUrlBar({
   return (
     <div
       className={cn(
-        "flex items-center gap-2 px-3 py-2 bg-slate-800 border-b border-slate-700/50",
+        "flex items-center gap-2 px-3 py-2 bg-card border-b border-border",
         className
       )}
     >
@@ -45,8 +45,8 @@ export function PreviewUrlBar({
           onClick={onBack}
           disabled={!canGoBack}
           className={cn(
-            "p-1 rounded hover:bg-slate-700 transition-colors",
-            canGoBack ? "text-slate-400" : "text-slate-600 cursor-not-allowed"
+            "p-1 rounded hover:bg-muted transition-colors",
+            canGoBack ? "text-muted-foreground" : "text-muted-foreground/40 cursor-not-allowed"
           )}
         >
           <ChevronLeft className="w-4 h-4" />
@@ -55,31 +55,31 @@ export function PreviewUrlBar({
           onClick={onForward}
           disabled={!canGoForward}
           className={cn(
-            "p-1 rounded hover:bg-slate-700 transition-colors",
-            canGoForward ? "text-slate-400" : "text-slate-600 cursor-not-allowed"
+            "p-1 rounded hover:bg-muted transition-colors",
+            canGoForward ? "text-muted-foreground" : "text-muted-foreground/40 cursor-not-allowed"
           )}
         >
           <ChevronRight className="w-4 h-4" />
         </button>
         <button
           onClick={onRefresh}
-          className="p-1 rounded text-slate-400 hover:bg-slate-700 hover:text-white transition-colors"
+          className="p-1 rounded text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
         >
           <RefreshCw className="w-4 h-4" />
         </button>
       </div>
 
       {/* URL Bar */}
-      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 bg-slate-900 rounded-full border border-slate-700/50">
+      <div className="flex-1 flex items-center gap-2 px-3 py-1.5 bg-background rounded-full border border-border">
         {isSecure ? (
-          <Lock className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+          <Lock className="w-3.5 h-3.5 text-success flex-shrink-0" />
         ) : (
-          <Globe className="w-3.5 h-3.5 text-slate-500 flex-shrink-0" />
+          <Globe className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0" />
         )}
         <div className="flex items-baseline text-sm overflow-hidden">
-          <span className="text-slate-500">https://</span>
-          <span className="text-white font-medium">{domain}.com</span>
-          <span className="text-indigo-400 truncate">{currentPath}</span>
+          <span className="text-muted-foreground">https://</span>
+          <span className="text-foreground font-medium">{domain}.com</span>
+          <span className="text-primary truncate">{currentPath}</span>
         </div>
       </div>
 

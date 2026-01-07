@@ -78,7 +78,7 @@ export function PageFlowDiagram({
 
         {/* Connector line */}
         {childPages.length > 0 && (
-          <div className="w-px h-4 bg-gradient-to-b from-indigo-500 to-slate-600" />
+          <div className="w-px h-4 bg-gradient-to-b from-primary to-muted-foreground" />
         )}
 
         {/* First level children */}
@@ -136,16 +136,16 @@ function FlowNode({ page, isActive, onClick, isRoot, size = "md" }: FlowNodeProp
         "flex flex-col items-center gap-1 rounded-lg transition-all duration-200",
         size === "sm" ? "p-2" : "p-3",
         isActive
-          ? "bg-indigo-600/20 ring-2 ring-indigo-500"
-          : "hover:bg-slate-800",
-        isRoot && "bg-gradient-to-br from-indigo-600/30 to-purple-600/30"
+          ? "bg-primary/20 ring-2 ring-primary"
+          : "hover:bg-muted",
+        isRoot && "bg-gradient-to-br from-primary/30 to-primary/20"
       )}
     >
       <div
         className={cn(
           "flex items-center justify-center rounded-md transition-all",
           size === "sm" ? "w-8 h-8 text-lg" : "w-10 h-10 text-xl",
-          isActive ? "bg-indigo-600/40" : "bg-slate-800"
+          isActive ? "bg-primary/40" : "bg-muted"
         )}
       >
         {icon}
@@ -154,7 +154,7 @@ function FlowNode({ page, isActive, onClick, isRoot, size = "md" }: FlowNodeProp
         className={cn(
           "font-medium truncate max-w-20",
           size === "sm" ? "text-[10px]" : "text-xs",
-          isActive ? "text-indigo-300" : "text-slate-400"
+          isActive ? "text-primary" : "text-muted-foreground"
         )}
       >
         {page.name}

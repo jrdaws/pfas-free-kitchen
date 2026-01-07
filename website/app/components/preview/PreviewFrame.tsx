@@ -44,8 +44,8 @@ export function PreviewFrame({
   return (
     <div className={cn("flex flex-col h-full", className)}>
       {/* Device selector */}
-      <div className="flex items-center justify-between px-4 py-2 bg-slate-900 border-b border-slate-700/50">
-        <div className="flex items-center gap-1 p-1 bg-slate-800 rounded-lg">
+      <div className="flex items-center justify-between px-4 py-2 bg-card border-b border-border">
+        <div className="flex items-center gap-1 p-1 bg-muted rounded-lg">
           {DEVICE_BUTTONS.map(({ device: d, icon, label }) => (
             <button
               key={d}
@@ -53,8 +53,8 @@ export function PreviewFrame({
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium transition-all",
                 device === d
-                  ? "bg-indigo-600 text-white shadow-lg"
-                  : "text-slate-400 hover:text-white hover:bg-slate-700"
+                  ? "bg-primary text-primary-foreground shadow-lg"
+                  : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
               title={label}
             >
@@ -64,7 +64,7 @@ export function PreviewFrame({
           ))}
         </div>
 
-        <div className="text-xs text-slate-500">
+        <div className="text-xs text-muted-foreground">
           {dimensions.width} × {dimensions.height}
         </div>
       </div>
@@ -81,7 +81,7 @@ export function PreviewFrame({
       />
 
       {/* Preview container with device frame */}
-      <div className="flex-1 overflow-auto bg-slate-950 p-4 flex items-start justify-center">
+      <div className="flex-1 overflow-auto bg-background p-4 flex items-start justify-center">
         <div
           className={cn(
             "relative bg-white rounded-lg shadow-2xl transition-all duration-300 overflow-hidden",

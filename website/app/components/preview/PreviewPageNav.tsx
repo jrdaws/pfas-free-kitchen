@@ -20,7 +20,7 @@ export function PreviewPageNav({
   return (
     <nav
       className={cn(
-        "flex items-center gap-1 p-2 bg-slate-900/80 backdrop-blur-sm border-b border-slate-700/50 overflow-x-auto",
+        "flex items-center gap-1 p-2 bg-card/80 backdrop-blur-sm border-b border-border overflow-x-auto",
         className
       )}
     >
@@ -35,8 +35,8 @@ export function PreviewPageNav({
             className={cn(
               "flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md transition-all duration-200 whitespace-nowrap",
               isActive
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-500/25"
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
+                ? "bg-primary text-primary-foreground shadow-lg shadow-primary/25"
+                : "text-muted-foreground hover:text-foreground hover:bg-muted"
             )}
           >
             <span className="text-base">{icon}</span>

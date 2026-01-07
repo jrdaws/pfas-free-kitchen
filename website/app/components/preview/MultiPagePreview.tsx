@@ -125,8 +125,8 @@ export function MultiPagePreview({
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         sidebarView === "minimap"
-                          ? "bg-indigo-600 text-white"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                       title="Page thumbnails"
                     >
@@ -139,8 +139,8 @@ export function MultiPagePreview({
                       className={cn(
                         "p-1.5 rounded transition-colors",
                         sidebarView === "flow"
-                          ? "bg-indigo-600 text-white"
-                          : "text-slate-400 hover:text-white hover:bg-slate-800"
+                          ? "bg-primary text-primary-foreground"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted"
                       )}
                       title="Site structure"
                     >
@@ -151,7 +151,7 @@ export function MultiPagePreview({
               )}
               <button
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-                className="p-1.5 rounded text-slate-400 hover:text-white hover:bg-slate-800 transition-colors ml-auto"
+                className="p-1.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ml-auto"
                 title={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
               >
                 {sidebarCollapsed ? (

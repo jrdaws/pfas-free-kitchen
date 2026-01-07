@@ -71,27 +71,27 @@ export function ImageGeneratorPanel({
   };
 
   return (
-    <div className={cn("flex flex-col gap-4 p-4 bg-slate-900 rounded-xl", className)}>
+    <div className={cn("flex flex-col gap-4 p-4 bg-card rounded-xl", className)}>
       <div className="flex items-center gap-2">
-        <Sparkles className="w-5 h-5 text-indigo-400" />
-        <h3 className="font-semibold text-white">AI Image Generator</h3>
+        <Sparkles className="w-5 h-5 text-primary" />
+        <h3 className="font-semibold text-foreground">AI Image Generator</h3>
       </div>
 
       {/* Prompt input */}
       <div className="space-y-2">
-        <label className="text-sm text-slate-400">Describe your image</label>
+        <label className="text-sm text-muted-foreground">Describe your image</label>
         <textarea
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           placeholder="A modern SaaS dashboard with analytics charts..."
-          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white placeholder:text-slate-500 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-2 focus:ring-primary"
           rows={3}
         />
       </div>
 
       {/* Style selection */}
       <div className="space-y-2">
-        <label className="text-sm text-slate-400">Style</label>
+        <label className="text-sm text-muted-foreground">Style</label>
         <div className="flex flex-wrap gap-2">
           {STYLE_OPTIONS.map(({ value, label, icon }) => (
             <button
@@ -100,8 +100,8 @@ export function ImageGeneratorPanel({
               className={cn(
                 "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-all",
                 style === value
-                  ? "bg-indigo-600 text-white"
-                  : "bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700"
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-muted text-muted-foreground hover:text-foreground hover:bg-muted/80"
               )}
             >
               <span>{icon}</span>
@@ -113,11 +113,11 @@ export function ImageGeneratorPanel({
 
       {/* Aspect ratio */}
       <div className="space-y-2">
-        <label className="text-sm text-slate-400">Aspect Ratio</label>
+        <label className="text-sm text-muted-foreground">Aspect Ratio</label>
         <select
           value={aspectRatio}
           onChange={(e) => setAspectRatio(e.target.value as AspectRatio)}
-          className="w-full px-3 py-2 bg-slate-800 border border-slate-700 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-indigo-500"
+          className="w-full px-3 py-2 bg-muted border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         >
           {ASPECT_OPTIONS.map(({ value, label }) => (
             <option key={value} value={value}>
@@ -201,8 +201,8 @@ export function ImageGeneratorPanel({
         className={cn(
           "flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-medium transition-all",
           isGenerating || !prompt.trim()
-            ? "bg-slate-700 text-slate-500 cursor-not-allowed"
-            : "bg-indigo-600 text-white hover:bg-indigo-500"
+            ? "bg-muted text-muted-foreground cursor-not-allowed"
+            : "bg-primary text-primary-foreground hover:bg-primary/90"
         )}
       >
         {isGenerating ? (

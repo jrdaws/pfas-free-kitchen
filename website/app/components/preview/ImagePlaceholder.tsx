@@ -51,17 +51,17 @@ export function ImagePlaceholder({
         {isGenerating ? (
           <>
             <div className="relative">
-              <Sparkles className="w-8 h-8 text-indigo-400 animate-pulse" />
-              <Loader2 className="absolute -bottom-1 -right-1 w-4 h-4 text-indigo-300 animate-spin" />
+              <Sparkles className="w-8 h-8 text-primary animate-pulse" />
+              <Loader2 className="absolute -bottom-1 -right-1 w-4 h-4 text-primary/70 animate-spin" />
             </div>
-            <span className="text-xs text-slate-400 animate-pulse">
+            <span className="text-xs text-muted-foreground animate-pulse">
               Generating {SLOT_LABELS[slot]}...
             </span>
           </>
         ) : (
           <>
-            <ImageIcon className="w-8 h-8 text-slate-600" />
-            <span className="text-xs text-slate-500">{SLOT_LABELS[slot]}</span>
+            <ImageIcon className="w-8 h-8 text-muted-foreground/60" />
+            <span className="text-xs text-muted-foreground">{SLOT_LABELS[slot]}</span>
           </>
         )}
       </div>
@@ -72,8 +72,8 @@ export function ImagePlaceholder({
           className={cn(
             "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium",
             isGenerating
-              ? "bg-indigo-500/20 text-indigo-300"
-              : "bg-slate-700/50 text-slate-400"
+              ? "bg-primary/20 text-primary"
+              : "bg-muted text-muted-foreground"
           )}
         >
           {isGenerating ? (
@@ -140,13 +140,13 @@ export function GeneratingOverlay({
       )}
     >
       <div className="relative">
-        <div className="w-16 h-16 rounded-full border-4 border-indigo-500/30 border-t-indigo-500 animate-spin" />
-        <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-indigo-400" />
+        <div className="w-16 h-16 rounded-full border-4 border-primary/30 border-t-primary animate-spin" />
+        <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 text-primary" />
       </div>
 
       <div className="text-center">
-        <p className="text-white font-medium">Generating AI Images</p>
-        <p className="text-sm text-slate-400 mt-1">
+        <p className="text-foreground font-medium">Generating AI Images</p>
+        <p className="text-sm text-muted-foreground mt-1">
           {currentSlot
             ? `Creating ${currentSlot}...`
             : `${generatedCount} of ${totalImages} images`}

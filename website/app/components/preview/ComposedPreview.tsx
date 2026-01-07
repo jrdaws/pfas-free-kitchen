@@ -64,7 +64,7 @@ export function ComposedPreview({
         </p>
         <button
           onClick={() => onNavigate("/")}
-          className="mt-4 px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+          className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
         >
           Go to Home
         </button>
@@ -161,8 +161,8 @@ function PreviewNavigation({
               className={cn(
                 "text-sm font-medium transition-colors",
                 currentPath === link.path
-                  ? "text-indigo-600"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "text-primary"
+                  : "text-foreground-secondary hover:text-foreground"
               )}
             >
               {link.label}
@@ -217,49 +217,71 @@ function PreviewComponentRenderer({
     // these would be actual component imports from a pattern library
     switch (baseType) {
       case "hero":
+        // Check for hero image in props
+        const heroImage = (props.heroImage as string) || (props.image as string) || (props.backgroundImage as string);
+        const hasHeroImage = heroImage && heroImage.startsWith("http");
+        
         return (
           <section
-            className="px-6 py-24 text-center"
+            className={cn(
+              "px-6 py-16 md:py-24",
+              hasHeroImage ? "grid md:grid-cols-2 gap-8 items-center" : "text-center"
+            )}
             style={{ 
               background: `linear-gradient(135deg, ${primaryColor}10 0%, ${secondaryColor}10 100%)` 
             }}
           >
-            <h1 className={cn(
-              "text-4xl md:text-5xl text-slate-900 mb-4",
-              appliedStyles?.typography.headingClass || "font-bold"
-            )}>
-              {(props.headline as string) || "Welcome to Our Platform"}
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
-              {(props.subheadline as string) || "Build something amazing with our tools."}
-            </p>
-            <div className="flex gap-4 justify-center">
-              <PreviewLink
-                href={(props.ctaLink as string) || "/signup"}
-                onNavigate={onNavigate}
-              >
-                <StyledButton
-                  componentStyle={buttonStyle}
-                  primaryColor={primaryColor}
-                  secondaryColor={secondaryColor}
-                  variant="primary"
+            <div className={cn(hasHeroImage && "order-1")}>
+              <h1 className={cn(
+                "text-4xl md:text-5xl text-slate-900 mb-4",
+                appliedStyles?.typography.headingClass || "font-bold",
+                !hasHeroImage && "max-w-3xl mx-auto"
+              )}>
+                {(props.headline as string) || "Welcome to Our Platform"}
+              </h1>
+              <p className={cn(
+                "text-xl text-slate-600 mb-8",
+                !hasHeroImage && "max-w-2xl mx-auto"
+              )}>
+                {(props.subheadline as string) || "Build something amazing with our tools."}
+              </p>
+              <div className={cn("flex gap-4", !hasHeroImage && "justify-center")}>
+                <PreviewLink
+                  href={(props.ctaLink as string) || "/signup"}
+                  onNavigate={onNavigate}
                 >
-                  {(props.ctaText as string) || "Get Started"}
-                </StyledButton>
-              </PreviewLink>
-              <PreviewLink
-                href={(props.secondaryLink as string) || "/features"}
-                onNavigate={onNavigate}
-              >
-                <StyledButton
-                  componentStyle={{ ...buttonStyle, style: "outline" }}
-                  primaryColor={primaryColor}
-                  variant="secondary"
+                  <StyledButton
+                    componentStyle={buttonStyle}
+                    primaryColor={primaryColor}
+                    secondaryColor={secondaryColor}
+                    variant="primary"
+                  >
+                    {(props.ctaText as string) || "Get Started"}
+                  </StyledButton>
+                </PreviewLink>
+                <PreviewLink
+                  href={(props.secondaryLink as string) || "/features"}
+                  onNavigate={onNavigate}
                 >
-                  Learn More
-                </StyledButton>
-              </PreviewLink>
+                  <StyledButton
+                    componentStyle={{ ...buttonStyle, style: "outline" }}
+                    primaryColor={primaryColor}
+                    variant="secondary"
+                  >
+                    Learn More
+                  </StyledButton>
+                </PreviewLink>
+              </div>
             </div>
+            {hasHeroImage && (
+              <div className="order-2">
+                <img
+                  src={heroImage}
+                  alt={(props.headline as string) || "Hero image"}
+                  className="w-full h-auto rounded-xl shadow-lg object-cover max-h-[400px]"
+                />
+              </div>
+            )}
           </section>
         );
 
@@ -269,12 +291,13 @@ function PreviewComponentRenderer({
           { title: "Secure", description: "Enterprise-grade security", icon: "🔒" },
           { title: "Scalable", description: "Grows with your business", icon: "📈" },
         ];
-        const rawFeatures = (props.features as { title?: string; description?: string; icon?: string }[]);
+        const rawFeatures = (props.features as { title?: string; description?: string; icon?: string; image?: string }[]);
         const features = Array.isArray(rawFeatures) && rawFeatures.length > 0
           ? rawFeatures.map((f, idx) => ({
               title: f.title || defaultFeatures[idx]?.title || `Feature ${idx + 1}`,
               description: f.description || defaultFeatures[idx]?.description || "Description",
               icon: f.icon || defaultFeatures[idx]?.icon || "✨",
+              image: f.image,
             }))
           : defaultFeatures;
         return (
@@ -288,15 +311,23 @@ function PreviewComponentRenderer({
             <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
               {features.map((feature, i) => (
                 <StyledCard key={i} componentStyle={cardStyle} className="text-center">
-                  <div 
-                    className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
-                    style={{ 
-                      backgroundColor: `${primaryColor}15`,
-                      color: primaryColor,
-                    }}
-                  >
-                    {feature.icon}
-                  </div>
+                  {feature.image && feature.image.startsWith("http") ? (
+                    <img
+                      src={feature.image}
+                      alt={feature.title}
+                      className="w-16 h-16 mx-auto mb-4 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div 
+                      className="w-12 h-12 mx-auto mb-4 rounded-lg flex items-center justify-center text-2xl"
+                      style={{ 
+                        backgroundColor: `${primaryColor}15`,
+                        color: primaryColor,
+                      }}
+                    >
+                      {feature.icon}
+                    </div>
+                  )}
                   <h3 className="text-lg font-semibold text-slate-900 mb-2">
                     {feature.title}
                   </h3>
@@ -331,7 +362,7 @@ function PreviewComponentRenderer({
                   key={i}
                   className={cn(
                     "p-6 rounded-xl bg-white border-2 transition-shadow hover:shadow-lg",
-                    i === 1 ? "border-indigo-500 shadow-lg" : "border-slate-200"
+                    i === 1 ? "border-primary shadow-lg" : "border-slate-200"
                   )}
                 >
                   <h3 className="text-lg font-semibold text-slate-900">{plan.name}</h3>
@@ -393,12 +424,13 @@ function PreviewComponentRenderer({
           { quote: "This product changed how we work.", author: "Jane Doe", role: "CEO" },
           { quote: "Best decision we ever made.", author: "John Smith", role: "CTO" },
         ];
-        const rawTestimonials = (props.testimonials as { quote?: string; author?: string; role?: string }[]);
+        const rawTestimonials = (props.testimonials as { quote?: string; author?: string; role?: string; avatar?: string; image?: string }[]);
         const testimonials = Array.isArray(rawTestimonials) && rawTestimonials.length > 0
           ? rawTestimonials.map((t, idx) => ({
               quote: t.quote || defaultTestimonials[idx]?.quote || "Great product!",
               author: t.author || defaultTestimonials[idx]?.author || "Customer",
               role: t.role || defaultTestimonials[idx]?.role || "User",
+              avatar: t.avatar || t.image,
             }))
           : defaultTestimonials;
         return (
@@ -410,9 +442,25 @@ function PreviewComponentRenderer({
               {testimonials.map((t, i) => (
                 <blockquote key={i} className="p-6 bg-slate-50 rounded-xl">
                   <p className="text-slate-700 italic mb-4">&ldquo;{t.quote}&rdquo;</p>
-                  <footer className="text-sm">
-                    <strong className="text-slate-900">{t.author}</strong>
-                    <span className="text-slate-500"> · {t.role}</span>
+                  <footer className="flex items-center gap-3 text-sm">
+                    {t.avatar && t.avatar.startsWith("http") ? (
+                      <img
+                        src={t.avatar}
+                        alt={t.author}
+                        className="w-10 h-10 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div 
+                        className="w-10 h-10 rounded-full flex items-center justify-center text-white font-medium"
+                        style={{ backgroundColor: primaryColor }}
+                      >
+                        {t.author.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <strong className="text-slate-900">{t.author}</strong>
+                      <span className="text-slate-500"> · {t.role}</span>
+                    </div>
                   </footer>
                 </blockquote>
               ))}
@@ -451,12 +499,20 @@ function PreviewComponentRenderer({
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
               {products.map((product, i) => (
                 <StyledCard key={i} componentStyle={cardStyle} className="text-center p-4">
-                  <div 
-                    className="w-full aspect-square mb-4 rounded-lg flex items-center justify-center"
-                    style={{ backgroundColor: `${primaryColor}10` }}
-                  >
-                    <span className="text-3xl">🛍️</span>
-                  </div>
+                  {product.image && product.image.startsWith("http") ? (
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-full aspect-square mb-4 rounded-lg object-cover"
+                    />
+                  ) : (
+                    <div 
+                      className="w-full aspect-square mb-4 rounded-lg flex items-center justify-center"
+                      style={{ backgroundColor: `${primaryColor}10` }}
+                    >
+                      <span className="text-3xl">🛍️</span>
+                    </div>
+                  )}
                   <h3 className="font-semibold text-slate-900">{product.name}</h3>
                   <p className="text-lg font-bold" style={{ color: primaryColor }}>{product.price}</p>
                 </StyledCard>
@@ -525,11 +581,12 @@ function PreviewComponentRenderer({
           { name: "Sarah Miller", role: "CTO" },
           { name: "Mike Chen", role: "Designer" },
         ];
-        const rawMembers = (props.members as { name?: string; role?: string }[]);
+        const rawMembers = (props.members as { name?: string; role?: string; avatar?: string; image?: string }[]);
         const members = Array.isArray(rawMembers) && rawMembers.length > 0
           ? rawMembers.map((m, idx) => ({
               name: m.name || defaultMembers[idx]?.name || "Team Member",
               role: m.role || defaultMembers[idx]?.role || "Role",
+              avatar: m.avatar || m.image,
             }))
           : defaultMembers;
         return (
@@ -540,12 +597,20 @@ function PreviewComponentRenderer({
             <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
               {members.map((member, i) => (
                 <StyledCard key={i} componentStyle={cardStyle} className="text-center p-6">
-                  <div 
-                    className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center"
-                    style={{ backgroundColor: `${primaryColor}15` }}
-                  >
-                    <span className="text-2xl">👤</span>
-                  </div>
+                  {member.avatar && member.avatar.startsWith("http") ? (
+                    <img
+                      src={member.avatar}
+                      alt={member.name}
+                      className="w-20 h-20 mx-auto mb-4 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div 
+                      className="w-20 h-20 mx-auto mb-4 rounded-full flex items-center justify-center text-white text-xl font-bold"
+                      style={{ backgroundColor: primaryColor }}
+                    >
+                      {member.name.charAt(0)}
+                    </div>
+                  )}
                   <h3 className="font-semibold text-slate-900">{member.name}</h3>
                   <p className="text-slate-600">{member.role}</p>
                 </StyledCard>

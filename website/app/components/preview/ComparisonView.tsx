@@ -64,14 +64,14 @@ export function ComparisonView({
             <img
               src={originalScreenshot}
               alt={originalLabel}
-              className="w-full h-auto rounded-lg border border-gray-200"
+              className="w-full h-auto rounded-lg border border-border"
             />
           </div>
           <div className="relative">
-            <span className="absolute top-2 left-2 px-2 py-1 bg-indigo-600 text-white text-xs rounded-md z-10">
+            <span className="absolute top-2 left-2 px-2 py-1 bg-primary text-primary-foreground text-xs rounded-md z-10">
               {generatedLabel}
             </span>
-            <div className="w-full h-auto rounded-lg border border-gray-200 overflow-hidden">
+            <div className="w-full h-auto rounded-lg border border-border overflow-hidden">
               {generatedPreview}
             </div>
           </div>
@@ -84,7 +84,7 @@ export function ComparisonView({
     return (
       <div className={cn("flex flex-col", className)}>
         <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
-        <div className="relative mt-4 rounded-lg overflow-hidden border border-gray-200">
+        <div className="relative mt-4 rounded-lg overflow-hidden border border-border">
           {/* Original image */}
           <img
             src={originalScreenshot}
@@ -123,7 +123,7 @@ export function ComparisonView({
       <ViewModeToggle viewMode={viewMode} onViewModeChange={setViewMode} />
       <div
         ref={containerRef}
-        className="relative mt-4 rounded-lg overflow-hidden border border-gray-200 select-none"
+        className="relative mt-4 rounded-lg overflow-hidden border border-border select-none"
         style={{ aspectRatio: "16/10" }}
       >
         {/* Original side */}
@@ -156,7 +156,7 @@ export function ComparisonView({
           >
             {generatedPreview}
           </div>
-          <span className="absolute top-2 right-2 px-2 py-1 bg-indigo-600 text-white text-xs rounded-md">
+          <span className="absolute top-2 right-2 px-2 py-1 bg-primary text-primary-foreground text-xs rounded-md">
             {generatedLabel}
           </span>
         </div>
@@ -171,8 +171,8 @@ export function ComparisonView({
           onMouseDown={() => setIsDragging(true)}
         >
           <div className="w-1 h-full bg-white shadow-lg" />
-          <div className="absolute w-8 h-8 bg-white rounded-full shadow-lg flex items-center justify-center">
-            <GripVertical className="w-4 h-4 text-gray-400" />
+          <div className="absolute w-8 h-8 bg-card rounded-full shadow-lg flex items-center justify-center">
+            <GripVertical className="w-4 h-4 text-muted-foreground" />
           </div>
         </div>
       </div>
@@ -187,14 +187,14 @@ interface ViewModeToggleProps {
 
 function ViewModeToggle({ viewMode, onViewModeChange }: ViewModeToggleProps) {
   return (
-    <div className="flex items-center justify-center gap-1 p-1 bg-gray-100 rounded-lg w-fit mx-auto">
+    <div className="flex items-center justify-center gap-1 p-1 bg-muted rounded-lg w-fit mx-auto">
       <button
         onClick={() => onViewModeChange("split")}
         className={cn(
           "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
           viewMode === "split"
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-500 hover:text-gray-700"
+            ? "bg-card text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         <GripVertical className="w-4 h-4" />
@@ -205,8 +205,8 @@ function ViewModeToggle({ viewMode, onViewModeChange }: ViewModeToggleProps) {
         className={cn(
           "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
           viewMode === "overlay"
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-500 hover:text-gray-700"
+            ? "bg-card text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         <Layers className="w-4 h-4" />
@@ -217,8 +217,8 @@ function ViewModeToggle({ viewMode, onViewModeChange }: ViewModeToggleProps) {
         className={cn(
           "flex items-center gap-1.5 px-3 py-1.5 text-sm font-medium rounded-md transition-colors",
           viewMode === "side-by-side"
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-500 hover:text-gray-700"
+            ? "bg-card text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
         )}
       >
         <Eye className="w-4 h-4" />
