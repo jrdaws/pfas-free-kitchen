@@ -38,3 +38,9 @@ export { PropsEditorModal, usePropsEditor, type EditorField } from "./PropsEdito
 export { AIGenerateButton } from "./AIGenerateButton";
 export { BulkGenerateButton } from "./BulkGenerateButton";
 
+// Section management
+export { AddSectionButton } from "./AddSectionButton";
+export { SectionPickerModal } from "./SectionPickerModal";
+export { DynamicPreviewRenderer, createTestDefinition } from "./DynamicPreviewRenderer";
+export { DraggableSectionList } from "./DraggableSectionList";
+

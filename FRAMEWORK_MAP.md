@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: ae3a969bf2
 
 ## Recent changes
+- bcbc076 2026-01-07 feat(templates): add template gallery for quick start
 - 9ca03b3 2026-01-07 feat: add undo/redo history for preview edits
 - 6ab246e 2026-01-06 feat: add branding customization panel for preview
 - d0e70a8 2026-01-06 feat(preview): add drag-and-drop section reordering
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - 6c5d94e 2026-01-06 feat: add service limit notifications and actionable error guidance
 - 239dfe5 2026-01-05 feat: unified preview system with AI image generation
 - b37218e 2026-01-05 chore(testing): close duplicate export clarity task
-- 557ac47 2026-01-05 chore: remove completed pattern expansion task file
 
 ## Agent Governance Structure
 
