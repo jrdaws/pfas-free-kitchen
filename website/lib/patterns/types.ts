@@ -271,6 +271,68 @@ export interface PatternRegistryInterface {
 }
 
 // ============================================
+// WEBSITE ANALYSIS (from Firecrawl/Inspiration)
+// ============================================
+
+export interface WebsiteAnalysis {
+  url: string;
+  analyzedAt: string;
+  
+  design: {
+    colorPalette: {
+      primary: string;
+      secondary: string;
+      accent: string;
+      background: string[];
+      text: string[];
+    };
+    typography: {
+      headingFont: string;
+      bodyFont: string;
+      sizes: number[];
+    };
+    spacing: {
+      containerWidth: string;
+      sectionPadding: string;
+    };
+    style: {
+      borderRadius: string;
+      shadows: string[];
+      animations: boolean;
+    };
+  };
+  
+  layout: {
+    headerStyle: "sticky" | "fixed" | "static";
+    navigationPattern: "horizontal" | "sidebar" | "hamburger" | "mega-menu";
+    footerSections: number;
+    heroPattern: "centered" | "split" | "video" | "gradient" | "image";
+    contentWidth: "full" | "contained" | "narrow";
+  };
+  
+  sections: {
+    type: PatternCategory;
+    layout: "grid" | "list" | "carousel" | "split" | "stacked";
+    itemCount: number;
+    hasAnimations: boolean;
+    order: number;
+  }[];
+  
+  conversion: {
+    ctaPlacements: string[];
+    trustSignals: string[];
+    socialProof: boolean;
+    pricingTiers: number;
+  };
+  
+  tech: {
+    framework: "next" | "react" | "vue" | "astro" | "unknown";
+    uiLibrary: "tailwind" | "shadcn" | "chakra" | "material" | "custom";
+    animations: "framer" | "gsap" | "css" | "none";
+  };
+}
+
+// ============================================
 // RENDERER PROPS
 // ============================================
 

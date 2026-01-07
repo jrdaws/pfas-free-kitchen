@@ -1,0 +1,307 @@
+# TASK: Implement Pattern Library Components
+
+**Priority**: P1
+**Assigned To**: Website Agent
+**From**: Research Agent
+**Dependencies**: None (can start immediately)
+**Estimated Effort**: 6-8 hours
+
+---
+
+## Context
+
+The Research Agent has completed competitor website analysis. Based on patterns observed across 15 top-performing websites (linear.app, vercel.com, stripe.com, etc.), we've identified 8 high-priority patterns to implement.
+
+**Reference**: `output/shared/research/website-analysis/ANALYSIS_SUMMARY.md`
+
+---
+
+## Objective
+
+Create reusable React components for the pattern library that can be:
+1. Used in the preview system
+2. Exported to user projects
+3. Customized via props and variants
+
+---
+
+## Patterns to Implement
+
+### 1. HeroCenteredGradient (Priority: P0)
+
+```
+┌────────────────────────────────────────────┐
+│           [Optional Badge/Tag]              │
+│                                             │
+│       Large Headline Goes Here              │
+│                                             │
+│     Supporting text that explains the       │
+│        value proposition clearly            │
+│                                             │
+│    [Primary CTA]     [Secondary CTA]        │
+│                                             │
+│    ░░░░░ Gradient Background ░░░░░          │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline: string`
+- `subheadline: string`
+- `badge?: { text: string; variant: 'new' | 'beta' | 'custom' }`
+- `primaryCTA: { text: string; href: string }`
+- `secondaryCTA?: { text: string; href: string }`
+- `variant: 'dark' | 'light' | 'gradient'`
+
+**Inspired by**: linear.app, vercel.com
+
+---
+
+### 2. HeroSplitImage (Priority: P0)
+
+```
+┌────────────────────────────────────────────┐
+│                                             │
+│  [Badge]                    ┌─────────────┐│
+│                            │             ││
+│  Headline                  │   Image/    ││
+│  Here                      │   Video     ││
+│                            │             ││
+│  Description text          │             ││
+│                            └─────────────┘│
+│  [CTA Button]                              │
+│                                             │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline: string`
+- `description: string`
+- `badge?: string`
+- `cta: { text: string; href: string }`
+- `media: { type: 'image' | 'video'; src: string }`
+- `layout: 'image-right' | 'image-left'`
+
+**Inspired by**: notion.so, figma.com
+
+---
+
+### 3. FeatureGrid3Col (Priority: P0)
+
+```
+┌────────────────────────────────────────────┐
+│           Section Headline                  │
+│         Optional subheadline                │
+│                                             │
+│  ┌────────┐  ┌────────┐  ┌────────┐        │
+│  │  Icon  │  │  Icon  │  │  Icon  │        │
+│  │ Title  │  │ Title  │  │ Title  │        │
+│  │  Desc  │  │  Desc  │  │  Desc  │        │
+│  └────────┘  └────────┘  └────────┘        │
+│                                             │
+│  ┌────────┐  ┌────────┐  ┌────────┐        │
+│  │  Icon  │  │  Icon  │  │  Icon  │        │
+│  │ Title  │  │ Title  │  │ Title  │        │
+│  │  Desc  │  │  Desc  │  │  Desc  │        │
+│  └────────┘  └────────┘  └────────┘        │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline: string`
+- `subheadline?: string`
+- `features: Array<{ icon: string; title: string; description: string }>`
+- `columns: 2 | 3 | 4`
+- `variant: 'icons' | 'illustrations' | 'screenshots'`
+
+**Inspired by**: stripe.com, supabase.com, notion.so
+
+---
+
+### 4. LogoWall (Priority: P1)
+
+```
+┌────────────────────────────────────────────┐
+│          Trusted by industry leaders        │
+│                                             │
+│   [Logo] [Logo] [Logo] [Logo] [Logo] [Logo] │
+│                                             │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline?: string`
+- `logos: Array<{ src: string; alt: string; href?: string }>`
+- `variant: 'static' | 'scrolling'`
+- `grayscale?: boolean`
+
+**Inspired by**: All SaaS landing pages
+
+---
+
+### 5. TestimonialCards (Priority: P1)
+
+```
+┌────────────────────────────────────────────┐
+│              What our users say             │
+│                                             │
+│  ┌─────────────┐  ┌─────────────┐          │
+│  │  "Quote..."  │  │  "Quote..."  │          │
+│  │             │  │             │          │
+│  │ [Avatar]    │  │ [Avatar]    │          │
+│  │ Name        │  │ Name        │          │
+│  │ Title       │  │ Title       │          │
+│  │ ★★★★★      │  │ ★★★★★      │          │
+│  └─────────────┘  └─────────────┘          │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline?: string`
+- `testimonials: Array<{ quote: string; author: { name: string; title: string; company: string; avatar?: string }; rating?: number }>`
+- `variant: 'grid' | 'carousel' | 'featured'`
+
+**Inspired by**: stripe.com, notion.so
+
+---
+
+### 6. PricingTable3Tier (Priority: P1)
+
+```
+┌────────────────────────────────────────────┐
+│              Simple, transparent pricing    │
+│          [Monthly] [Annual -20%]            │
+│                                             │
+│  ┌──────────┐ ┌──────────┐ ┌──────────┐    │
+│  │   Free   │ │   Pro    │ │Enterprise│    │
+│  │   $0/mo  │ │  $19/mo  │ │  Custom  │    │
+│  │          │ │ POPULAR  │ │          │    │
+│  │ ✓ 1 user │ │ ✓ 5 users│ │ ✓ Unlim  │    │
+│  │ ✓ Basic  │ │ ✓ All    │ │ ✓ All    │    │
+│  │          │ │ ✓ Support│ │ ✓ SLA    │    │
+│  │ [Start]  │ │ [Start]  │ │ [Contact]│    │
+│  └──────────┘ └──────────┘ └──────────┘    │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline?: string`
+- `subheadline?: string`
+- `billingToggle?: boolean`
+- `tiers: Array<{ name: string; price: { monthly: number; annual: number } | 'custom'; description?: string; features: string[]; cta: { text: string; href: string }; highlighted?: boolean }>`
+
+**Inspired by**: gumroad.com, lemonsqueezy.com
+
+---
+
+### 7. CTASection (Priority: P1)
+
+```
+┌────────────────────────────────────────────┐
+│  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+│                                             │
+│          Ready to get started?              │
+│    Start building for free. No credit card. │
+│                                             │
+│              [Get Started Free]             │
+│                                             │
+│  ░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline: string`
+- `subheadline?: string`
+- `cta: { text: string; href: string }`
+- `variant: 'centered' | 'split' | 'gradient-bg'`
+
+**Inspired by**: vercel.com, linear.app
+
+---
+
+### 8. FAQAccordion (Priority: P2)
+
+```
+┌────────────────────────────────────────────┐
+│           Frequently Asked Questions        │
+│                                             │
+│  ┌─────────────────────────────────────┐   │
+│  │ ▶ Question 1?                       │   │
+│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐   │
+│  │ ▼ Question 2?                       │   │
+│  │   Answer text goes here...          │   │
+│  └─────────────────────────────────────┘   │
+│  ┌─────────────────────────────────────┐   │
+│  │ ▶ Question 3?                       │   │
+│  └─────────────────────────────────────┘   │
+└────────────────────────────────────────────┘
+```
+
+**Props**:
+- `headline?: string`
+- `items: Array<{ question: string; answer: string }>`
+- `variant: 'single-column' | 'two-column'`
+
+**Inspired by**: stripe.com, notion.so
+
+---
+
+## File Structure
+
+Create in:
+
+```
+website/components/patterns/
+├── index.ts                    # Pattern registry export
+├── hero/
+│   ├── HeroCenteredGradient.tsx
+│   └── HeroSplitImage.tsx
+├── features/
+│   └── FeatureGrid.tsx
+├── social-proof/
+│   ├── LogoWall.tsx
+│   └── TestimonialCards.tsx
+├── pricing/
+│   └── PricingTable.tsx
+├── cta/
+│   └── CTASection.tsx
+└── faq/
+    └── FAQAccordion.tsx
+```
+
+---
+
+## Requirements
+
+1. **Use existing design system** - Use `globals.css` colors, Tailwind classes
+2. **TypeScript types** - Full props interface for each component
+3. **Responsive** - Mobile-first, works on all viewports
+4. **Accessible** - Proper ARIA labels, keyboard navigation
+5. **Themeable** - Support dark/light variants via props or CSS variables
+6. **Animations** - Subtle entry animations using CSS or Framer Motion
+
+---
+
+## Success Criteria
+
+- [ ] All 8 pattern components created
+- [ ] Pattern registry (`index.ts`) exports all components
+- [ ] Each component has TypeScript types
+- [ ] Components render correctly in isolation (Storybook optional)
+- [ ] Responsive on mobile, tablet, desktop
+- [ ] Dark/light variants working
+
+---
+
+## Handoff Chain
+
+After completing:
+1. ✅ Notify Research Agent (complete)
+2. → Quality Agent reviews accessibility
+3. → Documentation Agent creates usage docs
+
+---
+
+*Created by Research Agent*
+*(RESEARCH AGENT)*
+
