@@ -1,0 +1,506 @@
+ACTIVATION: w6-admin-console
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Frontend Engineer Agent
+MISSION: Build the admin console for product review and verification
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The admin console enables internal teams to:
+- Review products in queue
+- Upload and manage evidence
+- Make verification decisions
+- Handle user reports
+- View audit logs
+
+Protected by authentication with role-based access.
+
+SPEC REFERENCE
+Read: docs/pfas-platform/03-ADMIN-CONSOLE-SPEC.md
+Full document - all sections
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. PROJECT STRUCTURE
+   ```
+   admin/
+   ├── app/
+   │   ├── layout.tsx                # Admin layout with sidebar
+   │   ├── page.tsx                  # Dashboard
+   │   ├── auth/
+   │   │   ├── login/page.tsx
+   │   │   └── callback/page.tsx
+   │   ├── queue/
+   │   │   ├── page.tsx              # Review queue list
+   │   │   └── [id]/page.tsx         # Product review interface
+   │   ├── reports/
+   │   │   ├── page.tsx              # Reports list
+   │   │   └── [id]/page.tsx         # Report detail
+   │   ├── evidence/
+   │   │   ├── page.tsx              # Evidence library
+   │   │   └── upload/page.tsx       # Upload form
+   │   ├── catalog/
+   │   │   ├── products/page.tsx
+   │   │   ├── brands/page.tsx
+   │   │   └── categories/page.tsx
+   │   ├── analytics/page.tsx
+   │   ├── audit/page.tsx
+   │   └── settings/page.tsx
+   ├── components/
+   │   ├── layout/
+   │   │   ├── AdminSidebar.tsx
+   │   │   ├── AdminHeader.tsx
+   │   │   └── UserMenu.tsx
+   │   ├── queue/
+   │   │   ├── QueueTable.tsx
+   │   │   ├── QueueFilters.tsx
+   │   │   ├── RiskIndicator.tsx
+   │   │   └── ReviewInterface.tsx
+   │   ├── review/
+   │   │   ├── ComponentEditor.tsx
+   │   │   ├── EvidenceLinker.tsx
+   │   │   ├── TierSelector.tsx
+   │   │   ├── ChecklistPanel.tsx
+   │   │   └── DecisionForm.tsx
+   │   ├── evidence/
+   │   │   ├── EvidenceTable.tsx
+   │   │   ├── UploadForm.tsx
+   │   │   ├── MetadataForm.tsx
+   │   │   └── HashDisplay.tsx
+   │   ├── reports/
+   │   │   ├── ReportTable.tsx
+   │   │   ├── ReportDetail.tsx
+   │   │   └── ResolutionForm.tsx
+   │   └── dashboard/
+   │       ├── MetricCard.tsx
+   │       ├── TierChart.tsx
+   │       ├── SLAStatus.tsx
+   │       └── ActivityFeed.tsx
+   └── lib/
+       ├── auth.ts
+       ├── api.ts
+       └── permissions.ts
+   ```
+
+2. DASHBOARD
+   File: admin/app/page.tsx
+
+   ```tsx
+   export default async function Dashboard() {
+     const [queueStats, reportStats, coverage, activity] = await Promise.all([
+       fetchQueueStats(),
+       fetchReportStats(),
+       fetchCoverageStats(),
+       fetchRecentActivity(),
+     ]);
+
+     return (
+       <div className="dashboard">
+         <h1>Dashboard</h1>
+         
+         <div className="metrics-row">
+           <MetricCard 
+             title="Review Queue" 
+             value={queueStats.pending}
+             change={queueStats.todayChange}
+             link="/queue"
+           />
+           <MetricCard 
+             title="Open Reports" 
+             value={reportStats.open}
+             subtitle={`${reportStats.highPriority} high-priority`}
+             link="/reports"
+           />
+           <MetricCard 
+             title="Published" 
+             value={coverage.published}
+             change={coverage.weekChange}
+           />
+           <MetricCard 
+             title="Tier 1+ Coverage" 
+             value={`${coverage.tier1Plus}%`}
+             target="80%"
+           />
+         </div>
+
+         <div className="charts-row">
+           <TierDistributionChart data={coverage.tierDistribution} />
+           <SLAStatusChart data={reportStats.slaStatus} />
+         </div>
+
+         <ActivityFeed items={activity} />
+       </div>
+     );
+   }
+   ```
+
+3. REVIEW QUEUE
+   File: admin/app/queue/page.tsx
+
+   ```tsx
+   export default async function QueuePage({ searchParams }) {
+     const filters = parseQueueFilters(searchParams);
+     const { items, pagination } = await fetchQueue(filters);
+
+     return (
+       <div className="queue-page">
+         <header>
+           <h1>Review Queue</h1>
+           <QueueStats />
+         </header>
+
+         <QueueFilters 
+           activeFilters={filters}
+           options={{
+             lanes: ['all', 'standard', 'high_risk'],
+             statuses: ['pending', 'under_review'],
+             assigned: ['unassigned', 'mine', 'all'],
+           }}
+         />
+
+         <QueueTable items={items}>
+           {/* Columns: Product, Brand, Category, Lane, Age, Actions */}
+           {/* Risk indicator shows detected terms */}
+         </QueueTable>
+
+         <Pagination {...pagination} />
+       </div>
+     );
+   }
+   ```
+
+4. PRODUCT REVIEW INTERFACE
+   File: admin/app/queue/[id]/page.tsx
+
+   ```tsx
+   export default async function ReviewPage({ params }: { params: { id: string } }) {
+     const product = await fetchProductForReview(params.id);
+     const riskAssessment = await fetchRiskAssessment(params.id);
+     const evidence = await fetchProductEvidence(params.id);
+     const checklists = getCategoryChecklists(product.category);
+
+     return (
+       <div className="review-interface">
+         <header className="review-header">
+           <h1>Review: {product.name}</h1>
+           <div className="actions">
+             <Button variant="secondary">Save Draft</Button>
+             <Button variant="ghost" onClick={closeReview}>×</Button>
+           </div>
+         </header>
+
+         <div className="review-layout">
+           {/* Left: Product Info + Risk Assessment */}
+           <aside className="review-sidebar">
+             <ProductInfoPanel product={product} />
+             <RiskAssessmentPanel assessment={riskAssessment} />
+           </aside>
+
+           {/* Center: Main review content */}
+           <main className="review-main">
+             {/* Component Model Editor */}
+             <section>
+               <h2>Component Model</h2>
+               <ComponentEditor 
+                 components={product.components}
+                 materials={allMaterials}
+                 coatings={allCoatings}
+                 onUpdate={handleComponentUpdate}
+               />
+               {riskAssessment.ceramicNonstick && (
+                 <Alert variant="warning">
+                   Ceramic coating selected - see checklist for requirements
+                 </Alert>
+               )}
+             </section>
+
+             {/* Evidence Section */}
+             <section>
+               <h2>Evidence</h2>
+               <LinkedEvidenceList evidence={evidence} />
+               <div className="evidence-actions">
+                 <Button onClick={openEvidenceLinker}>Link Existing</Button>
+                 <Button onClick={openUploadModal}>Upload New</Button>
+               </div>
+             </section>
+
+             {/* Category-Specific Checklist */}
+             <section>
+               <h2>Verification Checklist</h2>
+               <ChecklistPanel 
+                 category={product.category}
+                 riskTerms={riskAssessment.terms}
+                 items={checklists}
+                 onItemToggle={handleChecklistToggle}
+               />
+             </section>
+
+             {/* Decision Form */}
+             <section>
+               <h2>Decision</h2>
+               <DecisionForm
+                 maxTier={calculateMaxTier(checklists, evidence)}
+                 onSubmit={handleDecisionSubmit}
+               />
+             </section>
+           </main>
+         </div>
+       </div>
+     );
+   }
+   ```
+
+5. DECISION FORM
+   File: admin/components/review/DecisionForm.tsx
+
+   ```tsx
+   export function DecisionForm({ maxTier, onSubmit }: DecisionFormProps) {
+     const [tier, setTier] = useState<number | null>(null);
+     const [claimType, setClaimType] = useState<'A' | 'B' | 'C' | null>(null);
+     const [scope, setScope] = useState('');
+     const [unknowns, setUnknowns] = useState<string[]>([]);
+     const [rationale, setRationale] = useState('');
+     const [validation, setValidation] = useState<ValidationResult | null>(null);
+
+     // Validate tier selection
+     useEffect(() => {
+       if (tier !== null && tier > maxTier) {
+         setValidation({
+           valid: false,
+           reason: `Product can only achieve Tier ${maxTier}. Check requirements.`,
+         });
+       } else {
+         setValidation(null);
+       }
+     }, [tier, maxTier]);
+
+     return (
+       <form onSubmit={handleSubmit}>
+         {/* Tier Selection */}
+         <fieldset>
+           <legend>Verification Tier</legend>
+           {[0, 1, 2, 3, 4].map(t => (
+             <label key={t} className={t > maxTier ? 'disabled' : ''}>
+               <input
+                 type="radio"
+                 name="tier"
+                 value={t}
+                 checked={tier === t}
+                 onChange={() => setTier(t)}
+                 disabled={t > maxTier}
+               />
+               <TierBadge tier={t} />
+               {t > maxTier && <span className="hint">Requirements not met</span>}
+             </label>
+           ))}
+         </fieldset>
+
+         {validation && !validation.valid && (
+           <Alert variant="error">{validation.reason}</Alert>
+         )}
+
+         {/* Claim Type */}
+         <fieldset>
+           <legend>Claim Type</legend>
+           <select value={claimType || ''} onChange={e => setClaimType(e.target.value)}>
+             <option value="">Select claim type</option>
+             <option value="A">A - No intentionally added PFAS</option>
+             <option value="B">B - Below detection limit (lab tested)</option>
+             <option value="C">C - Total fluorine screen</option>
+           </select>
+         </fieldset>
+
+         {/* Scope */}
+         <label>
+           Scope
+           <input
+             type="text"
+             value={scope}
+             onChange={e => setScope(e.target.value)}
+             placeholder="e.g., Food-contact surfaces (pan body)"
+             required
+           />
+         </label>
+
+         {/* Unknowns */}
+         <fieldset>
+           <legend>Unknowns (what we couldn't verify)</legend>
+           <UnknownsEditor 
+             items={unknowns}
+             onAdd={item => setUnknowns([...unknowns, item])}
+             onRemove={idx => setUnknowns(unknowns.filter((_, i) => i !== idx))}
+           />
+         </fieldset>
+
+         {/* Rationale */}
+         <label>
+           Rationale (required)
+           <textarea
+             value={rationale}
+             onChange={e => setRationale(e.target.value)}
+             placeholder="Explain the verification decision..."
+             required
+             minLength={50}
+             rows={4}
+           />
+         </label>
+
+         <div className="form-actions">
+           <Button type="button" variant="ghost">Cancel</Button>
+           <Button type="button" variant="secondary">Save as Draft</Button>
+           <Button type="button" variant="danger">Reject & Archive</Button>
+           <Button type="submit" variant="primary" disabled={!validation?.valid}>
+             Approve ✓
+           </Button>
+         </div>
+       </form>
+     );
+   }
+   ```
+
+6. EVIDENCE UPLOAD
+   File: admin/components/evidence/UploadForm.tsx
+
+   ```tsx
+   export function EvidenceUploadForm({ productId, onComplete }: UploadFormProps) {
+     const [file, setFile] = useState<File | null>(null);
+     const [hash, setHash] = useState<string | null>(null);
+     const [type, setType] = useState<EvidenceType | null>(null);
+     const [metadata, setMetadata] = useState({});
+     const [uploading, setUploading] = useState(false);
+
+     // Calculate hash on file selection
+     const handleFileSelect = async (selectedFile: File) => {
+       setFile(selectedFile);
+       const buffer = await selectedFile.arrayBuffer();
+       const hashHex = await crypto.subtle.digest('SHA-256', buffer)
+         .then(h => Array.from(new Uint8Array(h)).map(b => b.toString(16).padStart(2, '0')).join(''));
+       setHash(hashHex);
+     };
+
+     return (
+       <form onSubmit={handleUpload}>
+         {/* Step 1: File Upload */}
+         <section>
+           <h3>Step 1: File Upload</h3>
+           <FileDropzone
+             onDrop={handleFileSelect}
+             accept={['application/pdf', 'image/png', 'image/jpeg']}
+             maxSize={10 * 1024 * 1024} // 10MB
+           />
+           {file && (
+             <div className="file-info">
+               <p>✓ File: {file.name} ({formatBytes(file.size)})</p>
+               <p>✓ SHA-256: <code>{hash}</code></p>
+             </div>
+           )}
+         </section>
+
+         {/* Step 2: Type Selection */}
+         <section>
+           <h3>Step 2: Evidence Type</h3>
+           <select value={type || ''} onChange={e => setType(e.target.value)}>
+             <option value="">Select type</option>
+             <option value="lab_report">Lab Report</option>
+             <option value="brand_statement">Brand Statement</option>
+             <option value="policy_document">Policy Document</option>
+             <option value="screenshot">Screenshot</option>
+           </select>
+         </section>
+
+         {/* Step 3: Type-Specific Metadata */}
+         {type && (
+           <section>
+             <h3>Step 3: Metadata</h3>
+             {type === 'lab_report' && <LabReportMetadataForm onChange={setMetadata} />}
+             {type === 'brand_statement' && <BrandStatementMetadataForm onChange={setMetadata} />}
+             {type === 'screenshot' && <ScreenshotMetadataForm onChange={setMetadata} />}
+           </section>
+         )}
+
+         {/* Step 4: Link to Product */}
+         {productId && (
+           <section>
+             <h3>Step 4: Link to Product</h3>
+             <ProductLinker productId={productId} />
+           </section>
+         )}
+
+         <Button type="submit" disabled={!file || !type || uploading}>
+           {uploading ? 'Uploading...' : 'Upload Evidence'}
+         </Button>
+       </form>
+     );
+   }
+   ```
+
+7. CATEGORY CHECKLISTS
+   File: admin/lib/checklists.ts
+
+   ```typescript
+   export const CATEGORY_CHECKLISTS: Record<string, ChecklistItem[]> = {
+     cookware: [
+       { id: 'food_contact_identified', label: 'Food-contact surface material identified', required: true },
+       { id: 'coating_identified', label: 'Food-contact coating identified (or "none" confirmed)', required: true },
+       { id: 'handle_documented', label: 'Handle material documented', required: false },
+     ],
+     cookware_nonstick: [
+       { id: 'coating_type_clarified', label: 'Coating type clarified (PTFE = REJECT, ceramic = proceed)', required: true },
+       { id: 'brand_confirms_pfas_free', label: 'Brand confirms coating is PFAS-free', required: true },
+       { id: 'coating_brand_documented', label: 'Coating brand name documented', required: false },
+     ],
+     cookware_ceramic: [
+       { id: 'sol_gel_confirmed', label: 'Coating is sol-gel based (not PTFE with ceramic)', required: true },
+       { id: 'tech_spec_available', label: 'Brand provides technical specification', required: false },
+       { id: 'no_pfas_in_layers', label: 'No PFAS in binder or primer layers confirmed', required: true },
+     ],
+     // ... more category checklists from spec
+   };
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+AUTH PROTECTION
+───────────────────────────────────────────────────────────────────────────────
+
+All admin routes protected:
+
+```tsx
+// admin/app/layout.tsx
+export default async function AdminLayout({ children }) {
+  const session = await getSession();
+  
+  if (!session) {
+    redirect('/auth/login');
+  }
+
+  return (
+    <AdminProvider user={session.user}>
+      <AdminSidebar />
+      <main className="admin-main">{children}</main>
+    </AdminProvider>
+  );
+}
+```
+
+Permission checks per route:
+```tsx
+// admin/app/settings/page.tsx
+export default async function SettingsPage() {
+  const user = await requireRole(['super_admin']);
+  // ...
+}
+```
+
+───────────────────────────────────────────────────────────────────────────────
+KEYBOARD SHORTCUTS
+───────────────────────────────────────────────────────────────────────────────
+
+Implement from spec:
+- g d: Go to Dashboard
+- g q: Go to Queue
+- j/k: Navigate list items
+- a: Assign to me
+- Ctrl+S: Save draft
+- Ctrl+Enter: Submit decision

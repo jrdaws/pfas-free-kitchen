@@ -1,0 +1,63 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="600" fill="#FDF2F8"/>
+  
+  <!-- Background pattern -->
+  <pattern id="crosses" width="30" height="30" patternUnits="userSpaceOnUse">
+    <path d="M15 10 L15 20 M10 15 L20 15" stroke="#FCE7F3" stroke-width="1"/>
+  </pattern>
+  <rect width="1200" height="600" fill="url(#crosses)"/>
+  
+  <!-- Instant Pot / Pressure Cooker (center) -->
+  <g transform="translate(400, 100)">
+    <!-- Body -->
+    <rect x="0" y="80" width="300" height="250" rx="20" fill="#FBCFE8" stroke="#DB2777" stroke-width="3"/>
+    <!-- Lid -->
+    <path d="M20 80 L280 80 L280 50 Q280 30 260 30 L40 30 Q20 30 20 50 Z" fill="#F9A8D4" stroke="#DB2777" stroke-width="3"/>
+    <!-- Lid handle -->
+    <rect x="120" y="10" width="60" height="25" rx="5" fill="#EC4899" stroke="#DB2777" stroke-width="2"/>
+    <!-- Control panel -->
+    <rect x="30" y="100" width="240" height="60" rx="5" fill="#FDF2F8" stroke="#DB2777" stroke-width="2"/>
+    <!-- Display -->
+    <rect x="50" y="110" width="80" height="40" rx="3" fill="#1F2937" stroke="#DB2777" stroke-width="1"/>
+    <text x="90" y="138" font-family="monospace" font-size="18" fill="#10B981" text-anchor="middle">00:00</text>
+    <!-- Buttons -->
+    <circle cx="170" cy="130" r="15" fill="#EC4899" stroke="#DB2777" stroke-width="1"/>
+    <circle cx="210" cy="130" r="15" fill="#EC4899" stroke="#DB2777" stroke-width="1"/>
+    <circle cx="250" cy="130" r="15" fill="#EC4899" stroke="#DB2777" stroke-width="1"/>
+    <!-- Inner pot hint -->
+    <ellipse cx="150" cy="250" rx="100" ry="25" fill="#F9A8D4" stroke="#DB2777" stroke-width="2" opacity="0.5"/>
+  </g>
+  
+  <!-- Stand Mixer (left) -->
+  <g transform="translate(100, 150)">
+    <!-- Base -->
+    <rect x="0" y="180" width="180" height="80" rx="10" fill="#FBCFE8" stroke="#DB2777" stroke-width="2"/>
+    <!-- Motor housing -->
+    <path d="M30 180 L30 80 Q30 50 60 50 L120 50 Q150 50 150 80 L150 180" fill="#F9A8D4" stroke="#DB2777" stroke-width="2"/>
+    <!-- Bowl -->
+    <path d="M10 260 Q10 320 90 320 Q170 320 170 260" fill="#FBCFE8" stroke="#DB2777" stroke-width="2"/>
+    <!-- Attachment -->
+    <path d="M90 130 L90 220 Q80 280 90 280 Q100 280 90 220" stroke="#DB2777" stroke-width="3" fill="none"/>
+  </g>
+  
+  <!-- Blender (right) -->
+  <g transform="translate(850, 130)">
+    <!-- Base -->
+    <rect x="40" y="250" width="120" height="60" rx="8" fill="#FBCFE8" stroke="#DB2777" stroke-width="2"/>
+    <!-- Jar -->
+    <path d="M50 250 L30 100 Q25 80 50 80 L150 80 Q175 80 170 100 L150 250" fill="#FCE7F3" stroke="#DB2777" stroke-width="2" opacity="0.7"/>
+    <path d="M50 250 L30 100 Q25 80 50 80 L150 80 Q175 80 170 100 L150 250" fill="none" stroke="#DB2777" stroke-width="2"/>
+    <!-- Lid -->
+    <rect x="45" y="60" width="110" height="25" rx="5" fill="#F9A8D4" stroke="#DB2777" stroke-width="2"/>
+    <rect x="80" y="45" width="40" height="20" rx="4" fill="#EC4899" stroke="#DB2777" stroke-width="2"/>
+    <!-- Blade hint -->
+    <path d="M85 200 L115 200 M100 185 L100 215" stroke="#DB2777" stroke-width="2"/>
+    <!-- Buttons -->
+    <circle cx="80" cy="280" r="10" fill="#EC4899" stroke="#DB2777" stroke-width="1"/>
+    <circle cx="120" cy="280" r="10" fill="#EC4899" stroke="#DB2777" stroke-width="1"/>
+  </g>
+  
+  <!-- Text label -->
+  <text x="600" y="520" font-family="system-ui, sans-serif" font-size="32" font-weight="600" fill="#DB2777" text-anchor="middle">Appliance Accessories</text>
+  <text x="600" y="555" font-family="system-ui, sans-serif" font-size="18" fill="#6B7280" text-anchor="middle">Instant Pot, Stand Mixer, Blender Parts & More</text>
+</svg>

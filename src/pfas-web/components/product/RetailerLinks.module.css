@@ -1,0 +1,88 @@
+/* RetailerLinks.module.css */
+
+.container {
+  width: 100%;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--space-md);
+}
+
+.retailerButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-align: left;
+  width: 100%;
+}
+
+.retailerButton:hover {
+  border-color: var(--color-primary);
+  background: var(--color-bg-alt);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.retailerButton:focus-visible {
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+.icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.name {
+  flex: 1;
+  font-weight: 500;
+  color: var(--color-text);
+}
+
+.price {
+  font-weight: 600;
+  color: var(--color-primary);
+  font-size: var(--text-sm);
+}
+
+.outOfStock {
+  font-size: var(--text-xs);
+  color: var(--color-error);
+  background: var(--color-error-light);
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-full);
+}
+
+.externalIcon {
+  color: var(--color-text-muted);
+  font-size: var(--text-sm);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.retailerButton:hover .externalIcon {
+  opacity: 1;
+}
+
+.empty {
+  padding: var(--space-lg);
+  background: var(--color-bg-alt);
+  border-radius: var(--radius-md);
+  text-align: center;
+  color: var(--color-text-secondary);
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

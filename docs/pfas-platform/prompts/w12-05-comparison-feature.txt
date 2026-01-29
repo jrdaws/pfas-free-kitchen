@@ -1,0 +1,284 @@
+================================================================================
+WAVE 12-05: COMPARISON FEATURE
+================================================================================
+ACTIVATION: "Execute Wave 12-05: Comparison Feature"
+AGENT: Website Agent
+DEPENDS ON: Wave 12-01, Wave 12-02, Wave 12-03
+================================================================================
+
+CONTEXT
+-------
+Implement Newegg-style product comparison:
+- Add to compare from any product card
+- Comparison tray at bottom of screen
+- Dedicated comparison page with side-by-side view
+
+================================================================================
+TASK 1: COMPARISON CONTEXT (State Management)
+================================================================================
+
+Create `src/pfas-web/contexts/CompareContext.tsx`:
+
+```tsx
+'use client';
+
+interface CompareContextValue {
+  items: string[];  // Product IDs
+  addItem: (id: string) => void;
+  removeItem: (id: string) => void;
+  clearAll: () => void;
+  isInCompare: (id: string) => boolean;
+  maxItems: number;  // 4
+}
+
+// Persist to localStorage
+// Max 4 items
+// Expose via useCompare() hook
+```
+
+================================================================================
+TASK 2: COMPARISON TRAY (Floating)
+================================================================================
+
+Create `src/pfas-web/components/compare/CompareTray.tsx`:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ Compare Products (2 of 4)                                                     │
+├───────────────────────────────────────────────────────────────────────────────┤
+│ ┌─────────────┐  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐           │
+│ │ [Image]     │  │ [Image]     │  │   + Add     │  │   + Add     │           │
+│ │ All-Clad... │  │ Lodge...    │  │   Product   │  │   Product   │           │
+│ │     [×]     │  │     [×]     │  │             │  │             │           │
+│ └─────────────┘  └─────────────┘  └─────────────┘  └─────────────┘           │
+│                                                                               │
+│                               [Compare Now]  [Clear All]                      │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+BEHAVIOR:
+- Fixed to bottom of viewport
+- Slides up when items added
+- Auto-hides when empty
+- Collapses to compact mode (just count badge) on scroll down
+- Expands on hover or click
+- Mobile: Full-width, shorter height
+
+================================================================================
+TASK 3: ADD TO COMPARE BUTTON
+================================================================================
+
+Update `src/pfas-web/components/product/ProductCard.tsx`:
+
+Add compare checkbox to product cards:
+
+```tsx
+<button
+  className={cn(
+    'compare-checkbox',
+    isInCompare && 'compare-checkbox--active'
+  )}
+  onClick={() => toggleCompare(product.id)}
+  aria-pressed={isInCompare}
+>
+  {isInCompare ? (
+    <>
+      <CheckIcon /> In Compare
+    </>
+  ) : (
+    <>
+      <PlusIcon /> Compare
+    </>
+  )}
+</button>
+```
+
+STYLES:
+```css
+.compare-checkbox {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-sm);
+  padding: 4px 8px;
+  font-size: 12px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+.product-card:hover .compare-checkbox,
+.compare-checkbox--active {
+  opacity: 1;
+}
+
+.compare-checkbox--active {
+  background: var(--color-primary-100);
+  border-color: var(--color-primary-500);
+  color: var(--color-primary-700);
+}
+```
+
+================================================================================
+TASK 4: COMPARISON PAGE
+================================================================================
+
+Create `src/pfas-web/app/compare/page.tsx`:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ Compare Products                                              [Print] [Share] │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│             Product 1           Product 2           Product 3                 │
+│             ─────────           ─────────           ─────────                 │
+│ ┌───────────────────────────────────────────────────────────────────────────┐│
+│ │           │ [Image]           │ [Image]           │ [Image]               ││
+│ │           │ All-Clad D3       │ Lodge Cast Iron   │ Le Creuset            ││
+│ │           │ 12" Skillet       │ 12" Skillet       │ Dutch Oven            ││
+│ │           │ [Remove]          │ [Remove]          │ [Remove]              ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │VERIFICATION                                                               ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │ Tier      │ ████ Tier 3       │ ████ Tier 2       │ ████ Tier 3           ││
+│ │           │ Lab Tested        │ Policy Reviewed   │ Lab Tested            ││
+│ │ Evidence  │ 2 documents       │ 1 document        │ 2 documents           ││
+│ │ Scope     │ Food-contact      │ All components    │ Food-contact          ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │MATERIALS                                                                  ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │ Body      │ Stainless Steel   │ Cast Iron         │ Enameled Cast Iron    ││
+│ │ Coating   │ None              │ Pre-seasoned      │ Enamel                ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │COMPATIBILITY                                                              ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │ Induction │ ✓                 │ ✓                 │ ✓                     ││
+│ │ Oven Safe │ 600°F             │ 650°F             │ 500°F                 ││
+│ │ Dishwasher│ ✓                 │ ✗                 │ ✓                     ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │SHOP                                                                       ││
+│ ├───────────────────────────────────────────────────────────────────────────┤│
+│ │           │ [Amazon]          │ [Amazon]          │ [Amazon]              ││
+│ │           │ [Williams Sonoma] │ [Target]          │ [Williams Sonoma]     ││
+│ └───────────────────────────────────────────────────────────────────────────┘│
+│                                                                               │
+│ ⓘ As an Amazon Associate, we earn from qualifying purchases.                 │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+COMPARISON TABLE FEATURES:
+- Sticky header row (product images/names)
+- Row groups with headers (Verification, Materials, Compatibility, Shop)
+- Highlight differences (cells that differ get subtle background)
+- Best-in-category highlighting (highest tier gets badge)
+- Remove button per product
+- Add product slot if < 4 products
+
+================================================================================
+TASK 5: EMPTY COMPARISON STATE
+================================================================================
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│                                                                               │
+│                      [Illustration: Empty compare]                            │
+│                                                                               │
+│                  No products selected for comparison                          │
+│                                                                               │
+│               Add products to compare their verification                      │
+│               status, materials, and features side by side.                   │
+│                                                                               │
+│                         [Browse Products]                                     │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 6: MOBILE COMPARISON VIEW
+================================================================================
+
+On mobile (< 768px), use swipeable cards instead of table:
+
+```
+┌─────────────────────────────┐
+│ Comparing 3 products   [<][>]
+├─────────────────────────────┤
+│ ┌─────────────────────────┐ │
+│ │ [Image]                 │ │
+│ │ All-Clad D3 Skillet     │ │
+│ │ ████ Tier 3 · Lab Tested│ │
+│ ├─────────────────────────┤ │
+│ │ Material: Stainless     │ │
+│ │ Coating: None           │ │
+│ │ Induction: ✓            │ │
+│ │ Oven: 600°F             │ │
+│ │ Dishwasher: ✓           │ │
+│ ├─────────────────────────┤ │
+│ │ [Amazon] [Williams...]  │ │
+│ │         [Remove]        │ │
+│ └─────────────────────────┘ │
+│         ● ○ ○               │
+└─────────────────────────────┘
+```
+
+- Swipe left/right to see other products
+- Dots indicate current position
+- Arrow buttons for keyboard navigation
+
+================================================================================
+TASK 7: HEADER COMPARE ICON
+================================================================================
+
+Update `src/pfas-web/components/layout/Header.tsx`:
+
+Add compare icon to header with badge count:
+
+```tsx
+<Link href="/compare" className="header-icon">
+  <ScaleIcon />
+  {compareCount > 0 && (
+    <span className="badge">{compareCount}</span>
+  )}
+  <span className="sr-only">Compare ({compareCount} items)</span>
+</Link>
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Compare checkbox on all product cards
+□ Floating tray appears when items added
+□ Maximum 4 items enforced
+□ Comparison page shows side-by-side table
+□ Differences highlighted in comparison
+□ Best verification tier highlighted
+□ Remove individual items from compare
+□ Clear all functionality
+□ Empty state when no items
+□ Mobile: Swipeable card view
+□ State persists across page navigation (localStorage)
+□ Affiliate disclosure on comparison page
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/contexts/CompareContext.tsx
+- src/pfas-web/components/compare/CompareTray.tsx
+- src/pfas-web/components/compare/CompareTable.tsx
+- src/pfas-web/components/compare/CompareCard.tsx
+- src/pfas-web/components/compare/EmptyCompare.tsx
+- src/pfas-web/app/compare/page.tsx
+
+MODIFY:
+- src/pfas-web/components/product/ProductCard.tsx
+- src/pfas-web/components/layout/Header.tsx
+- src/pfas-web/components/layout/EcommerceShell.tsx (add CompareTray)
+- src/pfas-web/app/layout.tsx (wrap with CompareProvider)
+
+================================================================================

@@ -1,0 +1,428 @@
+ACTIVATION: w3-workflow-state
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement workflow state machines for product and report lifecycle
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Products and reports follow defined state machines with:
+- Valid state transitions
+- Guards (conditions for transition)
+- Side effects (notifications, audit logs)
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "5.1 Product Ingestion Workflow", "5.3 User Report Workflow"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. STATE MACHINE DEFINITIONS
+   File: src/state-machines/product.machine.ts
+
+   ```typescript
+   import { createMachine, assign } from 'xstate';
+
+   export const productMachine = createMachine({
+     id: 'product',
+     initial: 'draft',
+     context: {
+       productId: '',
+       reviewLane: 'standard',
+       reviewerId: null,
+       rejectionReason: null,
+     },
+     states: {
+       draft: {
+         on: {
+           SUBMIT_FOR_REVIEW: {
+             target: 'pending_review',
+             guard: 'hasMinimumData',
+             actions: ['logSubmitted', 'notifyReviewQueue'],
+           },
+         },
+       },
+       pending_review: {
+         on: {
+           ASSIGN_REVIEWER: {
+             target: 'under_review',
+             actions: ['assignReviewer', 'logAssigned'],
+           },
+           ESCALATE: {
+             actions: ['setHighRiskLane', 'logEscalated'],
+           },
+         },
+       },
+       under_review: {
+         on: {
+           APPROVE: {
+             target: 'published',
+             guard: 'hasVerificationDecision',
+             actions: ['createVerification', 'logApproved', 'indexProduct'],
+           },
+           REJECT: {
+             target: 'archived',
+             actions: ['setRejectionReason', 'logRejected'],
+           },
+           RETURN_TO_QUEUE: {
+             target: 'pending_review',
+             actions: ['unassignReviewer', 'logReturned'],
+           },
+           REQUEST_CHANGES: {
+             target: 'needs_info',
+             actions: ['logChangesRequested'],
+           },
+         },
+       },
+       needs_info: {
+         on: {
+           PROVIDE_INFO: {
+             target: 'under_review',
+             actions: ['logInfoProvided'],
+           },
+           TIMEOUT: {
+             target: 'archived',
+             actions: ['logTimedOut'],
+           },
+         },
+       },
+       published: {
+         on: {
+           SUSPEND: {
+             target: 'suspended',
+             actions: ['logSuspended', 'deindexProduct', 'notifySuspension'],
+           },
+           UPDATE: {
+             actions: ['logUpdated', 'reindexProduct'],
+           },
+           FLAG_FOR_REVALIDATION: {
+             target: 'under_review',
+             actions: ['logRevalidationRequested'],
+           },
+         },
+       },
+       suspended: {
+         on: {
+           REINSTATE: {
+             target: 'published',
+             guard: 'suspensionResolved',
+             actions: ['logReinstated', 'indexProduct'],
+           },
+           ARCHIVE: {
+             target: 'archived',
+             actions: ['logArchived'],
+           },
+         },
+       },
+       archived: {
+         type: 'final',
+       },
+     },
+   });
+   ```
+
+2. REPORT STATE MACHINE
+   File: src/state-machines/report.machine.ts
+
+   ```typescript
+   export const reportMachine = createMachine({
+     id: 'report',
+     initial: 'submitted',
+     context: {
+       reportId: '',
+       productId: '',
+       priority: 'normal',
+       assigneeId: null,
+       resolution: null,
+       slaDeadline: null,
+     },
+     states: {
+       submitted: {
+         entry: ['calculateSLA', 'setPriority'],
+         on: {
+           ASSIGN: {
+             target: 'under_review',
+             actions: ['assignReviewer', 'logAssigned'],
+           },
+           AUTO_DISMISS: {
+             target: 'dismissed',
+             guard: 'isDuplicateReport',
+             actions: ['logAutoDismissed'],
+           },
+         },
+       },
+       under_review: {
+         on: {
+           RESOLVE_DISMISS: {
+             target: 'dismissed',
+             actions: ['setResolution', 'logDismissed', 'notifyReporter'],
+           },
+           RESOLVE_ACTION: {
+             target: 'resolved',
+             actions: ['setResolution', 'triggerProductAction', 'logResolved', 'notifyReporter'],
+           },
+           REQUEST_MORE_INFO: {
+             target: 'awaiting_info',
+             actions: ['logInfoRequested', 'notifyReporter'],
+           },
+           ESCALATE: {
+             actions: ['increasePriority', 'notifyEscalation'],
+           },
+         },
+       },
+       awaiting_info: {
+         on: {
+           INFO_PROVIDED: {
+             target: 'under_review',
+             actions: ['logInfoReceived'],
+           },
+           TIMEOUT: {
+             target: 'dismissed',
+             actions: ['logTimedOut'],
+           },
+         },
+       },
+       resolved: {
+         type: 'final',
+         entry: ['recordResolutionMetrics'],
+       },
+       dismissed: {
+         type: 'final',
+         entry: ['recordResolutionMetrics'],
+       },
+     },
+   });
+   ```
+
+3. WORKFLOW SERVICE
+   File: src/services/workflow.service.ts
+
+   ```typescript
+   import { interpret } from 'xstate';
+   import { productMachine, reportMachine } from '../state-machines';
+
+   export class WorkflowService {
+     /**
+      * Transition product to new state
+      */
+     static async transitionProduct(
+       productId: string,
+       event: ProductEvent,
+       actorId: string
+     ): Promise<TransitionResult> {
+       const product = await ProductRepository.findById(productId);
+       if (!product) throw new NotFoundError('Product not found');
+
+       const machine = productMachine.withContext({
+         productId,
+         reviewLane: product.review_lane || 'standard',
+         reviewerId: product.reviewer_id,
+       });
+
+       const service = interpret(machine).start(product.status);
+       
+       // Validate transition
+       const nextState = machine.transition(product.status, event);
+       if (!nextState.changed) {
+         throw new InvalidTransitionError(
+           `Cannot transition from ${product.status} via ${event.type}`
+         );
+       }
+
+       // Execute transition
+       service.send(event);
+       const newState = service.getSnapshot().value as string;
+
+       // Persist new state
+       await ProductRepository.updateStatus(productId, newState, {
+         reviewerId: event.reviewerId,
+         rejectionReason: event.reason,
+       });
+
+       // Audit log
+       await AuditService.logProductTransition(actorId, productId, product.status, newState, event);
+
+       return {
+         previousState: product.status,
+         newState,
+         productId,
+       };
+     }
+
+     /**
+      * Transition report to new state
+      */
+     static async transitionReport(
+       reportId: string,
+       event: ReportEvent,
+       actorId: string
+     ): Promise<TransitionResult> {
+       // Similar pattern to product transitions
+     }
+
+     /**
+      * Get valid transitions for current state
+      */
+     static getValidTransitions(entityType: 'product' | 'report', currentState: string): string[] {
+       const machine = entityType === 'product' ? productMachine : reportMachine;
+       const stateNode = machine.states[currentState];
+       if (!stateNode) return [];
+       return Object.keys(stateNode.on || {});
+     }
+   }
+   ```
+
+4. SLA SERVICE
+   File: src/services/sla.service.ts
+
+   ```typescript
+   export class SLAService {
+     static readonly SLA_HOURS = {
+       critical: 24,
+       high: 72,
+       normal: 168, // 7 days
+       low: 336,    // 14 days
+     };
+
+     static calculateDeadline(priority: ReportPriority): Date {
+       const hours = this.SLA_HOURS[priority];
+       const deadline = new Date();
+       deadline.setHours(deadline.getHours() + hours);
+       return deadline;
+     }
+
+     static determinePriority(issueType: ReportIssueType): ReportPriority {
+       const priorityMap: Record<ReportIssueType, ReportPriority> = {
+         suspected_pfas: 'high',
+         materials_changed: 'high',
+         counterfeit_risk: 'high',
+         listing_mismatch: 'normal',
+         other: 'normal',
+       };
+       return priorityMap[issueType];
+     }
+
+     static async checkSLAStatus(reportId: string): Promise<SLAStatus> {
+       const report = await ReportRepository.findById(reportId);
+       if (!report?.sla_deadline) return { status: 'unknown' };
+
+       const now = new Date();
+       const deadline = new Date(report.sla_deadline);
+       const hoursRemaining = (deadline.getTime() - now.getTime()) / (1000 * 60 * 60);
+
+       if (report.status === 'resolved' || report.status === 'dismissed') {
+         const resolved = new Date(report.resolved_at);
+         return {
+           status: resolved <= deadline ? 'met' : 'breached',
+           resolvedAt: resolved,
+         };
+       }
+
+       if (hoursRemaining < 0) {
+         return { status: 'breached', hoursOverdue: Math.abs(hoursRemaining) };
+       }
+       if (hoursRemaining < 24) {
+         return { status: 'at_risk', hoursRemaining };
+       }
+       return { status: 'on_track', hoursRemaining };
+     }
+   }
+   ```
+
+5. QUEUE SERVICE
+   File: src/services/queue.service.ts
+
+   ```typescript
+   export class QueueService {
+     /**
+      * Add product to review queue
+      */
+     static async addToReviewQueue(
+       productId: string, 
+       options: { lane: 'standard' | 'high_risk' }
+     ): Promise<void> {
+       await ProductRepository.updateStatus(productId, 'pending_review');
+       await ProductRepository.setReviewLane(productId, options.lane);
+       await this.publishEvent('product.queued', { productId, lane: options.lane });
+     }
+
+     /**
+      * Get queue items for reviewer
+      */
+     static async getQueue(params: {
+       lane?: 'standard' | 'high_risk';
+       assignedTo?: string;
+       unassignedOnly?: boolean;
+       page: number;
+       limit: number;
+     }): Promise<QueueListResponse> {
+       return ProductRepository.findInReviewQueue(params);
+     }
+
+     /**
+      * Assign product to reviewer
+      */
+     static async assignToReviewer(productId: string, reviewerId: string): Promise<void> {
+       await WorkflowService.transitionProduct(productId, {
+         type: 'ASSIGN_REVIEWER',
+         reviewerId,
+       }, reviewerId);
+     }
+
+     /**
+      * Get queue statistics
+      */
+     static async getStats(): Promise<QueueStats> {
+       const [pending, underReview, byLane, avgAge] = await Promise.all([
+         ProductRepository.countByStatus('pending_review'),
+         ProductRepository.countByStatus('under_review'),
+         ProductRepository.countByReviewLane(),
+         ProductRepository.getAverageQueueAge(),
+       ]);
+
+       return { pending, underReview, byLane, avgAge };
+     }
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+STATE MACHINE GUARDS
+───────────────────────────────────────────────────────────────────────────────
+
+Implement these guards:
+
+```typescript
+const guards = {
+  hasMinimumData: (context) => {
+    // Product must have name, brand, category
+    return context.product?.name && context.product?.brand_id && context.product?.category_id;
+  },
+  hasVerificationDecision: (context) => {
+    // Must have tier, claim_type, rationale, evidence
+    return context.decision?.tier !== undefined && 
+           context.decision?.rationale && 
+           context.decision?.evidence_ids?.length > 0;
+  },
+  suspensionResolved: (context) => {
+    // Suspension reason must be addressed
+    return context.suspensionResolved === true;
+  },
+  isDuplicateReport: (context) => {
+    // Check for similar recent reports on same product
+    return context.duplicateReportId !== null;
+  },
+};
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Invalid transitions throw clear errors
+□ All transitions logged to audit
+□ SLA calculated on report submission
+□ Priority auto-set by issue type
+□ High-risk lane products prioritized in queue
+□ Final states cannot be transitioned from

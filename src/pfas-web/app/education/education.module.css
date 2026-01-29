@@ -1,0 +1,126 @@
+.page {
+  min-height: calc(100vh - var(--header-height) - 200px);
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+/* Header */
+.header {
+  background: linear-gradient(180deg, rgba(15, 118, 110, 0.05) 0%, var(--bg-primary) 100%);
+  padding: var(--space-12) var(--space-4);
+  text-align: center;
+}
+
+.headerContent {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: var(--space-4);
+}
+
+.subtitle {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Topics */
+.topics {
+  padding: var(--space-12) var(--space-4);
+  max-width: var(--max-width);
+  margin: 0 auto;
+}
+
+.topicGrid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.topicCard {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-6);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.topicCard:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.topicIcon {
+  font-size: 2rem;
+  margin-bottom: var(--space-3);
+}
+
+.topicTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.topicDescription {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  flex: 1;
+  margin-bottom: var(--space-4);
+}
+
+.topicArrow {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+/* Quick Facts */
+.quickFacts {
+  background: var(--bg-secondary);
+  padding: var(--space-12) var(--space-4);
+}
+
+.sectionTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.factGrid {
+  display: grid;
+  gap: var(--space-6);
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.fact {
+  text-align: center;
+}
+
+.factNumber {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: var(--space-2);
+}
+
+.factLabel {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+}

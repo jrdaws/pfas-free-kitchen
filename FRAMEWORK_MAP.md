@@ -1,9 +1,10 @@
 # FRAMEWORK_MAP
 
 Generated: (deterministic)
-Hash: ae3a969bf2
+Hash: a73c6adbc9
 
 ## Recent changes
+- aed65ff 2026-01-07 chore: move completed template gallery task to done
 - bcbc076 2026-01-07 feat(templates): add template gallery for quick start
 - 9ca03b3 2026-01-07 feat: add undo/redo history for preview edits
 - 6ab246e 2026-01-06 feat: add branding customization panel for preview
@@ -28,7 +29,6 @@ Hash: ae3a969bf2
 - ded6dcf 2026-01-06 feat: add service limit middleware to all Claude-based API endpoints
 - 6c5d94e 2026-01-06 feat: add service limit notifications and actionable error guidance
 - 239dfe5 2026-01-05 feat: unified preview system with AI image generation
-- b37218e 2026-01-05 chore(testing): close duplicate export clarity task
 
 ## Agent Governance Structure
 

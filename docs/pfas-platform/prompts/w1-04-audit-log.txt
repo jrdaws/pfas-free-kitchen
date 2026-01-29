@@ -1,0 +1,190 @@
+ACTIVATION: w1-audit-log
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement append-only audit logging system with tamper evidence
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The platform requires a complete, immutable audit trail for:
+- Legal defensibility of verification decisions
+- Evidence chain of custody
+- Admin action accountability
+- Compliance with "no silent failures" principle
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Section: "audit_log" table, immutability triggers
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. AUDIT REPOSITORY
+   File: src/repositories/audit.repository.ts
+
+   ```typescript
+   interface AuditEntry {
+     actor_type: 'system' | 'admin' | 'api' | 'scheduler';
+     actor_id?: string;
+     actor_ip_hash?: string;
+     action: string;
+     entity_type: string;
+     entity_id: string;
+     old_values?: Record<string, unknown>;
+     new_values?: Record<string, unknown>;
+     metadata?: Record<string, unknown>;
+     request_id?: string;
+   }
+
+   export class AuditRepository {
+     // INSERT only - no update, no delete
+     static async log(entry: AuditEntry): Promise<bigint>;
+     
+     // Query with filters (read-only)
+     static async query(filters: AuditQueryParams): Promise<AuditLogRow[]>;
+     
+     // Export for compliance
+     static async export(dateRange: DateRange): Promise<AuditLogRow[]>;
+   }
+   ```
+
+2. AUDIT SERVICE
+   File: src/services/audit.service.ts
+
+   High-level logging functions:
+
+   ```typescript
+   export class AuditService {
+     // Product lifecycle
+     static async logProductCreated(actor: Actor, product: Product): Promise<void>;
+     static async logProductUpdated(actor: Actor, productId: string, changes: Changes): Promise<void>;
+     static async logProductPublished(actor: Actor, productId: string): Promise<void>;
+     static async logProductSuspended(actor: Actor, productId: string, reason: string): Promise<void>;
+     
+     // Verification
+     static async logVerificationDecision(actor: Actor, decision: VerificationDecision): Promise<void>;
+     static async logTierChange(actor: Actor, productId: string, fromTier: number, toTier: number): Promise<void>;
+     
+     // Evidence
+     static async logEvidenceUploaded(actor: Actor, evidence: Evidence): Promise<void>;
+     static async logEvidenceLinked(actor: Actor, evidenceId: string, productId: string): Promise<void>;
+     
+     // Reports
+     static async logReportSubmitted(reportId: string, productId: string): Promise<void>;
+     static async logReportResolved(actor: Actor, reportId: string, resolution: string): Promise<void>;
+     
+     // Admin
+     static async logAdminLogin(actor: Actor): Promise<void>;
+     static async logSettingsChanged(actor: Actor, setting: string, oldValue: unknown, newValue: unknown): Promise<void>;
+   }
+   ```
+
+3. ACTION CONSTANTS
+   File: src/constants/audit-actions.ts
+
+   ```typescript
+   export const AUDIT_ACTIONS = {
+     // Product actions
+     PRODUCT_CREATED: 'product.created',
+     PRODUCT_UPDATED: 'product.updated',
+     PRODUCT_PUBLISHED: 'product.published',
+     PRODUCT_SUSPENDED: 'product.suspended',
+     PRODUCT_ARCHIVED: 'product.archived',
+     
+     // Verification actions
+     VERIFICATION_DECIDED: 'verification.decided',
+     VERIFICATION_UPGRADED: 'verification.upgraded',
+     VERIFICATION_DOWNGRADED: 'verification.downgraded',
+     
+     // Evidence actions
+     EVIDENCE_UPLOADED: 'evidence.uploaded',
+     EVIDENCE_LINKED: 'evidence.linked',
+     EVIDENCE_UNLINKED: 'evidence.unlinked',
+     EVIDENCE_EXPIRED: 'evidence.expired',
+     
+     // Report actions
+     REPORT_SUBMITTED: 'report.submitted',
+     REPORT_ASSIGNED: 'report.assigned',
+     REPORT_RESOLVED: 'report.resolved',
+     REPORT_DISMISSED: 'report.dismissed',
+     
+     // Admin actions
+     ADMIN_LOGIN: 'admin.login',
+     ADMIN_LOGOUT: 'admin.logout',
+     USER_CREATED: 'user.created',
+     USER_ROLE_CHANGED: 'user.role_changed',
+     SETTINGS_CHANGED: 'settings.changed',
+   } as const;
+   ```
+
+4. MIDDLEWARE INTEGRATION
+   File: src/middleware/auditMiddleware.ts
+
+   Auto-log all admin API calls:
+   ```typescript
+   export function auditMiddleware(req: Request, res: Response, next: NextFunction) {
+     // Capture request details
+     // On response finish, log action + result
+   }
+   ```
+
+5. TAMPER EVIDENCE (Optional - Phase 2)
+   File: src/jobs/audit-hash-chain.ts
+
+   Nightly job to compute hash chain:
+   ```typescript
+   // For each day's audit entries:
+   // hash = SHA256(previous_hash + entry_data)
+   // Store hash checkpoints for verification
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+QUERY API (Admin Console)
+───────────────────────────────────────────────────────────────────────────────
+
+GET /api/v1/admin/audit-log
+
+Query params:
+- start_date, end_date (required for bounded queries)
+- actor_id (filter by user)
+- action (filter by action type)
+- entity_type (filter by entity)
+- entity_id (filter by specific entity)
+- page, limit
+
+Response matches spec format with:
+- Timestamp, actor, action, entity, diff preview
+- Pagination metadata
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ NO UPDATE operations on audit_log ever
+□ NO DELETE operations on audit_log ever
+□ Database triggers enforce immutability (already in schema)
+□ IP addresses are hashed before storage (privacy)
+□ Request ID included for distributed tracing
+□ Actor is always captured (system for automated actions)
+□ Timestamps in UTC with timezone
+
+───────────────────────────────────────────────────────────────────────────────
+TESTING REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+Write tests to verify:
+1. Audit entry created for every action type
+2. UPDATE on audit_log throws database error
+3. DELETE on audit_log throws database error
+4. Query pagination works correctly
+5. Date range filtering is accurate
+6. IP hashing is consistent
+
+───────────────────────────────────────────────────────────────────────────────
+TECH NOTES
+───────────────────────────────────────────────────────────────────────────────
+
+- Use database transactions to ensure audit log is written atomically with action
+- Consider partitioning audit_log by month for performance at scale
+- Export function should stream large result sets

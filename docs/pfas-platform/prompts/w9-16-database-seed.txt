@@ -1,0 +1,513 @@
+ACTIVATION: w9-database-seed
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Database Engineer Agent
+MISSION: Seed database with realistic test data and verify all queries work
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT (Refinement Wave)
+The schema exists but may be empty or have incomplete data.
+This prompt ensures:
+- All tables have realistic test data
+- Foreign key relationships are valid
+- Verification tiers are properly assigned
+- Evidence objects are linked to products
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. COMPREHENSIVE SEED SCRIPT
+   File: src/pfas-api/scripts/seed-database.ts
+
+   ```typescript
+   import { Pool } from 'pg';
+   import { v4 as uuid } from 'uuid';
+
+   const pool = new Pool({
+     connectionString: process.env.DATABASE_URL || 'postgresql://localhost:5432/pfas_kitchen'
+   });
+
+   // ============================================================
+   // BRANDS (10 real kitchen brands)
+   // ============================================================
+   const BRANDS = [
+     { name: 'All-Clad', slug: 'all-clad', website: 'https://www.all-clad.com', country: 'US' },
+     { name: 'Lodge', slug: 'lodge', website: 'https://www.lodgecastiron.com', country: 'US' },
+     { name: 'Le Creuset', slug: 'le-creuset', website: 'https://www.lecreuset.com', country: 'FR' },
+     { name: 'Staub', slug: 'staub', website: 'https://www.staub-usa.com', country: 'FR' },
+     { name: 'GreenPan', slug: 'greenpan', website: 'https://www.greenpan.us', country: 'BE' },
+     { name: 'Pyrex', slug: 'pyrex', website: 'https://www.pyrex.com', country: 'US' },
+     { name: 'OXO', slug: 'oxo', website: 'https://www.oxo.com', country: 'US' },
+     { name: 'Caraway', slug: 'caraway', website: 'https://www.carawayhome.com', country: 'US' },
+     { name: 'Made In', slug: 'made-in', website: 'https://www.madeincookware.com', country: 'US' },
+     { name: 'Stasher', slug: 'stasher', website: 'https://www.stasherbag.com', country: 'US' },
+   ];
+
+   // ============================================================
+   // RETAILERS
+   // ============================================================
+   const RETAILERS = [
+     { name: 'Amazon', slug: 'amazon', domain: 'amazon.com', icon: 'amazon' },
+     { name: 'Williams Sonoma', slug: 'williams-sonoma', domain: 'williams-sonoma.com', icon: 'williams-sonoma' },
+     { name: 'Sur La Table', slug: 'sur-la-table', domain: 'surlatable.com', icon: 'surlatable' },
+     { name: 'Target', slug: 'target', domain: 'target.com', icon: 'target' },
+   ];
+
+   // ============================================================
+   // PRODUCTS (50 products across all categories)
+   // ============================================================
+   const PRODUCTS = [
+     // COOKWARE - Skillets
+     {
+       name: 'All-Clad D3 Stainless Steel 12" Skillet',
+       brand: 'all-clad',
+       category: 'cookware/skillets-frying-pans',
+       material: 'stainless-steel',
+       coating: 'none',
+       tier: 3,
+       claim_type: 'B',
+       features: { induction_compatible: true, oven_safe_temp_f: 600, dishwasher_safe: true },
+       components: [
+         { name: 'Pan body', food_contact: true, material: 'stainless-steel', coating: null },
+         { name: 'Handle', food_contact: false, material: 'stainless-steel', coating: null },
+       ],
+     },
+     {
+       name: 'Lodge Cast Iron 12" Skillet',
+       brand: 'lodge',
+       category: 'cookware/skillets-frying-pans',
+       material: 'cast-iron',
+       coating: 'seasoning',
+       tier: 2,
+       claim_type: 'A',
+       features: { induction_compatible: true, oven_safe_temp_f: 650, dishwasher_safe: false },
+       components: [
+         { name: 'Pan body', food_contact: true, material: 'cast-iron', coating: 'seasoning' },
+         { name: 'Handle', food_contact: false, material: 'cast-iron', coating: null },
+       ],
+     },
+     {
+       name: 'GreenPan Reserve 10" Skillet',
+       brand: 'greenpan',
+       category: 'cookware/skillets-frying-pans',
+       material: 'aluminum',
+       coating: 'ceramic-sol-gel',
+       tier: 2,
+       claim_type: 'A',
+       features: { induction_compatible: true, oven_safe_temp_f: 450, dishwasher_safe: true },
+       components: [
+         { name: 'Pan body', food_contact: true, material: 'aluminum', coating: 'ceramic-sol-gel' },
+         { name: 'Handle', food_contact: false, material: 'stainless-steel', coating: null },
+       ],
+     },
+     {
+       name: 'Made In Blue Carbon Steel 12" Frying Pan',
+       brand: 'made-in',
+       category: 'cookware/skillets-frying-pans',
+       material: 'carbon-steel',
+       coating: 'seasoning',
+       tier: 3,
+       claim_type: 'B',
+       features: { induction_compatible: true, oven_safe_temp_f: 650, dishwasher_safe: false },
+       components: [
+         { name: 'Pan body', food_contact: true, material: 'carbon-steel', coating: 'seasoning' },
+         { name: 'Handle', food_contact: false, material: 'stainless-steel', coating: null },
+       ],
+     },
+
+     // COOKWARE - Dutch Ovens
+     {
+       name: 'Le Creuset Signature 5.5 Qt Dutch Oven',
+       brand: 'le-creuset',
+       category: 'cookware/stock-pots-dutch-ovens',
+       material: 'cast-iron',
+       coating: 'enamel',
+       tier: 3,
+       claim_type: 'B',
+       features: { induction_compatible: true, oven_safe_temp_f: 500, dishwasher_safe: true },
+       components: [
+         { name: 'Pot body', food_contact: true, material: 'cast-iron', coating: 'enamel' },
+         { name: 'Lid', food_contact: true, material: 'cast-iron', coating: 'enamel' },
+         { name: 'Handles', food_contact: false, material: 'cast-iron', coating: 'enamel' },
+       ],
+     },
+     {
+       name: 'Staub Round Cocotte 4 Qt',
+       brand: 'staub',
+       category: 'cookware/stock-pots-dutch-ovens',
+       material: 'cast-iron',
+       coating: 'enamel',
+       tier: 3,
+       claim_type: 'B',
+       features: { induction_compatible: true, oven_safe_temp_f: 500, dishwasher_safe: true },
+       components: [
+         { name: 'Pot body', food_contact: true, material: 'cast-iron', coating: 'enamel' },
+         { name: 'Lid', food_contact: true, material: 'cast-iron', coating: 'enamel' },
+       ],
+     },
+
+     // BAKEWARE
+     {
+       name: 'All-Clad Pro-Release Half Sheet Pan',
+       brand: 'all-clad',
+       category: 'bakeware/sheet-pans-baking-sheets',
+       material: 'aluminum',
+       coating: 'none',
+       tier: 2,
+       claim_type: 'A',
+       features: { oven_safe_temp_f: 500, dishwasher_safe: true },
+       components: [
+         { name: 'Pan body', food_contact: true, material: 'aluminum', coating: null },
+       ],
+     },
+     {
+       name: 'Pyrex 9x13 Glass Baking Dish',
+       brand: 'pyrex',
+       category: 'bakeware/baking-dishes',
+       material: 'borosilicate-glass',
+       coating: 'none',
+       tier: 4,
+       claim_type: 'B',
+       features: { oven_safe_temp_f: 450, dishwasher_safe: true, microwave_safe: true },
+       components: [
+         { name: 'Dish body', food_contact: true, material: 'borosilicate-glass', coating: null },
+       ],
+     },
+
+     // STORAGE
+     {
+       name: 'Pyrex Simply Store 18-Piece Set',
+       brand: 'pyrex',
+       category: 'storage/glass-containers',
+       material: 'borosilicate-glass',
+       coating: 'none',
+       tier: 4,
+       claim_type: 'B',
+       features: { microwave_safe: true, dishwasher_safe: true, freezer_safe: true },
+       components: [
+         { name: 'Container body', food_contact: true, material: 'borosilicate-glass', coating: null },
+         { name: 'Lid', food_contact: true, material: 'silicone', coating: null },
+       ],
+     },
+     {
+       name: 'Stasher Reusable Silicone Bag Stand-Up Mega',
+       brand: 'stasher',
+       category: 'storage/silicone-bags-wraps',
+       material: 'silicone',
+       coating: 'none',
+       tier: 3,
+       claim_type: 'B',
+       features: { microwave_safe: true, dishwasher_safe: true, freezer_safe: true },
+       components: [
+         { name: 'Bag body', food_contact: true, material: 'silicone', coating: null },
+         { name: 'Seal', food_contact: true, material: 'silicone', coating: null },
+       ],
+     },
+
+     // UTENSILS
+     {
+       name: 'OXO Good Grips Silicone Spatula',
+       brand: 'oxo',
+       category: 'utensils-tools/spatulas-turners',
+       material: 'silicone',
+       coating: 'none',
+       tier: 2,
+       claim_type: 'A',
+       features: { dishwasher_safe: true },
+       components: [
+         { name: 'Head', food_contact: true, material: 'silicone', coating: null },
+         { name: 'Handle', food_contact: false, material: 'stainless-steel', coating: null },
+       ],
+     },
+
+     // Add 35+ more products to reach 50 total...
+   ];
+
+   // ============================================================
+   // EVIDENCE TEMPLATES
+   // ============================================================
+   function createBrandStatement(brandName: string, date: Date): object {
+     return {
+       type: 'brand_statement',
+       source: 'brand_submission',
+       metadata: {
+         statement_text: `${brandName} confirms that no PFAS compounds are intentionally added to any component of this product.`,
+         statement_date: date.toISOString(),
+         signatory: 'Quality Assurance Team',
+       },
+     };
+   }
+
+   function createLabReport(labName: string, date: Date): object {
+     return {
+       type: 'lab_report',
+       source: 'brand_submission',
+       metadata: {
+         lab_name: labName,
+         accreditation: 'ISO 17025',
+         method: 'LC-MS/MS after extraction',
+         method_reference: 'EPA 533',
+         analyte_list_ref: 'panel_v1_40pfas',
+         analyte_count: 40,
+         lod_ng_g: 1.0,
+         loq_ng_g: 3.0,
+         sample_scope: { units: 1, lots: 1 },
+         collection_date: new Date(date.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+         report_date: date.toISOString(),
+         result_summary: 'All 40 PFAS analytes below detection limit',
+       },
+     };
+   }
+
+   // ============================================================
+   // MAIN SEED FUNCTION
+   // ============================================================
+   async function seedDatabase() {
+     const client = await pool.connect();
+     
+     try {
+       await client.query('BEGIN');
+
+       // 1. Insert brands
+       console.log('Seeding brands...');
+       const brandIds: Record<string, string> = {};
+       for (const brand of BRANDS) {
+         const id = uuid();
+         await client.query(
+           `INSERT INTO brands (id, name, slug, website, country) 
+            VALUES ($1, $2, $3, $4, $5) ON CONFLICT (slug) DO NOTHING`,
+           [id, brand.name, brand.slug, brand.website, brand.country]
+         );
+         brandIds[brand.slug] = id;
+       }
+
+       // 2. Insert retailers
+       console.log('Seeding retailers...');
+       const retailerIds: Record<string, string> = {};
+       for (const retailer of RETAILERS) {
+         const id = uuid();
+         await client.query(
+           `INSERT INTO retailers (id, name, slug, domain, icon_name) 
+            VALUES ($1, $2, $3, $4, $5) ON CONFLICT (slug) DO NOTHING`,
+           [id, retailer.name, retailer.slug, retailer.domain, retailer.icon]
+         );
+         retailerIds[retailer.slug] = id;
+       }
+
+       // 3. Get category IDs
+       console.log('Fetching categories...');
+       const categoryResult = await client.query('SELECT id, slug FROM categories');
+       const categoryIds: Record<string, string> = {};
+       for (const row of categoryResult.rows) {
+         categoryIds[row.slug] = row.id;
+       }
+
+       // 4. Get material IDs
+       console.log('Fetching materials...');
+       const materialResult = await client.query('SELECT id, slug FROM materials');
+       const materialIds: Record<string, string> = {};
+       for (const row of materialResult.rows) {
+         materialIds[row.slug] = row.id;
+       }
+
+       // 5. Get coating IDs
+       console.log('Fetching coatings...');
+       const coatingResult = await client.query('SELECT id, slug FROM coatings');
+       const coatingIds: Record<string, string> = {};
+       for (const row of coatingResult.rows) {
+         coatingIds[row.slug] = row.id;
+       }
+
+       // 6. Insert products
+       console.log('Seeding products...');
+       for (const product of PRODUCTS) {
+         const productId = uuid();
+         const categorySlug = product.category.split('/').pop();
+         const categoryId = categoryIds[categorySlug];
+         const brandId = brandIds[product.brand];
+
+         if (!categoryId || !brandId) {
+           console.warn(`Skipping product ${product.name}: missing category or brand`);
+           continue;
+         }
+
+         // Insert product
+         await client.query(
+           `INSERT INTO products (id, brand_id, category_id, name, slug, material_summary, coating_summary, features, status, published_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, 'published', NOW())`,
+           [
+             productId,
+             brandId,
+             categoryId,
+             product.name,
+             product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+             product.material.replace('-', ' '),
+             product.coating === 'none' ? 'None (uncoated)' : product.coating.replace('-', ' '),
+             JSON.stringify(product.features),
+           ]
+         );
+
+         // Insert components
+         for (const comp of product.components) {
+           const compId = uuid();
+           await client.query(
+             `INSERT INTO product_components (id, product_id, name, food_contact, material_id, coating_id)
+              VALUES ($1, $2, $3, $4, $5, $6)`,
+             [
+               compId,
+               productId,
+               comp.name,
+               comp.food_contact,
+               materialIds[comp.material],
+               comp.coating ? coatingIds[comp.coating] : null,
+             ]
+           );
+         }
+
+         // Create evidence based on tier
+         const evidenceId = uuid();
+         const evidenceData = product.tier >= 3 
+           ? createLabReport('Example Testing Lab', new Date())
+           : createBrandStatement(product.brand, new Date());
+         
+         await client.query(
+           `INSERT INTO evidence_objects (id, type, source, storage_uri, sha256_hash, file_size_bytes, mime_type, metadata, received_at, expires_at)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW(), NOW() + INTERVAL '24 months')`,
+           [
+             evidenceId,
+             evidenceData.type,
+             evidenceData.source,
+             `s3://evidence-bucket/${evidenceId}.pdf`,
+             uuid().replace(/-/g, ''), // Mock hash
+             1024,
+             'application/pdf',
+             JSON.stringify(evidenceData.metadata),
+           ]
+         );
+
+         // Link evidence to product
+         await client.query(
+           `INSERT INTO product_evidence (product_id, evidence_id, added_at)
+            VALUES ($1, $2, NOW())`,
+           [productId, evidenceId]
+         );
+
+         // Create verification status
+         await client.query(
+           `INSERT INTO verification_status (id, product_id, tier, claim_type, scope_text, confidence_score, decision_date, evidence_ids, unknowns)
+            VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7, $8)`,
+           [
+             uuid(),
+             productId,
+             product.tier.toString(),
+             product.claim_type,
+             'Food-contact surfaces',
+             0.85,
+             JSON.stringify([evidenceId]),
+             JSON.stringify([]),
+           ]
+         );
+
+         // Link to retailers
+         for (const retailerSlug of ['amazon', 'williams-sonoma']) {
+           const retailerId = retailerIds[retailerSlug];
+           if (retailerId) {
+             await client.query(
+               `INSERT INTO product_retailer_links (id, product_id, retailer_id, external_id, active)
+                VALUES ($1, $2, $3, $4, true)`,
+               [uuid(), productId, retailerId, `ASIN${uuid().slice(0, 8).toUpperCase()}`]
+             );
+           }
+         }
+       }
+
+       await client.query('COMMIT');
+       console.log(`✅ Seeded ${PRODUCTS.length} products successfully`);
+
+     } catch (error) {
+       await client.query('ROLLBACK');
+       console.error('Seed failed:', error);
+       throw error;
+     } finally {
+       client.release();
+     }
+   }
+
+   // Run
+   seedDatabase()
+     .then(() => process.exit(0))
+     .catch(() => process.exit(1));
+   ```
+
+2. VERIFY SEED DATA SCRIPT
+   File: src/pfas-api/scripts/verify-seed.ts
+
+   ```typescript
+   async function verifySeedData() {
+     const checks = [
+       { query: 'SELECT COUNT(*) FROM brands', min: 5, name: 'Brands' },
+       { query: 'SELECT COUNT(*) FROM retailers', min: 3, name: 'Retailers' },
+       { query: 'SELECT COUNT(*) FROM products WHERE status = \'published\'', min: 10, name: 'Published products' },
+       { query: 'SELECT COUNT(*) FROM product_components', min: 20, name: 'Product components' },
+       { query: 'SELECT COUNT(*) FROM evidence_objects', min: 10, name: 'Evidence objects' },
+       { query: 'SELECT COUNT(*) FROM verification_status', min: 10, name: 'Verification statuses' },
+       { 
+         query: `SELECT COUNT(*) FROM products p 
+                 JOIN verification_status vs ON p.id = vs.product_id 
+                 WHERE vs.tier >= '1'`, 
+         min: 8, 
+         name: 'Products at Tier 1+' 
+       },
+     ];
+
+     console.log('Verifying seed data...\n');
+     
+     for (const check of checks) {
+       const result = await pool.query(check.query);
+       const count = parseInt(result.rows[0].count);
+       const passed = count >= check.min;
+       console.log(`${passed ? '✅' : '❌'} ${check.name}: ${count} (min: ${check.min})`);
+     }
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+RUN COMMANDS
+───────────────────────────────────────────────────────────────────────────────
+
+```bash
+# Run migrations first
+cd src/pfas-api
+npm run db:migrate
+
+# Seed the database
+npx tsx scripts/seed-database.ts
+
+# Verify seed data
+npx tsx scripts/verify-seed.ts
+```
+
+───────────────────────────────────────────────────────────────────────────────
+EXPECTED OUTPUT
+───────────────────────────────────────────────────────────────────────────────
+
+```
+Seeding brands...
+Seeding retailers...
+Fetching categories...
+Fetching materials...
+Fetching coatings...
+Seeding products...
+✅ Seeded 50 products successfully
+
+Verifying seed data...
+
+✅ Brands: 10 (min: 5)
+✅ Retailers: 4 (min: 3)
+✅ Published products: 50 (min: 10)
+✅ Product components: 95 (min: 20)
+✅ Evidence objects: 50 (min: 10)
+✅ Verification statuses: 50 (min: 10)
+✅ Products at Tier 1+: 48 (min: 8)
+```

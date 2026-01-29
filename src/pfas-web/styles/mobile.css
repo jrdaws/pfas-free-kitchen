@@ -1,0 +1,319 @@
+/* ============================================================
+   PFAS-Free Kitchen - Mobile-Specific Styles
+   ============================================================
+   
+   This file contains mobile-specific styles including:
+   - Touch target sizing (44px minimum)
+   - Safe area insets for notched devices
+   - Input zoom prevention
+   - Hover effect disabling on touch
+   - Landscape optimizations
+   ============================================================ */
+
+/* ============================================================
+   TOUCH TARGET MINIMUMS
+   Apple HIG and Material Design recommend 44px minimum
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Interactive elements */
+  button,
+  a,
+  [role="button"],
+  [role="link"],
+  input[type="checkbox"] + label,
+  input[type="radio"] + label {
+    min-height: 44px;
+  }
+
+  /* Icon buttons need explicit sizing */
+  .icon-button,
+  [class*="iconButton"],
+  [class*="IconButton"] {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 10px;
+  }
+
+  /* Checkboxes and radios */
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 20px;
+    height: 20px;
+    margin: 12px;
+  }
+
+  /* Links in text should have padding */
+  p a,
+  li a {
+    padding: 2px 0;
+    margin: -2px 0;
+  }
+}
+
+/* ============================================================
+   PREVENT INPUT ZOOM ON iOS
+   iOS zooms when input font-size < 16px
+   ============================================================ */
+
+@media (max-width: 768px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Reset appearance for custom styling */
+  select {
+    -webkit-appearance: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23666' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 40px;
+  }
+}
+
+/* ============================================================
+   SAFE AREA INSETS
+   For notched phones (iPhone X+) and home indicators
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Fixed position elements */
+  .mobile-nav,
+  .mobile-filter-sheet,
+  .bottom-sheet,
+  [class*="mobileNav"],
+  [class*="bottomSheet"],
+  [class*="BottomSheet"] {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Sticky headers */
+  .sticky-header,
+  [class*="stickyHeader"] {
+    padding-top: env(safe-area-inset-top);
+  }
+
+  /* Full-width elements */
+  .full-width-container {
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
+
+/* ============================================================
+   DISABLE HOVER ON TOUCH DEVICES
+   Prevents "sticky" hover states on mobile
+   ============================================================ */
+
+@media (hover: none) and (pointer: coarse) {
+  /* Reset hover transforms */
+  .product-card:hover,
+  [class*="productCard"]:hover,
+  [class*="ProductCard"]:hover,
+  [class*="card"]:hover {
+    transform: none !important;
+  }
+
+  /* Reset hover shadows (keep base shadow) */
+  [class*="card"]:hover {
+    box-shadow: var(--shadow-sm);
+  }
+
+  /* Reset hover scales */
+  img:hover {
+    transform: none;
+  }
+
+  /* Keep active states for feedback */
+  button:active,
+  a:active,
+  [role="button"]:active {
+    opacity: 0.8;
+  }
+}
+
+/* ============================================================
+   LANDSCAPE MODE OPTIMIZATIONS
+   ============================================================ */
+
+@media (max-width: 896px) and (orientation: landscape) {
+  /* Reduce header height in landscape */
+  .header,
+  [class*="header"] {
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+
+  /* Modal/drawer max heights */
+  .mobile-nav,
+  [class*="mobileNav"],
+  [class*="drawer"] {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+
+  /* Reduce vertical spacing */
+  .hero,
+  [class*="hero"] {
+    padding-top: var(--space-8);
+    padding-bottom: var(--space-8);
+  }
+}
+
+/* ============================================================
+   SCROLL BEHAVIOR
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Smooth scrolling for scrollable areas */
+  .scroll-container,
+  [class*="carousel"],
+  [class*="Carousel"] {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+    overscroll-behavior: contain;
+  }
+
+  /* Hide scrollbars on mobile where appropriate */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ============================================================
+   TAP HIGHLIGHT
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Remove default tap highlight */
+  a,
+  button,
+  [role="button"],
+  input,
+  select,
+  textarea {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+
+/* ============================================================
+   TEXT SELECTION
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Prevent accidental text selection on interactive elements */
+  button,
+  [role="button"],
+  nav a,
+  .nav-item,
+  [class*="navItem"] {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   For users who prefer less animation
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   FORM ELEMENTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Better touch targets for form controls */
+  label {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    cursor: pointer;
+  }
+
+  /* Increase spacing between form elements */
+  form > * + * {
+    margin-top: var(--space-4);
+  }
+
+  /* Better button styling */
+  button[type="submit"],
+  input[type="submit"] {
+    width: 100%;
+    padding: var(--space-3) var(--space-4);
+    font-size: var(--text-base);
+  }
+}
+
+/* ============================================================
+   IMAGES
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Prevent images from overflowing */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Lazy loading placeholder */
+  img[loading="lazy"] {
+    background: var(--color-gray-100);
+  }
+}
+
+/* ============================================================
+   PREVENT HORIZONTAL OVERFLOW
+   ============================================================ */
+
+@media (max-width: 768px) {
+  html,
+  body {
+    overflow-x: hidden;
+  }
+
+  /* Ensure content doesn't cause horizontal scroll */
+  main,
+  .container,
+  [class*="container"] {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+/* ============================================================
+   STICKY POSITION FIX FOR iOS
+   ============================================================ */
+
+@supports (-webkit-touch-callout: none) {
+  /* iOS-specific fixes */
+  .sticky,
+  [class*="sticky"] {
+    position: -webkit-sticky;
+    position: sticky;
+  }
+
+  /* Fix for iOS rubber-band scrolling */
+  body {
+    overscroll-behavior-y: none;
+  }
+}

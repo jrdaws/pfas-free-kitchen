@@ -1,0 +1,410 @@
+ACTIVATION: w5-frontend-public
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Frontend Engineer Agent
+MISSION: Build the public-facing Next.js frontend for product discovery
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The public site enables consumers to:
+- Browse PFAS-free kitchen products by category
+- Filter by verification tier, material, features
+- View detailed product information with evidence
+- Click through to retailers via affiliate links
+
+All with proper FTC disclosures and accessibility compliance.
+
+SPEC REFERENCE
+Read: docs/pfas-platform/01-PRD-MVP.md
+Sections: All Epic user stories for error/empty states
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. PROJECT STRUCTURE
+   ```
+   app/
+   ├── layout.tsx                    # Root layout with nav, footer, disclosure
+   ├── page.tsx                      # Homepage
+   ├── globals.css
+   ├── (browse)/
+   │   ├── [category]/
+   │   │   ├── page.tsx              # Category grid
+   │   │   └── [subcategory]/
+   │   │       └── page.tsx          # Subcategory grid
+   │   └── layout.tsx                # Browse layout with filters
+   ├── product/
+   │   └── [slug]/
+   │       └── page.tsx              # Product detail page
+   ├── compare/
+   │   └── page.tsx                  # Comparison page
+   ├── search/
+   │   └── page.tsx                  # Search results
+   ├── education/
+   │   ├── page.tsx                  # Education hub
+   │   ├── how-we-verify/
+   │   │   └── page.tsx
+   │   └── pfoa-vs-pfas/
+   │       └── page.tsx
+   ├── disclosure/
+   │   └── page.tsx                  # Full affiliate disclosure
+   └── api/                          # API routes if needed
+   
+   components/
+   ├── layout/
+   │   ├── Header.tsx
+   │   ├── Footer.tsx
+   │   ├── Navigation.tsx
+   │   └── AffiliateDisclosure.tsx   # Sitewide disclosure
+   ├── product/
+   │   ├── ProductCard.tsx
+   │   ├── ProductGrid.tsx
+   │   ├── TierBadge.tsx
+   │   ├── ComponentList.tsx
+   │   ├── EvidenceSection.tsx
+   │   ├── UnknownsPanel.tsx
+   │   └── RetailerButtons.tsx
+   ├── filters/
+   │   ├── FilterPanel.tsx
+   │   ├── TierFilter.tsx
+   │   ├── MaterialFilter.tsx
+   │   └── FeatureFilters.tsx
+   ├── search/
+   │   ├── SearchBar.tsx
+   │   ├── Autocomplete.tsx
+   │   └── EducationBanner.tsx
+   ├── compare/
+   │   ├── CompareBar.tsx
+   │   └── CompareTable.tsx
+   └── ui/
+       ├── Button.tsx
+       ├── Badge.tsx
+       ├── Modal.tsx
+       ├── Tooltip.tsx
+       └── Pagination.tsx
+   ```
+
+2. ROOT LAYOUT WITH DISCLOSURE
+   File: app/layout.tsx
+
+   ```tsx
+   export default function RootLayout({ children }: { children: React.ReactNode }) {
+     return (
+       <html lang="en">
+         <body>
+           <Header />
+           <main>{children}</main>
+           <Footer />
+           {/* Sitewide affiliate disclosure in footer */}
+         </body>
+       </html>
+     );
+   }
+   ```
+
+3. TIER BADGE COMPONENT
+   File: components/product/TierBadge.tsx
+
+   ```tsx
+   const TIER_CONFIG = {
+     0: { label: 'Unknown', color: 'gray', icon: '?' },
+     1: { label: 'Brand Statement', color: 'bronze', icon: '✓' },
+     2: { label: 'Policy Reviewed', color: 'silver', icon: '✓✓' },
+     3: { label: 'Lab Tested', color: 'gold', icon: '🔬' },
+     4: { label: 'Monitored', color: 'platinum', icon: '🔬+' },
+   };
+
+   export function TierBadge({ tier, showTooltip = true }: TierBadgeProps) {
+     const config = TIER_CONFIG[tier];
+     
+     return (
+       <Tooltip content={<TierTooltipContent tier={tier} />} disabled={!showTooltip}>
+         <Badge 
+           variant={config.color}
+           aria-label={`Verification tier ${tier}: ${config.label}`}
+         >
+           <span className="tier-icon">{config.icon}</span>
+           <span className="tier-label">{config.label}</span>
+         </Badge>
+       </Tooltip>
+     );
+   }
+   ```
+
+4. PRODUCT CARD
+   File: components/product/ProductCard.tsx
+
+   ```tsx
+   export function ProductCard({ product, onCompareToggle, isComparing }: ProductCardProps) {
+     return (
+       <article className="product-card" aria-labelledby={`product-${product.id}`}>
+         <div className="product-image">
+           <Image src={product.image_url} alt={product.name} width={200} height={200} />
+           <TierBadge tier={product.verification.tier} />
+         </div>
+         
+         <div className="product-info">
+           <h3 id={`product-${product.id}`}>
+             <Link href={`/product/${product.slug}`}>{product.name}</Link>
+           </h3>
+           <p className="brand">{product.brand.name}</p>
+           <p className="materials">{product.material_summary}</p>
+           
+           {product.verification.has_evidence && (
+             <span className="evidence-indicator" aria-label="Evidence available">
+               📄 Evidence
+             </span>
+           )}
+           
+           <div className="retailers">
+             {product.retailers.slice(0, 3).map(r => (
+               <RetailerChip key={r.id} retailer={r} size="small" />
+             ))}
+           </div>
+         </div>
+
+         <button 
+           onClick={() => onCompareToggle(product.id)}
+           aria-pressed={isComparing}
+           className="compare-toggle"
+         >
+           {isComparing ? 'Remove from compare' : 'Add to compare'}
+         </button>
+       </article>
+     );
+   }
+   ```
+
+5. CATEGORY PAGE WITH FILTERS
+   File: app/(browse)/[category]/page.tsx
+
+   ```tsx
+   export default async function CategoryPage({ 
+     params, 
+     searchParams 
+   }: { 
+     params: { category: string };
+     searchParams: Record<string, string>;
+   }) {
+     const filters = parseFilters(searchParams);
+     const { products, facets, pagination } = await fetchProducts({
+       category: params.category,
+       ...filters,
+     });
+
+     return (
+       <>
+         {/* Affiliate disclosure - required */}
+         <AffiliateDisclosureBanner text="Affiliate links may appear in results." />
+
+         <div className="category-layout">
+           <aside className="filter-panel">
+             <FilterPanel facets={facets} activeFilters={filters} />
+           </aside>
+
+           <main className="product-content">
+             <CategoryHeader category={params.category} count={pagination.total} />
+
+             {products.length === 0 ? (
+               <EmptyState type="no-results" filters={filters} />
+             ) : (
+               <>
+                 <ProductGrid products={products} />
+                 <Pagination {...pagination} />
+               </>
+             )}
+           </main>
+         </div>
+       </>
+     );
+   }
+   ```
+
+6. PRODUCT DETAIL PAGE
+   File: app/product/[slug]/page.tsx
+
+   ```tsx
+   export default async function ProductPage({ params }: { params: { slug: string } }) {
+     const product = await fetchProduct(params.slug);
+
+     if (!product) {
+       return <NotFoundState message="Product not found or has been removed." />;
+     }
+
+     return (
+       <article className="product-detail">
+         <Breadcrumb items={product.category.path} />
+
+         <header className="product-header">
+           <div className="product-image">
+             <Image src={product.images[0].url} alt={product.name} />
+           </div>
+           <div className="product-title">
+             <h1>{product.name}</h1>
+             <p className="brand">{product.brand.name}</p>
+             <TierBadge tier={product.verification.tier} size="large" />
+           </div>
+         </header>
+
+         {/* Food-Contact Materials Block - REQUIRED at top */}
+         <section className="food-contact-section" aria-labelledby="food-contact-heading">
+           <h2 id="food-contact-heading">Food-Contact Materials</h2>
+           <ComponentList components={product.components} />
+         </section>
+
+         {/* PFAS-Free Status Block */}
+         <section className="pfas-status-section" aria-labelledby="pfas-status-heading">
+           <h2 id="pfas-status-heading">PFAS-Free Status</h2>
+           <VerificationDetails verification={product.verification} />
+           <EvidenceSection evidence={product.evidence} />
+         </section>
+
+         {/* What Could Still Be Unknown - ALWAYS visible */}
+         <section className="unknowns-section" aria-labelledby="unknowns-heading">
+           <h2 id="unknowns-heading">What Could Still Be Unknown</h2>
+           <UnknownsPanel unknowns={product.verification.unknowns} />
+         </section>
+
+         {/* Affiliate CTAs with disclosure */}
+         <section className="buy-section">
+           <p className="affiliate-disclosure">
+             Affiliate link: We may earn a commission if you purchase through this link.
+           </p>
+           <RetailerButtons 
+             retailers={product.retailers}
+             productId={product.id}
+           />
+         </section>
+
+         {/* Report Issue */}
+         <footer className="product-footer">
+           <ReportIssueLink productId={product.id} />
+         </footer>
+       </article>
+     );
+   }
+   ```
+
+7. UNKNOWNS PANEL (Required - no silent failures)
+   File: components/product/UnknownsPanel.tsx
+
+   ```tsx
+   export function UnknownsPanel({ unknowns }: { unknowns: string[] }) {
+     if (unknowns.length === 0) {
+       return (
+         <div className="unknowns-panel unknowns-complete">
+           <span className="icon">✓</span>
+           <p>All major components verified</p>
+         </div>
+       );
+     }
+
+     return (
+       <div className="unknowns-panel unknowns-present">
+         <span className="icon">ℹ️</span>
+         <ul>
+           {unknowns.map((unknown, i) => (
+             <li key={i}>{unknown}</li>
+           ))}
+         </ul>
+       </div>
+     );
+   }
+   ```
+
+8. ERROR AND EMPTY STATES
+   File: components/ui/States.tsx
+
+   ```tsx
+   export function ErrorState({ type, onRetry }: ErrorStateProps) {
+     const messages = {
+       'api-timeout': 'Unable to load products. Please refresh or try again later.',
+       'search-down': 'Search temporarily unavailable. Browse by category instead.',
+       'not-found': 'Product not found or has been removed.',
+     };
+
+     return (
+       <div className="error-state" role="alert">
+         <p>{messages[type]}</p>
+         {onRetry && <Button onClick={onRetry}>Try Again</Button>}
+       </div>
+     );
+   }
+
+   export function EmptyState({ type, filters }: EmptyStateProps) {
+     if (type === 'no-results') {
+       return (
+         <div className="empty-state">
+           <p>No products match your filters.</p>
+           <p>Try adjusting:</p>
+           <ul>
+             {Object.entries(filters).map(([key, value]) => (
+               <li key={key}>
+                 {key}: {value} <button>Remove</button>
+               </li>
+             ))}
+           </ul>
+         </div>
+       );
+     }
+     // ... other empty states
+   }
+   ```
+
+9. RETAILER CLICK-OUT MODAL
+   File: components/product/RetailerModal.tsx
+
+   ```tsx
+   export function RetailerClickModal({ 
+     retailer, 
+     affiliateUrl, 
+     onConfirm, 
+     onCancel 
+   }: RetailerModalProps) {
+     return (
+       <Modal onClose={onCancel} aria-labelledby="modal-title">
+         <h2 id="modal-title">You're leaving PFAS-Free Kitchen</h2>
+         <p>You're about to visit {retailer.name}.</p>
+         <p className="disclosure">We may earn a commission from this purchase.</p>
+         <div className="modal-actions">
+           <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+           <Button variant="primary" onClick={() => onConfirm(affiliateUrl)}>
+             Continue to {retailer.name}
+           </Button>
+         </div>
+       </Modal>
+     );
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+ACCESSIBILITY REQUIREMENTS (WCAG 2.2 AA)
+───────────────────────────────────────────────────────────────────────────────
+
+□ All interactive elements keyboard accessible
+□ Focus indicators visible on all focusable elements
+□ Color contrast 4.5:1 minimum
+□ ARIA labels on badges, icons, and dynamic content
+□ Skip to main content link
+□ Form labels associated with inputs
+□ Error messages announced to screen readers
+
+───────────────────────────────────────────────────────────────────────────────
+FTC DISCLOSURE PLACEMENT (Required)
+───────────────────────────────────────────────────────────────────────────────
+
+1. Footer: Link to /disclosure page
+2. Category grids: Banner above first row
+3. Product detail: Text adjacent to buy buttons
+4. Click-out modal: Disclosure before confirm button
+
+───────────────────────────────────────────────────────────────────────────────
+PERFORMANCE TARGETS
+───────────────────────────────────────────────────────────────────────────────
+
+□ LCP < 2.5s on 4G for category pages
+□ CLS < 0.1 (no layout shift after load)
+□ FID < 100ms
+□ Use Next.js Image for all product images
+□ Implement ISR for category pages (revalidate: 60)

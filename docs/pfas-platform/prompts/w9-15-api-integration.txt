@@ -1,0 +1,305 @@
+ACTIVATION: w9-api-integration
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Integration Engineer Agent
+MISSION: Connect frontend to backend API and verify all data flows correctly
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT (Refinement Wave)
+The frontend (Next.js) and API (Express) exist but may not be fully connected.
+This prompt ensures:
+- Frontend fetches real data from API
+- All API endpoints return expected responses
+- Error handling works end-to-end
+- Loading states display correctly
+
+EXISTING CODE
+- API: src/pfas-api/
+- Frontend: src/pfas-web/
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. API CLIENT CONFIGURATION
+   File: src/pfas-web/lib/api.ts
+
+   ```typescript
+   const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api/v1';
+
+   export class APIClient {
+     static async get<T>(endpoint: string, options?: RequestInit): Promise<T> {
+       const res = await fetch(`${API_BASE}${endpoint}`, {
+         ...options,
+         headers: {
+           'Content-Type': 'application/json',
+           ...options?.headers,
+         },
+       });
+       
+       if (!res.ok) {
+         const error = await res.json().catch(() => ({ message: 'Unknown error' }));
+         throw new APIError(res.status, error.message || error.error?.message);
+       }
+       
+       const data = await res.json();
+       return data.data;
+     }
+
+     static async post<T>(endpoint: string, body: unknown): Promise<T> {
+       return this.get(endpoint, {
+         method: 'POST',
+         body: JSON.stringify(body),
+       });
+     }
+   }
+
+   export class APIError extends Error {
+     constructor(public status: number, message: string) {
+       super(message);
+       this.name = 'APIError';
+     }
+   }
+   ```
+
+2. DATA FETCHING FUNCTIONS
+   File: src/pfas-web/lib/data.ts
+
+   ```typescript
+   import { APIClient } from './api';
+   import type { 
+     ProductListResponse, 
+     ProductDetailResponse, 
+     CategoryTreeResponse,
+     SearchResponse 
+   } from './types';
+
+   export async function fetchProducts(params: {
+     category?: string;
+     tier?: number[];
+     material?: string[];
+     page?: number;
+     limit?: number;
+     sort?: string;
+   }): Promise<ProductListResponse> {
+     const searchParams = new URLSearchParams();
+     if (params.category) searchParams.set('category_id', params.category);
+     if (params.tier?.length) params.tier.forEach(t => searchParams.append('tier', t.toString()));
+     if (params.material?.length) params.material.forEach(m => searchParams.append('material', m));
+     if (params.page) searchParams.set('page', params.page.toString());
+     if (params.limit) searchParams.set('limit', params.limit.toString());
+     if (params.sort) searchParams.set('sort', params.sort);
+
+     return APIClient.get(`/products?${searchParams.toString()}`);
+   }
+
+   export async function fetchProduct(slug: string): Promise<ProductDetailResponse | null> {
+     try {
+       return await APIClient.get(`/products/${slug}`);
+     } catch (error) {
+       if (error instanceof APIError && error.status === 404) {
+         return null;
+       }
+       throw error;
+     }
+   }
+
+   export async function fetchCategories(): Promise<CategoryTreeResponse> {
+     return APIClient.get('/categories');
+   }
+
+   export async function searchProducts(query: string, filters?: object): Promise<SearchResponse> {
+     const params = new URLSearchParams({ q: query });
+     if (filters) {
+       Object.entries(filters).forEach(([key, value]) => {
+         if (value) params.set(key, String(value));
+       });
+     }
+     return APIClient.get(`/search?${params.toString()}`);
+   }
+
+   export async function fetchAffiliateLinks(productId: string) {
+     return APIClient.get(`/products/${productId}/affiliate-links`);
+   }
+
+   export async function trackClick(data: {
+     productId: string;
+     retailerId: string;
+     sessionId?: string;
+     referrerPage?: string;
+   }) {
+     return APIClient.post('/affiliate-clicks', {
+       product_id: data.productId,
+       retailer_id: data.retailerId,
+       session_id: data.sessionId,
+       referrer_page: data.referrerPage,
+     });
+   }
+
+   export async function submitReport(data: {
+     productId: string;
+     issueType: string;
+     description: string;
+     evidenceUrls?: string[];
+     contactEmail?: string;
+   }) {
+     return APIClient.post('/reports', {
+       product_id: data.productId,
+       issue_type: data.issueType,
+       description: data.description,
+       evidence_urls: data.evidenceUrls,
+       contact_email: data.contactEmail,
+     });
+   }
+   ```
+
+3. UPDATE PAGE COMPONENTS TO USE API
+   
+   File: src/pfas-web/app/(browse)/[category]/page.tsx
+   ```tsx
+   import { fetchProducts, fetchCategories } from '@/lib/data';
+   import { ProductGrid } from '@/components/product';
+   import { Suspense } from 'react';
+
+   export default async function CategoryPage({ 
+     params, 
+     searchParams 
+   }: { 
+     params: { category: string };
+     searchParams: Record<string, string>;
+   }) {
+     const filters = {
+       category: params.category,
+       tier: searchParams.tier ? searchParams.tier.split(',').map(Number) : undefined,
+       material: searchParams.material?.split(','),
+       page: searchParams.page ? parseInt(searchParams.page) : 1,
+       limit: 24,
+       sort: searchParams.sort || 'tier_desc',
+     };
+
+     try {
+       const data = await fetchProducts(filters);
+       
+       return (
+         <>
+           <AffiliateDisclosureBanner />
+           <ProductGrid 
+             products={data.data} 
+             facets={data.facets} 
+             pagination={data.pagination}
+           />
+         </>
+       );
+     } catch (error) {
+       return <ErrorState type="api-error" />;
+     }
+   }
+   ```
+
+   File: src/pfas-web/app/product/[slug]/page.tsx
+   ```tsx
+   import { fetchProduct, fetchAffiliateLinks } from '@/lib/data';
+   import { notFound } from 'next/navigation';
+
+   export default async function ProductPage({ params }: { params: { slug: string } }) {
+     const product = await fetchProduct(params.slug);
+     
+     if (!product) {
+       notFound();
+     }
+
+     const affiliateLinks = await fetchAffiliateLinks(product.id);
+
+     return (
+       <article className="product-detail">
+         {/* ... render product with real data ... */}
+       </article>
+     );
+   }
+   ```
+
+4. ENVIRONMENT CONFIGURATION
+   File: src/pfas-web/.env.local
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:3001/api/v1
+   ```
+
+5. API CORS CONFIGURATION
+   File: src/pfas-api/src/index.ts
+   
+   Ensure CORS allows frontend origin:
+   ```typescript
+   import cors from 'cors';
+
+   app.use(cors({
+     origin: process.env.CORS_ORIGIN || 'http://localhost:3000',
+     credentials: true,
+   }));
+   ```
+
+6. SEED DATA FOR DEVELOPMENT
+   File: src/pfas-api/scripts/seed-dev-data.ts
+
+   Create test products so frontend has data to display:
+   ```typescript
+   const TEST_PRODUCTS = [
+     {
+       name: 'All-Clad D3 Stainless Steel 12" Skillet',
+       brand: 'All-Clad',
+       category: 'cookware/skillets',
+       material: 'stainless_steel',
+       coating: 'none',
+       tier: 3,
+       // ...
+     },
+     {
+       name: 'Lodge Cast Iron 10" Skillet',
+       brand: 'Lodge',
+       category: 'cookware/skillets',
+       material: 'cast_iron',
+       coating: 'seasoning',
+       tier: 2,
+       // ...
+     },
+     // Add 10-20 test products across categories
+   ];
+
+   async function seedDevData() {
+     for (const product of TEST_PRODUCTS) {
+       await createProductWithVerification(product);
+     }
+     console.log(`Seeded ${TEST_PRODUCTS.length} products`);
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+VERIFICATION STEPS
+───────────────────────────────────────────────────────────────────────────────
+
+After implementation, verify:
+
+1. [ ] Homepage loads with product data
+2. [ ] Category page shows products from API
+3. [ ] Filters update URL and refetch data
+4. [ ] Product detail page shows all sections
+5. [ ] Tier badges display correct tier from API
+6. [ ] Affiliate links load from API
+7. [ ] Click tracking sends POST request
+8. [ ] Report submission works
+9. [ ] Error states display when API fails
+10. [ ] Loading states display during fetch
+
+───────────────────────────────────────────────────────────────────────────────
+START BOTH SERVERS
+───────────────────────────────────────────────────────────────────────────────
+
+```bash
+# Terminal 1: API
+cd src/pfas-api && npm run dev
+
+# Terminal 2: Frontend
+cd src/pfas-web && npm run dev
+```
+
+API runs on http://localhost:3001
+Frontend runs on http://localhost:3000

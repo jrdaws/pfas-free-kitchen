@@ -1,0 +1,338 @@
+================================================================================
+WAVE 12-09: EDUCATION & CONTENT PAGES
+================================================================================
+ACTIVATION: "Execute Wave 12-09: Education and Content Pages"
+AGENT: Website Agent
+DEPENDS ON: Wave 12-01
+================================================================================
+
+CONTEXT
+-------
+Create educational content pages that build trust and help users understand:
+- What PFAS are and why they matter
+- How the verification system works
+- How to make informed purchasing decisions
+
+================================================================================
+TASK 1: WHAT IS PFAS PAGE
+================================================================================
+
+Create `src/pfas-web/app/learn/what-is-pfas/page.tsx`:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ Learn > What is PFAS?                                                         │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│                        What is PFAS?                                          │
+│                        ─────────────                                          │
+│                                                                               │
+│  [Hero illustration: molecular structure simplified]                          │
+│                                                                               │
+│  PFAS (per- and polyfluoroalkyl substances) are a class of over 15,000       │
+│  synthetic chemicals used in consumer products since the 1940s. They're       │
+│  called "forever chemicals" because they don't break down naturally.          │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  Why Are They Used in Cookware?                                              │
+│  ──────────────────────────────                                              │
+│                                                                               │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
+│  │ [Icon]          │  │ [Icon]          │  │ [Icon]          │              │
+│  │ Non-stick       │  │ Stain resistant │  │ Water repellent │              │
+│  │ properties      │  │ coatings        │  │ treatments      │              │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘              │
+│                                                                               │
+│  PTFE (Teflon) and similar nonstick coatings contain PFAS. These compounds  │
+│  create the slippery surface that prevents food from sticking.               │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  Health Concerns                                                              │
+│  ───────────────                                                              │
+│                                                                               │
+│  Research has linked PFAS exposure to:                                        │
+│  • Increased cholesterol levels                                               │
+│  • Changes in liver enzymes                                                   │
+│  • Decreased vaccine response in children                                     │
+│  • Increased risk of certain cancers                                          │
+│  • Reproductive and developmental effects                                     │
+│                                                                               │
+│  [⚠️ Note: We are not medical professionals. Consult a doctor for health     │
+│  advice. Sources: EPA, CDC ATSDR]                                            │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  PFAS-Free Alternatives                                                       │
+│  ──────────────────────                                                       │
+│                                                                               │
+│  Materials that are naturally PFAS-free:                                      │
+│                                                                               │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
+│  │ Stainless Steel │  │ Cast Iron       │  │ Carbon Steel    │              │
+│  │ Browse →        │  │ Browse →        │  │ Browse →        │              │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘              │
+│                                                                               │
+│  ┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐              │
+│  │ Glass           │  │ Ceramic (true)  │  │ Enameled        │              │
+│  │ Browse →        │  │ Browse →        │  │ Browse →        │              │
+│  └─────────────────┘  └─────────────────┘  └─────────────────┘              │
+│                                                                               │
+│  [Browse All Verified Products]                                              │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 2: HOW WE VERIFY PAGE
+================================================================================
+
+Create `src/pfas-web/app/learn/how-we-verify/page.tsx`:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ Learn > How We Verify Products                                                │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│                   Our Verification Process                                    │
+│                   ────────────────────────                                    │
+│                                                                               │
+│  We use a tiered verification system to rate products based on the           │
+│  quality of evidence available. Higher tiers = more confidence.              │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  The Four Verification Tiers                                                  │
+│  ───────────────────────────                                                  │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ ✓✓ TIER 4 · MONITORED                                     Highest      │ │
+│  │ ────────────────────────────────────────────────────────────────────── │ │
+│  │ Products with ongoing testing programs. We receive updated lab        │ │
+│  │ results on a schedule (typically annually). If a product fails        │ │
+│  │ retest, the listing is immediately updated.                           │ │
+│  │                                                                        │ │
+│  │ Evidence required:                                                     │ │
+│  │ • Initial lab report (Tier 3 equivalent)                              │ │
+│  │ • Documented retest schedule                                          │ │
+│  │ • Access to ongoing results                                           │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ ✓ TIER 3 · LAB TESTED                                                  │ │
+│  │ ────────────────────────────────────────────────────────────────────── │ │
+│  │ Products tested by an independent laboratory using validated methods.  │ │
+│  │ We verify the lab report is authentic and the testing method is        │ │
+│  │ appropriate for detecting PFAS.                                        │ │
+│  │                                                                        │ │
+│  │ Evidence required:                                                     │ │
+│  │ • Lab report from accredited laboratory                               │ │
+│  │ • Test method (LC-MS/MS or total fluorine screening)                  │ │
+│  │ • Detection limits stated (LOD/LOQ)                                   │ │
+│  │ • Sample description matching product                                 │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ ○ TIER 2 · POLICY REVIEWED                                             │ │
+│  │ ────────────────────────────────────────────────────────────────────── │ │
+│  │ We've reviewed the manufacturer's PFAS policy, ingredient             │ │
+│  │ specifications, or supply chain documentation. No independent          │ │
+│  │ testing, but credible documentation exists.                           │ │
+│  │                                                                        │ │
+│  │ Evidence required:                                                     │ │
+│  │ • Written PFAS-free policy on company letterhead                      │ │
+│  │ • Material safety data sheets (MSDS)                                  │ │
+│  │ • Supply chain certifications                                         │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+│  ┌─────────────────────────────────────────────────────────────────────────┐ │
+│  │ · TIER 1 · BRAND STATEMENT                                   Lowest    │ │
+│  │ ────────────────────────────────────────────────────────────────────── │ │
+│  │ The brand has made a public claim that the product is PFAS-free, but  │ │
+│  │ we have not verified this claim with documentation or testing.         │ │
+│  │                                                                        │ │
+│  │ Evidence required:                                                     │ │
+│  │ • Public statement on brand website or packaging                      │ │
+│  │ • No independent verification                                         │ │
+│  └─────────────────────────────────────────────────────────────────────────┘ │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  Component-Level Analysis                                                     │
+│  ────────────────────────                                                     │
+│                                                                               │
+│  We don't just verify "the product" - we examine each component that         │
+│  contacts food. A pan might have:                                            │
+│                                                                               │
+│  [Diagram: Pan with labeled parts]                                           │
+│  • Cooking surface (food contact) ← Verified                                 │
+│  • Rivets (food contact) ← Verified                                          │
+│  • Handle (non-food contact) ← May not be verified                           │
+│                                                                               │
+│  This matters because some products use PFAS-free coatings but have          │
+│  PFAS in handles, lids, or other components.                                 │
+│                                                                               │
+├───────────────────────────────────────────────────────────────────────────────┤
+│                                                                               │
+│  Our Independence                                                             │
+│  ────────────────                                                             │
+│                                                                               │
+│  • We do not accept payment for reviews or rankings                          │
+│  • Affiliate links are clearly disclosed                                     │
+│  • Verification tier is never influenced by affiliate relationships          │
+│  • All evidence documents are stored with SHA-256 hashes                     │
+│                                                                               │
+│  [Read Our Editorial Policy]                                                 │
+│                                                                               │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 3: BUYER'S GUIDE PAGE
+================================================================================
+
+Create `src/pfas-web/app/learn/buyers-guide/page.tsx`:
+
+Content sections:
+1. Choosing the right material for your cooking style
+2. Understanding ceramic coatings (true ceramic vs sol-gel)
+3. What "PFOA-free" actually means (vs PFAS-free)
+4. Questions to ask before buying
+5. Red flags to watch for
+6. Our top picks by category (links to filtered search)
+
+================================================================================
+TASK 4: ABOUT US PAGE
+================================================================================
+
+Create `src/pfas-web/app/about/page.tsx`:
+
+Content:
+- Mission statement
+- Team (if public)
+- How we're funded (affiliate commissions, disclosed)
+- Contact information
+- Media inquiries
+
+================================================================================
+TASK 5: DISCLOSURE PAGE
+================================================================================
+
+Update `src/pfas-web/app/disclosure/page.tsx`:
+
+Full FTC-compliant disclosure:
+- Amazon Associates disclosure
+- How affiliate links work
+- That we earn commissions
+- That this doesn't affect rankings
+- Links to all retailer program policies
+
+================================================================================
+TASK 6: FAQ PAGE
+================================================================================
+
+Create `src/pfas-web/app/faq/page.tsx`:
+
+Accordion-style FAQ:
+
+**General Questions:**
+- What are PFAS?
+- Why should I care about PFAS in cookware?
+- Is Teflon the same as PFAS?
+
+**About Our Ratings:**
+- How do you verify products?
+- What does each tier mean?
+- Can brands pay to be listed?
+- How often do you retest products?
+
+**Shopping Questions:**
+- Do you sell products directly?
+- How do affiliate links work?
+- Why don't you show prices?
+
+**Product Questions:**
+- Is ceramic coating safe?
+- What about "PFOA-free" products?
+- Are all stainless steel pans PFAS-free?
+
+================================================================================
+TASK 7: SITE NAVIGATION UPDATES
+================================================================================
+
+Update mega menu and footer to include new pages:
+
+LEARN SECTION:
+- What is PFAS?
+- How We Verify
+- Buyer's Guide
+- FAQ
+
+ABOUT SECTION:
+- About Us
+- Editorial Policy
+- Affiliate Disclosure
+- Contact
+
+================================================================================
+TASK 8: CONTENT COMPONENTS
+================================================================================
+
+Create reusable content components:
+
+`src/pfas-web/components/content/InfoBox.tsx`:
+```tsx
+// Callout box for important information
+<InfoBox type="warning" title="Important">
+  Content here
+</InfoBox>
+```
+
+`src/pfas-web/components/content/AccordionFAQ.tsx`:
+```tsx
+// Expandable FAQ items
+<AccordionFAQ items={faqItems} />
+```
+
+`src/pfas-web/components/content/TableOfContents.tsx`:
+```tsx
+// Sticky sidebar TOC for long pages
+<TableOfContents headings={headings} />
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ What is PFAS page explains the issue clearly
+□ How We Verify page details all 4 tiers
+□ Component-level analysis is explained
+□ Buyer's Guide helps users make decisions
+□ About page establishes credibility
+□ Disclosure page is FTC-compliant
+□ FAQ covers common questions
+□ All pages use consistent layout
+□ Navigation updated with new pages
+□ Pages are SEO-optimized (meta tags, headings)
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/app/learn/what-is-pfas/page.tsx
+- src/pfas-web/app/learn/how-we-verify/page.tsx
+- src/pfas-web/app/learn/buyers-guide/page.tsx
+- src/pfas-web/app/about/page.tsx
+- src/pfas-web/app/faq/page.tsx
+- src/pfas-web/components/content/InfoBox.tsx
+- src/pfas-web/components/content/AccordionFAQ.tsx
+- src/pfas-web/components/content/TableOfContents.tsx
+
+MODIFY:
+- src/pfas-web/app/disclosure/page.tsx
+- src/pfas-web/components/layout/MegaMenu.tsx
+- src/pfas-web/components/layout/Footer.tsx
+
+================================================================================

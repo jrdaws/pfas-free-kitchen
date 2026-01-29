@@ -1,0 +1,340 @@
+================================================================================
+WAVE 14-01: FIX ROUTING & SLUG SYNCHRONIZATION
+================================================================================
+ACTIVATION: "Execute Wave 14-01: Fix Routing and Slug Synchronization"
+AGENT: Website Agent
+PRIORITY: CRITICAL - Do this first
+================================================================================
+
+CONTEXT
+-------
+The website has broken links because:
+1. Product slugs in mock data don't match frontend link patterns
+2. Category routes like /cookware/skillets don't exist
+3. Pages like /new-arrivals don't exist
+
+This wave fixes ALL routing issues.
+
+================================================================================
+TASK 1: AUDIT CURRENT SLUGS IN MOCK DATA
+================================================================================
+
+Read the current mock data and list all product slugs:
+
+```bash
+grep -o '"slug": "[^"]*"' src/pfas-api/src/mock/data.ts
+```
+
+Compare against what the frontend expects. The frontend generates links like:
+- Product cards link to: `/product/{slug}`
+- Category links go to: `/search?category={category_slug}`
+
+================================================================================
+TASK 2: FIX PRODUCT SLUG FORMAT
+================================================================================
+
+Update `src/pfas-api/src/mock/data.ts`:
+
+Ensure ALL product slugs follow this format:
+- Lowercase
+- Hyphens instead of spaces
+- No special characters
+- Include size if relevant
+
+BEFORE: `all-clad-d3-stainless-steel-12-skillet`
+AFTER: `all-clad-d3-stainless-12-inch-fry-pan`
+
+Create a slug mapping for consistency:
+
+```typescript
+// Helper function for consistent slugs
+function createSlug(name: string): string {
+  return name
+    .toLowerCase()
+    .replace(/['"]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/[^a-z0-9-]/g, '')
+    .replace(/-+/g, '-')
+    .trim();
+}
+```
+
+================================================================================
+TASK 3: CREATE MISSING CATEGORY ROUTES
+================================================================================
+
+The navigation links to URLs like:
+- `/cookware/skillets` 
+- `/bakeware`
+- `/storage`
+
+But these routes don't exist. Fix by creating a catch-all category route:
+
+Create `src/pfas-web/app/[...category]/page.tsx`:
+
+```tsx
+import { redirect } from 'next/navigation';
+
+// Map URL paths to search query params
+const CATEGORY_MAP: Record<string, string> = {
+  'cookware': 'cookware',
+  'cookware/skillets': 'skillets',
+  'cookware/saucepans': 'saucepans',
+  'cookware/dutch-ovens': 'dutch-ovens',
+  'cookware/stock-pots': 'stock-pots',
+  'bakeware': 'bakeware',
+  'bakeware/sheet-pans': 'sheet-pans',
+  'bakeware/baking-dishes': 'baking-dishes',
+  'storage': 'storage',
+  'storage/glass-containers': 'glass-containers',
+  'utensils': 'utensils',
+  'appliances': 'appliances',
+};
+
+export default function CategoryPage({ params }: { params: { category: string[] } }) {
+  const path = params.category.join('/');
+  const categorySlug = CATEGORY_MAP[path];
+  
+  if (categorySlug) {
+    redirect(`/search?category=${categorySlug}`);
+  }
+  
+  // If not found, redirect to search
+  redirect('/search');
+}
+```
+
+================================================================================
+TASK 4: CREATE NEW ARRIVALS PAGE
+================================================================================
+
+Create `src/pfas-web/app/new-arrivals/page.tsx`:
+
+```tsx
+import { Metadata } from 'next';
+import { ProductGrid } from '@/components/search/ProductGrid';
+
+export const metadata: Metadata = {
+  title: 'New Arrivals',
+  description: 'Recently added PFAS-free kitchen products',
+};
+
+async function getNewProducts() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/products?sort=newest&limit=24`,
+    { next: { revalidate: 3600 } }
+  );
+  return res.json();
+}
+
+export default async function NewArrivalsPage() {
+  const { data, meta } = await getNewProducts();
+  
+  return (
+    <main className="new-arrivals-page">
+      <div className="page-header">
+        <h1>New Arrivals</h1>
+        <p>Recently added verified PFAS-free products</p>
+      </div>
+      
+      <ProductGrid products={data} />
+      
+      {meta.total === 0 && (
+        <div className="empty-state">
+          <p>Check back soon for new products!</p>
+        </div>
+      )}
+    </main>
+  );
+}
+```
+
+================================================================================
+TASK 5: CREATE HIGHEST VERIFIED PAGE
+================================================================================
+
+Create `src/pfas-web/app/highest-verified/page.tsx`:
+
+```tsx
+import { Metadata } from 'next';
+import { ProductGrid } from '@/components/search/ProductGrid';
+
+export const metadata: Metadata = {
+  title: 'Highest Verified Products',
+  description: 'Products with Tier 4 (Monitored) or Tier 3 (Lab Tested) verification',
+};
+
+async function getHighestVerified() {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/products?tier=3,4&limit=48`,
+    { next: { revalidate: 3600 } }
+  );
+  return res.json();
+}
+
+export default async function HighestVerifiedPage() {
+  const { data } = await getHighestVerified();
+  
+  return (
+    <main className="highest-verified-page">
+      <div className="page-header">
+        <h1>Highest Verified Products</h1>
+        <p>Products with Tier 4 (Monitored) or Tier 3 (Lab Tested) verification status</p>
+      </div>
+      
+      <ProductGrid products={data} />
+    </main>
+  );
+}
+```
+
+================================================================================
+TASK 6: FIX NAVIGATION LINKS
+================================================================================
+
+Update `src/pfas-web/components/layout/Navigation.tsx` (or Header.tsx):
+
+Ensure all navigation links use the correct paths:
+
+```tsx
+const NAV_LINKS = [
+  {
+    label: 'Cookware',
+    href: '/search?category=cookware',
+    children: [
+      { label: 'Skillets & Frying Pans', href: '/search?category=skillets' },
+      { label: 'Saucepans', href: '/search?category=saucepans' },
+      { label: 'Dutch Ovens', href: '/search?category=dutch-ovens' },
+      { label: 'Stock Pots', href: '/search?category=stock-pots' },
+    ],
+  },
+  {
+    label: 'Bakeware',
+    href: '/search?category=bakeware',
+    children: [
+      { label: 'Sheet Pans', href: '/search?category=sheet-pans' },
+      { label: 'Baking Dishes', href: '/search?category=baking-dishes' },
+    ],
+  },
+  {
+    label: 'Storage',
+    href: '/search?category=storage',
+  },
+  {
+    label: 'Utensils',
+    href: '/search?category=utensils',
+  },
+  {
+    label: 'Appliances',
+    href: '/search?category=appliances',
+  },
+  {
+    label: 'New Arrivals',
+    href: '/new-arrivals',
+    highlight: true,
+  },
+  {
+    label: 'Highest Verified',
+    href: '/highest-verified',
+    highlight: true,
+  },
+];
+```
+
+================================================================================
+TASK 7: ADD SORT OPTIONS TO API
+================================================================================
+
+Update `src/pfas-api/src/mock-server.ts`:
+
+Add sort parameter handling:
+
+```typescript
+app.get('/api/v1/products', (req, res) => {
+  const { category, tier, sort = 'best', limit = '20', offset = '0' } = req.query;
+  
+  let products = [...MOCK_PRODUCTS];
+  
+  // Apply filters...
+  
+  // Sort
+  switch (sort) {
+    case 'newest':
+      products.sort((a, b) => 
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+      );
+      break;
+    case 'tier-high':
+      products.sort((a, b) => b.verification.tier - a.verification.tier);
+      break;
+    case 'tier-low':
+      products.sort((a, b) => a.verification.tier - b.verification.tier);
+      break;
+    case 'name-asc':
+      products.sort((a, b) => a.name.localeCompare(b.name));
+      break;
+    case 'name-desc':
+      products.sort((a, b) => b.name.localeCompare(a.name));
+      break;
+    default: // 'best' - by tier then name
+      products.sort((a, b) => {
+        if (b.verification.tier !== a.verification.tier) {
+          return b.verification.tier - a.verification.tier;
+        }
+        return a.name.localeCompare(b.name);
+      });
+  }
+  
+  // Paginate and return...
+});
+```
+
+================================================================================
+TASK 8: TEST ALL ROUTES
+================================================================================
+
+After fixes, verify these routes work:
+
+```bash
+# Product pages
+curl -s http://localhost:3000/product/all-clad-d3-stainless-12-inch-fry-pan
+
+# Category redirects
+curl -s -o /dev/null -w "%{redirect_url}" http://localhost:3000/cookware/skillets
+
+# Static pages
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/new-arrivals
+curl -s -o /dev/null -w "%{http_code}" http://localhost:3000/highest-verified
+
+# API endpoints
+curl -s "http://localhost:3001/api/v1/products?sort=newest&limit=5"
+curl -s "http://localhost:3001/api/v1/products?tier=3,4"
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All product links from homepage go to valid product pages
+□ Category navigation links work (redirect to search with filter)
+□ /new-arrivals page renders with products
+□ /highest-verified page renders with Tier 3+ products
+□ /cookware, /bakeware, etc. redirect to search
+□ No 404 errors on main navigation paths
+□ Sort options work in API
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/app/[...category]/page.tsx
+- src/pfas-web/app/new-arrivals/page.tsx
+- src/pfas-web/app/highest-verified/page.tsx
+
+MODIFY:
+- src/pfas-api/src/mock/data.ts (fix slugs)
+- src/pfas-api/src/mock-server.ts (add sort)
+- src/pfas-web/components/layout/Navigation.tsx (fix links)
+
+================================================================================

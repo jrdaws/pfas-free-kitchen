@@ -1,0 +1,608 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.breadcrumb {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-bottom: var(--space-6);
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+}
+
+.breadcrumb a {
+  color: var(--color-gray-600);
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 var(--space-4);
+  color: var(--color-gray-900);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: var(--space-10);
+}
+
+.sidebar {
+  position: sticky;
+  top: var(--space-20);
+  height: fit-content;
+}
+
+/* Content */
+.content {
+  line-height: 1.8;
+  color: var(--color-gray-700);
+  max-width: 800px;
+}
+
+.section {
+  margin-bottom: var(--space-14);
+  scroll-margin-top: var(--space-20);
+}
+
+.section h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-6);
+  letter-spacing: -0.01em;
+}
+
+.section h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-gray-800);
+  margin: var(--space-6) 0 var(--space-3);
+}
+
+.section p {
+  margin: 0 0 var(--space-4);
+  font-size: 1.0625rem;
+}
+
+.tierIntro {
+  color: var(--color-gray-600);
+  margin-bottom: var(--space-6);
+}
+
+/* Philosophy Grid */
+.philosophyGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.philosophyCard {
+  padding: var(--space-5);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  transition: all 0.2s ease;
+}
+
+.philosophyCard:hover {
+  border-color: var(--color-primary-200);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.philosophyIcon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-primary-50);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-3);
+}
+
+.philosophyIcon svg {
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary-600);
+}
+
+.philosophyCard h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-2);
+}
+
+.philosophyCard p {
+  font-size: 0.875rem;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+/* Component Example */
+.componentExample {
+  margin: var(--space-6) 0;
+  padding: var(--space-6);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-xl);
+}
+
+.componentExample h3 {
+  margin-top: 0;
+  margin-bottom: var(--space-4);
+  text-align: center;
+  color: var(--color-gray-700);
+}
+
+/* Why Matters */
+.whyMatters {
+  margin: var(--space-6) 0;
+  padding: var(--space-5);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.whyMatters h3 {
+  margin-top: 0;
+}
+
+.whyMatters ul {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.whyMatters li {
+  margin: var(--space-2) 0;
+  font-size: 0.9375rem;
+  color: var(--color-gray-600);
+}
+
+/* Lab Testing Table */
+.labTable {
+  overflow-x: auto;
+  margin: var(--space-6) 0;
+}
+
+.labTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+}
+
+.labTable th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-gray-100);
+  font-weight: 700;
+  color: var(--color-gray-700);
+  border-bottom: 2px solid var(--color-gray-200);
+}
+
+.labTable td {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-gray-200);
+  vertical-align: top;
+}
+
+.labTable tr:hover td {
+  background: var(--color-gray-50);
+}
+
+.methodNote {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-gray-500);
+  font-weight: normal;
+  margin-top: var(--space-1);
+}
+
+/* Lab Verification */
+.labVerification {
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.labVerification h3 {
+  margin-top: 0;
+}
+
+.labVerification ul {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.labVerification li {
+  margin: var(--space-2) 0;
+  font-size: 0.9375rem;
+  color: var(--color-gray-600);
+}
+
+/* Unknowns Grid */
+.unknownsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.unknownCard {
+  padding: var(--space-5);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.unknownCard h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-900);
+}
+
+.unknownCard p {
+  font-size: 0.875rem;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-600);
+}
+
+.unknownCard ol {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.unknownCard li {
+  font-size: 0.8125rem;
+  color: var(--color-gray-600);
+  margin: var(--space-1) 0;
+}
+
+/* Principle Grid */
+.principleGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.principleCard {
+  padding: var(--space-5);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.principleIcon {
+  font-size: 1.5rem;
+  margin-bottom: var(--space-2);
+}
+
+.principleCard h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--color-gray-900);
+}
+
+.principleCard p {
+  font-size: 0.875rem;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+/* Commitment */
+.commitment {
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-green-50));
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  margin-top: var(--space-6);
+}
+
+.commitment h3 {
+  margin-top: 0;
+}
+
+.commitment ul {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.commitment li {
+  margin: var(--space-2) 0;
+  font-size: 0.9375rem;
+  color: var(--color-gray-700);
+}
+
+.policyLink {
+  text-align: center;
+  margin-top: var(--space-6);
+}
+
+.policyLink a {
+  color: var(--color-primary-600);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Request Verification */
+.requestGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+  margin: var(--space-6) 0;
+}
+
+.requestCard {
+  padding: var(--space-6);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  text-align: center;
+}
+
+.requestIcon {
+  font-size: 2rem;
+  margin-bottom: var(--space-3);
+}
+
+.requestCard h3 {
+  font-size: 1.25rem;
+  margin: 0 0 var(--space-3);
+}
+
+.requestCard p {
+  font-size: 0.9375rem;
+  margin: 0 0 var(--space-4);
+  color: var(--color-gray-600);
+}
+
+.brandOptions {
+  text-align: left;
+  margin: 0 0 var(--space-4);
+  padding-left: var(--space-5);
+}
+
+.brandOptions li {
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  margin: var(--space-1) 0;
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  padding: var(--space-10);
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-green-50));
+  border-radius: var(--radius-xl);
+}
+
+.cta h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-900);
+}
+
+.cta p {
+  margin: 0 0 var(--space-6);
+  color: var(--color-gray-600);
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* Page Footer */
+.pageFooter {
+  margin-top: var(--space-10);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--color-gray-200);
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+}
+
+.pageFooter p {
+  margin: var(--space-1) 0;
+}
+
+.pageFooter a {
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+/* Legacy Tier Cards (keep for compatibility) */
+.tierCard {
+  padding: var(--space-6);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+  border-left-width: 4px;
+}
+
+.tier4 {
+  border-left-color: var(--tier-platinum);
+  background: linear-gradient(to right, rgba(8, 145, 178, 0.05), transparent);
+}
+
+.tier3 {
+  border-left-color: var(--tier-gold);
+  background: linear-gradient(to right, rgba(202, 138, 4, 0.05), transparent);
+}
+
+.tier2 {
+  border-left-color: var(--tier-silver);
+  background: linear-gradient(to right, rgba(100, 116, 139, 0.05), transparent);
+}
+
+.tier1 {
+  border-left-color: var(--tier-bronze);
+  background: linear-gradient(to right, rgba(180, 83, 9, 0.05), transparent);
+}
+
+.tierHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-3);
+}
+
+.tierLevel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-gray-500);
+  padding: var(--space-1) var(--space-2);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-sm);
+}
+
+.tierTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-2);
+  color: var(--color-gray-900);
+}
+
+.tierDescription {
+  margin: 0 0 var(--space-4);
+  font-size: 1rem;
+  color: var(--color-gray-600);
+}
+
+.tierEvidence {
+  background: white;
+  padding: var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-200);
+}
+
+.tierEvidence h4 {
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--color-gray-700);
+}
+
+.tierEvidence ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tierEvidence li {
+  padding: var(--space-1) 0;
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-2);
+}
+
+.tierEvidence li::before {
+  content: '✓';
+  color: var(--color-green-500);
+  font-weight: bold;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .content {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .philosophyGrid,
+  .principleGrid,
+  .requestGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .unknownsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .section h2 {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-4) var(--space-3) var(--space-12);
+  }
+
+  .tierCard {
+    padding: var(--space-4);
+  }
+
+  .cta {
+    padding: var(--space-6);
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .labTable {
+    font-size: 0.8125rem;
+  }
+
+  .labTable th,
+  .labTable td {
+    padding: var(--space-2) var(--space-3);
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "provider": "clerk",
+  "type": "auth",
+  "version": "1.0.0",
+  "description": "Clerk authentication with pre-built UI components, social providers, and user management",
+  "dependencies": {
+    "@clerk/nextjs": "^5.0.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY",
+    "CLERK_SECRET_KEY"
+  ],
+  "files": {
+    "app": ["app/sign-in/**", "app/sign-up/**"],
+    "components": ["components/auth/**"],
+    "middleware": ["middleware.ts"]
+  },
+  "postInstallInstructions": "Create a Clerk account at https://clerk.com, create an application, and get your API keys from the dashboard"
+}

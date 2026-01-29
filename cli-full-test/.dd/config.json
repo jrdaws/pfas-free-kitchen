@@ -1,0 +1,7 @@
+{
+  "plan": "free",
+  "featureOverrides": {},
+  "afterInstall": {
+    "policy": "prompt"
+  }
+}

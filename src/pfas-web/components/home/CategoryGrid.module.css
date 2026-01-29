@@ -1,0 +1,192 @@
+/* ============================================================
+   CategoryGrid - Shop by category cards
+   ============================================================ */
+
+.container {
+  padding: var(--space-16) var(--space-4);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-10);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+  margin: 0 0 var(--space-2);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+/* ============================================================
+   GRID LAYOUT
+   ============================================================ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-6);
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Make last two items center-aligned when 5 items total */
+.grid > :nth-child(4) {
+  grid-column: 1 / 2;
+}
+
+.grid > :nth-child(5) {
+  grid-column: 2 / 3;
+}
+
+/* ============================================================
+   CATEGORY CARD
+   ============================================================ */
+
+.card {
+  display: block;
+  position: relative;
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--color-gray-100);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-xl);
+  text-decoration: none;
+}
+
+.card:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   IMAGE AREA
+   ============================================================ */
+
+.imageWrapper {
+  position: relative;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.imagePlaceholder {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image {
+  object-fit: cover;
+  transition: transform var(--transition-slow);
+}
+
+.card:hover .image {
+  transform: scale(1.05);
+}
+
+.iconWrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+}
+
+.iconWrapper svg {
+  width: 64px;
+  height: 64px;
+  color: rgba(255, 255, 255, 0.9);
+  stroke-width: 1;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0) 50%
+  );
+  z-index: 2;
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: var(--space-4);
+  z-index: 3;
+}
+
+.name {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  margin: 0 0 var(--space-1);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.count {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .grid > :nth-child(4),
+  .grid > :nth-child(5) {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 640px) {
+  .container {
+    padding: var(--space-10) var(--space-4);
+  }
+  
+  .grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+  
+  .imageWrapper {
+    aspect-ratio: 16 / 9;
+  }
+  
+  .iconWrapper svg {
+    width: 48px;
+    height: 48px;
+  }
+}

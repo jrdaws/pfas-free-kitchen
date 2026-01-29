@@ -1,0 +1,453 @@
+================================================================================
+WAVE 14-04: AMAZON PRODUCT IMAGES INTEGRATION
+================================================================================
+ACTIVATION: "Execute Wave 14-04: Amazon Product Images Integration"
+AGENT: Website Agent
+DEPENDS ON: Wave 14-03
+================================================================================
+
+CONTEXT
+-------
+Products need real images. This wave sets up proper image handling using
+Amazon product images through approved methods.
+
+================================================================================
+TASK 1: CONFIGURE NEXT.JS FOR AMAZON IMAGES
+================================================================================
+
+Update `next.config.js`:
+
+```javascript
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      // Amazon product images
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images-na.ssl-images-amazon.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images-amazon.com',
+        pathname: '/**',
+      },
+      // Williams Sonoma
+      {
+        protocol: 'https',
+        hostname: 'www.williams-sonoma.com',
+        pathname: '/wsimgs/**',
+      },
+      // Placeholder fallback
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
+        pathname: '/**',
+      },
+    ],
+    // Optimize images
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+  },
+};
+
+module.exports = nextConfig;
+```
+
+================================================================================
+TASK 2: CREATE IMAGE COMPONENT WITH FALLBACK
+================================================================================
+
+Create `src/pfas-web/components/ui/ProductImage.tsx`:
+
+```tsx
+'use client';
+
+import Image from 'next/image';
+import { useState } from 'react';
+
+interface ProductImageProps {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  className?: string;
+  priority?: boolean;
+  category?: string;
+}
+
+const CATEGORY_PLACEHOLDERS: Record<string, string> = {
+  'skillets': '/placeholders/skillet.svg',
+  'saucepans': '/placeholders/saucepan.svg',
+  'dutch-ovens': '/placeholders/dutch-oven.svg',
+  'sheet-pans': '/placeholders/sheet-pan.svg',
+  'baking-dishes': '/placeholders/baking-dish.svg',
+  'glass-containers': '/placeholders/container.svg',
+  'default': '/placeholders/product-default.svg',
+};
+
+export function ProductImage({ 
+  src, 
+  alt, 
+  width = 400, 
+  height = 400, 
+  className,
+  priority = false,
+  category = 'default',
+}: ProductImageProps) {
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true);
+  
+  const fallbackSrc = CATEGORY_PLACEHOLDERS[category] || CATEGORY_PLACEHOLDERS.default;
+  const imageSrc = error ? fallbackSrc : src;
+  
+  return (
+    <div className={`product-image-wrapper ${className || ''}`}>
+      {loading && (
+        <div className="product-image-skeleton">
+          <div className="skeleton-shimmer" />
+        </div>
+      )}
+      <Image
+        src={imageSrc}
+        alt={alt}
+        width={width}
+        height={height}
+        className={`product-image ${loading ? 'opacity-0' : 'opacity-100'}`}
+        onError={() => setError(true)}
+        onLoad={() => setLoading(false)}
+        priority={priority}
+        style={{ objectFit: 'contain' }}
+      />
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 3: RESEARCH AND ADD REAL IMAGE URLS
+================================================================================
+
+For each product in the database, find the Amazon image URL:
+
+**Method 1: Manual (Most Reliable)**
+1. Go to Amazon product page
+2. Right-click main product image
+3. Select "Open Image in New Tab"
+4. Copy the URL
+
+**Amazon Image URL Pattern:**
+```
+https://m.media-amazon.com/images/I/{IMAGE_ID}._AC_SL1500_.jpg
+```
+
+**Image Size Modifiers:**
+- `_AC_SL1500_` - 1500px
+- `_AC_SL1200_` - 1200px
+- `_AC_SL800_` - 800px
+- `_AC_SL500_` - 500px
+- `_AC_SL300_` - 300px
+- `_AC_UL200_` - 200px thumbnail
+
+**Example Product Images:**
+
+```typescript
+// All-Clad D3 12" Fry Pan
+{
+  asin: "B00005RUGJ",
+  images: {
+    primary: "https://m.media-amazon.com/images/I/71YLu6h4OQL._AC_SL1500_.jpg",
+    gallery: [
+      "https://m.media-amazon.com/images/I/71YLu6h4OQL._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/71CWZV8l4pL._AC_SL1500_.jpg",
+    ],
+  },
+}
+
+// Lodge 12" Cast Iron
+{
+  asin: "B00006JSUA",
+  images: {
+    primary: "https://m.media-amazon.com/images/I/91wLwbvfPML._AC_SL1500_.jpg",
+    gallery: [
+      "https://m.media-amazon.com/images/I/91wLwbvfPML._AC_SL1500_.jpg",
+      "https://m.media-amazon.com/images/I/81GmV0j1WAL._AC_SL1500_.jpg",
+    ],
+  },
+}
+
+// Le Creuset Dutch Oven
+{
+  asin: "B00005QFQB",
+  images: {
+    primary: "https://m.media-amazon.com/images/I/71xfKbz-8UL._AC_SL1500_.jpg",
+    gallery: [],
+  },
+}
+
+// Pyrex Glass Storage
+{
+  asin: "B00005B8K5",
+  images: {
+    primary: "https://m.media-amazon.com/images/I/71OyMsxe+2L._AC_SL1500_.jpg",
+    gallery: [],
+  },
+}
+```
+
+================================================================================
+TASK 4: CREATE IMAGE GALLERY COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/product/ImageGallery.tsx`:
+
+```tsx
+'use client';
+
+import { useState } from 'react';
+import { ProductImage } from '@/components/ui/ProductImage';
+import { ChevronLeftIcon, ChevronRightIcon } from '@/components/icons';
+
+interface ImageGalleryProps {
+  images: string[];
+  productName: string;
+  category?: string;
+}
+
+export function ImageGallery({ images, productName, category }: ImageGalleryProps) {
+  const [activeIndex, setActiveIndex] = useState(0);
+  
+  const displayImages = images.length > 0 ? images : ['/placeholders/product-default.svg'];
+  
+  return (
+    <div className="image-gallery">
+      {/* Main Image */}
+      <div className="gallery-main">
+        <ProductImage
+          src={displayImages[activeIndex]}
+          alt={productName}
+          width={600}
+          height={600}
+          category={category}
+          priority
+        />
+        
+        {displayImages.length > 1 && (
+          <>
+            <button
+              className="gallery-nav gallery-nav-prev"
+              onClick={() => setActiveIndex(i => (i - 1 + displayImages.length) % displayImages.length)}
+              aria-label="Previous image"
+            >
+              <ChevronLeftIcon />
+            </button>
+            <button
+              className="gallery-nav gallery-nav-next"
+              onClick={() => setActiveIndex(i => (i + 1) % displayImages.length)}
+              aria-label="Next image"
+            >
+              <ChevronRightIcon />
+            </button>
+          </>
+        )}
+      </div>
+      
+      {/* Thumbnails */}
+      {displayImages.length > 1 && (
+        <div className="gallery-thumbnails">
+          {displayImages.map((src, index) => (
+            <button
+              key={index}
+              className={`gallery-thumb ${index === activeIndex ? 'active' : ''}`}
+              onClick={() => setActiveIndex(index)}
+              aria-label={`View image ${index + 1}`}
+            >
+              <ProductImage
+                src={src}
+                alt={`${productName} - Image ${index + 1}`}
+                width={80}
+                height={80}
+                category={category}
+              />
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 5: UPDATE PRODUCT CARDS TO USE REAL IMAGES
+================================================================================
+
+Update `src/pfas-web/components/product/ProductCard.tsx`:
+
+```tsx
+import { ProductImage } from '@/components/ui/ProductImage';
+
+export function ProductCard({ product }: { product: Product }) {
+  const categorySlug = product.category?.id?.replace('cat_', '') || 'default';
+  
+  return (
+    <article className="product-card">
+      <Link href={`/product/${product.slug}`}>
+        <div className="product-card-image">
+          <ProductImage
+            src={product.primary_image_url}
+            alt={product.name}
+            width={300}
+            height={300}
+            category={categorySlug}
+          />
+        </div>
+        
+        {/* ... rest of card content */}
+      </Link>
+    </article>
+  );
+}
+```
+
+================================================================================
+TASK 6: ADD IMAGE STYLES
+================================================================================
+
+Add to `src/pfas-web/styles/components/product-image.css`:
+
+```css
+.product-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.product-image {
+  transition: opacity 0.3s ease;
+}
+
+.product-image-skeleton {
+  position: absolute;
+  inset: 0;
+  background: var(--color-gray-100);
+}
+
+.skeleton-shimmer {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-100) 0%,
+    var(--color-gray-50) 50%,
+    var(--color-gray-100) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Gallery styles */
+.image-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.gallery-main {
+  position: relative;
+  aspect-ratio: 1;
+  background: white;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.gallery-nav:hover {
+  background: var(--color-gray-50);
+  box-shadow: var(--shadow-lg);
+}
+
+.gallery-nav-prev { left: var(--space-4); }
+.gallery-nav-next { right: var(--space-4); }
+
+.gallery-thumbnails {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+}
+
+.gallery-thumb {
+  flex-shrink: 0;
+  width: 80px;
+  height: 80px;
+  border: 2px solid transparent;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: all var(--transition-fast);
+}
+
+.gallery-thumb:hover,
+.gallery-thumb.active {
+  opacity: 1;
+  border-color: var(--color-primary-500);
+}
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Amazon images load correctly
+□ Images fall back to placeholders on error
+□ Loading skeleton shows while images load
+□ Image gallery works with multiple images
+□ Product cards show real product images
+□ Images are optimized (WebP/AVIF)
+□ No broken image errors in console
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/ui/ProductImage.tsx
+- src/pfas-web/components/product/ImageGallery.tsx
+- src/pfas-web/styles/components/product-image.css
+
+MODIFY:
+- next.config.js
+- src/pfas-web/components/product/ProductCard.tsx
+- src/pfas-api/src/data/products.ts (add image URLs)
+
+================================================================================

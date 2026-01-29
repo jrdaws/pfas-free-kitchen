@@ -1,0 +1,237 @@
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  margin-bottom: var(--space-12);
+  padding-bottom: var(--space-8);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 var(--space-4);
+  color: var(--color-gray-900);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--color-gray-600);
+  margin: 0;
+}
+
+/* Content */
+.content {
+  line-height: 1.8;
+  color: var(--color-gray-700);
+}
+
+.section {
+  margin-bottom: var(--space-12);
+}
+
+.section h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-4);
+}
+
+.section h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-2);
+}
+
+.section p {
+  margin: 0 0 var(--space-4);
+  font-size: 1.0625rem;
+}
+
+/* Mission Box */
+.missionBox {
+  padding: var(--space-6);
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-green-50));
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-6);
+}
+
+.missionText {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--color-gray-800);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* Value Grid */
+.valueGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.valueCard {
+  padding: var(--space-5);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.valueIcon {
+  font-size: 2rem;
+  margin-bottom: var(--space-3);
+}
+
+.valueCard h3 {
+  margin: 0 0 var(--space-2);
+}
+
+.valueCard p {
+  font-size: 0.9375rem;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+/* Funding List */
+.fundingList {
+  list-style: none;
+  padding: 0;
+  margin: var(--space-4) 0;
+}
+
+.fundingList li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-2) 0;
+}
+
+.check {
+  color: var(--color-green-500);
+  font-weight: bold;
+}
+
+/* Link Box */
+.linkBox {
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+.linkBox a {
+  color: var(--color-primary-600);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Policy List */
+.policyList {
+  list-style: disc;
+  padding-left: var(--space-6);
+  margin: var(--space-4) 0;
+}
+
+.policyList li {
+  padding: var(--space-1) 0;
+}
+
+/* Contact Grid */
+.contactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.contactCard {
+  padding: var(--space-5);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-lg);
+}
+
+.contactCard h3 {
+  margin: 0 0 var(--space-1);
+  font-size: 1rem;
+}
+
+.contactCard p {
+  font-size: 0.875rem;
+  margin: 0 0 var(--space-2);
+  color: var(--color-gray-600);
+}
+
+.contactCard a {
+  color: var(--color-primary-600);
+  font-size: 0.875rem;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  padding: var(--space-10);
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-green-50));
+  border-radius: var(--radius-xl);
+}
+
+.cta h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-900);
+}
+
+.cta p {
+  margin: 0 0 var(--space-6);
+  color: var(--color-gray-600);
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .valueGrid,
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-4) var(--space-3) var(--space-12);
+  }
+
+  .cta {
+    padding: var(--space-6);
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

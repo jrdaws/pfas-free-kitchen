@@ -1,0 +1,277 @@
+================================================================================
+WAVE 13-01: COMPREHENSIVE SITE REVIEW & REFINEMENT
+================================================================================
+ACTIVATION: "Execute Wave 13-01: Comprehensive Review"
+AGENT: Website Agent / QA Agent
+DEPENDS ON: Waves 12-01 through 12-10
+================================================================================
+
+CONTEXT
+-------
+All major features have been implemented. This wave performs a comprehensive
+review of the entire application to identify gaps, connect incomplete features,
+enhance overlooked areas, and ensure production readiness.
+
+================================================================================
+PHASE 1: CODEBASE AUDIT
+================================================================================
+
+TASK 1.1: COMPONENT INVENTORY
+-----------------------------
+Review all components in these directories:
+- src/pfas-web/components/
+- src/pfas-web/app/
+
+For each component, verify:
+□ Proper TypeScript types (no 'any' types)
+□ Proper prop validation
+□ Accessibility attributes (aria-*, role, etc.)
+□ Error states handled
+□ Loading states handled
+□ Empty states handled
+□ Mobile responsiveness
+□ Consistent styling patterns
+
+TASK 1.2: API INTEGRATION CHECK
+-------------------------------
+Review src/pfas-web/lib/data.ts and verify:
+□ All API calls have error handling
+□ All API calls have proper types
+□ Loading states are managed
+□ Cache strategies are appropriate
+□ Fallback data exists for failed requests
+
+TASK 1.3: CONTEXT & STATE REVIEW
+--------------------------------
+Review all contexts:
+- CompareContext
+- ToastContext
+- Any other state management
+
+Verify:
+□ No memory leaks
+□ Proper cleanup on unmount
+□ localStorage sync works correctly
+□ State persists across navigation
+
+================================================================================
+PHASE 2: FEATURE GAP ANALYSIS
+================================================================================
+
+TASK 2.1: USER FLOWS
+--------------------
+Test complete user journeys:
+
+FLOW 1: Product Discovery
+1. User lands on homepage
+2. Views category grid
+3. Clicks a category
+4. Sees search results with filters
+5. Applies filters
+6. Views product details
+7. Clicks affiliate link
+
+VERIFY: All steps work, no dead ends, proper loading states
+
+FLOW 2: Product Comparison
+1. User browses products
+2. Adds items to compare
+3. Views comparison tray
+4. Opens compare page
+5. Sees side-by-side comparison
+6. Removes items
+7. Clears all
+
+VERIFY: State persists, max 4 limit enforced, mobile works
+
+FLOW 3: Education Journey
+1. User visits Learn section
+2. Reads What is PFAS
+3. Navigates to How We Verify
+4. Explores Buyer's Guide
+5. Checks FAQ
+6. Reviews About page
+
+VERIFY: All links work, content complete, navigation consistent
+
+FLOW 4: Search & Filter
+1. User enters search query
+2. Sees results
+3. Applies tier filter
+4. Applies category filter
+5. Applies material filter
+6. Sorts results
+7. Paginates
+
+VERIFY: URL params update, filters combine correctly, clear works
+
+TASK 2.2: MISSING FEATURES CHECK
+--------------------------------
+Verify these features exist and work:
+
+□ Recent searches (localStorage persistence)
+□ Recently viewed products
+□ Save/wishlist functionality
+□ Share product functionality
+□ Report product issue
+□ Contact form
+□ Newsletter signup
+□ Search suggestions/autocomplete
+□ Filter count badges
+□ Sort by relevance/popularity
+□ Price range indication (without showing prices)
+
+================================================================================
+PHASE 3: UI/UX REFINEMENTS
+================================================================================
+
+TASK 3.1: VISUAL CONSISTENCY
+----------------------------
+Audit for consistency:
+□ Button styles (primary, secondary, outline, ghost)
+□ Color usage (tiers, success, warning, error)
+□ Typography scale (h1-h6, body, small)
+□ Spacing scale (consistent margins/padding)
+□ Border radius (consistent roundness)
+□ Shadow usage (elevation levels)
+□ Icon sizes (consistent across components)
+
+TASK 3.2: INTERACTION POLISH
+----------------------------
+Verify interactions:
+□ Hover states on all interactive elements
+□ Focus states visible for keyboard users
+□ Active/pressed states
+□ Transition animations (not too slow, not jarring)
+□ Loading spinners/skeletons where needed
+□ Toast notifications work
+□ Modals have proper focus trap
+□ Dropdowns close on outside click
+
+TASK 3.3: RESPONSIVE BREAKPOINTS
+--------------------------------
+Test at these widths:
+□ 320px (small mobile)
+□ 375px (iPhone SE)
+□ 414px (iPhone Plus)
+□ 768px (tablet)
+□ 1024px (small desktop)
+□ 1280px (desktop)
+□ 1536px (large desktop)
+
+Check for:
+□ No horizontal overflow
+□ Touch targets ≥ 44px
+□ Readable text sizes
+□ Proper image scaling
+□ Navigation adapts correctly
+
+================================================================================
+PHASE 4: PERFORMANCE OPTIMIZATION
+================================================================================
+
+TASK 4.1: IMAGE OPTIMIZATION
+----------------------------
+□ All images use next/image
+□ Proper width/height attributes
+□ Lazy loading for below-fold images
+□ Placeholder/blur effects
+□ WebP format where possible
+
+TASK 4.2: CODE SPLITTING
+------------------------
+□ Dynamic imports for heavy components
+□ Route-based code splitting working
+□ Third-party scripts loaded efficiently
+
+TASK 4.3: DATA FETCHING
+-----------------------
+□ Parallel fetches where possible
+□ Proper Suspense boundaries
+□ No waterfall requests
+□ API response caching
+
+================================================================================
+PHASE 5: CONTENT COMPLETENESS
+================================================================================
+
+TASK 5.1: COPY & CONTENT
+------------------------
+Review all text content for:
+□ Grammar and spelling
+□ Consistent voice and tone
+□ Clear CTAs
+□ Proper disclosure language
+□ No placeholder text (Lorem ipsum)
+□ Alt text for images
+□ Helpful error messages
+
+TASK 5.2: LEGAL COMPLIANCE
+--------------------------
+Verify presence and accuracy of:
+□ Affiliate disclosure (FTC compliant)
+□ Privacy policy placeholder/link
+□ Terms of service placeholder/link
+□ Cookie notice if applicable
+□ Amazon Associates compliance
+
+================================================================================
+PHASE 6: INTEGRATION FIXES
+================================================================================
+
+Based on audit findings, fix:
+
+1. CONNECT DISCONNECTED FEATURES
+   - Wire up any placeholder components
+   - Connect mock data to real API endpoints
+   - Implement any stubbed functions
+
+2. FIX BROKEN LINKS
+   - Internal navigation links
+   - External affiliate links
+   - Footer/header links
+   - Breadcrumb links
+
+3. COMPLETE PARTIAL IMPLEMENTATIONS
+   - Forms without submit handlers
+   - Buttons without click handlers
+   - Components missing error states
+
+4. ENHANCE USER FEEDBACK
+   - Add missing toast notifications
+   - Add success states after actions
+   - Add confirmation dialogs where needed
+
+================================================================================
+DELIVERABLES
+================================================================================
+
+1. AUDIT REPORT
+   - List of all findings
+   - Categorized by severity (critical, high, medium, low)
+   - Recommended fixes
+
+2. CODE CHANGES
+   - Fix all critical and high severity issues
+   - Document medium/low for future sprints
+
+3. UPDATED TESTS
+   - Add tests for any new functionality
+   - Fix failing tests
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All user flows complete without errors
+□ No TypeScript errors
+□ No console errors in browser
+□ All pages render correctly
+□ Mobile experience is smooth
+□ Accessibility audit passes
+□ Performance metrics acceptable
+□ All links functional
+□ All forms submittable
+□ State management working correctly
+
+================================================================================

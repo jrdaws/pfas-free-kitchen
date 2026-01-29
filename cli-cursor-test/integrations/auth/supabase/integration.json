@@ -1,0 +1,21 @@
+{
+  "provider": "supabase",
+  "type": "auth",
+  "version": "1.0.0",
+  "description": "Supabase authentication with email/password, social providers, and session management",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10",
+    "@supabase/ssr": "^0.1.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY"
+  ],
+  "files": {
+    "lib": ["lib/supabase.ts"],
+    "app": ["app/login/**", "app/api/auth/callback/**"],
+    "components": ["components/auth/**"],
+    "middleware": ["middleware.ts"]
+  },
+  "postInstallInstructions": "Create a Supabase project at https://supabase.com and add your credentials to .env.local"
+}

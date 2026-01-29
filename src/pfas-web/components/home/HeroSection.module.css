@@ -1,0 +1,328 @@
+/* ============================================================
+   HeroSection - Homepage hero with search and stats
+   Professional e-commerce styling
+   ============================================================ */
+
+.hero {
+  position: relative;
+  padding: var(--space-16) var(--space-4) var(--space-20);
+  min-height: 560px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* ============================================================
+   BACKGROUND
+   ============================================================ */
+
+.background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.pattern {
+  position: absolute;
+  inset: 0;
+  background: 
+    linear-gradient(135deg, var(--color-primary-900) 0%, var(--color-primary-800) 50%, var(--color-gray-900) 100%);
+}
+
+/* Subtle geometric pattern */
+.pattern::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center top, transparent 0%, rgba(0,0,0,0.2) 100%);
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  width: 100%;
+  text-align: center;
+}
+
+/* Heading */
+.heading {
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  line-height: 1.2;
+  margin: 0 0 var(--space-4);
+  letter-spacing: -0.02em;
+}
+
+.highlight {
+  color: var(--color-accent-400);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: var(--text-lg);
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ============================================================
+   SEARCH FORM
+   ============================================================ */
+
+.searchForm {
+  margin-bottom: var(--space-6);
+}
+
+.searchWrapper {
+  display: flex;
+  align-items: center;
+  background: var(--color-white);
+  border-radius: var(--radius-xl);
+  padding: var(--space-1-5);
+  box-shadow: var(--shadow-xl), 0 0 40px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.searchIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-gray-400);
+  margin-left: var(--space-4);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: var(--space-3) var(--space-3);
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+}
+
+.searchInput::placeholder {
+  color: var(--color-gray-400);
+}
+
+.searchButton {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  white-space: nowrap;
+}
+
+.searchButton:hover {
+  background: var(--color-primary-hover);
+}
+
+.searchButton:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
+}
+
+/* ============================================================
+   ACTION BUTTONS
+   ============================================================ */
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  margin-bottom: var(--space-10);
+}
+
+.primaryButton,
+.secondaryButton {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-lg);
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.primaryButton {
+  background: var(--color-accent);
+  color: var(--color-gray-900);
+}
+
+.primaryButton:hover {
+  background: var(--color-accent-400);
+  text-decoration: none;
+  transform: translateY(-1px);
+}
+
+.secondaryButton {
+  background: transparent;
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.secondaryButton:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+}
+
+/* ============================================================
+   STATS ROW
+   ============================================================ */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+}
+
+.statIcon {
+  width: 32px;
+  height: 32px;
+  color: var(--color-accent-400);
+}
+
+.statIcon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.statContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.statValue {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-white);
+  line-height: 1;
+}
+
+.statLabel {
+  font-family: var(--font-body);
+  font-size: var(--text-xs);
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: var(--space-1);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .hero {
+    padding: var(--space-10) var(--space-4) var(--space-12);
+    min-height: auto;
+  }
+  
+  .subtitle br {
+    display: none;
+  }
+  
+  .searchWrapper {
+    flex-direction: column;
+    padding: var(--space-2);
+    gap: var(--space-2);
+  }
+  
+  .searchIcon {
+    display: none;
+  }
+  
+  .searchInput {
+    width: 100%;
+    text-align: center;
+    padding: var(--space-3);
+  }
+  
+  .searchButton {
+    width: 100%;
+  }
+  
+  .actions {
+    flex-direction: column;
+    gap: var(--space-3);
+  }
+  
+  .primaryButton,
+  .secondaryButton {
+    justify-content: center;
+    width: 100%;
+  }
+  
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-3);
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: var(--text-base);
+  }
+  
+  .stat {
+    padding: var(--space-2);
+  }
+  
+  .statValue {
+    font-size: var(--text-lg);
+  }
+  
+  .statLabel {
+    font-size: 10px;
+  }
+}

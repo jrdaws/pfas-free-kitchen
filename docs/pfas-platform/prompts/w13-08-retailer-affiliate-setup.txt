@@ -1,0 +1,368 @@
+================================================================================
+WAVE 13-08: RETAILER & AFFILIATE DATA SETUP
+================================================================================
+ACTIVATION: "Execute Wave 13-08: Retailer and Affiliate Data Setup"
+AGENT: Data Agent / Website Agent
+DEPENDS ON: Wave 13-01 through 13-03
+================================================================================
+
+CONTEXT
+-------
+Set up the retailer data, affiliate link structure, and proper disclosure
+handling. Links must be formatted correctly for each affiliate program
+and disclosures must be prominently displayed.
+
+================================================================================
+TASK 1: CREATE RETAILER DATA
+================================================================================
+
+Create `src/pfas-api/src/mock/retailers.ts`:
+
+```typescript
+export interface Retailer {
+  id: string;
+  name: string;
+  slug: string;
+  website: string;
+  affiliate_program: string | null;
+  affiliate_tag: string | null;
+  link_template: string;
+  icon: string;
+  disclosure_text: string;
+  active: boolean;
+}
+
+export const MOCK_RETAILERS: Retailer[] = [
+  {
+    id: "ret_amazon",
+    name: "Amazon",
+    slug: "amazon",
+    website: "https://www.amazon.com",
+    affiliate_program: "Amazon Associates",
+    affiliate_tag: "pfasfreekitch-20", // Placeholder - replace with real tag
+    link_template: "https://www.amazon.com/dp/{asin}?tag={affiliate_tag}",
+    icon: "amazon",
+    disclosure_text: "As an Amazon Associate, we earn from qualifying purchases.",
+    active: true,
+  },
+  {
+    id: "ret_williams_sonoma",
+    name: "Williams Sonoma",
+    slug: "williams-sonoma",
+    website: "https://www.williams-sonoma.com",
+    affiliate_program: "Williams Sonoma Affiliate Program",
+    affiliate_tag: null, // Requires signup
+    link_template: "https://www.williams-sonoma.com/products/{product_id}/",
+    icon: "williams-sonoma",
+    disclosure_text: "We may earn a commission from purchases made through this link.",
+    active: true,
+  },
+  {
+    id: "ret_sur_la_table",
+    name: "Sur La Table",
+    slug: "sur-la-table",
+    website: "https://www.surlatable.com",
+    affiliate_program: "Sur La Table Affiliate Program",
+    affiliate_tag: null,
+    link_template: "https://www.surlatable.com/product/{product_id}/",
+    icon: "sur-la-table",
+    disclosure_text: "We may earn a commission from purchases made through this link.",
+    active: true,
+  },
+  {
+    id: "ret_target",
+    name: "Target",
+    slug: "target",
+    website: "https://www.target.com",
+    affiliate_program: "Target Partners",
+    affiliate_tag: null,
+    link_template: "https://www.target.com/p/{product_id}",
+    icon: "target",
+    disclosure_text: "We may earn a commission from purchases made through this link.",
+    active: true,
+  },
+  {
+    id: "ret_walmart",
+    name: "Walmart",
+    slug: "walmart",
+    website: "https://www.walmart.com",
+    affiliate_program: "Walmart Affiliate Program",
+    affiliate_tag: null,
+    link_template: "https://www.walmart.com/ip/{product_id}",
+    icon: "walmart",
+    disclosure_text: "We may earn a commission from purchases made through this link.",
+    active: true,
+  },
+  {
+    id: "ret_bed_bath",
+    name: "Bed Bath & Beyond",
+    slug: "bed-bath-beyond",
+    website: "https://www.bedbathandbeyond.com",
+    affiliate_program: null, // Check if still exists
+    affiliate_tag: null,
+    link_template: "https://www.bedbathandbeyond.com/store/product/{product_id}",
+    icon: "bed-bath-beyond",
+    disclosure_text: "We may earn a commission from purchases made through this link.",
+    active: false, // Verify status
+  },
+  {
+    id: "ret_direct",
+    name: "Brand Direct",
+    slug: "brand-direct",
+    website: null,
+    affiliate_program: null,
+    affiliate_tag: null,
+    link_template: "{brand_url}/products/{product_id}",
+    icon: "external-link",
+    disclosure_text: "This link goes directly to the brand's website.",
+    active: true,
+  },
+];
+```
+
+================================================================================
+TASK 2: CREATE PRODUCT-RETAILER LINKS
+================================================================================
+
+Add retailer links to each product in the mock data:
+
+```typescript
+// Example for All-Clad D3 12" Skillet
+{
+  id: "prd_cookware_001",
+  // ... other fields ...
+  retailer_links: [
+    {
+      retailer_id: "ret_amazon",
+      product_identifier: "B00005RGJD", // ASIN
+      url: "https://www.amazon.com/dp/B00005RGJD?tag=pfasfreekitch-20",
+      in_stock: true,
+      last_checked: "2026-01-28T00:00:00Z",
+    },
+    {
+      retailer_id: "ret_williams_sonoma",
+      product_identifier: "all-clad-d3-stainless-steel-12-inch-fry-pan",
+      url: "https://www.williams-sonoma.com/products/all-clad-d3-stainless-steel-12-inch-fry-pan/",
+      in_stock: true,
+      last_checked: "2026-01-28T00:00:00Z",
+    },
+    {
+      retailer_id: "ret_sur_la_table",
+      product_identifier: "1234567",
+      url: "https://www.surlatable.com/all-clad-d3-stainless-12-fry/1234567.html",
+      in_stock: true,
+      last_checked: "2026-01-28T00:00:00Z",
+    },
+  ],
+}
+```
+
+================================================================================
+TASK 3: CREATE SAMPLE PRODUCT IDENTIFIERS
+================================================================================
+
+Research and add real product identifiers (ASINs, URLs) for at least
+20 products. Focus on:
+
+**Amazon ASINs (research these):**
+- All-Clad D3 12" Skillet: B00005RGJD (example - verify)
+- Lodge 12" Cast Iron: B00006JSUA (example - verify)
+- Le Creuset 5.5qt Dutch Oven: B00005QFQ8 (example - verify)
+- Pyrex 9x13 Baking Dish: B00005JBOW (example - verify)
+
+```typescript
+// Add to products in mock data
+export const PRODUCT_ASINS = {
+  "prd_cookware_001": "B00005RGJD", // All-Clad D3 12" Skillet
+  "prd_cookware_002": "B00006JSUA", // Lodge 12" Cast Iron
+  "prd_cookware_003": "B00005QFQ8", // Le Creuset Dutch Oven
+  // ... add more
+};
+```
+
+================================================================================
+TASK 4: CREATE RETAILER LINK COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/product/RetailerLinks.tsx`:
+
+```tsx
+interface RetailerLinksProps {
+  links: RetailerLink[];
+  productName: string;
+}
+
+export function RetailerLinks({ links, productName }: RetailerLinksProps) {
+  return (
+    <div className="retailer-links">
+      <h3 className="retailer-links-title">Shop This Product</h3>
+      
+      <div className="retailer-buttons">
+        {links.map(link => (
+          <a
+            key={link.retailer_id}
+            href={link.url}
+            target="_blank"
+            rel="noopener sponsored"
+            className="retailer-button"
+            onClick={() => trackAffiliateClick(link)}
+          >
+            <RetailerIcon retailer={link.retailer_id} />
+            <span>{getRetailerName(link.retailer_id)}</span>
+            <ExternalLinkIcon />
+          </a>
+        ))}
+      </div>
+      
+      <AffiliateDisclosure links={links} />
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 5: CREATE AFFILIATE DISCLOSURE COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/disclosure/AffiliateDisclosure.tsx`:
+
+```tsx
+interface AffiliateDisclosureProps {
+  links: RetailerLink[];
+  variant?: 'inline' | 'expanded';
+}
+
+export function AffiliateDisclosure({ links, variant = 'inline' }: AffiliateDisclosureProps) {
+  const hasAmazon = links.some(l => l.retailer_id === 'ret_amazon');
+  
+  if (variant === 'inline') {
+    return (
+      <p className="affiliate-disclosure-inline">
+        <InfoIcon size={14} />
+        {hasAmazon ? (
+          <span>
+            As an Amazon Associate, we earn from qualifying purchases.
+            {links.length > 1 && ' We may earn commissions from other retailers.'}
+          </span>
+        ) : (
+          <span>We may earn commissions from purchases made through these links.</span>
+        )}
+        <a href="/disclosure">Learn more</a>
+      </p>
+    );
+  }
+  
+  return (
+    <div className="affiliate-disclosure-expanded">
+      <h4>Affiliate Disclosure</h4>
+      <p>
+        When you click through to these retailers and make a purchase, we may 
+        earn a commission at no extra cost to you. This helps support our 
+        research and operations.
+      </p>
+      {hasAmazon && (
+        <p className="amazon-disclosure">
+          <strong>Amazon:</strong> As an Amazon Associate, we earn from 
+          qualifying purchases.
+        </p>
+      )}
+      <p>
+        <a href="/disclosure">Read our full disclosure policy →</a>
+      </p>
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 6: CREATE RETAILER ICONS
+================================================================================
+
+Create `src/pfas-web/components/icons/retailers/`:
+
+- `AmazonIcon.tsx`
+- `TargetIcon.tsx`
+- `WalmartIcon.tsx`
+- `WilliamsSonomaIcon.tsx`
+- `SurLaTableIcon.tsx`
+- `ExternalLinkIcon.tsx`
+
+Use official brand colors where appropriate, or generic styling.
+
+================================================================================
+TASK 7: ADD AFFILIATE TRACKING
+================================================================================
+
+Create `src/pfas-web/lib/tracking.ts`:
+
+```typescript
+export function trackAffiliateClick(link: RetailerLink) {
+  // Track for analytics (internal)
+  if (typeof window !== 'undefined' && window.gtag) {
+    window.gtag('event', 'affiliate_click', {
+      retailer: link.retailer_id,
+      product_id: link.product_identifier,
+    });
+  }
+  
+  // Note: Actual conversion tracking is handled by retailer's 
+  // affiliate program through their tags/pixels
+}
+```
+
+================================================================================
+TASK 8: UPDATE API MOCK SERVER
+================================================================================
+
+Add retailer endpoints to mock server:
+
+```typescript
+// GET /api/v1/retailers
+app.get('/api/v1/retailers', (req, res) => {
+  res.json({ data: MOCK_RETAILERS.filter(r => r.active) });
+});
+
+// GET /api/v1/products/:slug/retailers
+app.get('/api/v1/products/:slug/retailers', (req, res) => {
+  const product = getMockProduct(req.params.slug);
+  if (!product) {
+    return res.status(404).json({ error: 'Product not found' });
+  }
+  
+  res.json({
+    data: product.retailer_links || [],
+    disclosure: 'As an Amazon Associate, we earn from qualifying purchases.',
+  });
+});
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All major retailers have complete data entries
+□ At least 20 products have real retailer links
+□ Amazon ASIN format is correct
+□ Affiliate disclosure appears near every retailer link
+□ Amazon-specific disclosure language is used
+□ Retailer icons render correctly
+□ External links have rel="noopener sponsored"
+□ Affiliate clicks are tracked
+□ Mock API serves retailer data
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-api/src/mock/retailers.ts
+- src/pfas-web/components/product/RetailerLinks.tsx
+- src/pfas-web/components/disclosure/AffiliateDisclosure.tsx
+- src/pfas-web/components/icons/retailers/*.tsx
+- src/pfas-web/lib/tracking.ts
+
+MODIFY:
+- src/pfas-api/src/mock/data.ts (add retailer_links to products)
+- src/pfas-api/src/mock-server.ts (add retailer endpoints)
+
+================================================================================

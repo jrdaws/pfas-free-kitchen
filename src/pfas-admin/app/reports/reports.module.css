@@ -1,0 +1,40 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stats {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.productLink {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.productLink:hover {
+  color: var(--color-primary);
+}
+
+.issueType {
+  text-transform: capitalize;
+}
+
+.sla {
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.sla.ok {
+  color: var(--color-success);
+}
+
+.sla.at-risk {
+  color: var(--color-warning);
+}
+
+.sla.breached {
+  color: var(--color-error);
+}

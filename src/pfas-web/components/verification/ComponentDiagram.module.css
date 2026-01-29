@@ -1,0 +1,232 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.diagramWrapper {
+  background: linear-gradient(135deg, var(--color-gray-50), white);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  position: relative;
+}
+
+.diagram {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  margin: 0 auto;
+  display: block;
+}
+
+.interactiveArea {
+  transition: all 0.2s ease;
+}
+
+.interactiveArea:hover {
+  filter: brightness(1.1);
+}
+
+.statusDots circle {
+  stroke: white;
+  stroke-width: 2;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.15));
+}
+
+.labels text {
+  pointer-events: none;
+}
+
+/* Details Panel */
+.detailsPanel {
+  display: flex;
+  gap: var(--space-3);
+  margin-top: var(--space-4);
+  padding: var(--space-4);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.statusIndicator {
+  width: 4px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+}
+
+.detailsContent {
+  flex: 1;
+  min-width: 0;
+}
+
+.componentName {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-2);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+}
+
+.foodContactBadge {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  background: var(--color-primary-100);
+  color: var(--color-primary-700);
+  border-radius: var(--radius-sm);
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.componentMaterial {
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+  margin: 0 0 var(--space-2);
+  line-height: 1.6;
+}
+
+.componentMaterial strong {
+  color: var(--color-gray-700);
+}
+
+.componentDescription {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  margin: 0 0 var(--space-3);
+  line-height: 1.6;
+}
+
+.statusBadge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  border: 1px solid;
+}
+
+/* Instruction */
+.instruction {
+  text-align: center;
+  padding: var(--space-3);
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  font-style: italic;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  padding: var(--space-3);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.8125rem;
+  color: var(--color-gray-600);
+}
+
+.legendDot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid white;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+/* Component List */
+.componentList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.componentButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-3);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  color: var(--color-gray-700);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.componentButton:hover {
+  border-color: var(--status-color);
+  background: var(--color-gray-50);
+}
+
+.componentButton.active {
+  border-color: var(--status-color);
+  background: color-mix(in srgb, var(--status-color) 10%, white);
+  box-shadow: 0 0 0 1px var(--status-color);
+}
+
+.componentDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.componentLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.foodBadge {
+  font-size: 0.75rem;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .diagramWrapper {
+    padding: var(--space-4);
+  }
+
+  .legend {
+    gap: var(--space-4);
+  }
+
+  .legendItem {
+    font-size: 0.75rem;
+  }
+
+  .detailsPanel {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .statusIndicator {
+    width: 100%;
+    height: 4px;
+  }
+}

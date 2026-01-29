@@ -1,0 +1,346 @@
+ACTIVATION: w10-disclosure-audit
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Compliance Engineer Agent
+MISSION: Audit and fix all FTC disclosure placements across the site
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT (Refinement Wave)
+FTC compliance is non-negotiable. This prompt audits every page and ensures:
+- Disclosure on category/search grids
+- Disclosure on product detail near buy buttons
+- Disclosure in click-out modal
+- Footer link to full disclosure page
+
+SPEC REFERENCE
+Read: docs/pfas-platform/01-PRD-MVP.md
+Section: "3. Compliance Requirements"
+
+───────────────────────────────────────────────────────────────────────────────
+AUDIT CHECKLIST
+───────────────────────────────────────────────────────────────────────────────
+
+For each page, verify disclosure exists and meets requirements:
+
+1. HOMEPAGE
+   Location: Above any product listings
+   Text: "Affiliate links may appear on this site."
+   Style: Readable, not hidden, same size as surrounding text
+   
+   □ Present?
+   □ Visible without scrolling?
+   □ High contrast (readable)?
+
+2. CATEGORY PAGES (/cookware, /bakeware, etc.)
+   Location: Above first row of product cards
+   Text: "Affiliate links may appear in results."
+   
+   □ Present on ALL category pages?
+   □ Visible before products?
+   □ Persists on filter/sort changes?
+
+3. SEARCH RESULTS (/search?q=...)
+   Location: Above search results
+   Text: "Affiliate links may appear in results."
+   
+   □ Present?
+   □ Visible before results?
+
+4. PRODUCT DETAIL PAGES (/product/[slug])
+   Location: Adjacent to "Buy at [Retailer]" buttons
+   Text: "Affiliate link: We may earn a commission if you purchase through this link."
+   
+   □ Present near buy buttons?
+   □ Not below the fold?
+   □ Same font size as button text?
+
+5. COMPARE PAGE (/compare)
+   Location: Near any retailer links
+   Text: Same as product detail
+   
+   □ Present if affiliate links shown?
+
+6. CLICK-OUT MODAL
+   Location: In modal before redirect
+   Text: "We may earn a commission from this purchase."
+   
+   □ Present in modal?
+   □ Visible before "Continue" button?
+
+7. FOOTER (All pages)
+   Location: Site footer
+   Element: Link to /disclosure page
+   Text: "Affiliate Disclosure"
+   
+   □ Present in footer?
+   □ Links to disclosure page?
+
+8. DISCLOSURE PAGE (/disclosure)
+   Full explanation text required.
+   
+   □ Page exists?
+   □ Explains affiliate relationship?
+   □ States commissions are earned?
+   □ Clarifies doesn't affect verification?
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. GRID DISCLOSURE COMPONENT
+   File: src/pfas-web/components/layout/AffiliateDisclosure.tsx
+
+   ```tsx
+   import styles from './AffiliateDisclosure.module.css';
+
+   interface AffiliateDisclosureProps {
+     variant: 'banner' | 'inline' | 'modal';
+   }
+
+   const DISCLOSURE_TEXT = {
+     banner: 'Affiliate links may appear in results.',
+     inline: 'Affiliate link: We may earn a commission if you purchase through this link.',
+     modal: 'We may earn a commission from this purchase.',
+   };
+
+   export function AffiliateDisclosure({ variant }: AffiliateDisclosureProps) {
+     return (
+       <p className={`${styles.disclosure} ${styles[variant]}`} role="note">
+         {DISCLOSURE_TEXT[variant]}
+       </p>
+     );
+   }
+   ```
+
+   File: src/pfas-web/components/layout/AffiliateDisclosure.module.css
+   ```css
+   .disclosure {
+     font-size: 0.875rem;
+     color: var(--color-text-muted);
+   }
+
+   .banner {
+     background: var(--color-bg-alt);
+     padding: var(--space-sm) var(--space-md);
+     border-radius: var(--radius-md);
+     margin-bottom: var(--space-lg);
+     text-align: center;
+   }
+
+   .inline {
+     margin-bottom: var(--space-sm);
+   }
+
+   .modal {
+     background: rgba(0, 0, 0, 0.05);
+     padding: var(--space-sm);
+     border-radius: var(--radius-sm);
+     margin: var(--space-md) 0;
+   }
+   ```
+
+2. ADD DISCLOSURE TO CATEGORY PAGE
+   File: src/pfas-web/app/(browse)/[category]/page.tsx
+
+   ```tsx
+   import { AffiliateDisclosure } from '@/components/layout';
+
+   export default async function CategoryPage({ params, searchParams }) {
+     // ... existing code ...
+
+     return (
+       <>
+         <AffiliateDisclosure variant="banner" />
+         <div className={styles.layout}>
+           {/* filters and products */}
+         </div>
+       </>
+     );
+   }
+   ```
+
+3. ADD DISCLOSURE TO PDP
+   File: src/pfas-web/app/product/[slug]/page.tsx
+
+   Find the buy buttons section and add:
+   ```tsx
+   <section className={styles.buySection}>
+     <AffiliateDisclosure variant="inline" />
+     <div className={styles.retailerButtons}>
+       {/* retailer buttons */}
+     </div>
+   </section>
+   ```
+
+4. ADD DISCLOSURE TO CLICK-OUT MODAL
+   File: src/pfas-web/components/product/RetailerModal.tsx
+
+   ```tsx
+   export function RetailerModal({ retailer, onConfirm, onCancel }) {
+     return (
+       <Modal onClose={onCancel}>
+         <h2>You're leaving PFAS-Free Kitchen</h2>
+         <p>You're about to visit {retailer.name}.</p>
+         
+         <AffiliateDisclosure variant="modal" />
+         
+         <div className={styles.actions}>
+           <Button variant="secondary" onClick={onCancel}>Cancel</Button>
+           <Button variant="primary" onClick={onConfirm}>
+             Continue to {retailer.name}
+           </Button>
+         </div>
+       </Modal>
+     );
+   }
+   ```
+
+5. ADD FOOTER LINK
+   File: src/pfas-web/components/layout/Footer.tsx
+
+   ```tsx
+   export function Footer() {
+     return (
+       <footer className={styles.footer}>
+         <nav className={styles.links}>
+           <Link href="/disclosure">Affiliate Disclosure</Link>
+           <Link href="/education/how-we-verify">How We Verify</Link>
+           <Link href="/privacy">Privacy Policy</Link>
+           <Link href="/terms">Terms of Service</Link>
+         </nav>
+         <p className={styles.copyright}>
+           © {new Date().getFullYear()} PFAS-Free Kitchen
+         </p>
+       </footer>
+     );
+   }
+   ```
+
+6. DISCLOSURE PAGE CONTENT
+   File: src/pfas-web/app/disclosure/page.tsx
+
+   ```tsx
+   export default function DisclosurePage() {
+     return (
+       <article className={styles.page}>
+         <h1>Affiliate Disclosure</h1>
+         
+         <section>
+           <h2>Our Relationship with Retailers</h2>
+           <p>
+             PFAS-Free Kitchen is a participant in affiliate programs including 
+             Amazon Associates and other retailer partnerships. This means when 
+             you click on links to products on our site and make a purchase, we 
+             may earn a commission at no additional cost to you.
+           </p>
+         </section>
+
+         <section>
+           <h2>How This Affects Our Content</h2>
+           <p>
+             Our affiliate relationships do NOT influence our verification process 
+             or product ratings. Every product on our site goes through the same 
+             rigorous verification process regardless of affiliate status.
+           </p>
+           <p>
+             We never accept payment to improve a product's verification tier or 
+             ranking. Trust comes first.
+           </p>
+         </section>
+
+         <section>
+           <h2>FTC Compliance</h2>
+           <p>
+             In accordance with the Federal Trade Commission's guidelines, we 
+             disclose our affiliate relationships clearly throughout our site. 
+             You'll see disclosure notices:
+           </p>
+           <ul>
+             <li>Above product listings on category pages</li>
+             <li>Next to "Buy" buttons on product pages</li>
+             <li>Before you leave our site to visit a retailer</li>
+           </ul>
+         </section>
+
+         <section>
+           <h2>Questions?</h2>
+           <p>
+             If you have questions about our affiliate relationships, please 
+             contact us at disclosure@pfasfreekitchen.com.
+           </p>
+         </section>
+       </article>
+     );
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+AUTOMATED AUDIT SCRIPT
+───────────────────────────────────────────────────────────────────────────────
+
+File: src/pfas-web/tests/disclosure-audit.spec.ts
+
+```typescript
+import { test, expect } from '@playwright/test';
+
+const PAGES_TO_AUDIT = [
+  { path: '/', selector: '.disclosure-banner', name: 'Homepage' },
+  { path: '/cookware', selector: '.disclosure-banner', name: 'Category - Cookware' },
+  { path: '/bakeware', selector: '.disclosure-banner', name: 'Category - Bakeware' },
+  { path: '/storage', selector: '.disclosure-banner', name: 'Category - Storage' },
+  { path: '/search?q=skillet', selector: '.disclosure-banner', name: 'Search results' },
+  { path: '/product/all-clad-d3-stainless-steel-12-skillet', selector: '.disclosure-inline', name: 'Product detail' },
+];
+
+test.describe('FTC Disclosure Audit', () => {
+  for (const page of PAGES_TO_AUDIT) {
+    test(`${page.name} has disclosure`, async ({ page: browserPage }) => {
+      await browserPage.goto(page.path);
+      
+      // Check disclosure exists
+      const disclosure = browserPage.locator('[data-testid="affiliate-disclosure"]');
+      await expect(disclosure).toBeVisible();
+      
+      // Check text contains key phrase
+      await expect(disclosure).toContainText(/affiliate|commission/i);
+    });
+  }
+
+  test('Footer has disclosure link', async ({ page }) => {
+    await page.goto('/');
+    const footerLink = page.locator('footer a[href="/disclosure"]');
+    await expect(footerLink).toBeVisible();
+  });
+
+  test('Disclosure page exists and has required content', async ({ page }) => {
+    await page.goto('/disclosure');
+    
+    await expect(page.locator('h1')).toContainText(/disclosure/i);
+    await expect(page.locator('body')).toContainText('commission');
+    await expect(page.locator('body')).toContainText('FTC');
+  });
+
+  test('Click-out modal shows disclosure', async ({ page }) => {
+    await page.goto('/product/all-clad-d3-stainless-steel-12-skillet');
+    
+    // Click buy button to trigger modal
+    await page.click('[data-testid="buy-button"]');
+    
+    // Check modal has disclosure
+    const modal = page.locator('[role="dialog"]');
+    await expect(modal).toContainText(/commission/i);
+  });
+});
+```
+
+Run: `npx playwright test tests/disclosure-audit.spec.ts`
+
+───────────────────────────────────────────────────────────────────────────────
+SIGN-OFF REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+Before launch:
+□ Legal review of disclosure language
+□ All automated tests pass
+□ Manual audit of every page type
+□ Screenshot documentation for compliance records

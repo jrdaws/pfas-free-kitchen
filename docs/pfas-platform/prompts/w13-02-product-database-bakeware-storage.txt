@@ -1,0 +1,367 @@
+================================================================================
+WAVE 13-02: PRODUCT DATABASE - BAKEWARE & STORAGE
+================================================================================
+ACTIVATION: "Execute Wave 13-02: Product Database Bakeware and Storage"
+AGENT: Data Agent / Research Agent
+DEPENDS ON: Wave 13-01
+================================================================================
+
+CONTEXT
+-------
+Populate the database with REAL PFAS-free bakeware and food storage products.
+Focus on glass, ceramic, stainless steel, and silicone (verified PFAS-free).
+
+================================================================================
+TASK 1: RESEARCH & CREATE BAKING SHEET PRODUCTS
+================================================================================
+
+Add 10-12 real baking sheets:
+
+STAINLESS STEEL / ALUMINUM (UNCOATED):
+1. Nordic Ware Natural Aluminum Half Sheet (2 pack)
+2. Nordic Ware Natural Aluminum Quarter Sheet
+3. USA Pan Bakeware Half Sheet Pan
+4. USA Pan Bakeware Quarter Sheet Pan
+5. Vollrath Wear-Ever Half Sheet Pans (commercial)
+6. Chicago Metallic Commercial II Half Sheet
+7. Fat Daddio's Anodized Aluminum Sheet Pans
+
+Note: Aluminum is PFAS-free but specify "uncoated" - some have nonstick.
+
+DATA STRUCTURE:
+```typescript
+{
+  id: "prd_bake_001",
+  name: "Nordic Ware Natural Aluminum Commercial Baker's Half Sheet",
+  slug: "nordic-ware-natural-aluminum-half-sheet",
+  description: "Commercial-grade pure aluminum baking sheet. No coatings or treatments. Reinforced steel rim prevents warping.",
+  brand_id: "brd_nordic_ware",
+  category_id: "cat_sheet_pans",
+  
+  material_summary: "Pure Aluminum",
+  coating_summary: "None (uncoated)",
+  
+  components: [
+    {
+      name: "Pan body",
+      material: "Pure Aluminum 3003",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free",
+    },
+    {
+      name: "Rim",
+      material: "Galvanized Steel",
+      coating: null,
+      food_contact: false,
+      pfas_status: "inherently_free",
+    }
+  ],
+  
+  verification: {
+    tier: 2,
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "Pure aluminum with no applied coatings. Material is inherently PFAS-free.",
+    scope: "all_components",
+    unknowns: [],
+  },
+  
+  features: {
+    dimensions: "18 x 13 x 1 inches",
+    weight_lbs: 1.2,
+    oven_safe_temp_f: 450,
+    dishwasher_safe: true,
+    made_in: "USA",
+  },
+  
+  retailers: [
+    { retailer_id: "ret_amazon", available: true },
+    { retailer_id: "ret_target", available: true },
+    { retailer_id: "ret_walmart", available: true },
+  ],
+}
+```
+
+================================================================================
+TASK 2: RESEARCH & CREATE BAKING DISH PRODUCTS
+================================================================================
+
+Add 12-15 glass/ceramic baking dishes:
+
+GLASS BAKING DISHES:
+1. Pyrex Easy Grab 9x13 Glass Baking Dish
+2. Pyrex Deep 9x13 Glass Baking Dish
+3. Pyrex 8x8 Square Glass Baking Dish
+4. Pyrex Basics 3-Quart Glass Oblong Dish
+5. Anchor Hocking 9x13 Glass Baking Dish
+6. Anchor Hocking 8x8 Square Glass Dish
+7. OXO Good Grips Glass 9x13 Baking Dish
+8. Libbey Baker's Basics Glass Bake Dish Set
+
+CERAMIC BAKING DISHES:
+9. Le Creuset Stoneware 9x13 Rectangular Dish
+10. Staub Ceramic 9x13 Rectangular Dish
+11. Emile Henry Rectangular Baker 9x13
+12. Casafina Ceramic Rectangular Baker
+13. HIC Harold Import Porcelain Baker
+
+STONEWARE:
+14. Lodge Stoneware Baking Dish
+15. Pampered Chef Stoneware Bar Pan
+
+```typescript
+{
+  id: "prd_bake_010",
+  name: "Pyrex Easy Grab 9x13 Glass Baking Dish with Lid",
+  slug: "pyrex-easy-grab-9x13-glass-baking-dish",
+  description: "Borosilicate glass baking dish with BPA-free plastic lid. Large handles for easy grip. Oven, microwave, freezer, and dishwasher safe.",
+  brand_id: "brd_pyrex",
+  category_id: "cat_baking_dishes",
+  
+  material_summary: "Borosilicate Glass",
+  coating_summary: "None",
+  
+  components: [
+    {
+      name: "Dish body",
+      material: "Borosilicate Glass",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free",
+    },
+    {
+      name: "Lid",
+      material: "BPA-free Plastic",
+      coating: null,
+      food_contact: true,
+      pfas_status: "unknown", // Need to verify plastic type
+    }
+  ],
+  
+  verification: {
+    tier: 2, // Glass body verified, lid unknown
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "Glass dish is inherently PFAS-free. Plastic lid composition not verified.",
+    scope: "food_contact",
+    unknowns: ["Plastic lid PFAS status not independently verified"],
+  },
+}
+```
+
+================================================================================
+TASK 3: RESEARCH & CREATE MUFFIN/CUPCAKE PAN PRODUCTS
+================================================================================
+
+Add 6-8 muffin pans:
+
+1. USA Pan Bakeware 12-Cup Muffin Pan
+2. Chicago Metallic Commercial II 12-Cup
+3. Fat Daddio's Anodized Aluminum Muffin Pan
+4. Nordic Ware Natural Aluminum Muffin Pan
+5. OXO Good Grips Non-Stick Pro (CHECK COATING - may have PTFE)
+6. Wilton Recipe Right 12-Cup (CHECK COATING)
+
+IMPORTANT: Many muffin pans have nonstick coating. Only include:
+- Uncoated aluminum
+- Silicone (verified PFAS-free silicone)
+- Stainless steel
+
+================================================================================
+TASK 4: RESEARCH & CREATE FOOD STORAGE CONTAINERS
+================================================================================
+
+Add 15-20 food storage products:
+
+GLASS CONTAINERS:
+1. Pyrex Simply Store 18-Piece Glass Set
+2. Pyrex Freshlock 10-Piece Set
+3. Anchor Hocking TrueSeal Glass Storage Set
+4. Snapware Total Solution Glass 10-Piece
+5. OXO Good Grips Smart Seal Glass Containers
+6. Rubbermaid Brilliance Glass Set
+7. Glasslock Oven Safe Container Set
+8. Prep Naturals Glass Meal Prep Containers
+
+STAINLESS STEEL CONTAINERS:
+9. LunchBots Stainless Steel Containers
+10. U-Konserve Stainless Steel Food Containers
+11. ECOlunchbox Stainless Steel Set
+12. Tatonka Stainless Steel Food Containers
+13. Dalcini Stainless Steel Containers
+14. Onyx Stainless Steel Containers
+
+BOROSILICATE WITH BAMBOO LIDS:
+15. JoyJolt Borosilicate Glass with Bamboo Lids
+16. Bayco Glass Food Storage with Bamboo Lids
+
+```typescript
+{
+  id: "prd_storage_001",
+  name: "Pyrex Simply Store 18-Piece Glass Storage Set",
+  slug: "pyrex-simply-store-18-piece-glass-set",
+  description: "Set includes 9 glass containers with BPA-free plastic lids. Nesting design for easy storage. Microwave, oven, freezer, and dishwasher safe.",
+  brand_id: "brd_pyrex",
+  category_id: "cat_glass_containers",
+  
+  material_summary: "Tempered Glass",
+  coating_summary: "None",
+  
+  components: [
+    {
+      name: "Container bodies (9)",
+      material: "Tempered Non-Porous Glass",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free",
+    },
+    {
+      name: "Lids (9)",
+      material: "BPA-free Polypropylene",
+      coating: null,
+      food_contact: true,
+      pfas_status: "likely_free", // PP typically doesn't contain PFAS
+    }
+  ],
+  
+  verification: {
+    tier: 2,
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "Glass containers are inherently PFAS-free. Polypropylene lids do not typically contain PFAS.",
+    scope: "all_components",
+    unknowns: ["Lid gaskets not independently tested"],
+  },
+  
+  features: {
+    piece_count: 18,
+    includes: "1c, 2c, 4c, 7c, 11c containers with lids",
+    microwave_safe: true,
+    oven_safe: true,
+    oven_safe_temp_f: 450,
+    freezer_safe: true,
+    dishwasher_safe: true,
+    stackable: true,
+    made_in: "USA",
+  },
+}
+```
+
+================================================================================
+TASK 5: RESEARCH & CREATE FOOD WRAP ALTERNATIVES
+================================================================================
+
+Add 5-8 food wrap products:
+
+1. Bee's Wrap Reusable Food Wraps
+2. Abeego Beeswax Wraps
+3. If You Care Unbleached Parchment Paper
+4. Regency Wraps Natural Parchment
+5. Stasher Silicone Bags (various sizes)
+6. Zip Top Silicone Containers
+7. W&P Porter Silicone Bags
+
+Note: Verify silicone products use food-grade PFAS-free silicone.
+
+================================================================================
+TASK 6: ADD NEW BRANDS
+================================================================================
+
+Add brand entries for:
+
+```typescript
+// Bakeware brands
+{ id: "brd_nordic_ware", name: "Nordic Ware", country: "USA", founded: 1946 },
+{ id: "brd_usa_pan", name: "USA Pan", country: "USA" },
+{ id: "brd_chicago_metallic", name: "Chicago Metallic", country: "USA" },
+{ id: "brd_fat_daddios", name: "Fat Daddio's", country: "USA" },
+{ id: "brd_pyrex", name: "Pyrex", country: "USA", founded: 1915 },
+{ id: "brd_anchor_hocking", name: "Anchor Hocking", country: "USA", founded: 1905 },
+{ id: "brd_oxo", name: "OXO", country: "USA", founded: 1990 },
+{ id: "brd_emile_henry", name: "Emile Henry", country: "France", founded: 1850 },
+
+// Storage brands
+{ id: "brd_snapware", name: "Snapware", country: "USA" },
+{ id: "brd_rubbermaid", name: "Rubbermaid", country: "USA" },
+{ id: "brd_glasslock", name: "Glasslock", country: "South Korea" },
+{ id: "brd_lunchbots", name: "LunchBots", country: "USA" },
+{ id: "brd_ecolunchbox", name: "ECOlunchbox", country: "USA" },
+{ id: "brd_stasher", name: "Stasher", country: "USA" },
+{ id: "brd_bees_wrap", name: "Bee's Wrap", country: "USA" },
+```
+
+================================================================================
+TASK 7: ADD NEW CATEGORIES
+================================================================================
+
+```typescript
+export const MOCK_CATEGORIES = [
+  {
+    id: "cat_cookware",
+    name: "Cookware",
+    slug: "cookware",
+    parent_id: null,
+    children: [
+      { id: "cat_skillets", name: "Skillets & Frying Pans", slug: "skillets-frying-pans" },
+      { id: "cat_saucepans", name: "Saucepans", slug: "saucepans" },
+      { id: "cat_dutch_ovens", name: "Dutch Ovens", slug: "dutch-ovens" },
+      { id: "cat_stock_pots", name: "Stock Pots", slug: "stock-pots" },
+      { id: "cat_saute_pans", name: "Sauté Pans", slug: "saute-pans" },
+      { id: "cat_woks", name: "Woks", slug: "woks" },
+      { id: "cat_griddles", name: "Griddles & Grill Pans", slug: "griddles-grill-pans" },
+    ],
+  },
+  {
+    id: "cat_bakeware",
+    name: "Bakeware",
+    slug: "bakeware",
+    parent_id: null,
+    children: [
+      { id: "cat_sheet_pans", name: "Sheet Pans", slug: "sheet-pans" },
+      { id: "cat_baking_dishes", name: "Baking Dishes", slug: "baking-dishes" },
+      { id: "cat_muffin_pans", name: "Muffin & Cupcake Pans", slug: "muffin-cupcake-pans" },
+      { id: "cat_cake_pans", name: "Cake Pans", slug: "cake-pans" },
+      { id: "cat_loaf_pans", name: "Loaf Pans", slug: "loaf-pans" },
+      { id: "cat_pie_pans", name: "Pie & Tart Pans", slug: "pie-tart-pans" },
+      { id: "cat_roasting_pans", name: "Roasting Pans", slug: "roasting-pans" },
+    ],
+  },
+  {
+    id: "cat_storage",
+    name: "Storage",
+    slug: "storage",
+    parent_id: null,
+    children: [
+      { id: "cat_glass_containers", name: "Glass Containers", slug: "glass-containers" },
+      { id: "cat_stainless_containers", name: "Stainless Steel Containers", slug: "stainless-steel-containers" },
+      { id: "cat_silicone_bags", name: "Silicone Bags", slug: "silicone-bags" },
+      { id: "cat_food_wraps", name: "Food Wraps", slug: "food-wraps" },
+      { id: "cat_jars", name: "Jars & Canisters", slug: "jars-canisters" },
+    ],
+  },
+  // ... utensils, appliances categories
+];
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ 10-12 real baking sheet products added
+□ 12-15 real baking dish products added  
+□ 6-8 real muffin pan products added
+□ 15-20 real food storage products added
+□ 5-8 real food wrap alternatives added
+□ All brands have complete profiles
+□ Categories properly structured
+□ Verification tiers are conservative
+□ Products with unknown coatings marked accordingly
+
+================================================================================
+FILES TO MODIFY
+================================================================================
+
+- src/pfas-api/src/mock/data.ts
+
+================================================================================

@@ -1,0 +1,213 @@
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+/* Hero */
+.hero {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 800;
+  margin: 0 0 var(--space-4);
+  color: var(--color-gray-900);
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  font-size: 1.25rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Cards Grid */
+.cardsSection {
+  margin-bottom: var(--space-16);
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-8);
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-xl);
+  text-decoration: none;
+  transition: all var(--transition-normal);
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card.blue {
+  border-top: 4px solid var(--color-blue-500);
+}
+
+.card.green {
+  border-top: 4px solid var(--color-green-500);
+}
+
+.card.purple {
+  border-top: 4px solid var(--color-purple-500);
+}
+
+.card.orange {
+  border-top: 4px solid var(--color-orange-500);
+}
+
+.cardIcon {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-4);
+}
+
+.cardTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-900);
+}
+
+.cardDescription {
+  font-size: 1rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  flex: 1;
+  line-height: 1.6;
+}
+
+.cardLink {
+  margin-top: var(--space-4);
+  font-weight: 600;
+  color: var(--color-primary-600);
+}
+
+/* Facts Section */
+.factsSection {
+  padding: var(--space-10);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-xl);
+  margin-bottom: var(--space-12);
+}
+
+.factsTitle {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-8);
+  color: var(--color-gray-900);
+}
+
+.factsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-6);
+}
+
+.fact {
+  text-align: center;
+}
+
+.factNumber {
+  display: block;
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-primary-600);
+  margin-bottom: var(--space-2);
+}
+
+.factLabel {
+  display: block;
+  font-size: 0.875rem;
+  color: var(--color-gray-600);
+}
+
+/* CTA */
+.cta {
+  text-align: center;
+  padding: var(--space-10);
+  background: linear-gradient(135deg, var(--color-primary-50), var(--color-green-50));
+  border-radius: var(--radius-xl);
+}
+
+.cta h2 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 var(--space-3);
+  color: var(--color-gray-900);
+}
+
+.cta p {
+  margin: 0 0 var(--space-6);
+  color: var(--color-gray-600);
+}
+
+.ctaButtons {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .factsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+
+  .cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .card {
+    padding: var(--space-6);
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-4) var(--space-3) var(--space-12);
+  }
+
+  .factsGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+
+  .factNumber {
+    font-size: 2rem;
+  }
+
+  .cta {
+    padding: var(--space-6);
+  }
+
+  .ctaButtons {
+    flex-direction: column;
+    align-items: center;
+  }
+}

@@ -1,0 +1,293 @@
+ACTIVATION: w2-ingestion-pipeline
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Data Engineer Agent
+MISSION: Build the product ingestion pipeline with enrichment and risk detection
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Products enter the system via:
+- Affiliate feeds (Impact, CJ, Awin)
+- Amazon PA-API
+- Brand portal submissions
+- Manual entry
+
+Each product needs enrichment and PFAS risk term detection before review.
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "5. Workflow State Machines" - Product Ingestion Workflow
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. FEED ADAPTERS
+   Directory: src/adapters/feeds/
+
+   ```typescript
+   // Base adapter interface
+   interface FeedAdapter {
+     name: string;
+     fetchProducts(): AsyncGenerator<RawProduct>;
+     mapToCanonical(raw: RawProduct): CanonicalProduct;
+   }
+
+   // Implementations
+   export class ImpactFeedAdapter implements FeedAdapter { ... }
+   export class AmazonPAAPIAdapter implements FeedAdapter { ... }
+   export class ManualEntryAdapter implements FeedAdapter { ... }
+   ```
+
+2. CANONICAL PRODUCT SCHEMA
+   File: src/types/canonical-product.ts
+
+   ```typescript
+   interface CanonicalProduct {
+     // External identifiers
+     source: 'impact' | 'amazon' | 'brand_portal' | 'manual';
+     source_id: string;
+     gtin?: string;
+     asin?: string;
+     mpn?: string;
+     
+     // Basic info
+     name: string;
+     brand_name: string;
+     description?: string;
+     category_hint?: string;
+     image_url?: string;
+     
+     // Raw attributes (pre-enrichment)
+     raw_attributes: Record<string, string>;
+     
+     // Retailer info
+     retailer_id: string;
+     retailer_url: string;
+   }
+   ```
+
+3. ENRICHMENT SERVICE
+   File: src/services/enrichment.service.ts
+
+   ```typescript
+   export class EnrichmentService {
+     /**
+      * Extract structured data from raw product
+      */
+     static async enrich(product: CanonicalProduct): Promise<EnrichedProduct> {
+       return {
+         ...product,
+         
+         // NLP-extracted fields
+         materials: await this.extractMaterials(product),
+         coatings: await this.extractCoatings(product),
+         
+         // Feature extraction
+         features: await this.extractFeatures(product),
+         
+         // Risk assessment
+         risk_terms: await this.detectRiskTerms(product),
+         pfas_risk_flagged: await this.calculateRiskFlag(product),
+         
+         // Category mapping
+         category_id: await this.mapCategory(product),
+       };
+     }
+
+     /**
+      * Extract materials from name/description
+      * "12-inch Stainless Steel Skillet" -> ["stainless_steel"]
+      */
+     static async extractMaterials(product: CanonicalProduct): Promise<string[]>;
+
+     /**
+      * Extract coating info
+      * "Ceramic nonstick coating" -> ["ceramic_sol_gel"]
+      */
+     static async extractCoatings(product: CanonicalProduct): Promise<string[]>;
+
+     /**
+      * Extract features
+      * "Oven safe to 500°F" -> { oven_safe_temp_f: 500 }
+      */
+     static async extractFeatures(product: CanonicalProduct): Promise<ProductFeatures>;
+
+     /**
+      * Detect PFAS risk terms
+      */
+     static async detectRiskTerms(product: CanonicalProduct): Promise<RiskTerm[]>;
+   }
+   ```
+
+4. RISK TERM DETECTOR
+   File: src/services/risk-detector.service.ts
+
+   ```typescript
+   const RISK_TERMS = {
+     high_risk: [
+       { pattern: /\bPTFE\b/i, reason: 'PTFE is a fluoropolymer (PFAS)' },
+       { pattern: /\bTeflon\b/i, reason: 'Teflon is PTFE brand (PFAS)' },
+       { pattern: /\bnon-?stick\b/i, reason: 'Nonstick may indicate PFAS coating' },
+       { pattern: /\bceramic.{0,20}non-?stick/i, reason: 'Ceramic nonstick requires verification' },
+       { pattern: /\bstain.{0,10}resist/i, reason: 'Stain resistance may indicate PFAS treatment' },
+       { pattern: /\bwater.{0,10}repel/i, reason: 'Water repellency may indicate PFAS treatment' },
+       { pattern: /\bgrease.{0,10}proof/i, reason: 'Grease proofing may indicate PFAS treatment' },
+     ],
+     moderate_risk: [
+       { pattern: /\bPFOA.{0,5}free\b/i, reason: 'PFOA-free does not mean PFAS-free' },
+       { pattern: /\bcoated\b/i, reason: 'Coating type should be verified' },
+     ],
+     auto_reject: [
+       { pattern: /\bSilverstone\b/i, reason: 'Silverstone is PTFE-based' },
+       { pattern: /\btitanium.{0,10}non-?stick/i, reason: 'Titanium nonstick is typically PTFE' },
+       { pattern: /\bgranite.{0,10}non-?stick/i, reason: 'Granite nonstick is typically PTFE' },
+     ],
+   };
+
+   export class RiskDetectorService {
+     static detect(text: string): RiskDetectionResult {
+       const results: RiskTerm[] = [];
+       
+       for (const [level, patterns] of Object.entries(RISK_TERMS)) {
+         for (const { pattern, reason } of patterns) {
+           if (pattern.test(text)) {
+             results.push({ term: pattern.source, level, reason, matched: text.match(pattern)?.[0] });
+           }
+         }
+       }
+       
+       return {
+         terms: results,
+         highest_risk: this.getHighestRisk(results),
+         requires_elevated_review: results.some(r => r.level === 'high_risk'),
+         auto_reject: results.some(r => r.level === 'auto_reject'),
+       };
+     }
+   }
+   ```
+
+5. DEDUPLICATION SERVICE
+   File: src/services/dedup.service.ts
+
+   ```typescript
+   export class DedupService {
+     /**
+      * Find existing product match
+      * Priority: GTIN > ASIN > (brand + MPN) > fuzzy match
+      */
+     static async findMatch(product: CanonicalProduct): Promise<{
+       matched: boolean;
+       matchType?: 'gtin' | 'asin' | 'mpn' | 'fuzzy';
+       existingProductId?: string;
+       confidence?: number;
+     }>;
+
+     /**
+      * Merge new data into existing product
+      * Only update if new data is more complete
+      */
+     static async mergeIfBetter(
+       existingId: string,
+       newProduct: CanonicalProduct
+     ): Promise<MergeResult>;
+   }
+   ```
+
+6. INGESTION WORKFLOW
+   File: src/workflows/product-ingestion.workflow.ts
+
+   Using Temporal or similar:
+   ```typescript
+   export async function productIngestionWorkflow(product: CanonicalProduct) {
+     // Step 1: Check for duplicates
+     const dedupResult = await DedupService.findMatch(product);
+     if (dedupResult.matched && dedupResult.matchType !== 'fuzzy') {
+       await DedupService.mergeIfBetter(dedupResult.existingProductId!, product);
+       return { status: 'merged', productId: dedupResult.existingProductId };
+     }
+
+     // Step 2: Enrich product
+     const enriched = await EnrichmentService.enrich(product);
+
+     // Step 3: Auto-reject check
+     if (enriched.risk_terms.some(t => t.level === 'auto_reject')) {
+       return { status: 'rejected', reason: 'Auto-reject term detected' };
+     }
+
+     // Step 4: Create product record
+     const productId = await ProductRepository.create({
+       ...enriched,
+       status: 'pending_review',
+       pfas_risk_flagged: enriched.pfas_risk_flagged,
+       requires_elevated_review: enriched.requires_elevated_review,
+     });
+
+     // Step 5: Create initial components (best effort)
+     await ComponentService.createFromEnrichment(productId, enriched);
+
+     // Step 6: Queue for review
+     await QueueService.addToReviewQueue(productId, {
+       lane: enriched.requires_elevated_review ? 'high_risk' : 'standard',
+     });
+
+     // Step 7: Audit log
+     await AuditService.logProductCreated('system', productId);
+
+     return { status: 'queued', productId };
+   }
+   ```
+
+7. QUEUE WORKERS
+   File: src/workers/ingestion.worker.ts
+
+   ```typescript
+   export class IngestionWorker {
+     static async processQueue() {
+       const queue = new SQSConsumer({
+         queueUrl: process.env.INGESTION_QUEUE_URL,
+         handler: async (message) => {
+           const product = JSON.parse(message.body) as CanonicalProduct;
+           await productIngestionWorkflow(product);
+         },
+       });
+       await queue.start();
+     }
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+FEATURE EXTRACTION PATTERNS
+───────────────────────────────────────────────────────────────────────────────
+
+```typescript
+const FEATURE_PATTERNS = {
+  oven_safe_temp_f: /oven.{0,20}(\d{3,4})°?\s*F/i,
+  oven_safe_temp_c: /oven.{0,20}(\d{2,3})°?\s*C/i,
+  induction_compatible: /\binduction\b/i,
+  dishwasher_safe: /\bdishwasher.{0,10}safe\b/i,
+  size_inches: /(\d+(?:\.\d+)?)\s*(?:inch|in|")/i,
+  size_quarts: /(\d+(?:\.\d+)?)\s*(?:quart|qt)/i,
+};
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Never scrape retailer sites (use feeds/APIs only)
+□ Auto-reject PTFE/Teflon products (don't queue for review)
+□ Risk terms flagged products go to high_risk lane
+□ Dedup by GTIN/ASIN before creating new records
+□ All ingested products start at status = 'pending_review'
+□ Audit log captures all ingestion events
+
+───────────────────────────────────────────────────────────────────────────────
+QUEUE TOPICS
+───────────────────────────────────────────────────────────────────────────────
+
+Publish to:
+- `product.ingested` - After raw product received
+- `product.enriched` - After enrichment complete
+- `product.rejected` - If auto-reject triggered
+- `product.queued` - When added to review queue

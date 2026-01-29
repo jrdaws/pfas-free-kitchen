@@ -1,0 +1,66 @@
+.container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  margin-bottom: var(--space-4);
+}
+
+.pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-3);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pill:hover {
+  background: var(--bg-tertiary, #e5e7eb);
+  border-color: var(--text-muted);
+}
+
+.label {
+  color: var(--text-secondary);
+}
+
+.remove {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: var(--bg-tertiary, #e5e7eb);
+  border-radius: 50%;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.pill:hover .remove {
+  background: var(--color-primary);
+  color: white;
+}
+
+.clearAll {
+  padding: var(--space-1) var(--space-2);
+  background: none;
+  border: none;
+  font-size: 0.8125rem;
+  color: var(--color-primary);
+  cursor: pointer;
+}
+
+.clearAll:hover {
+  text-decoration: underline;
+}

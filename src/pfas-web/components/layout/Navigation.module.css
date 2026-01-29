@@ -1,0 +1,25 @@
+.nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.link {
+  padding: var(--space-2) var(--space-3);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-decoration: none;
+  border-radius: var(--border-radius-md);
+  transition: all 0.15s ease;
+}
+
+.link:hover {
+  color: var(--text-primary);
+  background: var(--bg-secondary);
+}
+
+.link.active {
+  color: var(--color-primary);
+  background: rgba(15, 118, 110, 0.08);
+}

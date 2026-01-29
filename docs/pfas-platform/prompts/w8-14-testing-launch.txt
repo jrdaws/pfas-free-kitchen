@@ -1,0 +1,516 @@
+ACTIVATION: w8-testing-launch
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: QA Engineer Agent
+MISSION: Create comprehensive test suites and launch validation checklist
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Before launch, the platform must pass:
+- Unit tests for rules engine and link generation
+- Integration tests for ingestion → verification → publish flow
+- E2E tests for all user journeys
+- Data quality validation
+- Compliance audit
+
+SPEC REFERENCE
+Read: docs/pfas-platform/01-PRD-MVP.md
+Sections: "6. Launch Criteria"
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Section: "6. Error Handling Strategy"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. UNIT TEST SUITES
+
+   File: tests/unit/rules-engine.test.ts
+   ```typescript
+   describe('RulesEngine', () => {
+     describe('Tier 1 Evaluation', () => {
+       it('should pass when brand attestation exists and is not expired', async () => {
+         const context = createTestContext({
+           evidence: [createBrandAttestation({ receivedAt: oneMonthAgo })],
+         });
+         const result = await RulesEngine.evaluateTier(TIER_RULES[0], context);
+         expect(result.passed).toBe(true);
+       });
+
+       it('should fail when brand attestation is expired', async () => {
+         const context = createTestContext({
+           evidence: [createBrandAttestation({ receivedAt: thirteenMonthsAgo })],
+         });
+         const result = await RulesEngine.evaluateTier(TIER_RULES[0], context);
+         expect(result.passed).toBe(false);
+         expect(result.blockers).toContain('No valid brand attestation found');
+       });
+
+       it('should fail when no attestation exists', async () => {
+         const context = createTestContext({ evidence: [] });
+         const result = await RulesEngine.evaluate(testProductId);
+         expect(result.maxAchievableTier).toBe(0);
+       });
+     });
+
+     describe('Tier 2 Evaluation', () => {
+       it('should fail when component model is incomplete', async () => {
+         const context = createTestContext({
+           evidence: [createBrandAttestation()],
+           components: [
+             { id: 'cmp_1', food_contact: true, material_id: null }, // Missing material
+           ],
+         });
+         const result = await RulesEngine.evaluate(testProductId);
+         expect(result.maxAchievableTier).toBe(1);
+       });
+
+       it('should fail when risk terms unresolved', async () => {
+         const context = createTestContext({
+           evidence: [createBrandAttestation()],
+           components: [createCompleteComponent()],
+           riskTerms: [{ term: 'nonstick', resolved: false }],
+         });
+         const result = await RulesEngine.evaluate(testProductId);
+         expect(result.maxAchievableTier).toBe(1);
+       });
+     });
+
+     describe('Tier 3 Evaluation', () => {
+       it('should pass when lab report covers food-contact components', async () => {
+         const foodContactComponent = createCompleteComponent({ id: 'cmp_body', food_contact: true });
+         const context = createTestContext({
+           evidence: [
+             createBrandAttestation(),
+             createLabReport({ sampleScope: { component_ids: ['cmp_body'] } }),
+           ],
+           components: [foodContactComponent],
+         });
+         const result = await RulesEngine.evaluate(testProductId);
+         expect(result.maxAchievableTier).toBe(3);
+       });
+
+       it('should fail when lab report does not cover food-contact', async () => {
+         const context = createTestContext({
+           evidence: [
+             createBrandAttestation(),
+             createLabReport({ sampleScope: { component_ids: ['cmp_handle'] } }), // Wrong component
+           ],
+           components: [
+             { id: 'cmp_body', food_contact: true },
+             { id: 'cmp_handle', food_contact: false },
+           ],
+         });
+         const result = await RulesEngine.evaluate(testProductId);
+         expect(result.maxAchievableTier).toBe(2);
+       });
+     });
+   });
+   ```
+
+   File: tests/unit/affiliate-links.test.ts
+   ```typescript
+   describe('AffiliateService', () => {
+     it('should generate valid Amazon link with tag', async () => {
+       const links = await AffiliateService.getLinks(testProductId);
+       const amazonLink = links.links.find(l => l.retailer_id === 'ret_amazon');
+       expect(amazonLink.affiliate_url).toContain('tag=');
+       expect(amazonLink.affiliate_url).toMatch(/amazon\.com\/dp\/[A-Z0-9]{10}/);
+     });
+
+     it('should include disclosure text with every link', async () => {
+       const links = await AffiliateService.getLinks(testProductId);
+       for (const link of links.links) {
+         expect(link.disclosure_required).toBe(true);
+         expect(link.disclosure_text).toContain('commission');
+       }
+     });
+
+     it('should add UTM params for tracking', async () => {
+       const links = await AffiliateService.getLinks(testProductId);
+       const amazonLink = links.links[0];
+       expect(amazonLink.affiliate_url).toContain('utm_source=pfasfreekitchen');
+     });
+   });
+   ```
+
+   File: tests/unit/evidence-hash.test.ts
+   ```typescript
+   describe('Evidence Hashing', () => {
+     it('should calculate consistent SHA-256 hash', () => {
+       const buffer = Buffer.from('test content');
+       const hash1 = sha256(buffer);
+       const hash2 = sha256(buffer);
+       expect(hash1).toBe(hash2);
+       expect(hash1).toHaveLength(64);
+     });
+
+     it('should detect tampered evidence', async () => {
+       const evidence = await EvidenceService.upload({
+         file: testPdfBuffer,
+         ...testMetadata,
+       });
+
+       // Simulate tampering by changing stored hash
+       await db.query('UPDATE evidence_objects SET sha256_hash = $1 WHERE id = $2', [
+         'tamperedhash',
+         evidence.evidence_id,
+       ]);
+
+       // Should throw on retrieval
+       await expect(EvidenceService.getArtifact(evidence.evidence_id))
+         .rejects.toThrow('integrity check failed');
+     });
+   });
+   ```
+
+2. INTEGRATION TEST SUITES
+
+   File: tests/integration/product-flow.test.ts
+   ```typescript
+   describe('Product Lifecycle', () => {
+     it('should ingest, enrich, review, and publish product', async () => {
+       // Step 1: Ingest
+       const product = await ingestTestProduct({
+         name: 'Test Stainless Skillet',
+         brand: 'TestBrand',
+         materials: ['stainless_steel'],
+       });
+       expect(product.status).toBe('pending_review');
+
+       // Step 2: Add evidence
+       const evidence = await EvidenceService.upload({
+         file: testBrandStatement,
+         type: 'brand_statement',
+         productId: product.id,
+       });
+
+       // Step 3: Make verification decision
+       await VerificationService.decide({
+         productId: product.id,
+         tier: 1,
+         claimType: 'A',
+         evidenceIds: [evidence.evidence_id],
+         rationale: 'Brand attestation received',
+         reviewerId: testReviewerId,
+       });
+
+       // Step 4: Publish
+       await WorkflowService.transitionProduct(product.id, { type: 'APPROVE' }, testReviewerId);
+       
+       const published = await ProductRepository.findById(product.id);
+       expect(published.status).toBe('published');
+
+       // Step 5: Verify in search index
+       await new Promise(resolve => setTimeout(resolve, 1000)); // Wait for indexing
+       const searchResults = await SearchService.search({ q: 'Test Stainless' });
+       expect(searchResults.results.map(r => r.id)).toContain(product.id);
+     });
+
+     it('should reject auto-reject products', async () => {
+       const result = await ingestTestProduct({
+         name: 'Test PTFE Pan',
+         brand: 'TestBrand',
+         description: 'Teflon coated',
+       });
+       expect(result.status).toBe('rejected');
+       expect(result.reason).toContain('Auto-reject');
+     });
+   });
+   ```
+
+   File: tests/integration/report-flow.test.ts
+   ```typescript
+   describe('Report Workflow', () => {
+     it('should submit, review, and resolve report', async () => {
+       // Submit
+       const report = await ReportService.submit({
+         productId: testProductId,
+         issueType: 'suspected_pfas',
+         description: 'Found lab results showing...',
+       });
+       expect(report.priority).toBe('high');
+       expect(report.sla_deadline).toBeDefined();
+
+       // Assign
+       await ReportService.assign(report.id, testReviewerId);
+
+       // Resolve with tier downgrade
+       await ReportService.resolve({
+         reportId: report.id,
+         action: 'downgrade_tier',
+         newTier: 0,
+         resolution: 'Evidence confirmed issue',
+         reviewerId: testReviewerId,
+       });
+
+       // Verify product tier changed
+       const verification = await VerificationRepository.findByProductId(testProductId);
+       expect(verification.tier).toBe(0);
+     });
+   });
+   ```
+
+3. E2E TEST SUITES
+
+   File: tests/e2e/browse.spec.ts (Playwright)
+   ```typescript
+   test.describe('Product Browsing', () => {
+     test('should browse category and apply filters', async ({ page }) => {
+       await page.goto('/cookware');
+       
+       // Check disclosure visible
+       await expect(page.getByText('Affiliate links may appear')).toBeVisible();
+       
+       // Apply tier filter
+       await page.getByLabel('Tier 3').check();
+       await expect(page.locator('.product-card')).toHaveCount.greaterThan(0);
+       
+       // Check URL params updated
+       expect(page.url()).toContain('tier=3');
+     });
+
+     test('should show empty state when no results', async ({ page }) => {
+       await page.goto('/cookware?tier=4&material=nonexistent');
+       await expect(page.getByText('No products match your filters')).toBeVisible();
+     });
+
+     test('should display verification badge on all cards', async ({ page }) => {
+       await page.goto('/cookware');
+       const cards = page.locator('.product-card');
+       const count = await cards.count();
+       
+       for (let i = 0; i < count; i++) {
+         await expect(cards.nth(i).locator('.tier-badge')).toBeVisible();
+       }
+     });
+   });
+   ```
+
+   File: tests/e2e/product-detail.spec.ts
+   ```typescript
+   test.describe('Product Detail Page', () => {
+     test('should show all required sections', async ({ page }) => {
+       await page.goto('/product/test-stainless-skillet');
+
+       // Food-contact materials section
+       await expect(page.getByRole('heading', { name: 'Food-Contact Materials' })).toBeVisible();
+       
+       // PFAS status section
+       await expect(page.getByRole('heading', { name: 'PFAS-Free Status' })).toBeVisible();
+       
+       // Unknowns panel (required even if empty)
+       await expect(page.getByRole('heading', { name: 'What Could Still Be Unknown' })).toBeVisible();
+       
+       // Affiliate disclosure
+       await expect(page.getByText('We may earn a commission')).toBeVisible();
+     });
+
+     test('should show confirmation modal on retailer click', async ({ page }) => {
+       await page.goto('/product/test-stainless-skillet');
+       await page.getByRole('button', { name: 'Buy at Amazon' }).click();
+       
+       await expect(page.getByText("You're leaving PFAS-Free Kitchen")).toBeVisible();
+       await expect(page.getByText('commission')).toBeVisible();
+     });
+   });
+   ```
+
+4. DATA QUALITY VALIDATION
+
+   File: scripts/validate-data-quality.ts
+   ```typescript
+   async function validateDataQuality(): Promise<ValidationReport> {
+     const report: ValidationReport = {
+       passed: true,
+       checks: [],
+     };
+
+     // Check 1: All published products have evidence
+     const productsWithoutEvidence = await db.query(`
+       SELECT p.id, p.name 
+       FROM products p
+       LEFT JOIN product_evidence pe ON p.id = pe.product_id
+       WHERE p.status = 'published' AND pe.product_id IS NULL
+     `);
+     report.checks.push({
+       name: 'Products have evidence',
+       passed: productsWithoutEvidence.rows.length === 0,
+       failures: productsWithoutEvidence.rows,
+     });
+
+     // Check 2: All published products have verification tier
+     const productsWithoutTier = await db.query(`
+       SELECT p.id, p.name 
+       FROM products p
+       LEFT JOIN verification_status vs ON p.id = vs.product_id
+       WHERE p.status = 'published' AND vs.id IS NULL
+     `);
+     report.checks.push({
+       name: 'Products have verification tier',
+       passed: productsWithoutTier.rows.length === 0,
+       failures: productsWithoutTier.rows,
+     });
+
+     // Check 3: Tier 3+ products have lab report
+     const tier3WithoutLab = await db.query(`
+       SELECT p.id, p.name, vs.tier
+       FROM products p
+       JOIN verification_status vs ON p.id = vs.product_id
+       WHERE vs.tier >= 3 
+         AND NOT EXISTS (
+           SELECT 1 FROM product_evidence pe 
+           JOIN evidence_objects eo ON pe.evidence_id = eo.id
+           WHERE pe.product_id = p.id AND eo.type = 'lab_report'
+         )
+     `);
+     report.checks.push({
+       name: 'Tier 3+ products have lab report',
+       passed: tier3WithoutLab.rows.length === 0,
+       failures: tier3WithoutLab.rows,
+     });
+
+     // Check 4: Tier 1+ coverage >= 80%
+     const coverageResult = await db.query(`
+       SELECT 
+         COUNT(*) FILTER (WHERE vs.tier >= 1) * 100.0 / COUNT(*) as tier1_plus_pct
+       FROM products p
+       LEFT JOIN verification_status vs ON p.id = vs.product_id
+       WHERE p.status = 'published'
+     `);
+     const coverage = parseFloat(coverageResult.rows[0].tier1_plus_pct);
+     report.checks.push({
+       name: 'Tier 1+ coverage >= 80%',
+       passed: coverage >= 80,
+       value: `${coverage.toFixed(1)}%`,
+     });
+
+     report.passed = report.checks.every(c => c.passed);
+     return report;
+   }
+   ```
+
+5. COMPLIANCE AUDIT CHECKLIST
+
+   File: docs/pfas-platform/LAUNCH_CHECKLIST.md
+   ```markdown
+   # Launch Checklist
+
+   ## Content Readiness
+   - [ ] 500 products loaded across all 5 categories
+   - [ ] 100% products have verification tier
+   - [ ] 100% products have ≥1 evidence object
+   - [ ] 80%+ products at Tier 1+
+   - [ ] All categories have ≥20 products
+
+   ## Compliance
+   - [ ] Legal review: Terms of Service
+   - [ ] Legal review: Privacy Policy
+   - [ ] Legal review: Affiliate Disclosure page
+   - [ ] Legal review: Claim language in Playbook
+   - [ ] FTC disclosure on category grids: VERIFIED
+   - [ ] FTC disclosure on PDP near buttons: VERIFIED
+   - [ ] FTC disclosure in footer link: VERIFIED
+   - [ ] Amazon Associates account approved
+   - [ ] Amazon links tested (open correct product)
+   - [ ] No Amazon prices displayed: VERIFIED
+
+   ## Technical
+   - [ ] All error states implemented
+   - [ ] All empty states implemented
+   - [ ] Lighthouse audit: LCP < 2.5s
+   - [ ] Lighthouse audit: CLS < 0.1
+   - [ ] axe-core accessibility audit passed
+   - [ ] Security scan: no critical vulnerabilities
+   - [ ] Evidence integrity check: all hashes valid
+   - [ ] Search index: all published products indexed
+   - [ ] Audit log: immutability triggers working
+
+   ## Operational
+   - [ ] Admin console functional
+   - [ ] Review queue workflow tested
+   - [ ] Evidence upload + hash display working
+   - [ ] Report submission flow tested
+   - [ ] Monitoring dashboards configured
+   - [ ] Alert thresholds set
+   - [ ] Incident response runbook documented
+   - [ ] Rollback procedure documented and tested
+
+   ## Sign-off
+   - [ ] Product lead approval
+   - [ ] Engineering lead approval
+   - [ ] Legal approval
+   - [ ] Launch date confirmed: ____________
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+TEST COMMANDS
+───────────────────────────────────────────────────────────────────────────────
+
+```bash
+# Unit tests
+npm run test:unit
+
+# Integration tests (requires test DB)
+npm run test:integration
+
+# E2E tests (requires running app)
+npm run test:e2e
+
+# Data quality validation
+npm run validate:data
+
+# Full test suite
+npm run test:all
+
+# Coverage report
+npm run test:coverage
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CI/CD PIPELINE
+───────────────────────────────────────────────────────────────────────────────
+
+```yaml
+# .github/workflows/test.yml
+name: Test Suite
+on: [push, pull_request]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run test:unit
+
+  integration:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_DB: test
+          POSTGRES_PASSWORD: test
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npm run db:migrate:test
+      - run: npm run test:integration
+
+  e2e:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci
+      - run: npx playwright install
+      - run: npm run build
+      - run: npm run test:e2e
+
+  validate:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm run validate:data
+```

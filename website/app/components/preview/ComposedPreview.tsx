@@ -12,6 +12,25 @@ import { SectionToolbar } from "./SectionToolbar";
 import type { PreviewComposition, PreviewPage, PreviewComponent } from "./types";
 import type { WebsiteAnalysis, AppliedStyles } from "./analysis-types";
 import { extractAppliedStyles } from "./analysis-types";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import { AddSectionButton } from "./AddSectionButton";
+import { SectionPickerModal } from "./SectionPickerModal";
 
 interface ProjectContext {
   projectName?: string;
@@ -30,6 +49,10 @@ interface ComposedPreviewProps {
   className?: string;
   editable?: boolean;
   onComponentEdit?: (componentId: string, updates: Record<string, unknown>) => void;
+  onComponentsReorder?: (pageId: string, newComponents: PreviewComponent[]) => void;
+  onComponentDuplicate?: (pageId: string, componentId: string) => void;
+  onComponentDelete?: (pageId: string, componentId: string) => void;
+  onComponentAdd?: (pageId: string, patternId: string, insertIndex: number) => void;
   projectContext?: ProjectContext;
 }
 
@@ -41,6 +64,10 @@ export function ComposedPreview({
   className,
   editable = false,
   onComponentEdit,
+  onComponentsReorder,
+  onComponentDuplicate,
+  onComponentDelete,
+  onComponentAdd,
   projectContext,
 }: ComposedPreviewProps) {
   // Build AI context from project info
@@ -53,6 +80,42 @@ export function ComposedPreview({
     domain: projectContext?.domain,
   }), [projectContext, composition.projectName]);
   const currentPage = composition.pages.find((p) => p.path === currentPath);
+  
+  // Section picker modal state
+  const [pickerOpen, setPickerOpen] = useState(false);
+  const [insertIndex, setInsertIndex] = useState(0);
+  
+  // Drag and drop sensors
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: { distance: 8 },
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
+  
+  // Handle drag end for reordering
+  const handleDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+    
+    if (over && active.id !== over.id && currentPage) {
+      const oldIndex = currentPage.components.findIndex((c) => c.id === active.id);
+      const newIndex = currentPage.components.findIndex((c) => c.id === over.id);
+      
+      if (oldIndex !== -1 && newIndex !== -1) {
+        const newComponents = arrayMove(currentPage.components, oldIndex, newIndex);
+        onComponentsReorder?.(currentPage.path, newComponents);
+      }
+    }
+  }, [currentPage, onComponentsReorder]);
+  
+  // Handle adding a new section
+  const handleAddSection = useCallback((patternId: string) => {
+    if (currentPage && onComponentAdd) {
+      onComponentAdd(currentPage.path, patternId, insertIndex);
+    }
+  }, [currentPage, onComponentAdd, insertIndex]);
   
   // Extract applied styles from analysis
   const appliedStyles = useMemo(
@@ -125,21 +188,93 @@ export function ComposedPreview({
         appliedStyles={appliedStyles}
       />
 
-      {/* Render page components */}
+      {/* Render page components with drag-and-drop */}
       <main>
-        {currentPage.components.map((component) => (
-          <PreviewComponentRenderer
-            key={component.id}
-            component={component}
-            onNavigate={onNavigate}
-            theme={composition.theme}
-            appliedStyles={appliedStyles}
-            editable={editable}
-            onEdit={onComponentEdit ? (updates) => onComponentEdit(component.id, updates) : undefined}
-            aiContext={aiContext}
-          />
-        ))}
+        {editable && onComponentsReorder ? (
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={handleDragEnd}
+          >
+            <SortableContext
+              items={currentPage.components.map((c) => c.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              {currentPage.components.map((component, index) => (
+                <div key={component.id}>
+                  {/* Add Section Button before each section */}
+                  {onComponentAdd && (
+                    <AddSectionButton
+                      position="between"
+                      onClick={() => {
+                        setInsertIndex(index);
+                        setPickerOpen(true);
+                      }}
+                    />
+                  )}
+                  <SortableSection
+                    id={component.id}
+                    index={index}
+                    totalSections={currentPage.components.length}
+                    component={component}
+                    onNavigate={onNavigate}
+                    theme={composition.theme}
+                    appliedStyles={appliedStyles}
+                    editable={editable}
+                    onEdit={onComponentEdit ? (updates) => onComponentEdit(component.id, updates) : undefined}
+                    onMoveUp={() => {
+                      if (index > 0) {
+                        const newComponents = arrayMove(currentPage.components, index, index - 1);
+                        onComponentsReorder(currentPage.path, newComponents);
+                      }
+                    }}
+                    onMoveDown={() => {
+                      if (index < currentPage.components.length - 1) {
+                        const newComponents = arrayMove(currentPage.components, index, index + 1);
+                        onComponentsReorder(currentPage.path, newComponents);
+                      }
+                    }}
+                    onDuplicate={() => onComponentDuplicate?.(currentPage.path, component.id)}
+                    onDelete={() => onComponentDelete?.(currentPage.path, component.id)}
+                    aiContext={aiContext}
+                  />
+                </div>
+              ))}
+              
+              {/* Add Section Button at the end */}
+              {onComponentAdd && (
+                <AddSectionButton
+                  position="end"
+                  onClick={() => {
+                    setInsertIndex(currentPage.components.length);
+                    setPickerOpen(true);
+                  }}
+                />
+              )}
+            </SortableContext>
+          </DndContext>
+        ) : (
+          currentPage.components.map((component) => (
+            <PreviewComponentRendererInner
+              key={component.id}
+              component={component}
+              onNavigate={onNavigate}
+              theme={composition.theme}
+              appliedStyles={appliedStyles}
+              editable={editable}
+              onEdit={onComponentEdit ? (updates) => onComponentEdit(component.id, updates) : undefined}
+              aiContext={aiContext}
+            />
+          ))
+        )}
       </main>
+      
+      {/* Section Picker Modal */}
+      <SectionPickerModal
+        isOpen={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={handleAddSection}
+      />
 
       {/* Simple footer */}
       <footer className="px-6 py-8 bg-slate-50 border-t border-slate-200 text-center">
@@ -204,6 +339,190 @@ function PreviewNavigation({
   );
 }
 
+// Sortable wrapper for drag-and-drop sections
+interface SortableSectionProps {
+  id: string;
+  index: number;
+  totalSections: number;
+  component: PreviewComponent;
+  onNavigate: (path: string) => void;
+  theme: PreviewComposition["theme"];
+  appliedStyles?: AppliedStyles | null;
+  editable?: boolean;
+  onEdit?: (updates: Record<string, unknown>) => void;
+  onMoveUp: () => void;
+  onMoveDown: () => void;
+  onDuplicate: () => void;
+  onDelete: () => void;
+  aiContext?: ProjectContext;
+}
+
+function SortableSection({
+  id,
+  index,
+  totalSections,
+  component,
+  onNavigate,
+  theme,
+  appliedStyles,
+  editable,
+  onEdit,
+  onMoveUp,
+  onMoveDown,
+  onDuplicate,
+  onDelete,
+  aiContext,
+}: SortableSectionProps) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    zIndex: isDragging ? 50 : "auto",
+    opacity: isDragging ? 0.8 : 1,
+  };
+
+  const [isHovered, setIsHovered] = useState(false);
+  const primaryColor = appliedStyles?.colors.primary || theme.primaryColor;
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={cn(
+        "relative group",
+        isDragging && "shadow-2xl rounded-lg"
+      )}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      {/* Section toolbar with drag handle */}
+      {editable && isHovered && (
+        <div
+          className={cn(
+            "absolute top-2 right-2 z-50",
+            "flex items-center gap-0.5",
+            "bg-stone-900/95 backdrop-blur-sm rounded-lg p-1",
+            "border border-stone-700/50",
+            "shadow-lg"
+          )}
+        >
+          {/* Drag Handle - key for drag-and-drop! */}
+          <div
+            {...attributes}
+            {...listeners}
+            className="p-1.5 cursor-grab active:cursor-grabbing text-stone-400 hover:text-orange-400 transition-colors touch-none"
+            title="Drag to reorder"
+          >
+            <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <circle cx="9" cy="6" r="1.5" />
+              <circle cx="15" cy="6" r="1.5" />
+              <circle cx="9" cy="12" r="1.5" />
+              <circle cx="15" cy="12" r="1.5" />
+              <circle cx="9" cy="18" r="1.5" />
+              <circle cx="15" cy="18" r="1.5" />
+            </svg>
+          </div>
+          
+          <div className="w-px h-4 bg-stone-700 mx-0.5" />
+          
+          {/* Move Up */}
+          <button
+            onClick={onMoveUp}
+            disabled={index === 0}
+            className={cn(
+              "p-1.5 rounded transition-colors",
+              index === 0
+                ? "text-stone-600 cursor-not-allowed"
+                : "text-stone-400 hover:text-white hover:bg-stone-800"
+            )}
+            title="Move up"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+            </svg>
+          </button>
+          
+          {/* Move Down */}
+          <button
+            onClick={onMoveDown}
+            disabled={index === totalSections - 1}
+            className={cn(
+              "p-1.5 rounded transition-colors",
+              index === totalSections - 1
+                ? "text-stone-600 cursor-not-allowed"
+                : "text-stone-400 hover:text-white hover:bg-stone-800"
+            )}
+            title="Move down"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div className="w-px h-4 bg-stone-700 mx-0.5" />
+          
+          {/* Duplicate */}
+          <button
+            onClick={onDuplicate}
+            className="p-1.5 rounded text-stone-400 hover:text-white hover:bg-stone-800 transition-colors"
+            title="Duplicate section"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+            </svg>
+          </button>
+          
+          {/* Delete */}
+          <button
+            onClick={onDelete}
+            disabled={totalSections <= 1}
+            className={cn(
+              "p-1.5 rounded transition-colors",
+              totalSections <= 1
+                ? "text-stone-600 cursor-not-allowed"
+                : "text-stone-400 hover:text-red-400 hover:bg-red-950/50"
+            )}
+            title="Delete section"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+            </svg>
+          </button>
+          
+          {/* Pattern name badge */}
+          <div className="ml-2 px-2 py-0.5 text-[10px] font-medium text-stone-400 bg-stone-800 rounded">
+            {component.type}
+          </div>
+        </div>
+      )}
+
+      {/* Section outline on hover */}
+      {editable && isHovered && (
+        <div className="absolute inset-0 border-2 border-dashed border-orange-500/40 pointer-events-none z-30 rounded-lg" />
+      )}
+
+      {/* Actual component content */}
+      <PreviewComponentRendererInner
+        component={component}
+        onNavigate={onNavigate}
+        theme={theme}
+        appliedStyles={appliedStyles}
+        editable={editable}
+        onEdit={onEdit}
+        aiContext={aiContext}
+      />
+    </div>
+  );
+}
+
 interface PreviewComponentRendererProps {
   component: PreviewComponent;
   onNavigate: (path: string) => void;
@@ -229,7 +548,8 @@ function getBaseType(type: string): string {
   return type.split("-")[0];
 }
 
-function PreviewComponentRenderer({
+// Inner renderer for component content (without drag wrapper)
+function PreviewComponentRendererInner({
   component,
   onNavigate,
   theme,
@@ -726,54 +1046,7 @@ function PreviewComponentRenderer({
     }
   }, [component, theme, onNavigate, primaryColor, secondaryColor, buttonStyle, cardStyle, appliedStyles]);
 
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <div
-      className={cn("relative group", editable && "cursor-pointer")}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* Section toolbar - shows on hover in editable mode */}
-      {editable && isHovered && (
-        <SectionToolbar
-          pageId="/"
-          sectionIndex={0}
-          totalSections={1}
-          patternName={component.type}
-          onMoveUp={() => {
-            console.log('[Preview] Move up clicked for:', component.type);
-            alert('Move Up - Full reordering coming in Wave 4!');
-          }}
-          onMoveDown={() => {
-            console.log('[Preview] Move down clicked for:', component.type);
-            alert('Move Down - Full reordering coming in Wave 4!');
-          }}
-          onDuplicate={() => {
-            console.log('[Preview] Duplicate clicked for:', component.type);
-            alert('Duplicate - Coming in Wave 4!');
-          }}
-          onDelete={() => {
-            console.log('[Preview] Delete clicked for:', component.type);
-            alert('Delete - Coming in Wave 4!');
-          }}
-          onEdit={() => {
-            console.log('[Preview] Edit clicked for:', component.type);
-          }}
-          onRegenerate={() => {
-            console.log('[Preview] Regenerate clicked for:', component.type);
-            alert('Regenerate - Regenerating section content...');
-          }}
-        />
-      )}
-
-      {/* Section outline on hover */}
-      {editable && isHovered && (
-        <div className="absolute inset-0 border-2 border-dashed border-orange-500/30 pointer-events-none z-30" />
-      )}
-
-      {renderComponent()}
-    </div>
-  );
+  // Just render the component - toolbar is handled by SortableSection wrapper
+  return renderComponent();
 }
 

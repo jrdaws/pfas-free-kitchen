@@ -1,0 +1,453 @@
+ACTIVATION: w3-rules-engine
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement the verification rules engine for tier determination
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The rules engine determines what verification tier a product can achieve based on:
+- Available evidence
+- Component model completeness
+- Risk term resolution
+- Evidence expiry
+
+SPEC REFERENCE
+Read: docs/pfas-platform/04-VERIFICATION-PLAYBOOK.md
+Sections: "3. Verification Tier Requirements (Detailed)"
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Section: "5.2 Verification Decision Workflow"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. TIER RULES DEFINITION
+   File: src/rules/tier-rules.ts
+
+   ```typescript
+   interface TierRule {
+     tier: 0 | 1 | 2 | 3 | 4;
+     name: string;
+     checks: TierCheck[];
+   }
+
+   interface TierCheck {
+     id: string;
+     description: string;
+     check: (context: VerificationContext) => Promise<CheckResult>;
+     blocking: boolean; // If fails, cannot achieve this tier
+   }
+
+   interface CheckResult {
+     passed: boolean;
+     reason?: string;
+     data?: Record<string, unknown>;
+   }
+
+   export const TIER_RULES: TierRule[] = [
+     {
+       tier: 1,
+       name: 'Brand Statement',
+       checks: [
+         {
+           id: 'has_brand_attestation',
+           description: 'Brand attestation evidence exists',
+           check: async (ctx) => {
+             const attestation = ctx.evidence.find(e => 
+               e.type === 'brand_statement' && !isExpired(e)
+             );
+             return { 
+               passed: !!attestation,
+               reason: attestation ? undefined : 'No valid brand attestation found',
+               data: { evidenceId: attestation?.id }
+             };
+           },
+           blocking: true,
+         },
+         {
+           id: 'attestation_has_scope',
+           description: 'Attestation specifies component scope',
+           check: async (ctx) => {
+             const attestation = ctx.evidence.find(e => e.type === 'brand_statement');
+             const hasScope = attestation?.metadata?.scope_text || 
+                              attestation?.metadata?.statement_text?.includes('all');
+             return { passed: !!hasScope, reason: hasScope ? undefined : 'Attestation scope unclear' };
+           },
+           blocking: false, // Warning but not blocking
+         },
+       ],
+     },
+     {
+       tier: 2,
+       name: 'Policy Reviewed',
+       checks: [
+         {
+           id: 'all_tier1_passed',
+           description: 'All Tier 1 requirements met',
+           check: async (ctx) => ({ passed: ctx.tier1Passed }),
+           blocking: true,
+         },
+         {
+           id: 'component_model_complete',
+           description: 'All components have material/coating assigned',
+           check: async (ctx) => {
+             const incomplete = ctx.components.filter(c => 
+               c.food_contact && (!c.material_id || (c.needs_coating && !c.coating_id))
+             );
+             return { 
+               passed: incomplete.length === 0,
+               reason: incomplete.length > 0 ? `${incomplete.length} component(s) incomplete` : undefined,
+               data: { incompleteComponents: incomplete.map(c => c.name) }
+             };
+           },
+           blocking: true,
+         },
+         {
+           id: 'risk_terms_resolved',
+           description: 'All risk terms addressed in review',
+           check: async (ctx) => {
+             const unresolved = ctx.riskTerms.filter(t => !t.resolved);
+             return {
+               passed: unresolved.length === 0,
+               reason: unresolved.length > 0 ? `${unresolved.length} unresolved risk term(s)` : undefined,
+               data: { unresolvedTerms: unresolved }
+             };
+           },
+           blocking: true,
+         },
+         {
+           id: 'has_policy_document',
+           description: 'Policy document or detailed specification exists',
+           check: async (ctx) => {
+             const hasPolicy = ctx.evidence.some(e => 
+               e.type === 'policy_document' && !isExpired(e)
+             );
+             return { passed: hasPolicy };
+           },
+           blocking: false, // Recommended but not required
+         },
+       ],
+     },
+     {
+       tier: 3,
+       name: 'Lab Tested',
+       checks: [
+         {
+           id: 'all_tier2_passed',
+           description: 'All Tier 2 requirements met',
+           check: async (ctx) => ({ passed: ctx.tier2Passed }),
+           blocking: true,
+         },
+         {
+           id: 'has_lab_report',
+           description: 'Third-party lab report exists',
+           check: async (ctx) => {
+             const labReport = ctx.evidence.find(e => 
+               e.type === 'lab_report' && !isExpired(e)
+             );
+             return { 
+               passed: !!labReport,
+               data: { evidenceId: labReport?.id, expiresAt: labReport?.expires_at }
+             };
+           },
+           blocking: true,
+         },
+         {
+           id: 'lab_covers_food_contact',
+           description: 'Lab report covers food-contact components',
+           check: async (ctx) => {
+             const labReport = ctx.evidence.find(e => e.type === 'lab_report');
+             const testedComponents = labReport?.metadata?.sample_scope?.component_ids || [];
+             const foodContactIds = ctx.components.filter(c => c.food_contact).map(c => c.id);
+             const allCovered = foodContactIds.every(id => testedComponents.includes(id));
+             return {
+               passed: allCovered,
+               reason: allCovered ? undefined : 'Lab report does not cover all food-contact components',
+               data: { testedComponents, foodContactIds }
+             };
+           },
+           blocking: true,
+         },
+         {
+           id: 'lab_has_method_and_limits',
+           description: 'Lab report documents method and LOD/LOQ',
+           check: async (ctx) => {
+             const labReport = ctx.evidence.find(e => e.type === 'lab_report');
+             const hasMethod = !!labReport?.metadata?.method;
+             const hasLimits = labReport?.metadata?.lod_ng_g && labReport?.metadata?.loq_ng_g;
+             return { passed: hasMethod && hasLimits };
+           },
+           blocking: true,
+         },
+       ],
+     },
+     {
+       tier: 4,
+       name: 'Monitored',
+       checks: [
+         {
+           id: 'all_tier3_passed',
+           description: 'All Tier 3 requirements met',
+           check: async (ctx) => ({ passed: ctx.tier3Passed }),
+           blocking: true,
+         },
+         {
+           id: 'has_verification_history',
+           description: 'Previous verification exists',
+           check: async (ctx) => {
+             return { passed: ctx.verificationHistory.length > 0 };
+           },
+           blocking: true,
+         },
+         {
+           id: 'revalidation_scheduled',
+           description: 'Next revalidation date is set',
+           check: async (ctx) => {
+             return { passed: !!ctx.nextReviewDue };
+           },
+           blocking: true,
+         },
+       ],
+     },
+   ];
+   ```
+
+2. RULES ENGINE
+   File: src/services/rules-engine.service.ts
+
+   ```typescript
+   export class RulesEngine {
+     /**
+      * Evaluate all tiers and return maximum achievable
+      */
+     static async evaluate(productId: string): Promise<TierEvaluationResult> {
+       const context = await this.buildContext(productId);
+       
+       const results: TierEvaluationResult = {
+         productId,
+         maxAchievableTier: 0,
+         tierResults: [],
+         blockers: [],
+         warnings: [],
+       };
+
+       for (const tierRule of TIER_RULES) {
+         const tierResult = await this.evaluateTier(tierRule, context);
+         results.tierResults.push(tierResult);
+         
+         if (tierResult.passed) {
+           results.maxAchievableTier = tierRule.tier;
+           context[`tier${tierRule.tier}Passed`] = true;
+         } else {
+           // Can't achieve this tier, stop evaluating higher tiers
+           results.blockers.push(...tierResult.blockers);
+           break;
+         }
+         
+         results.warnings.push(...tierResult.warnings);
+       }
+
+       return results;
+     }
+
+     /**
+      * Build context for rule evaluation
+      */
+     static async buildContext(productId: string): Promise<VerificationContext> {
+       const [product, components, evidence, riskTerms, history] = await Promise.all([
+         ProductRepository.findById(productId),
+         ComponentRepository.findByProductId(productId),
+         EvidenceRepository.findByProductId(productId),
+         RiskTermRepository.findByProductId(productId),
+         VerificationHistoryRepository.findByProductId(productId),
+       ]);
+
+       return {
+         product,
+         components,
+         evidence,
+         riskTerms,
+         verificationHistory: history,
+         tier1Passed: false,
+         tier2Passed: false,
+         tier3Passed: false,
+       };
+     }
+
+     /**
+      * Evaluate a single tier's rules
+      */
+     static async evaluateTier(
+       tierRule: TierRule, 
+       context: VerificationContext
+     ): Promise<TierResult> {
+       const results: CheckResult[] = [];
+       const blockers: string[] = [];
+       const warnings: string[] = [];
+
+       for (const check of tierRule.checks) {
+         const result = await check.check(context);
+         results.push({ checkId: check.id, ...result });
+
+         if (!result.passed) {
+           if (check.blocking) {
+             blockers.push(`${check.description}: ${result.reason || 'Failed'}`);
+           } else {
+             warnings.push(`${check.description}: ${result.reason || 'Not met'}`);
+           }
+         }
+       }
+
+       return {
+         tier: tierRule.tier,
+         name: tierRule.name,
+         passed: blockers.length === 0,
+         checks: results,
+         blockers,
+         warnings,
+       };
+     }
+
+     /**
+      * Validate a proposed tier decision
+      */
+     static async validateDecision(
+       productId: string, 
+       proposedTier: number
+     ): Promise<ValidationResult> {
+       const evaluation = await this.evaluate(productId);
+       
+       if (proposedTier > evaluation.maxAchievableTier) {
+         return {
+           valid: false,
+           reason: `Product can only achieve Tier ${evaluation.maxAchievableTier}`,
+           blockers: evaluation.blockers,
+         };
+       }
+
+       return { valid: true };
+     }
+   }
+   ```
+
+3. CONFIDENCE CALCULATOR
+   File: src/services/confidence.service.ts
+
+   ```typescript
+   export class ConfidenceCalculator {
+     static calculate(context: VerificationContext, tier: number): number {
+       let confidence = this.getBaseConfidence(tier);
+       
+       // Evidence quality boost
+       if (context.evidence.some(e => e.type === 'lab_report')) {
+         confidence += 0.1;
+       }
+       if (context.evidence.length > 1) {
+         confidence += 0.05;
+       }
+       if (context.evidence.every(e => this.isRecent(e))) {
+         confidence += 0.05;
+       }
+       
+       // Sample coverage factor
+       const labReport = context.evidence.find(e => e.type === 'lab_report');
+       if (labReport) {
+         const sampleSize = labReport.metadata?.sample_scope?.units || 1;
+         if (sampleSize === 1) {
+           confidence *= 0.85;
+         }
+       }
+       
+       return Math.min(1.0, Math.max(0, confidence));
+     }
+
+     private static getBaseConfidence(tier: number): number {
+       const bases = { 0: 0, 1: 0.5, 2: 0.7, 3: 0.85, 4: 0.95 };
+       return bases[tier] || 0;
+     }
+
+     private static isRecent(evidence: Evidence): boolean {
+       const sixMonthsAgo = new Date();
+       sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+       return new Date(evidence.received_at) > sixMonthsAgo;
+     }
+   }
+   ```
+
+4. UNKNOWNS GENERATOR
+   File: src/services/unknowns.service.ts
+
+   ```typescript
+   export class UnknownsGenerator {
+     static generate(context: VerificationContext, tier: number): string[] {
+       const unknowns: string[] = [];
+
+       // Untested components
+       const labReport = context.evidence.find(e => e.type === 'lab_report');
+       if (labReport) {
+         const testedIds = new Set(labReport.metadata?.sample_scope?.component_ids || []);
+         for (const component of context.components) {
+           if (component.food_contact && !testedIds.has(component.id)) {
+             unknowns.push(`${component.name} not independently tested`);
+           }
+         }
+       } else if (tier > 0) {
+         unknowns.push('No third-party lab testing performed');
+       }
+
+       // Sample scope limitations
+       if (labReport) {
+         const units = labReport.metadata?.sample_scope?.units || 1;
+         const lots = labReport.metadata?.sample_scope?.lots || 1;
+         if (units === 1 || lots === 1) {
+           unknowns.push(`Testing based on ${units} unit(s) from ${lots} lot(s)`);
+         }
+       }
+
+       // Screening limitations
+       const isScreening = labReport?.metadata?.method?.toLowerCase().includes('tof') ||
+                           labReport?.metadata?.method?.toLowerCase().includes('fluorine');
+       if (isScreening) {
+         unknowns.push('Screening method used; individual PFAS compounds not identified');
+       }
+
+       // Non-food-contact components
+       const nonFoodContact = context.components.filter(c => !c.food_contact);
+       if (nonFoodContact.length > 0 && tier < 4) {
+         unknowns.push(`Non-food-contact components (${nonFoodContact.map(c => c.name).join(', ')}) not in scope`);
+       }
+
+       return unknowns;
+     }
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Rules are evaluated in order (Tier 1 → 2 → 3 → 4)
+□ Cannot skip tiers (Tier 3 requires Tier 2 passed)
+□ Blocking checks prevent tier achievement
+□ Non-blocking checks generate warnings
+□ Evidence expiry checked in real-time
+□ Unknowns always generated (even if empty: "All major components verified")
+
+───────────────────────────────────────────────────────────────────────────────
+UTILITY: Evidence Expiry Check
+───────────────────────────────────────────────────────────────────────────────
+
+```typescript
+function isExpired(evidence: Evidence): boolean {
+  if (!evidence.expires_at) return false;
+  return new Date(evidence.expires_at) < new Date();
+}
+
+function expiresWithin(evidence: Evidence, days: number): boolean {
+  if (!evidence.expires_at) return false;
+  const threshold = new Date();
+  threshold.setDate(threshold.getDate() + days);
+  return new Date(evidence.expires_at) < threshold;
+}
+```

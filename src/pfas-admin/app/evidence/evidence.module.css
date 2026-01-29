@@ -1,0 +1,25 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.evidenceCell {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.filename {
+  font-weight: 500;
+}
+
+.hash {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-1);
+}

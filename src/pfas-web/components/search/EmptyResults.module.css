@@ -1,0 +1,126 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.illustration {
+  position: relative;
+  font-size: 4rem;
+  margin-bottom: var(--space-6);
+}
+
+.emoji {
+  display: block;
+}
+
+.sparkles {
+  position: absolute;
+  top: -10px;
+  right: -20px;
+  font-size: 1.5rem;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.2);
+  }
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-3);
+  color: var(--text-primary);
+}
+
+.message {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  max-width: 480px;
+  line-height: 1.6;
+  margin: 0 0 var(--space-6);
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-8);
+}
+
+.primaryButton {
+  padding: var(--space-3) var(--space-6);
+  background: var(--color-primary);
+  color: white;
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.primaryButton:hover {
+  background: var(--color-primary-dark, #15803d);
+}
+
+.secondaryButton {
+  padding: var(--space-3) var(--space-6);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.secondaryButton:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+.suggestions {
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-color);
+}
+
+.suggestionsLabel {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0 0 var(--space-3);
+}
+
+.suggestionLinks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-2);
+}
+
+.suggestionLink {
+  padding: var(--space-2) var(--space-3);
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 9999px;
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: all 0.15s ease;
+}
+
+.suggestionLink:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}

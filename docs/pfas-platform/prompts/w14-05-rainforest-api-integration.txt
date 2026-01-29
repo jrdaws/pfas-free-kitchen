@@ -1,0 +1,343 @@
+================================================================================
+WAVE 14-05: RAINFOREST API INTEGRATION (OPTIONAL - RECOMMENDED)
+================================================================================
+ACTIVATION: "Execute Wave 14-05: Rainforest API Integration"
+AGENT: Backend Agent
+DEPENDS ON: Wave 14-02 (have affiliate tag), Rainforest API account
+================================================================================
+
+CONTEXT
+-------
+Rainforest API provides Amazon product data without needing PA-API approval.
+This enables:
+- Real-time product details
+- Current images
+- Price data (for internal use, not display per Amazon TOS)
+- Product availability
+- Customer reviews
+
+Cost: $49/month for 10,000 requests
+
+================================================================================
+TASK 1: SET UP RAINFOREST API ACCOUNT
+================================================================================
+
+1. Go to: https://www.rainforestapi.com
+2. Sign up for account
+3. Get your API key
+4. Add to `.env.local`:
+
+```bash
+RAINFOREST_API_KEY=your-api-key-here
+```
+
+================================================================================
+TASK 2: CREATE RAINFOREST API CLIENT
+================================================================================
+
+Create `src/pfas-api/src/lib/rainforest.ts`:
+
+```typescript
+import axios from 'axios';
+
+const RAINFOREST_API_KEY = process.env.RAINFOREST_API_KEY;
+const RAINFOREST_BASE_URL = 'https://api.rainforestapi.com/request';
+
+interface RainforestProductResponse {
+  request_info: {
+    success: boolean;
+    credits_used: number;
+    credits_remaining: number;
+  };
+  product: {
+    title: string;
+    asin: string;
+    link: string;
+    brand: string;
+    main_image: {
+      link: string;
+    };
+    images: Array<{ link: string }>;
+    feature_bullets: string[];
+    description: string;
+    specifications: Array<{ name: string; value: string }>;
+    buybox_winner?: {
+      price?: { value: number; currency: string };
+      availability?: { raw: string };
+    };
+    rating: number;
+    ratings_total: number;
+  };
+}
+
+export async function getAmazonProduct(asin: string): Promise<RainforestProductResponse | null> {
+  if (!RAINFOREST_API_KEY) {
+    console.warn('Rainforest API key not configured');
+    return null;
+  }
+  
+  try {
+    const response = await axios.get(RAINFOREST_BASE_URL, {
+      params: {
+        api_key: RAINFOREST_API_KEY,
+        type: 'product',
+        amazon_domain: 'amazon.com',
+        asin: asin,
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error(`Error fetching product ${asin}:`, error);
+    return null;
+  }
+}
+
+export async function searchAmazonProducts(query: string): Promise<any> {
+  if (!RAINFOREST_API_KEY) {
+    return null;
+  }
+  
+  try {
+    const response = await axios.get(RAINFOREST_BASE_URL, {
+      params: {
+        api_key: RAINFOREST_API_KEY,
+        type: 'search',
+        amazon_domain: 'amazon.com',
+        search_term: query,
+      },
+    });
+    
+    return response.data;
+  } catch (error) {
+    console.error(`Error searching for "${query}":`, error);
+    return null;
+  }
+}
+```
+
+================================================================================
+TASK 3: CREATE PRODUCT SYNC SERVICE
+================================================================================
+
+Create `src/pfas-api/src/services/product-sync.ts`:
+
+```typescript
+import { getAmazonProduct } from '../lib/rainforest';
+import { REAL_PRODUCTS } from '../data/products';
+
+interface SyncResult {
+  asin: string;
+  success: boolean;
+  updated: boolean;
+  error?: string;
+}
+
+export async function syncProductFromAmazon(asin: string): Promise<SyncResult> {
+  const amazonData = await getAmazonProduct(asin);
+  
+  if (!amazonData || !amazonData.request_info.success) {
+    return { asin, success: false, updated: false, error: 'API request failed' };
+  }
+  
+  const product = amazonData.product;
+  
+  // Find existing product in our database
+  const existingProduct = REAL_PRODUCTS.find(p => 
+    p.affiliate_links.amazon?.asin === asin
+  );
+  
+  if (!existingProduct) {
+    return { asin, success: false, updated: false, error: 'Product not in database' };
+  }
+  
+  // Update with fresh data
+  const updates = {
+    name: product.title,
+    images: {
+      primary: product.main_image?.link || existingProduct.images.primary,
+      gallery: product.images?.map(i => i.link) || [],
+    },
+    // Note: Don't update verification - that's manual
+  };
+  
+  // In production, this would update the database
+  console.log(`Would update product ${asin}:`, updates);
+  
+  return { asin, success: true, updated: true };
+}
+
+export async function syncAllProducts(): Promise<SyncResult[]> {
+  const results: SyncResult[] = [];
+  
+  for (const product of REAL_PRODUCTS) {
+    if (product.affiliate_links.amazon?.asin) {
+      // Rate limit: 1 request per second
+      await new Promise(resolve => setTimeout(resolve, 1000));
+      
+      const result = await syncProductFromAmazon(product.affiliate_links.amazon.asin);
+      results.push(result);
+      
+      console.log(`Synced ${product.affiliate_links.amazon.asin}: ${result.success ? '✓' : '✗'}`);
+    }
+  }
+  
+  return results;
+}
+```
+
+================================================================================
+TASK 4: CREATE SYNC API ENDPOINT
+================================================================================
+
+Add to `src/pfas-api/src/mock-server.ts`:
+
+```typescript
+import { syncProductFromAmazon, syncAllProducts } from './services/product-sync';
+
+// Sync single product (for admin use)
+app.post('/api/v1/admin/sync-product/:asin', async (req, res) => {
+  const { asin } = req.params;
+  
+  // In production, add authentication here
+  
+  const result = await syncProductFromAmazon(asin);
+  res.json(result);
+});
+
+// Sync all products (cron job)
+app.post('/api/v1/admin/sync-all', async (req, res) => {
+  // In production, add authentication and run as background job
+  
+  const results = await syncAllProducts();
+  
+  const summary = {
+    total: results.length,
+    success: results.filter(r => r.success).length,
+    failed: results.filter(r => !r.success).length,
+  };
+  
+  res.json({ summary, results });
+});
+```
+
+================================================================================
+TASK 5: CREATE PRODUCT ENRICHMENT SCRIPT
+================================================================================
+
+Create `scripts/enrich-products.ts`:
+
+```typescript
+#!/usr/bin/env ts-node
+
+/**
+ * Script to enrich product database with Amazon data
+ * Usage: npx ts-node scripts/enrich-products.ts
+ */
+
+import { getAmazonProduct } from '../src/pfas-api/src/lib/rainforest';
+
+// ASINs of products to enrich
+const PRODUCT_ASINS = [
+  'B00005RUGJ', // All-Clad D3 12" Fry Pan
+  'B00006JSUA', // Lodge 12" Cast Iron
+  'B00005QFQB', // Le Creuset Dutch Oven
+  'B000N501BK', // Lodge Enameled Dutch Oven
+  'B00005B8K5', // Pyrex Simply Store
+  'B000G0KJG4', // Nordic Ware Half Sheet
+  'B07TWWWFQX', // Made In Carbon Steel
+  'B00462QP0W', // de Buyer Mineral B
+  // Add more...
+];
+
+async function main() {
+  console.log('Enriching products from Amazon...\n');
+  
+  const products = [];
+  
+  for (const asin of PRODUCT_ASINS) {
+    console.log(`Fetching ${asin}...`);
+    
+    const data = await getAmazonProduct(asin);
+    
+    if (data?.product) {
+      const p = data.product;
+      
+      products.push({
+        asin: p.asin,
+        name: p.title,
+        brand: p.brand,
+        main_image: p.main_image?.link,
+        images: p.images?.map(i => i.link) || [],
+        features: p.feature_bullets,
+        rating: p.rating,
+        reviews: p.ratings_total,
+      });
+      
+      console.log(`  ✓ ${p.title.substring(0, 50)}...`);
+    } else {
+      console.log(`  ✗ Failed to fetch ${asin}`);
+    }
+    
+    // Rate limit
+    await new Promise(r => setTimeout(r, 1100));
+  }
+  
+  // Output as TypeScript
+  console.log('\n\n// Generated product data:');
+  console.log(JSON.stringify(products, null, 2));
+}
+
+main().catch(console.error);
+```
+
+================================================================================
+TASK 6: SCHEDULE DAILY SYNC (Production)
+================================================================================
+
+For production, set up a cron job to sync product data daily:
+
+```typescript
+// Using node-cron or similar
+import cron from 'node-cron';
+import { syncAllProducts } from './services/product-sync';
+
+// Run at 3 AM daily
+cron.schedule('0 3 * * *', async () => {
+  console.log('Starting daily product sync...');
+  
+  try {
+    const results = await syncAllProducts();
+    console.log(`Sync complete: ${results.filter(r => r.success).length}/${results.length} successful`);
+  } catch (error) {
+    console.error('Sync failed:', error);
+  }
+});
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Rainforest API client configured
+□ Single product sync works
+□ Bulk sync works with rate limiting
+□ Product images update from Amazon
+□ Product names sync correctly
+□ Enrichment script runs successfully
+□ API endpoints protected (in production)
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-api/src/lib/rainforest.ts
+- src/pfas-api/src/services/product-sync.ts
+- scripts/enrich-products.ts
+
+MODIFY:
+- src/pfas-api/src/mock-server.ts
+- .env.local (add API key)
+
+================================================================================

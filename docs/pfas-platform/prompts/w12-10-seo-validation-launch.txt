@@ -1,0 +1,490 @@
+================================================================================
+WAVE 12-10: SEO, VALIDATION & LAUNCH PREP
+================================================================================
+ACTIVATION: "Execute Wave 12-10: SEO Validation and Launch Prep"
+AGENT: Website Agent / QA Agent
+DEPENDS ON: Wave 12-01 through 12-09
+================================================================================
+
+CONTEXT
+-------
+Final wave: Ensure the site is optimized for search engines, passes
+accessibility checks, performs well, and is ready for launch.
+
+================================================================================
+TASK 1: META TAGS & STRUCTURED DATA
+================================================================================
+
+Update `src/pfas-web/app/layout.tsx`:
+
+GLOBAL META:
+```tsx
+export const metadata: Metadata = {
+  metadataBase: new URL('https://pfasfreekitchen.com'),
+  title: {
+    default: 'PFAS-Free Kitchen | Verified Cookware & Kitchen Products',
+    template: '%s | PFAS-Free Kitchen',
+  },
+  description: 'Find independently verified PFAS-free cookware, bakeware, and kitchen products. Lab-tested products with transparent verification.',
+  keywords: ['PFAS-free', 'cookware', 'nonstick alternatives', 'safe cookware', 'Teflon alternatives'],
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    siteName: 'PFAS-Free Kitchen',
+    images: [{ url: '/og-image.png', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@pfasfreekitchen',
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+};
+```
+
+PAGE-SPECIFIC META (examples):
+
+Search page:
+```tsx
+export async function generateMetadata({ searchParams }) {
+  const query = searchParams.q;
+  return {
+    title: query ? `Search: ${query}` : 'Browse All Products',
+    description: query 
+      ? `Find verified PFAS-free ${query} products.`
+      : 'Browse our complete catalog of verified PFAS-free kitchen products.',
+  };
+}
+```
+
+Product page:
+```tsx
+export async function generateMetadata({ params }) {
+  const product = await getProduct(params.slug);
+  return {
+    title: `${product.name} - ${product.brand.name}`,
+    description: `${product.name} verification status: Tier ${product.verification.tier}. ${product.verification.tier_label}.`,
+    openGraph: {
+      images: [{ url: product.primary_image_url }],
+    },
+  };
+}
+```
+
+================================================================================
+TASK 2: STRUCTURED DATA (JSON-LD)
+================================================================================
+
+Create `src/pfas-web/components/seo/ProductSchema.tsx`:
+
+```tsx
+export function ProductSchema({ product }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'Product',
+    name: product.name,
+    description: product.description,
+    image: product.primary_image_url,
+    brand: {
+      '@type': 'Brand',
+      name: product.brand.name,
+    },
+    category: product.category.path.join(' > '),
+    additionalProperty: [
+      {
+        '@type': 'PropertyValue',
+        name: 'PFAS Verification Tier',
+        value: product.verification.tier_label,
+      },
+      {
+        '@type': 'PropertyValue',
+        name: 'Material',
+        value: product.material_summary,
+      },
+    ],
+    // Note: No price per Amazon TOS
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+Create `src/pfas-web/components/seo/BreadcrumbSchema.tsx`:
+```tsx
+export function BreadcrumbSchema({ items }) {
+  const schema = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: items.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.label,
+      item: item.href ? `https://pfasfreekitchen.com${item.href}` : undefined,
+    })),
+  };
+
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
+    />
+  );
+}
+```
+
+Create `src/pfas-web/components/seo/FAQSchema.tsx`:
+```tsx
+// For FAQ page
+```
+
+================================================================================
+TASK 3: SITEMAP & ROBOTS
+================================================================================
+
+Create `src/pfas-web/app/sitemap.ts`:
+```tsx
+export default async function sitemap() {
+  const products = await getAllProductSlugs();
+  
+  const productUrls = products.map(slug => ({
+    url: `https://pfasfreekitchen.com/product/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly',
+    priority: 0.8,
+  }));
+  
+  const staticPages = [
+    { url: 'https://pfasfreekitchen.com', priority: 1.0 },
+    { url: 'https://pfasfreekitchen.com/search', priority: 0.9 },
+    { url: 'https://pfasfreekitchen.com/compare', priority: 0.7 },
+    { url: 'https://pfasfreekitchen.com/learn/what-is-pfas', priority: 0.8 },
+    { url: 'https://pfasfreekitchen.com/learn/how-we-verify', priority: 0.8 },
+    { url: 'https://pfasfreekitchen.com/learn/buyers-guide', priority: 0.7 },
+    { url: 'https://pfasfreekitchen.com/about', priority: 0.5 },
+    { url: 'https://pfasfreekitchen.com/faq', priority: 0.6 },
+    { url: 'https://pfasfreekitchen.com/disclosure', priority: 0.3 },
+  ];
+  
+  return [...staticPages, ...productUrls];
+}
+```
+
+Create `src/pfas-web/app/robots.ts`:
+```tsx
+export default function robots() {
+  return {
+    rules: {
+      userAgent: '*',
+      allow: '/',
+      disallow: ['/api/', '/admin/'],
+    },
+    sitemap: 'https://pfasfreekitchen.com/sitemap.xml',
+  };
+}
+```
+
+================================================================================
+TASK 4: ACCESSIBILITY AUDIT
+================================================================================
+
+Run automated accessibility checks:
+
+```bash
+# Install axe-core
+npm install -D @axe-core/playwright
+
+# Create accessibility test
+# src/pfas-web/tests/accessibility.spec.ts
+```
+
+```tsx
+import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
+
+const pages = [
+  '/',
+  '/search',
+  '/product/all-clad-d3-stainless-steel-12-skillet',
+  '/compare',
+  '/learn/what-is-pfas',
+];
+
+for (const page of pages) {
+  test(`${page} should have no accessibility violations`, async ({ page: p }) => {
+    await p.goto(page);
+    const results = await new AxeBuilder({ page: p }).analyze();
+    expect(results.violations).toEqual([]);
+  });
+}
+```
+
+MANUAL CHECKS:
+□ All images have alt text
+□ Form inputs have labels
+□ Color contrast ratio ≥ 4.5:1
+□ Focus indicators visible
+□ Keyboard navigation works
+□ Screen reader announces content correctly
+□ Skip link works
+□ Headings in logical order (h1 → h2 → h3)
+
+================================================================================
+TASK 5: PERFORMANCE AUDIT
+================================================================================
+
+Run Lighthouse audits:
+
+```bash
+# Create Lighthouse CI config
+# lighthouserc.js
+```
+
+```js
+module.exports = {
+  ci: {
+    collect: {
+      url: [
+        'http://localhost:3000/',
+        'http://localhost:3000/search',
+        'http://localhost:3000/product/all-clad-d3-stainless-steel-12-skillet',
+      ],
+      numberOfRuns: 3,
+    },
+    assert: {
+      assertions: {
+        'categories:performance': ['error', { minScore: 0.9 }],
+        'categories:accessibility': ['error', { minScore: 0.9 }],
+        'categories:best-practices': ['error', { minScore: 0.9 }],
+        'categories:seo': ['error', { minScore: 0.9 }],
+        'largest-contentful-paint': ['error', { maxNumericValue: 2500 }],
+        'cumulative-layout-shift': ['error', { maxNumericValue: 0.1 }],
+        'first-contentful-paint': ['error', { maxNumericValue: 1800 }],
+      },
+    },
+  },
+};
+```
+
+OPTIMIZATIONS TO VERIFY:
+□ Images optimized (WebP, proper sizing)
+□ Code splitting working
+□ No unused JavaScript
+□ CSS is minimized
+□ Fonts preloaded
+□ Critical CSS inlined
+□ API responses cached appropriately
+
+================================================================================
+TASK 6: CROSS-BROWSER TESTING
+================================================================================
+
+Test in:
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+- iOS Safari
+- Chrome Android
+
+CHECKLIST PER BROWSER:
+□ Layout renders correctly
+□ Fonts load properly
+□ Animations work
+□ Forms submit correctly
+□ LocalStorage works (compare, recent searches)
+□ No console errors
+
+================================================================================
+TASK 7: ERROR PAGES
+================================================================================
+
+Create `src/pfas-web/app/not-found.tsx`:
+```tsx
+export default function NotFound() {
+  return (
+    <EcommerceShell>
+      <div className="error-page">
+        <img src="/illustrations/error-404.svg" alt="" />
+        <h1>Page Not Found</h1>
+        <p>The page you're looking for doesn't exist or has been moved.</p>
+        <Link href="/" className="btn btn-primary">
+          Go to Homepage
+        </Link>
+        <Link href="/search" className="btn btn-secondary">
+          Browse Products
+        </Link>
+      </div>
+    </EcommerceShell>
+  );
+}
+```
+
+Create `src/pfas-web/app/error.tsx`:
+```tsx
+'use client';
+
+export default function Error({ error, reset }) {
+  return (
+    <EcommerceShell>
+      <div className="error-page">
+        <img src="/illustrations/error-500.svg" alt="" />
+        <h1>Something Went Wrong</h1>
+        <p>We're sorry, but something unexpected happened.</p>
+        <button onClick={reset} className="btn btn-primary">
+          Try Again
+        </button>
+        <Link href="/" className="btn btn-secondary">
+          Go to Homepage
+        </Link>
+      </div>
+    </EcommerceShell>
+  );
+}
+```
+
+================================================================================
+TASK 8: ANALYTICS SETUP
+================================================================================
+
+Create `src/pfas-web/components/analytics/Analytics.tsx`:
+
+```tsx
+// Placeholder for analytics (Google Analytics, Plausible, etc.)
+// Configure based on deployment requirements
+
+export function Analytics() {
+  if (process.env.NODE_ENV !== 'production') return null;
+  
+  return (
+    <>
+      {/* Analytics script here */}
+    </>
+  );
+}
+```
+
+Track events:
+- Page views
+- Product views
+- Search queries
+- Filter usage
+- Compare actions
+- Affiliate link clicks (with proper disclosure)
+
+================================================================================
+TASK 9: FINAL VALIDATION CHECKLIST
+================================================================================
+
+CREATE VALIDATION SCRIPT `scripts/validate-site.sh`:
+
+```bash
+#!/bin/bash
+set -e
+
+echo "🔍 Running validation checks..."
+
+# TypeScript check
+echo "→ TypeScript..."
+npm run typecheck
+
+# Lint check
+echo "→ Linting..."
+npm run lint
+
+# Build check
+echo "→ Building..."
+npm run build
+
+# Unit tests
+echo "→ Unit tests..."
+npm test
+
+# E2E tests
+echo "→ E2E tests..."
+npm run test:e2e
+
+# Lighthouse
+echo "→ Lighthouse..."
+npm run lighthouse
+
+# Accessibility
+echo "→ Accessibility..."
+npm run test:a11y
+
+echo "✅ All validation checks passed!"
+```
+
+================================================================================
+TASK 10: LAUNCH CHECKLIST
+================================================================================
+
+PRE-LAUNCH:
+□ All validation checks pass
+□ Environment variables documented
+□ Database migrations ready
+□ CDN configured
+□ SSL certificate ready
+□ Domain DNS configured
+□ Error tracking configured (Sentry, etc.)
+□ Backup strategy defined
+□ Monitoring alerts configured
+
+LAUNCH DAY:
+□ Deploy to production
+□ Verify all pages load
+□ Test affiliate links work
+□ Submit sitemap to Google Search Console
+□ Announce launch
+
+POST-LAUNCH:
+□ Monitor error rates
+□ Monitor performance metrics
+□ Check search console for issues
+□ Respond to user feedback
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All pages have proper meta tags
+□ JSON-LD structured data on product pages
+□ Sitemap generated dynamically
+□ robots.txt configured correctly
+□ Lighthouse scores ≥ 90 in all categories
+□ No accessibility violations (axe-core)
+□ Works in all major browsers
+□ 404 and 500 error pages styled
+□ Analytics placeholder ready
+□ Validation script passes
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/seo/ProductSchema.tsx
+- src/pfas-web/components/seo/BreadcrumbSchema.tsx
+- src/pfas-web/components/seo/FAQSchema.tsx
+- src/pfas-web/app/sitemap.ts
+- src/pfas-web/app/robots.ts
+- src/pfas-web/app/not-found.tsx
+- src/pfas-web/app/error.tsx
+- src/pfas-web/components/analytics/Analytics.tsx
+- src/pfas-web/tests/accessibility.spec.ts
+- scripts/validate-site.sh
+- lighthouserc.js
+
+MODIFY:
+- src/pfas-web/app/layout.tsx (metadata)
+- src/pfas-web/app/search/page.tsx (metadata)
+- src/pfas-web/app/product/[slug]/page.tsx (metadata + schema)
+- package.json (add validation scripts)
+
+================================================================================

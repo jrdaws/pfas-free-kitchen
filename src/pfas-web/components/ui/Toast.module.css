@@ -1,0 +1,146 @@
+/* Toast.module.css */
+
+.container {
+  position: fixed;
+  bottom: var(--space-lg);
+  right: var(--space-lg);
+  z-index: var(--z-tooltip);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-width: 400px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg);
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  border-left: 4px solid;
+  animation: slideIn 0.2s ease-out;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.toast:focus {
+  outline: none;
+  box-shadow: var(--shadow-lg), var(--focus-ring);
+}
+
+.toast.exiting {
+  animation: slideOut 0.2s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+/* Type variants */
+.success {
+  border-color: var(--color-success);
+  background: var(--color-success-light);
+}
+
+.success .icon {
+  color: var(--color-success);
+}
+
+.error {
+  border-color: var(--color-error);
+  background: var(--color-error-light);
+}
+
+.error .icon {
+  color: var(--color-error);
+}
+
+.warning {
+  border-color: var(--color-warning);
+  background: var(--color-warning-light);
+}
+
+.warning .icon {
+  color: var(--color-warning);
+}
+
+.info {
+  border-color: var(--color-info);
+  background: var(--color-info-light);
+}
+
+.info .icon {
+  color: var(--color-info);
+}
+
+/* Icon */
+.icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+/* Message */
+.message {
+  flex: 1;
+  font-size: var(--text-sm);
+  color: var(--color-text);
+  line-height: 1.4;
+}
+
+/* Close button */
+.closeButton {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  margin-left: var(--space-sm);
+}
+
+.closeButton:hover {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--color-text);
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .container {
+    left: var(--space-md);
+    right: var(--space-md);
+    bottom: var(--space-md);
+    max-width: none;
+  }
+
+  .toast {
+    padding: var(--space-sm) var(--space-md);
+  }
+}

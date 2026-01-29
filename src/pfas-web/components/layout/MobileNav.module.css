@@ -1,0 +1,234 @@
+/* ============================================================
+   MobileNav - Slide-in navigation drawer for mobile
+   ============================================================ */
+
+/* ============================================================
+   BACKDROP
+   ============================================================ */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+  z-index: var(--z-modal-backdrop);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================
+   DRAWER
+   ============================================================ */
+
+.drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: min(300px, 85vw);
+  background: var(--color-white);
+  z-index: var(--z-modal);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+  padding-bottom: env(safe-area-inset-bottom);
+  overscroll-behavior: contain;
+}
+
+.drawer.open {
+  transform: translateX(0);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--color-gray-200);
+  min-height: 60px;
+  flex-shrink: 0;
+}
+
+.closeButton,
+.backButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: none;
+  border: none;
+  padding: var(--space-2);
+  margin: calc(var(--space-2) * -1);
+  cursor: pointer;
+  color: var(--color-text);
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-semibold);
+  min-height: 44px;
+  min-width: 44px;
+}
+
+.closeButton svg,
+.backButton svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.backButton:active {
+  background: var(--color-gray-100);
+  border-radius: var(--radius-md);
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+
+.section {
+  padding: var(--space-2) 0;
+}
+
+.divider {
+  height: 1px;
+  background: var(--color-gray-200);
+  margin: var(--space-2) var(--space-4);
+}
+
+/* ============================================================
+   NAV ITEMS
+   ============================================================ */
+
+.navItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: none;
+  border: none;
+  color: var(--color-text);
+  text-decoration: none;
+  cursor: pointer;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast);
+}
+
+.navItem:active {
+  background: var(--color-gray-100);
+}
+
+.navIcon {
+  font-size: 1.25rem;
+  width: 28px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.navLabel {
+  flex: 1;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.chevron {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   SUB-NAVIGATION
+   ============================================================ */
+
+.subNav {
+  padding: var(--space-2) 0;
+}
+
+.subNavItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  color: var(--color-text);
+  text-decoration: none;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast);
+}
+
+.subNavItem:active {
+  background: var(--color-gray-100);
+}
+
+.subNavItem span:first-child {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+}
+
+.count {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+}
+
+/* ============================================================
+   LANDSCAPE MODE
+   ============================================================ */
+
+@media (orientation: landscape) and (max-height: 500px) {
+  .drawer {
+    width: min(280px, 50vw);
+  }
+  
+  .navItem,
+  .subNavItem {
+    min-height: 44px;
+    padding: var(--space-2) var(--space-4);
+  }
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .drawer {
+    transition-duration: 0.01ms;
+  }
+}

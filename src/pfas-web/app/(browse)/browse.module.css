@@ -1,0 +1,3 @@
+.browseLayout {
+  min-height: calc(100vh - var(--header-height) - 200px);
+}

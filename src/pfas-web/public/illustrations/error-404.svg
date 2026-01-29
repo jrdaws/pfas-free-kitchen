@@ -1,0 +1,18 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Confused pan -->
+  <ellipse cx="100" cy="100" rx="60" ry="30" stroke="#1a5f4a" stroke-width="4" fill="none"/>
+  <path d="M40 100 C40 130 65 155 100 155 C135 155 160 130 160 100" stroke="#1a5f4a" stroke-width="4" fill="none"/>
+  <!-- Handle -->
+  <path d="M160 100 L190 100" stroke="#1a5f4a" stroke-width="6" stroke-linecap="round"/>
+  <!-- Confused face -->
+  <!-- Eyes (X marks) -->
+  <line x1="75" y1="85" x2="85" y2="95" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="85" y1="85" x2="75" y2="95" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="115" y1="85" x2="125" y2="95" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round"/>
+  <line x1="125" y1="85" x2="115" y2="95" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round"/>
+  <!-- Wavy confused mouth -->
+  <path d="M80 115 Q90 110 100 115 Q110 120 120 115" stroke="#1a5f4a" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <!-- Question marks floating -->
+  <text x="45" y="60" font-family="sans-serif" font-size="20" fill="#1a5f4a" opacity="0.5">?</text>
+  <text x="145" y="50" font-family="sans-serif" font-size="16" fill="#1a5f4a" opacity="0.4">?</text>
+</svg>

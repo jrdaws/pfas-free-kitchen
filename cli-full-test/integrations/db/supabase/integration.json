@@ -1,0 +1,18 @@
+{
+  "provider": "supabase",
+  "type": "db",
+  "version": "1.0.0",
+  "description": "Supabase Postgres database with real-time subscriptions",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.47.10"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_SUPABASE_URL",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY",
+    "SUPABASE_SERVICE_ROLE_KEY"
+  ],
+  "files": {
+    "lib": ["lib/database.ts"]
+  },
+  "postInstallInstructions": "Configure your Supabase database schema at https://supabase.com/dashboard"
+}

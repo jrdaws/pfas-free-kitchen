@@ -1,0 +1,327 @@
+================================================================================
+WAVE 13-03: PRODUCT DATABASE - UTENSILS & ACCESSORIES
+================================================================================
+ACTIVATION: "Execute Wave 13-03: Product Database Utensils and Accessories"
+AGENT: Data Agent / Research Agent
+DEPENDS ON: Wave 13-01, 13-02
+================================================================================
+
+CONTEXT
+-------
+Populate the database with REAL PFAS-free kitchen utensils, tools, and 
+appliance accessories. Focus on wood, stainless steel, silicone (verified),
+and bamboo products.
+
+================================================================================
+TASK 1: RESEARCH & CREATE COOKING UTENSIL SETS
+================================================================================
+
+Add 10-12 utensil sets:
+
+WOODEN UTENSILS:
+1. OXO Good Grips Wooden Turner
+2. OXO Good Grips Wooden Spoon Set
+3. Totally Bamboo Cooking Utensil Set
+4. FAAY 6-Piece Teak Utensil Set
+5. Scanwood Olive Wood Utensil Set
+6. Jonathan's Spoons Cherry Wood Set
+
+STAINLESS STEEL UTENSILS:
+7. All-Clad Stainless Steel Utensil Set
+8. OXO Steel Cooking Utensils
+9. Cuisinart Stainless Steel Utensil Set
+10. KitchenAid Stainless Steel Tools
+
+SILICONE UTENSILS (verify PFAS-free):
+11. GIR (Get It Right) Ultimate Spatula
+12. GIR Skinny Spatula
+13. Di Oro Seamless Silicone Spatula Set
+14. StarPack Silicone Spatula Set
+
+```typescript
+{
+  id: "prd_utensil_001",
+  name: "GIR Ultimate Silicone Spatula",
+  slug: "gir-ultimate-silicone-spatula",
+  description: "One-piece seamless construction eliminates gaps where bacteria can hide. Heat-resistant platinum-grade silicone up to 550°F.",
+  brand_id: "brd_gir",
+  category_id: "cat_spatulas",
+  
+  material_summary: "Platinum-Grade Silicone",
+  coating_summary: "None (solid silicone)",
+  
+  components: [
+    {
+      name: "Spatula body",
+      material: "Platinum-Cured Silicone",
+      coating: null,
+      food_contact: true,
+      pfas_status: "verified_free", // GIR specifically states PFAS-free
+    }
+  ],
+  
+  verification: {
+    tier: 2,
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "GIR states their silicone is PFAS-free. Platinum-cured silicone does not require PFAS in manufacturing.",
+    scope: "all_components",
+    unknowns: [],
+    brand_statement: "Our silicone is FDA food-grade and contains no BPA, BPS, lead, latex, phthalates, or PFAS.",
+    brand_statement_url: "https://gir.co/pages/about",
+  },
+  
+  features: {
+    heat_resistant_f: 550,
+    dishwasher_safe: true,
+    one_piece: true,
+    colors_available: ["Red", "Orange", "Yellow", "Green", "Teal", "Blue", "Purple", "Pink", "Black", "White", "Gray"],
+    made_in: "China",
+  },
+}
+```
+
+================================================================================
+TASK 2: RESEARCH & CREATE CUTTING BOARDS
+================================================================================
+
+Add 8-10 cutting boards:
+
+WOOD:
+1. John Boos Maple Cutting Board
+2. John Boos Cherry Edge-Grain Board
+3. Teakhaus Teak Cutting Board
+4. Virginia Boys Kitchens Walnut Board
+5. Sonder Los Angeles Walnut Board
+
+BAMBOO:
+6. Totally Bamboo Cutting Board
+7. Royal Craft Wood Bamboo Board Set
+
+OTHER:
+8. Epicurean Kitchen Series (composite - verify)
+9. OXO Good Grips Carving Board (check material)
+
+```typescript
+{
+  id: "prd_utensil_020",
+  name: "John Boos Maple Edge-Grain Cutting Board 20x15",
+  slug: "john-boos-maple-cutting-board-20x15",
+  description: "Professional-grade hard maple cutting board. Edge-grain construction for durability. Made in USA with sustainably harvested wood.",
+  brand_id: "brd_john_boos",
+  category_id: "cat_cutting_boards",
+  
+  material_summary: "Hard Maple Wood",
+  coating_summary: "Food-Safe Mineral Oil",
+  
+  components: [
+    {
+      name: "Board",
+      material: "Hard Maple (Acer saccharum)",
+      coating: "Food-grade mineral oil",
+      food_contact: true,
+      pfas_status: "inherently_free",
+    }
+  ],
+  
+  verification: {
+    tier: 2,
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "Solid wood with mineral oil finish. No synthetic coatings or treatments.",
+    scope: "all_components",
+    unknowns: [],
+  },
+}
+```
+
+================================================================================
+TASK 3: RESEARCH & CREATE MIXING BOWLS
+================================================================================
+
+Add 8-10 mixing bowl sets:
+
+STAINLESS STEEL:
+1. Cuisinart Stainless Steel Mixing Bowl Set
+2. FineDine Stainless Steel Mixing Bowls (6-piece)
+3. Vollrath Economy Mixing Bowls
+4. Winco Stainless Steel Bowl Set
+
+GLASS:
+5. Pyrex 4-Piece Glass Mixing Bowl Set
+6. Anchor Hocking Glass Mixing Bowl Set
+7. Duralex Lys Stackable Glass Bowls
+
+CERAMIC:
+8. Mason Cash Mixing Bowl Set
+9. KitchenAid Ceramic Nesting Bowls
+
+================================================================================
+TASK 4: RESEARCH & CREATE MEASURING TOOLS
+================================================================================
+
+Add 6-8 measuring sets:
+
+STAINLESS STEEL:
+1. Cuisipro Stainless Steel Measuring Cups
+2. OXO Good Grips Stainless Measuring Cups
+3. KitchenAid Stainless Measuring Spoons
+4. All-Clad Stainless Measuring Cup Set
+
+GLASS:
+5. Pyrex 2-Cup Glass Measuring Cup
+6. Anchor Hocking Glass Measuring Set
+7. OXO Good Grips Glass Measuring Cups
+
+================================================================================
+TASK 5: RESEARCH & CREATE APPLIANCE ACCESSORIES
+================================================================================
+
+Add 10-12 appliance accessories:
+
+INSTANT POT / PRESSURE COOKER:
+1. Instant Pot Stainless Steel Inner Pot
+2. Instant Pot Glass Lid
+3. Instant Pot Steamer Basket (stainless)
+4. Instant Pot Silicone Lid (verify)
+
+STAND MIXER:
+5. KitchenAid Stainless Steel Bowl
+6. KitchenAid Glass Bowl
+7. KitchenAid Flex Edge Beater (verify silicone)
+
+AIR FRYER (must verify - many have PTFE baskets):
+8. Ninja Air Fryer Stainless Steel Basket (if available)
+9. Silicone Air Fryer Liners (verify PFAS-free)
+
+BLENDER:
+10. Vitamix Stainless Steel Container
+11. Vitamix Glass Container (if available)
+
+NOTE ON AIR FRYERS:
+Most air fryer baskets have PTFE (PFAS) coatings. Be very careful with this
+category. Only include products explicitly verified as PFAS-free.
+
+```typescript
+{
+  id: "prd_accessory_001",
+  name: "Instant Pot Stainless Steel Inner Pot 6-Quart",
+  slug: "instant-pot-stainless-steel-inner-pot-6qt",
+  description: "Replacement inner pot for Instant Pot Duo and Duo Plus 6-quart models. Food-grade 304 stainless steel with no coatings.",
+  brand_id: "brd_instant_pot",
+  category_id: "cat_pressure_cooker_accessories",
+  
+  material_summary: "304 Stainless Steel",
+  coating_summary: "None (uncoated)",
+  
+  components: [
+    {
+      name: "Pot body",
+      material: "304 (18/8) Stainless Steel",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free",
+    }
+  ],
+  
+  verification: {
+    tier: 2,
+    tier_label: "Policy Reviewed",
+    claim_type: "A",
+    rationale: "Uncoated 304 stainless steel. No nonstick treatments.",
+    scope: "all_components",
+    unknowns: [],
+  },
+  
+  features: {
+    capacity_qt: 6,
+    compatible_models: ["Duo 6-Qt", "Duo Plus 6-Qt", "Duo Nova 6-Qt"],
+    dishwasher_safe: true,
+  },
+}
+```
+
+================================================================================
+TASK 6: ADD NEW BRANDS
+================================================================================
+
+```typescript
+// Utensil brands
+{ id: "brd_gir", name: "GIR (Get It Right)", country: "USA", pfas_policy: "Our silicone is FDA food-grade and contains no BPA, BPS, lead, latex, phthalates, or PFAS." },
+{ id: "brd_di_oro", name: "Di Oro", country: "USA" },
+{ id: "brd_totally_bamboo", name: "Totally Bamboo", country: "USA" },
+{ id: "brd_john_boos", name: "John Boos", country: "USA", founded: 1887 },
+{ id: "brd_teakhaus", name: "Teakhaus", country: "Thailand" },
+{ id: "brd_scanwood", name: "Scanwood", country: "Denmark" },
+
+// Appliance brands
+{ id: "brd_instant_pot", name: "Instant Pot", country: "Canada" },
+{ id: "brd_kitchenaid", name: "KitchenAid", country: "USA", founded: 1919 },
+{ id: "brd_vitamix", name: "Vitamix", country: "USA", founded: 1921 },
+{ id: "brd_ninja", name: "Ninja", country: "USA" },
+
+// Bowl/measuring brands
+{ id: "brd_finedine", name: "FineDine", country: "USA" },
+{ id: "brd_vollrath", name: "Vollrath", country: "USA", founded: 1874 },
+{ id: "brd_winco", name: "Winco", country: "USA" },
+{ id: "brd_duralex", name: "Duralex", country: "France", founded: 1945 },
+{ id: "brd_mason_cash", name: "Mason Cash", country: "UK", founded: 1800 },
+{ id: "brd_cuisipro", name: "Cuisipro", country: "Canada" },
+```
+
+================================================================================
+TASK 7: ADD NEW CATEGORIES
+================================================================================
+
+```typescript
+{
+  id: "cat_utensils",
+  name: "Utensils & Tools",
+  slug: "utensils-tools",
+  parent_id: null,
+  children: [
+    { id: "cat_spatulas", name: "Spatulas & Turners", slug: "spatulas-turners" },
+    { id: "cat_spoons", name: "Cooking Spoons", slug: "cooking-spoons" },
+    { id: "cat_tongs", name: "Tongs", slug: "tongs" },
+    { id: "cat_whisks", name: "Whisks", slug: "whisks" },
+    { id: "cat_ladles", name: "Ladles", slug: "ladles" },
+    { id: "cat_cutting_boards", name: "Cutting Boards", slug: "cutting-boards" },
+    { id: "cat_mixing_bowls", name: "Mixing Bowls", slug: "mixing-bowls" },
+    { id: "cat_measuring", name: "Measuring Cups & Spoons", slug: "measuring-cups-spoons" },
+  ],
+},
+{
+  id: "cat_appliances",
+  name: "Appliance Accessories",
+  slug: "appliance-accessories",
+  parent_id: null,
+  children: [
+    { id: "cat_pressure_cooker_accessories", name: "Pressure Cooker Accessories", slug: "pressure-cooker-accessories" },
+    { id: "cat_mixer_accessories", name: "Stand Mixer Accessories", slug: "stand-mixer-accessories" },
+    { id: "cat_blender_accessories", name: "Blender Accessories", slug: "blender-accessories" },
+    { id: "cat_air_fryer_accessories", name: "Air Fryer Accessories", slug: "air-fryer-accessories" },
+  ],
+},
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ 10-12 real cooking utensil products added
+□ 8-10 real cutting board products added
+□ 8-10 real mixing bowl products added
+□ 6-8 real measuring tool products added
+□ 10-12 real appliance accessory products added
+□ All brands have complete profiles
+□ Silicone products verified for PFAS-free claims
+□ Air fryer products carefully vetted (most have PTFE)
+□ Categories properly structured
+
+================================================================================
+FILES TO MODIFY
+================================================================================
+
+- src/pfas-api/src/mock/data.ts
+
+================================================================================

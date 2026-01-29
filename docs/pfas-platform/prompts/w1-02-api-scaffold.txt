@@ -1,0 +1,213 @@
+ACTIVATION: w1-api-scaffold
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Scaffold the API layer with all endpoints defined but not fully implemented
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+You are creating the API scaffold for a PFAS-free kitchen products platform.
+This is the structural foundation - stub implementations that other agents will complete.
+Use Node.js with TypeScript. Structure for scalability.
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "2. API Contracts", "1.2 Technology Stack"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. PROJECT STRUCTURE
+   ```
+   src/
+   ├── index.ts                 # Entry point
+   ├── config/
+   │   ├── database.ts          # Postgres connection
+   │   ├── search.ts            # OpenSearch connection
+   │   └── storage.ts           # S3 connection
+   ├── middleware/
+   │   ├── auth.ts              # JWT/session validation
+   │   ├── rateLimit.ts         # Rate limiting
+   │   ├── errorHandler.ts      # Global error handler
+   │   └── requestLogger.ts     # Request logging
+   ├── routes/
+   │   ├── index.ts             # Route aggregator
+   │   ├── catalog.routes.ts    # /api/v1/products, /api/v1/categories
+   │   ├── verification.routes.ts
+   │   ├── evidence.routes.ts
+   │   ├── affiliate.routes.ts
+   │   ├── search.routes.ts
+   │   ├── reports.routes.ts
+   │   └── admin/               # Admin-only routes
+   │       ├── index.ts
+   │       ├── verification.admin.routes.ts
+   │       ├── evidence.admin.routes.ts
+   │       └── reports.admin.routes.ts
+   ├── services/
+   │   ├── catalog.service.ts
+   │   ├── verification.service.ts
+   │   ├── evidence.service.ts
+   │   ├── affiliate.service.ts
+   │   ├── search.service.ts
+   │   └── reports.service.ts
+   ├── repositories/
+   │   ├── product.repository.ts
+   │   ├── evidence.repository.ts
+   │   ├── verification.repository.ts
+   │   └── audit.repository.ts
+   ├── types/
+   │   ├── api.types.ts         # Request/Response types
+   │   ├── domain.types.ts      # Domain models
+   │   └── database.types.ts    # DB row types
+   ├── utils/
+   │   ├── hash.ts              # SHA-256 utilities
+   │   ├── pagination.ts        # Pagination helpers
+   │   └── validation.ts        # Zod schemas
+   └── errors/
+       └── AppError.ts          # Custom error classes
+   ```
+
+2. ENDPOINT STUBS
+   Create route handlers for ALL endpoints from spec:
+
+   PUBLIC ENDPOINTS:
+   - GET  /api/v1/products
+   - GET  /api/v1/products/:id
+   - GET  /api/v1/products/:id/compare (query: ids=...)
+   - GET  /api/v1/products/:id/verification
+   - GET  /api/v1/products/:id/affiliate-links
+   - GET  /api/v1/categories
+   - GET  /api/v1/evidence/:id
+   - GET  /api/v1/evidence/:id/artifact
+   - GET  /api/v1/search
+   - GET  /api/v1/search/autocomplete
+   - POST /api/v1/reports
+   - POST /api/v1/affiliate-clicks
+
+   ADMIN ENDPOINTS (require auth):
+   - POST   /api/v1/admin/verification/decide
+   - POST   /api/v1/admin/evidence/upload
+   - GET    /api/v1/admin/reports
+   - PATCH  /api/v1/admin/reports/:id
+   - GET    /api/v1/admin/queue
+   - POST   /api/v1/admin/queue/:id/assign
+   - GET    /api/v1/admin/audit-log
+
+3. TYPE DEFINITIONS
+   Create TypeScript interfaces matching API contracts:
+   - ProductListResponse
+   - ProductDetailResponse
+   - VerificationResponse
+   - EvidenceResponse
+   - SearchResponse
+   - AffiliateLinksResponse
+   - ReportRequest / ReportResponse
+   - All admin request/response types
+
+4. ERROR HANDLING
+   Implement error codes from spec:
+   - VALIDATION_ERROR (400)
+   - NOT_FOUND (404)
+   - CONFLICT (409)
+   - RATE_LIMITED (429)
+   - INTERNAL_ERROR (500)
+   - SERVICE_UNAVAILABLE (503)
+
+5. VALIDATION SCHEMAS
+   Use Zod for request validation:
+   - Product list query params
+   - Search query params
+   - Report submission body
+   - Verification decision body
+   - Evidence upload metadata
+
+───────────────────────────────────────────────────────────────────────────────
+STUB IMPLEMENTATION PATTERN
+───────────────────────────────────────────────────────────────────────────────
+
+Every handler should follow this pattern:
+
+```typescript
+// catalog.routes.ts
+import { Router } from 'express';
+import { z } from 'zod';
+import { CatalogService } from '../services/catalog.service';
+
+const router = Router();
+
+const listProductsSchema = z.object({
+  category_id: z.string().optional(),
+  tier: z.array(z.coerce.number().min(0).max(4)).optional(),
+  material: z.array(z.string()).optional(),
+  page: z.coerce.number().default(1),
+  limit: z.coerce.number().default(24).max(100),
+  sort: z.enum(['tier_desc', 'tier_asc', 'name_asc', 'name_desc', 'newest']).default('tier_desc')
+});
+
+router.get('/products', async (req, res, next) => {
+  try {
+    const params = listProductsSchema.parse(req.query);
+    
+    // STUB: Implement in w2-catalog-service
+    const result = await CatalogService.listProducts(params);
+    
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+export default router;
+```
+
+Service stubs should throw NotImplementedError:
+
+```typescript
+// catalog.service.ts
+export class CatalogService {
+  static async listProducts(params: ListProductsParams): Promise<ProductListResponse> {
+    // TODO: Implement in w2-catalog-service
+    throw new NotImplementedError('CatalogService.listProducts');
+  }
+}
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ All 23 endpoints from spec are stubbed
+□ Request validation in place (Zod)
+□ Response types match spec exactly
+□ Admin routes protected by auth middleware (stubbed)
+□ Global error handler catches all errors
+□ Request IDs generated for tracing
+
+───────────────────────────────────────────────────────────────────────────────
+TECH STACK
+───────────────────────────────────────────────────────────────────────────────
+
+- Node.js 20+
+- TypeScript 5+
+- Express.js (or Fastify)
+- Zod for validation
+- pino for logging
+
+DEPENDENCIES TO INSTALL:
+```json
+{
+  "dependencies": {
+    "express": "^4.18.2",
+    "zod": "^3.22.4",
+    "pino": "^8.16.2",
+    "uuid": "^9.0.1"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.2",
+    "tsx": "^4.6.2"
+  }
+}
+```

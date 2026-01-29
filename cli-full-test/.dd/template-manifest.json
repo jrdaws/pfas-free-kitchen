@@ -1,0 +1,278 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2025-12-22T06:40:00.299Z",
+  "templateId": "saas",
+  "templateSource": "auto",
+  "frameworkVersion": null,
+  "resolvedRef": "/Users/joseph.dawson/Documents/dawson-does-framework/templates/saas",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "1dbed268b10add28ce9071e6d102ff2e64afad91311d7c961d7fc2d2f14ae643"
+    },
+    {
+      "path": "README.md",
+      "sha256": "fcce6c2292c28e3832de5da4790687c5e8e059d50753daf70e1808b8945c4dd5"
+    },
+    {
+      "path": "app/layout.tsx",
+      "sha256": "ded8526942e329dfcbef52922013ef2645daf6afde26f2984dc01f664c4756ca"
+    },
+    {
+      "path": "app/page.tsx",
+      "sha256": "c8fd1fd67d62f4dfa6198b5b3ca57b7abe1be10f7fb08dd8c19609805f7ffb1e"
+    },
+    {
+      "path": "integrations/ai/anthropic/.env.example",
+      "sha256": "e309800fbd67ac972dc0ade7fb47d904ef02a38c5930c2dd67bdb8c5805a6484"
+    },
+    {
+      "path": "integrations/ai/anthropic/app/api/ai/claude/route.ts",
+      "sha256": "ce13a504d700a0f8b75e8168bcec14dab0e58a6e64662c54da45095dc2093db0"
+    },
+    {
+      "path": "integrations/ai/anthropic/components/ai/claude-chat.tsx",
+      "sha256": "ce05357b286ee27a1a7bf013a8806013e30b9e975dc14835ec06304e50d34fb1"
+    },
+    {
+      "path": "integrations/ai/anthropic/integration.json",
+      "sha256": "ed499110fc70607303783d03e850bfeb12a5205f589fe1530ff52ace778e953a"
+    },
+    {
+      "path": "integrations/ai/anthropic/lib/anthropic.ts",
+      "sha256": "c6a51c52b29f5a1e597e6f62946a258d6637b5642ee7378887a0bd26af4596fe"
+    },
+    {
+      "path": "integrations/ai/anthropic/package.json",
+      "sha256": "a49c4663f570a25867aa064a1588599f56591b9f0ff1f64e41a04d93acbea15d"
+    },
+    {
+      "path": "integrations/ai/openai/.env.example",
+      "sha256": "ab5d90f0b7191c2305469555dd8922066ef552a2fd6a902d9402449b04282609"
+    },
+    {
+      "path": "integrations/ai/openai/app/api/ai/chat/route.ts",
+      "sha256": "e875637dd73f5ad117ad403960f3085f74ba401acbe7be4faa073cf8109f275f"
+    },
+    {
+      "path": "integrations/ai/openai/app/api/ai/completion/route.ts",
+      "sha256": "c70599098a39cef9d2f4f4f3612b00c39f5b140b10a4b63da324195a6637a96c"
+    },
+    {
+      "path": "integrations/ai/openai/components/ai/chat-interface.tsx",
+      "sha256": "a059cf460c2ac6e3688a7e4d4bb43c47acb1951a024006e27afe24071087a09b"
+    },
+    {
+      "path": "integrations/ai/openai/integration.json",
+      "sha256": "0383735879b5202a9eb873c4b9394d4a982d3d261d35207f7e588d4414d1beae"
+    },
+    {
+      "path": "integrations/ai/openai/lib/openai.ts",
+      "sha256": "b9fd5e8496c9f2c25c812ec3b616660413f47d7ae96aaa97e83dc72e0d4e03b8"
+    },
+    {
+      "path": "integrations/ai/openai/package.json",
+      "sha256": "5dc1db12030df2305e5d371cec0c6ef33c2e8da739f022643dfebbddcda9b309"
+    },
+    {
+      "path": "integrations/analytics/plausible/.env.example",
+      "sha256": "b7d4cc0ba55a755c5e0f6c7353894982be1eab9b8c5e56740c73ddebb7622eef"
+    },
+    {
+      "path": "integrations/analytics/plausible/components/analytics/plausible-provider.tsx",
+      "sha256": "91b4495ee2ee1e8236b9cbe68957939d8a225200112543f40b4bb492039d3245"
+    },
+    {
+      "path": "integrations/analytics/plausible/components/analytics/use-plausible.tsx",
+      "sha256": "2189838c4cf6eb802e478ee316d132161e19385548e0cc208ed6dc5dd707d41e"
+    },
+    {
+      "path": "integrations/analytics/plausible/integration.json",
+      "sha256": "f2e1f49a27cb5018d8c2faa0855f7d91150f05335229ff84969f8ac275a2d962"
+    },
+    {
+      "path": "integrations/analytics/plausible/package.json",
+      "sha256": "b9c48871ecd129756f0d8994a93a86be8839ed09177c615866d6f40fe7daa10f"
+    },
+    {
+      "path": "integrations/analytics/posthog/.env.example",
+      "sha256": "b5187bdbe320970d5ab2f07f3060f7790bd9f9aa5e293c66efce95e0d8bc5b9e"
+    },
+    {
+      "path": "integrations/analytics/posthog/components/analytics/posthog-provider.tsx",
+      "sha256": "406994ae0ece385fac602acc67c2696bfe502fdab504ba0c244451e1d6356603"
+    },
+    {
+      "path": "integrations/analytics/posthog/components/analytics/use-posthog.tsx",
+      "sha256": "d056af75c93e00c99438934798f848ace832a81e027ce5194fe61c8e2fe5e92f"
+    },
+    {
+      "path": "integrations/analytics/posthog/integration.json",
+      "sha256": "c26a1f0221c21ee57ab15471e824b9407953716c1a005f71ec0f751e50470326"
+    },
+    {
+      "path": "integrations/analytics/posthog/lib/posthog.ts",
+      "sha256": "f11d139e68243ec620bbaa9fb5aad866981d964b82fef045b31734fb00ea6779"
+    },
+    {
+      "path": "integrations/analytics/posthog/package.json",
+      "sha256": "0c18ad8958a1fe12e08343ce829c5e81e0a55ed08302b240daa983b415af68a5"
+    },
+    {
+      "path": "integrations/auth/clerk/.env.example",
+      "sha256": "bd03b48805f0288b9fec5f56b867619b5546d6ccb19e4aa0cb7e816526d03bf0"
+    },
+    {
+      "path": "integrations/auth/clerk/app/sign-in/[[...sign-in]]/page.tsx",
+      "sha256": "c9460f0ab53243fbdf7bbbb6297e826a2c26dce4e0404aa0947511d5ae22f7a0"
+    },
+    {
+      "path": "integrations/auth/clerk/app/sign-up/[[...sign-up]]/page.tsx",
+      "sha256": "7d37ba1a3becbeead6f939c0bb12b0ac42056220088e40b4a96a59151b5876e9"
+    },
+    {
+      "path": "integrations/auth/clerk/components/auth/clerk-provider-wrapper.tsx",
+      "sha256": "93216744013a99a0210b6814a706a10115e15310992f11b24e943a857e48601a"
+    },
+    {
+      "path": "integrations/auth/clerk/components/auth/user-button.tsx",
+      "sha256": "076455fb5fc444a82cb9dfc494548c58dd592cb9bfa893d9a12a5f2701c6d812"
+    },
+    {
+      "path": "integrations/auth/clerk/integration.json",
+      "sha256": "47e85a5049d00b0e3c1da1d72c2b6db3cb850731d6d821ad0e8693cd2978b9e5"
+    },
+    {
+      "path": "integrations/auth/clerk/middleware.ts",
+      "sha256": "fb0c9bc8d0d617c19736774d745f07f805832e74a6076163e8c81e9b542b1121"
+    },
+    {
+      "path": "integrations/auth/clerk/package.json",
+      "sha256": "34b5df8c5cd626807da35918375466c421940a1a2dc731a32b71e5f48bf5b3ca"
+    },
+    {
+      "path": "integrations/auth/supabase/.env.example",
+      "sha256": "7c6cca32d2743655037ba7d157e7d534c184a165cf1afae18d8509cbf2c2e24d"
+    },
+    {
+      "path": "integrations/auth/supabase/app/api/auth/callback/route.ts",
+      "sha256": "60935d469ada3d3f082a9f4bfadfa0de64683537cd459ac166963084a397a6b4"
+    },
+    {
+      "path": "integrations/auth/supabase/app/login/page.tsx",
+      "sha256": "95466cc0d315ce88ae1e332ec85f282c3b63bdaf62dce61133f798114157740a"
+    },
+    {
+      "path": "integrations/auth/supabase/components/auth/auth-button.tsx",
+      "sha256": "0d88ea2efe19a2f5b06b789b258c5213cf4c412dec5c28837cc17dfae99c7d01"
+    },
+    {
+      "path": "integrations/auth/supabase/integration.json",
+      "sha256": "3d79824be5583bf4294067cae11b0e2d470d9daa9857879dbe842636b6944fde"
+    },
+    {
+      "path": "integrations/auth/supabase/lib/supabase.ts",
+      "sha256": "1c55abe19dbc8e896383555820a59c8b4a9185248f76eb7aa00128dcee1228cd"
+    },
+    {
+      "path": "integrations/auth/supabase/middleware.ts",
+      "sha256": "e19868deeedc37d7fdef5a4257a0143cdcc75456e05412118921629e64d559ef"
+    },
+    {
+      "path": "integrations/auth/supabase/package.json",
+      "sha256": "95614f4e200374e64738339da529e7d36e1a33ebc5477f9a501c381aa40e9623"
+    },
+    {
+      "path": "integrations/db/supabase/.env.example",
+      "sha256": "e7ffc1d6747ca17d7ace54931a29175c06a3d91f21fb87af88d420ddccc9329f"
+    },
+    {
+      "path": "integrations/db/supabase/integration.json",
+      "sha256": "d1ef4811f08281000ef951c5ba220443a439c6d61caaf83528453bf7df304f0e"
+    },
+    {
+      "path": "integrations/db/supabase/lib/database.ts",
+      "sha256": "37340fd490de4364a94ec269857e052a5e083f928b1c8d8634cb69ba6c47dc36"
+    },
+    {
+      "path": "integrations/db/supabase/package.json",
+      "sha256": "8de653e98a3da420076d9096906b1068ce0df4fe14b6b46b674d6f97b99b41f6"
+    },
+    {
+      "path": "integrations/email/resend/.env.example",
+      "sha256": "607a77e7b6c0038093a7a0e21ae798859d53f8eeef78516d242d6e1611a1877a"
+    },
+    {
+      "path": "integrations/email/resend/app/api/email/send/route.ts",
+      "sha256": "a8c79fa622dcd9d59132f6874448e37bf3749bedfb0436e0fbbfcdd85cc35596"
+    },
+    {
+      "path": "integrations/email/resend/emails/welcome-email.tsx",
+      "sha256": "a59fb6f1705c2e8060cd33468be6eb2bf819bfed298238feaa7555b30a3623db"
+    },
+    {
+      "path": "integrations/email/resend/integration.json",
+      "sha256": "729cab3a1b64ccab29c3f60cdfe5c18ecf19c385631abb0cfa91da281c349bb5"
+    },
+    {
+      "path": "integrations/email/resend/lib/resend.ts",
+      "sha256": "1ff053c59166b1da5f2aab035aed5dbdd2f8c350cce1312e80f12087224e4424"
+    },
+    {
+      "path": "integrations/email/resend/package.json",
+      "sha256": "952ba4cb580a18d70cc137d74b04f3de26bcdbd18ba4e058fe9af969700405ce"
+    },
+    {
+      "path": "integrations/payments/stripe/.env.example",
+      "sha256": "5e3d1bdcc9d107ec3ffea02c86c3fa482b318b0f2ef76087ffc9b4e160d73b0a"
+    },
+    {
+      "path": "integrations/payments/stripe/app/api/stripe/checkout/route.ts",
+      "sha256": "ef90bf53f3dfe4b0fe732648bf86325d913923ad3f133b5411898c04907a9e10"
+    },
+    {
+      "path": "integrations/payments/stripe/app/api/stripe/portal/route.ts",
+      "sha256": "894caf920e6779678f316b21e2743dffc463e7686a856cbf07414b4825e669b0"
+    },
+    {
+      "path": "integrations/payments/stripe/app/api/stripe/webhook/route.ts",
+      "sha256": "b179b3072a659488faabbf0eb90c398a20014e958612759abc35013c4d464b98"
+    },
+    {
+      "path": "integrations/payments/stripe/components/pricing/pricing-cards.tsx",
+      "sha256": "a6738df34a1dfc51f9845bd818eb9ce7a5dda58e94b3258248bb3b8355eacbf9"
+    },
+    {
+      "path": "integrations/payments/stripe/integration.json",
+      "sha256": "9726e72d4b6643712520c1d092452b952810a7be2f9cd41a6c49783a400988e7"
+    },
+    {
+      "path": "integrations/payments/stripe/lib/stripe.ts",
+      "sha256": "32856a46ee6879a6e8458d86ecdd9f1fa443e577ec55830049114b31797d1ea3"
+    },
+    {
+      "path": "integrations/payments/stripe/package.json",
+      "sha256": "a98cf185bc8365b534be31ea50fe6ef45f031f14f509ded2048549ac17740d53"
+    },
+    {
+      "path": "next-env.d.ts",
+      "sha256": "71fe32a4c981d1830bea2427b31dbe950396a55b13cbe03be1848c61ed882b56"
+    },
+    {
+      "path": "next.config.js",
+      "sha256": "0935383a99db4517c595ec2e41390ea95f2f9d9c4070295768a0359020cfbe7d"
+    },
+    {
+      "path": "package.json",
+      "sha256": "b264f4d38e1c9752568f488d90313b9b5fc706198cb21a5cd4b718353f915326"
+    },
+    {
+      "path": "template.json",
+      "sha256": "f0d4a444683f7f6b49647a6c26aed8f5a947afb08471d0a337501a896c2c8708"
+    },
+    {
+      "path": "tsconfig.json",
+      "sha256": "a3c19868e9060234b77ab174bf06e7320a896582106b59c4ced704edbfe3636d"
+    }
+  ]
+}

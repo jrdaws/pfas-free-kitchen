@@ -1,0 +1,6 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield background -->
+  <path d="M24 4L6 12V22C6 33.1 13.5 43.1 24 46C34.5 43.1 42 33.1 42 22V12L24 4Z" fill="#2563EB" stroke="#1D4ED8" stroke-width="2"/>
+  <!-- Single checkmark -->
+  <path d="M15 24L21 30L33 18" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

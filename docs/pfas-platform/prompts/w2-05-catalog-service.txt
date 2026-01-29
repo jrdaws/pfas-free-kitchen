@@ -1,0 +1,214 @@
+ACTIVATION: w2-catalog-service
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement the Catalog Service for products, components, and categories
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The Catalog Service is the core data service for:
+- Products with component-level detail
+- Categories with hierarchy
+- Brands and retailers
+- Faceted filtering and pagination
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "2.1 Catalog Service" API contracts
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. CATALOG SERVICE IMPLEMENTATION
+   File: src/services/catalog.service.ts
+
+   ```typescript
+   export class CatalogService {
+     /**
+      * List products with filtering, sorting, and facets
+      * - Joins verification_status for tier data
+      * - Joins components for material/coating summary
+      * - Returns facet counts for filters
+      */
+     static async listProducts(params: ListProductsParams): Promise<ProductListResponse>;
+
+     /**
+      * Get single product with full detail
+      * - All components with materials/coatings
+      * - Current verification status
+      * - All linked evidence
+      * - Available retailers
+      */
+     static async getProduct(idOrSlug: string): Promise<ProductDetailResponse>;
+
+     /**
+      * Get comparison data for multiple products
+      * - Parallel fetch of 2-4 products
+      * - Compute differences array
+      */
+     static async compareProducts(ids: string[]): Promise<CompareResponse>;
+
+     /**
+      * List categories with hierarchy
+      * - Include product counts per category
+      * - Build tree structure
+      */
+     static async listCategories(): Promise<CategoryTreeResponse>;
+
+     /**
+      * Get category by slug with subcategories
+      */
+     static async getCategory(slug: string): Promise<CategoryResponse>;
+   }
+   ```
+
+2. PRODUCT REPOSITORY
+   File: src/repositories/product.repository.ts
+
+   ```typescript
+   export class ProductRepository {
+     // Base queries
+     static async findById(id: string): Promise<ProductRow | null>;
+     static async findBySlug(slug: string): Promise<ProductRow | null>;
+     
+     // List with complex filtering
+     static async findMany(params: {
+       categoryId?: string;
+       brandId?: string;
+       tiers?: number[];
+       materials?: string[];
+       coatingTypes?: string[];
+       retailerId?: string;
+       induction?: boolean;
+       ovenSafeMin?: number;
+       status?: ProductStatus;
+       page: number;
+       limit: number;
+       sort: SortOption;
+     }): Promise<{ rows: ProductRow[]; total: number }>;
+     
+     // With relations
+     static async findWithComponents(id: string): Promise<ProductWithComponents>;
+     static async findWithVerification(id: string): Promise<ProductWithVerification>;
+     static async findWithEvidence(id: string): Promise<ProductWithEvidence>;
+     static async findWithRetailers(id: string): Promise<ProductWithRetailers>;
+     
+     // Facet aggregations
+     static async getFacetCounts(baseFilters: FilterParams): Promise<FacetCounts>;
+   }
+   ```
+
+3. COMPONENT REPOSITORY
+   File: src/repositories/component.repository.ts
+
+   ```typescript
+   export class ComponentRepository {
+     static async findByProductId(productId: string): Promise<ComponentRow[]>;
+     static async findFoodContactByProductId(productId: string): Promise<ComponentRow[]>;
+   }
+   ```
+
+4. CATEGORY REPOSITORY
+   File: src/repositories/category.repository.ts
+
+   ```typescript
+   export class CategoryRepository {
+     static async findAll(): Promise<CategoryRow[]>;
+     static async findBySlug(slug: string): Promise<CategoryRow | null>;
+     static async findByParentId(parentId: string | null): Promise<CategoryRow[]>;
+     static async getProductCount(categoryId: string): Promise<number>;
+     static async buildTree(): Promise<CategoryTree>;
+   }
+   ```
+
+5. RESPONSE TRANSFORMERS
+   File: src/transformers/product.transformer.ts
+
+   Transform database rows to API response format:
+   ```typescript
+   export function toProductListItem(row: ProductRow, verification: VerificationRow): ProductListItem;
+   export function toProductDetail(product: ProductWithRelations): ProductDetailResponse;
+   export function toComponentResponse(component: ComponentRow): ComponentResponse;
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+FILTERING LOGIC
+───────────────────────────────────────────────────────────────────────────────
+
+Implement faceted filtering with these rules:
+
+1. TIER FILTER
+   - Filter by verification_status.tier
+   - Multiple tiers = OR logic
+
+2. MATERIAL FILTER
+   - Filter by components.material_id where food_contact = true
+   - Multiple materials = OR logic
+
+3. COATING TYPE FILTER
+   - Filter by components.coating_id joined to coatings.type
+   - Values: none, ceramic_sol_gel, unknown
+   - PTFE/fluoropolymer excluded from catalog (not a filter option)
+
+4. FEATURES FILTERS
+   - induction_compatible: products.features->>'induction_compatible' = 'true'
+   - oven_safe_min_temp: products.features->>'oven_safe_temp_f' >= :value
+
+5. RETAILER FILTER
+   - Filter by product_retailer_links.retailer_id
+
+───────────────────────────────────────────────────────────────────────────────
+FACET AGGREGATION
+───────────────────────────────────────────────────────────────────────────────
+
+Return facet counts WITH current filters applied:
+
+```typescript
+interface FacetCounts {
+  tier: Array<{ value: number; label: string; count: number }>;
+  material: Array<{ value: string; label: string; count: number }>;
+  coating_type: Array<{ value: string; label: string; count: number }>;
+  // ... other facets
+}
+```
+
+Use SQL COUNT with GROUP BY or window functions for efficiency.
+Show (0) counts but keep facet option visible.
+
+───────────────────────────────────────────────────────────────────────────────
+SORTING OPTIONS
+───────────────────────────────────────────────────────────────────────────────
+
+Implement these sort options:
+
+- tier_desc: ORDER BY verification_status.tier DESC, products.name ASC
+- tier_asc: ORDER BY verification_status.tier ASC, products.name ASC
+- name_asc: ORDER BY products.name ASC
+- name_desc: ORDER BY products.name DESC
+- newest: ORDER BY products.published_at DESC
+
+DEFAULT: tier_desc (trust-first ranking)
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Only return products with status = 'published' on public endpoints
+□ Include verification tier on every product response
+□ Food-contact components always highlighted/flagged
+□ Facet counts accurate with current filters
+□ Pagination uses cursor-based or offset (offset OK for MVP)
+□ Handle product not found gracefully (404 response)
+
+───────────────────────────────────────────────────────────────────────────────
+TESTING
+───────────────────────────────────────────────────────────────────────────────
+
+Write tests for:
+1. Filter combinations (tier + material + category)
+2. Facet count accuracy
+3. Sort order correctness
+4. Pagination (first, middle, last page)
+5. Product not found returns 404
+6. Component model fully populated

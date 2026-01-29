@@ -1,0 +1,194 @@
+.page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4) var(--space-16);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+  padding-bottom: var(--space-6);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 var(--space-2);
+  color: var(--color-gray-900);
+}
+
+.updated {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* Content */
+.content {
+  line-height: 1.8;
+  color: var(--color-gray-700);
+}
+
+.section {
+  margin-bottom: var(--space-10);
+}
+
+.section h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-4);
+}
+
+.section h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-2);
+}
+
+.section p {
+  margin: 0 0 var(--space-4);
+  font-size: 1rem;
+}
+
+.section ul {
+  margin: var(--space-3) 0 var(--space-4);
+  padding-left: var(--space-6);
+}
+
+.section li {
+  padding: var(--space-1) 0;
+}
+
+/* Amazon Box */
+.amazonBox {
+  padding: var(--space-5);
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-4);
+}
+
+.amazonBox p {
+  margin: 0;
+  font-size: 0.9375rem;
+}
+
+/* Disclosure Locations */
+.disclosureLocations {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.locationCard {
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.locationCard h3 {
+  font-size: 0.9375rem;
+  margin: 0 0 var(--space-1);
+}
+
+.locationCard p {
+  font-size: 0.875rem;
+  margin: 0;
+  color: var(--color-gray-600);
+}
+
+/* Impact Grid */
+.impactGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+  margin: var(--space-6) 0;
+}
+
+.impactCard {
+  padding: var(--space-5);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+}
+
+.impactCard h3 {
+  font-size: 1rem;
+  margin: 0 0 var(--space-3);
+}
+
+.impactCard ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.impactCard li {
+  padding: var(--space-1) 0;
+  font-size: 0.9375rem;
+}
+
+/* Contact Email */
+.contactEmail {
+  text-align: center;
+  padding: var(--space-4);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.contactEmail a {
+  color: var(--color-primary-600);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+/* Related */
+.related {
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.related h2 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin: 0 0 var(--space-4);
+  color: var(--color-gray-900);
+}
+
+.relatedLinks {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.relatedLink {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.relatedLink:hover {
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2rem;
+  }
+
+  .disclosureLocations,
+  .impactGrid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .page {
+    padding: var(--space-4) var(--space-3) var(--space-12);
+  }
+}

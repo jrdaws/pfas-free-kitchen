@@ -1,0 +1,149 @@
+/* ============================================================
+   BottomSheet - Mobile-friendly slide-up sheet
+   ============================================================ */
+
+/* ============================================================
+   BACKDROP
+   ============================================================ */
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition-normal), visibility var(--transition-normal);
+  z-index: var(--z-modal-backdrop);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* ============================================================
+   SHEET
+   ============================================================ */
+
+.sheet {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: var(--color-white);
+  border-radius: var(--radius-2xl) var(--radius-2xl) 0 0;
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  max-height: 90vh;
+  transition: height var(--transition-normal), transform var(--transition-normal);
+  padding-bottom: env(safe-area-inset-bottom);
+  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+  will-change: transform, height;
+}
+
+.sheet:not(.open) {
+  height: 0 !important;
+}
+
+/* ============================================================
+   DRAG HANDLE
+   ============================================================ */
+
+.dragHandle {
+  display: flex;
+  justify-content: center;
+  padding: var(--space-3) var(--space-4) var(--space-2);
+  cursor: grab;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: none;
+}
+
+.dragHandle:active {
+  cursor: grabbing;
+}
+
+.dragIndicator {
+  width: 36px;
+  height: 4px;
+  background: var(--color-gray-300);
+  border-radius: var(--radius-full);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--space-4) var(--space-3);
+  flex-shrink: 0;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+}
+
+.headerActions {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.resetButton,
+.doneButton {
+  background: none;
+  border: none;
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  padding: var(--space-2) var(--space-3);
+  min-height: 44px;
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+
+.resetButton {
+  color: var(--color-text-secondary);
+}
+
+.resetButton:active {
+  background: var(--color-gray-100);
+}
+
+.doneButton {
+  color: var(--color-primary);
+}
+
+.doneButton:active {
+  background: var(--color-primary-100);
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+  padding: 0 var(--space-4) var(--space-4);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .backdrop,
+  .sheet {
+    transition-duration: 0.01ms;
+  }
+}

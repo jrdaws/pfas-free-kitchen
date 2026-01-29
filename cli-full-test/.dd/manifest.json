@@ -1,0 +1,7 @@
+{
+  "template": "saas",
+  "version": "0.1.0",
+  "capabilities": ["auth", "billing", "subscriptions", "user-management"],
+  "description": "Full-featured SaaS application template",
+  "framework_version": "0.3.0"
+}

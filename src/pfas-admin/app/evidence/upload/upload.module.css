@@ -1,0 +1,132 @@
+.page {
+  max-width: 720px;
+}
+
+.header {
+  margin-bottom: var(--space-6);
+}
+
+.backLink {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  display: inline-block;
+  margin-bottom: var(--space-2);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.section {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-5);
+}
+
+.sectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: var(--space-4);
+}
+
+/* Dropzone */
+.dropzone {
+  position: relative;
+}
+
+.fileInput {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.dropzoneLabel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-8);
+  border: 2px dashed var(--border-color);
+  border-radius: var(--border-radius-lg);
+  text-align: center;
+  transition: all 0.15s;
+}
+
+.dropzone:hover .dropzoneLabel {
+  border-color: var(--color-primary);
+  background: rgba(15, 118, 110, 0.02);
+}
+
+.dropzoneIcon {
+  font-size: 2rem;
+}
+
+.dropzoneHint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* File Info */
+.fileInfo {
+  margin-top: var(--space-4);
+  padding: var(--space-3);
+  background: rgba(5, 150, 105, 0.05);
+  border-radius: var(--border-radius-md);
+  font-size: 0.875rem;
+}
+
+.fileInfo p {
+  margin: 0;
+}
+
+.hashInfo {
+  margin-top: var(--space-2) !important;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.hashInfo code {
+  font-size: 0.7rem;
+  word-break: break-all;
+}
+
+/* Fields */
+.select {
+  width: 100%;
+  padding: var(--space-3);
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.field label {
+  font-size: 0.875rem;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-3);
+}

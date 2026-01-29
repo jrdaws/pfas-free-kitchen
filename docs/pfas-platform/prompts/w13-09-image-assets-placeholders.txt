@@ -1,0 +1,298 @@
+================================================================================
+WAVE 13-09: IMAGE ASSETS & PLACEHOLDERS
+================================================================================
+ACTIVATION: "Execute Wave 13-09: Image Assets and Placeholders"
+AGENT: Media Agent / Website Agent
+DEPENDS ON: Wave 13-01 through 13-03
+================================================================================
+
+CONTEXT
+-------
+Create all necessary image assets, placeholders, and icons for the website.
+Product images will be placeholders initially (real images require licensing
+or API integration with retailers).
+
+================================================================================
+TASK 1: CREATE CATEGORY HERO IMAGES
+================================================================================
+
+Create placeholder/illustrative images for categories:
+
+`public/categories/`:
+- `cookware-hero.svg` - Artistic pan/pot arrangement
+- `bakeware-hero.svg` - Baking sheets and dishes
+- `storage-hero.svg` - Glass containers
+- `utensils-hero.svg` - Spatulas, spoons, etc.
+- `appliances-hero.svg` - Kitchen appliance accessories
+
+SVG STYLE:
+- Line art or flat illustration style
+- Use brand colors (teal accents)
+- 1200x600 aspect ratio for hero use
+- 400x300 for category cards
+
+================================================================================
+TASK 2: CREATE PRODUCT PLACEHOLDER IMAGES
+================================================================================
+
+Create category-specific product placeholders:
+
+`public/placeholders/products/`:
+```
+skillet-placeholder.svg      (pan silhouette)
+saucepan-placeholder.svg     (saucepan silhouette)
+dutch-oven-placeholder.svg   (dutch oven silhouette)
+stock-pot-placeholder.svg    (stock pot silhouette)
+sheet-pan-placeholder.svg    (sheet pan silhouette)
+baking-dish-placeholder.svg  (rectangular dish silhouette)
+muffin-pan-placeholder.svg   (muffin pan silhouette)
+container-placeholder.svg    (storage container silhouette)
+utensil-placeholder.svg      (spatula silhouette)
+cutting-board-placeholder.svg (cutting board silhouette)
+mixing-bowl-placeholder.svg  (bowl silhouette)
+default-placeholder.svg      (generic kitchen item)
+```
+
+SVG STYLE:
+- Simple silhouette/outline
+- Light gray background (#F5F5F5)
+- Darker gray icon (#9E9E9E)
+- Square aspect ratio (1:1)
+- 400x400 base size
+
+================================================================================
+TASK 3: CREATE BRAND LOGO PLACEHOLDERS
+================================================================================
+
+Create brand logo placeholders (text-based):
+
+`public/brands/`:
+```
+all-clad.svg
+lodge.svg
+le-creuset.svg
+staub.svg
+made-in.svg
+demeyere.svg
+cuisinart.svg
+tramontina.svg
+pyrex.svg
+anchor-hocking.svg
+nordic-ware.svg
+usa-pan.svg
+oxo.svg
+gir.svg
+(etc. for all brands)
+```
+
+SVG STYLE:
+- Brand name in clean typography
+- Neutral colors (gray/black)
+- 200x60 aspect ratio
+- These are placeholders - real logos require licensing
+
+================================================================================
+TASK 4: CREATE VERIFICATION TIER ICONS
+================================================================================
+
+Create custom tier icons:
+
+`public/icons/tiers/`:
+```
+tier-4-monitored.svg    (shield with double checkmark, green)
+tier-3-lab-tested.svg   (shield with checkmark, blue)
+tier-2-reviewed.svg     (shield with circle, purple)
+tier-1-statement.svg    (shield with dot, gray)
+tier-0-unknown.svg      (shield with question mark, light gray)
+```
+
+SVG STYLE:
+- Shield or badge shape
+- Consistent size (24x24, 32x32, 48x48 variants)
+- Color-coded per tier color scheme
+- Clear at small sizes
+
+================================================================================
+TASK 5: CREATE UI ICONS
+================================================================================
+
+Create/verify all UI icons exist:
+
+`public/icons/ui/`:
+```
+search.svg
+filter.svg
+sort.svg
+grid-view.svg
+list-view.svg
+compare.svg
+heart.svg
+heart-filled.svg
+share.svg
+print.svg
+external-link.svg
+chevron-down.svg
+chevron-right.svg
+chevron-left.svg
+check.svg
+x.svg
+plus.svg
+minus.svg
+info.svg
+warning.svg
+error.svg
+menu.svg
+close.svg
+```
+
+================================================================================
+TASK 6: CREATE EMPTY STATE ILLUSTRATIONS
+================================================================================
+
+`public/illustrations/`:
+```
+empty-search.svg        (magnifying glass with question mark)
+empty-compare.svg       (empty balance scales)
+empty-saved.svg         (empty heart)
+empty-cart.svg          (empty shopping bag)
+error-404.svg           (confused pan or lost spatula)
+error-500.svg           (broken pan)
+loading.svg             (animated spinner or pan)
+```
+
+STYLE:
+- Line art illustration
+- Single accent color + grays
+- Friendly, not corporate
+- 200x200 base size
+
+================================================================================
+TASK 7: CREATE FAVICON & APP ICONS
+================================================================================
+
+`public/`:
+```
+favicon.ico             (16x16, 32x32)
+favicon-16x16.png
+favicon-32x32.png
+apple-touch-icon.png    (180x180)
+android-chrome-192x192.png
+android-chrome-512x512.png
+site.webmanifest
+```
+
+ICON DESIGN:
+- Simple pan or leaf icon
+- Works at small sizes
+- Brand colors (teal)
+
+================================================================================
+TASK 8: CREATE OG/SOCIAL IMAGES
+================================================================================
+
+`public/og/`:
+```
+og-default.png          (1200x630 - default share image)
+og-search.png           (1200x630 - for search pages)
+og-product-template.png (1200x630 - template for products)
+twitter-card.png        (1200x600 - Twitter summary large)
+```
+
+Include:
+- Logo
+- Tagline: "Find PFAS-Free Kitchen Products"
+- Brand colors
+
+================================================================================
+TASK 9: CREATE COMPONENT TO MAP PRODUCT TO PLACEHOLDER
+================================================================================
+
+Create `src/pfas-web/lib/images.ts`:
+
+```typescript
+const CATEGORY_PLACEHOLDERS: Record<string, string> = {
+  'cat_skillets': '/placeholders/products/skillet-placeholder.svg',
+  'cat_saucepans': '/placeholders/products/saucepan-placeholder.svg',
+  'cat_dutch_ovens': '/placeholders/products/dutch-oven-placeholder.svg',
+  'cat_stock_pots': '/placeholders/products/stock-pot-placeholder.svg',
+  'cat_sheet_pans': '/placeholders/products/sheet-pan-placeholder.svg',
+  'cat_baking_dishes': '/placeholders/products/baking-dish-placeholder.svg',
+  'cat_muffin_pans': '/placeholders/products/muffin-pan-placeholder.svg',
+  'cat_glass_containers': '/placeholders/products/container-placeholder.svg',
+  'cat_stainless_containers': '/placeholders/products/container-placeholder.svg',
+  'cat_spatulas': '/placeholders/products/utensil-placeholder.svg',
+  'cat_cutting_boards': '/placeholders/products/cutting-board-placeholder.svg',
+  'cat_mixing_bowls': '/placeholders/products/mixing-bowl-placeholder.svg',
+};
+
+export function getProductImage(product: Product): string {
+  // If product has real image, use it
+  if (product.primary_image_url && !product.primary_image_url.includes('placeholder')) {
+    return product.primary_image_url;
+  }
+  
+  // Otherwise, return category-appropriate placeholder
+  return CATEGORY_PLACEHOLDERS[product.category_id] || '/placeholders/products/default-placeholder.svg';
+}
+
+export function getBrandLogo(brand: Brand): string {
+  if (brand.logo_url && !brand.logo_url.includes('placeholder')) {
+    return brand.logo_url;
+  }
+  return `/brands/${brand.slug}.svg`;
+}
+```
+
+================================================================================
+TASK 10: UPDATE PRODUCT DATA WITH PLACEHOLDER REFERENCES
+================================================================================
+
+Update all products in mock data to use appropriate placeholders:
+
+```typescript
+{
+  id: "prd_cookware_001",
+  // ...
+  primary_image_url: "/placeholders/products/skillet-placeholder.svg",
+  images: [
+    "/placeholders/products/skillet-placeholder.svg",
+  ],
+  // ...
+}
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Category hero images created (5)
+□ Product placeholders created (12+)
+□ Brand logo placeholders created (20+)
+□ Tier icons created (5)
+□ UI icons created (20+)
+□ Empty state illustrations created (6+)
+□ Favicon and app icons created
+□ OG images created
+□ Image helper functions work
+□ All products reference appropriate placeholders
+□ All images are optimized SVGs where possible
+
+================================================================================
+FILES TO CREATE
+================================================================================
+
+- public/categories/*.svg
+- public/placeholders/products/*.svg
+- public/brands/*.svg
+- public/icons/tiers/*.svg
+- public/icons/ui/*.svg
+- public/illustrations/*.svg
+- public/favicon.ico
+- public/favicon-*.png
+- public/apple-touch-icon.png
+- public/android-chrome-*.png
+- public/site.webmanifest
+- public/og/*.png
+- src/pfas-web/lib/images.ts
+
+================================================================================

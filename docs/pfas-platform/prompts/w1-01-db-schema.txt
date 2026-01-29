@@ -1,0 +1,101 @@
+ACTIVATION: w1-db-schema
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Database Engineer Agent
+MISSION: Implement the complete PostgreSQL schema for PFAS-Free Kitchen Platform
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+You are building the database foundation for a PFAS-free kitchen products platform.
+The schema must support:
+- Product catalog with component-level granularity
+- Evidence artifacts with immutable storage references
+- 5-tier verification system (0-4)
+- Append-only audit logging
+- Affiliate link tracking
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Section: "3. PostgreSQL Schema DDL"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. MIGRATIONS
+   Create migration files in: supabase/migrations/ (or prisma/migrations/)
+   
+   Files to create:
+   - 001_extensions.sql (uuid-ossp, pgcrypto)
+   - 002_enums.sql (all enum types)
+   - 003_brands_retailers.sql (brands, retailers, affiliate_programs, link_templates)
+   - 004_categories.sql (hierarchical categories)
+   - 005_materials_coatings.sql (materials, coatings with seed data)
+   - 006_products.sql (products, components, variants, retailer_links)
+   - 007_evidence.sql (evidence_objects, product_evidence, claims)
+   - 008_verification.sql (verification_status, verification_history)
+   - 009_reports.sql (user_reports, moderation_actions)
+   - 010_tracking.sql (affiliate_clicks)
+   - 011_audit.sql (audit_log with immutability triggers)
+   - 012_views.sql (v_published_products, v_review_queue)
+   - 013_seed_data.sql (categories, materials, coatings)
+
+2. INDEXES
+   Ensure all indexes from spec are created:
+   - Composite indexes for common queries
+   - Partial indexes for filtered queries (WHERE status = 'published')
+   - GIN index for full-text search on products
+
+3. TRIGGERS
+   Implement these functions and triggers:
+   - update_updated_at() - auto-update timestamps
+   - prevent_evidence_hard_delete() - block DELETE on evidence_objects
+   - prevent_audit_modification() - block UPDATE/DELETE on audit_log
+
+4. CONSTRAINTS
+   - All foreign keys with appropriate ON DELETE behavior
+   - UNIQUE constraints as specified
+   - CHECK constraints where applicable
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Evidence objects can NEVER be deleted (soft delete via deleted_at only)
+□ Audit log is append-only (no updates, no deletes)
+□ SHA-256 hash stored for every evidence artifact
+□ Verification history preserves all tier changes
+□ Component model required - products have multiple components
+
+───────────────────────────────────────────────────────────────────────────────
+VALIDATION
+───────────────────────────────────────────────────────────────────────────────
+
+After implementation, verify:
+1. Can create a product with 3 components
+2. Can link evidence to specific components
+3. Cannot DELETE from evidence_objects (trigger should block)
+4. Cannot UPDATE audit_log (trigger should block)
+5. Verification history captures tier changes
+6. Full-text search index works on product name/description
+
+───────────────────────────────────────────────────────────────────────────────
+OUTPUT FORMAT
+───────────────────────────────────────────────────────────────────────────────
+
+Create each migration file with:
+- Header comment with purpose
+- Transactional wrapper (BEGIN/COMMIT) if needed
+- Idempotent where possible (IF NOT EXISTS)
+
+Example:
+```sql
+-- Migration: 007_evidence.sql
+-- Purpose: Evidence objects and product-evidence relationships
+
+CREATE TABLE IF NOT EXISTS evidence_objects (
+  ...
+);
+```
+
+TECH STACK: PostgreSQL 15+, Supabase preferred

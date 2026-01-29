@@ -1,0 +1,228 @@
+================================================================================
+WAVE 14-02: AFFILIATE ACCOUNT SETUP GUIDE
+================================================================================
+ACTIVATION: "Execute Wave 14-02: Affiliate Account Setup Guide"
+AGENT: Human (User Action Required)
+PRIORITY: HIGH - Required for real links
+================================================================================
+
+CONTEXT
+-------
+This wave requires YOU (the human) to create affiliate accounts. These cannot
+be created programmatically - you must sign up manually. This guide walks you
+through setting up each account.
+
+================================================================================
+STEP 1: AMAZON ASSOCIATES (PRIMARY - DO THIS FIRST)
+================================================================================
+
+Amazon has the most PFAS-free kitchen products. Set this up first.
+
+**Sign Up:**
+1. Go to: https://affiliate-program.amazon.com
+2. Click "Sign Up"
+3. Log in with your existing Amazon account (or create one)
+
+**Account Information:**
+- Payee Name: Your legal name or business name
+- Address: Your address for tax purposes
+- Phone: Your phone number
+
+**Website Information:**
+- Website URL: Enter your domain (e.g., pfasfreekitchen.com)
+  - If no domain yet, use: localhost:3000 (temporary)
+- What is your website about: "Product reviews and recommendations for PFAS-free kitchen products including cookware, bakeware, and food storage"
+- Topics: Home & Garden, Kitchen & Dining
+
+**Store ID:**
+- Choose a Store ID (this is your tracking tag)
+- Suggestion: `pfasfreekitch-20` or `pfaskitchen-20`
+- WRITE THIS DOWN - you'll need it
+
+**Traffic & Monetization:**
+- How do you drive traffic: Content/Niche Site
+- How do you monetize: Affiliate links in content
+- How do you build links: Text links, product links
+
+**Identity Verification:**
+- Complete the phone verification
+- Enter the PIN they text/call you
+
+**IMPORTANT:** 
+- You have 180 days to make 3 qualifying sales or account closes
+- Review takes 1-3 days
+- You can start creating links immediately
+
+**After Approval, Enable PA-API (Optional - for automation):**
+1. Go to: Tools → Product Advertising API
+2. Request access (requires good standing)
+3. Note: Requires 3 sales first for new accounts
+
+================================================================================
+STEP 2: IMPACT RADIUS (Williams Sonoma, Sur La Table)
+================================================================================
+
+**Sign Up:**
+1. Go to: https://impact.com
+2. Click "Partners" → "Apply Now"
+
+**Apply to Brands:**
+After account creation, search for and apply to:
+- Williams-Sonoma (ID: 1234) 
+- Sur La Table
+- Crate & Barrel
+- West Elm
+
+**Profile Setup:**
+- Website: Your domain
+- Category: Home & Garden / Kitchen
+- Description: "PFAS-Free Kitchen helps consumers find verified PFAS-free cookware and kitchen products through independent testing and research"
+- Monthly Traffic: Estimate (even 1000 is fine to start)
+
+================================================================================
+STEP 3: SHAREASALE (Lodge, Cuisinart, Many DTC Brands)
+================================================================================
+
+**Sign Up:**
+1. Go to: https://www.shareasale.com/info/affiliates/
+2. Click "Affiliate Sign Up"
+
+**Key Merchants to Apply For:**
+- Lodge Cast Iron
+- Cuisinart
+- OXO
+- Vitamix
+- Le Creuset (check availability)
+
+**Application Tips:**
+- Be specific about your niche
+- Mention you focus on PFAS-free products
+- Note your verification methodology adds value
+
+================================================================================
+STEP 4: CJ AFFILIATE (Target, Walmart, Wayfair)
+================================================================================
+
+**Sign Up:**
+1. Go to: https://www.cj.com
+2. Click "Publishers" → "Join Now"
+
+**Key Merchants:**
+- Target
+- Walmart  
+- Wayfair
+- Bed Bath & Beyond (if active)
+- Kohl's
+
+================================================================================
+STEP 5: RAKUTEN ADVERTISING (Backup Option)
+================================================================================
+
+**Sign Up:**
+1. Go to: https://rakutenadvertising.com
+2. Apply as a publisher
+
+**Key Merchants:**
+- Various department stores
+- Specialty retailers
+
+================================================================================
+STEP 6: RECORD YOUR CREDENTIALS
+================================================================================
+
+After signing up, record these in a secure location:
+
+```
+AFFILIATE_CREDENTIALS.md (DO NOT COMMIT TO GIT)
+
+Amazon Associates:
+- Store ID (Tracking Tag): _______________
+- Associates Email: _______________
+- PA-API Access Key: _______________ (if approved)
+- PA-API Secret Key: _______________ (if approved)
+
+Impact:
+- Account ID: _______________
+- API Key: _______________
+
+ShareASale:
+- Affiliate ID: _______________
+- API Token: _______________
+
+CJ Affiliate:
+- Website ID: _______________
+- API Key: _______________
+```
+
+================================================================================
+STEP 7: SET UP ENVIRONMENT VARIABLES
+================================================================================
+
+Create `.env.local` in your project (this file is gitignored):
+
+```bash
+# Amazon Associates
+AMAZON_ASSOCIATE_TAG=pfasfreekitch-20
+AMAZON_PA_API_KEY=your-key-here
+AMAZON_PA_API_SECRET=your-secret-here
+AMAZON_PA_API_REGION=us-east-1
+
+# Impact
+IMPACT_ACCOUNT_ID=your-id
+IMPACT_API_KEY=your-key
+
+# ShareASale
+SHAREASALE_AFFILIATE_ID=your-id
+SHAREASALE_API_TOKEN=your-token
+
+# Site Config
+NEXT_PUBLIC_SITE_URL=https://pfasfreekitchen.com
+```
+
+================================================================================
+STEP 8: ALTERNATIVE - RAINFOREST API (FASTER)
+================================================================================
+
+If you don't want to wait for PA-API approval, use Rainforest API:
+
+1. Go to: https://www.rainforestapi.com
+2. Sign up for free trial (100 requests)
+3. Paid plans start at $49/month
+
+**Advantages:**
+- Works immediately (no Amazon approval needed)
+- Get product data: titles, images, prices, descriptions
+- More generous rate limits
+- Still use YOUR Amazon tag for affiliate links
+
+**How it works:**
+- You search for products via Rainforest API
+- Get product details and images
+- Generate affiliate links with YOUR Amazon tag
+- Links still earn you commission
+
+================================================================================
+EXPECTED TIMELINE
+================================================================================
+
+| Account | Sign Up | Approval | First Links |
+|---------|---------|----------|-------------|
+| Amazon Associates | 10 min | Instant* | Same day |
+| Impact | 15 min | 1-3 days | After approval |
+| ShareASale | 15 min | 1-5 days | After approval |
+| CJ Affiliate | 15 min | 1-5 days | After approval |
+| Rainforest API | 5 min | Instant | Same day |
+
+*Amazon lets you create links immediately but reviews in background
+
+================================================================================
+NEXT STEPS AFTER ACCOUNT SETUP
+================================================================================
+
+Once you have your Amazon Associate tag, tell me:
+
+"My Amazon Associates tag is: [YOUR-TAG-20]"
+
+Then run Wave 14-03 to integrate real affiliate links.
+
+================================================================================

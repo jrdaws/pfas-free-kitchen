@@ -1,0 +1,13 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Empty heart outline -->
+  <path d="M100 170 L30 100 C10 70 30 35 65 35 C85 35 100 55 100 55 C100 55 115 35 135 35 C170 35 190 70 170 100 Z" 
+        stroke="#1a5f4a" stroke-width="4" fill="none" stroke-dasharray="8 6"/>
+  <!-- Small decorative hearts -->
+  <path d="M40 150 L35 145 C32 140 35 135 40 135 C43 135 45 138 45 138 C45 138 47 135 50 135 C55 135 58 140 55 145 Z" 
+        stroke="#1a5f4a" stroke-width="2" fill="none" opacity="0.4"/>
+  <path d="M160 50 L155 45 C152 40 155 35 160 35 C163 35 165 38 165 38 C165 38 167 35 170 35 C175 35 178 40 175 45 Z" 
+        stroke="#1a5f4a" stroke-width="2" fill="none" opacity="0.4"/>
+  <!-- Plus sign in center -->
+  <line x1="90" y1="95" x2="110" y2="95" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+  <line x1="100" y1="85" x2="100" y2="105" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round" opacity="0.5"/>
+</svg>

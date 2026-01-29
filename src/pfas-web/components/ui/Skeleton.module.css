@@ -1,0 +1,199 @@
+/* ============================================================
+   Skeleton Loading Styles
+   Shimmer animation and variants for loading states
+   ============================================================ */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-alt) 25%,
+    var(--color-surface) 50%,
+    var(--color-bg-alt) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* Reduced motion: static placeholder */
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--color-bg-alt);
+  }
+}
+
+/* ============================================================
+   VARIANTS
+   ============================================================ */
+
+.circular {
+  border-radius: 50%;
+}
+
+.text {
+  border-radius: var(--radius-sm);
+  height: 1em;
+}
+
+.rectangular {
+  border-radius: var(--radius-md);
+}
+
+/* ============================================================
+   PRODUCT CARD SKELETON
+   ============================================================ */
+
+.cardSkeleton {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.cardImage {
+  aspect-ratio: 1;
+  width: 100%;
+  border-radius: 0;
+}
+
+.cardContent {
+  padding: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-xs);
+}
+
+/* ============================================================
+   GRID SKELETON
+   ============================================================ */
+
+.gridSkeleton {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--space-lg);
+}
+
+@media (max-width: 640px) {
+  .gridSkeleton {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-md);
+  }
+}
+
+@media (max-width: 400px) {
+  .gridSkeleton {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   PRODUCT DETAIL SKELETON
+   ============================================================ */
+
+.detailSkeleton {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2xl);
+  padding: var(--space-xl) 0;
+}
+
+@media (max-width: 768px) {
+  .detailSkeleton {
+    grid-template-columns: 1fr;
+    gap: var(--space-lg);
+  }
+}
+
+.detailGallery {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detailMainImage {
+  aspect-ratio: 1;
+  width: 100%;
+}
+
+.detailThumbnails {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.detailInfo {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.detailActions {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-md);
+}
+
+/* ============================================================
+   TEXT SKELETON
+   ============================================================ */
+
+.textSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ============================================================
+   SEARCH RESULTS SKELETON
+   ============================================================ */
+
+.searchSkeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.searchHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.searchFilters {
+  display: flex;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+/* ============================================================
+   TABLE ROW SKELETON
+   ============================================================ */
+
+.tableRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+/* ============================================================
+   INLINE SKELETON
+   ============================================================ */
+
+.inline {
+  display: inline-block;
+  vertical-align: middle;
+}

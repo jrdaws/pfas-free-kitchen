@@ -1,0 +1,13 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F5F5F5"/>
+  <g transform="translate(100, 100)">
+    <!-- Container body -->
+    <rect x="20" y="60" width="160" height="140" rx="8" stroke="#BDBDBD" stroke-width="4" fill="none"/>
+    <!-- Lid -->
+    <rect x="10" y="40" width="180" height="30" rx="6" stroke="#BDBDBD" stroke-width="4" fill="none"/>
+    <!-- Lid handle -->
+    <rect x="80" y="30" width="40" height="15" rx="4" stroke="#BDBDBD" stroke-width="3" fill="none"/>
+    <!-- Seal line -->
+    <line x1="30" y1="70" x2="170" y2="70" stroke="#BDBDBD" stroke-width="2" stroke-dasharray="8 4"/>
+  </g>
+</svg>

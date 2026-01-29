@@ -1,0 +1,42 @@
+.banner {
+  display: flex;
+  gap: var(--space-4);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(20, 184, 166, 0.08));
+  border: 1px solid rgba(15, 118, 110, 0.2);
+  border-radius: var(--border-radius-lg);
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+}
+
+.icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin-bottom: var(--space-2);
+}
+
+.message {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+  line-height: 1.5;
+}
+
+.link {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-primary);
+}
+
+.link:hover {
+  text-decoration: underline;
+}

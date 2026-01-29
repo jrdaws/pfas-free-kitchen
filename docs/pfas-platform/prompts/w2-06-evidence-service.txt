@@ -1,0 +1,270 @@
+ACTIVATION: w2-evidence-service
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement Evidence Service with immutable storage and hash verification
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Evidence artifacts (PDFs, images) are critical for legal defensibility.
+They must be:
+- Immutably stored (WORM - Write Once Read Many)
+- Hash-verified on every access
+- Properly typed with complete metadata
+- Linked to specific product components
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "2.3 Evidence Service" API contracts, "evidence_objects" schema
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. EVIDENCE SERVICE
+   File: src/services/evidence.service.ts
+
+   ```typescript
+   export class EvidenceService {
+     /**
+      * Upload new evidence artifact
+      * 1. Validate file type and size
+      * 2. Calculate SHA-256 hash
+      * 3. Upload to S3 with WORM config
+      * 4. Create database record
+      * 5. Log to audit
+      */
+     static async upload(params: {
+       file: Buffer;
+       filename: string;
+       mimeType: string;
+       type: EvidenceType;
+       source: EvidenceSource;
+       metadata: EvidenceMetadata;
+       productId?: string;
+       componentIds?: string[];
+       uploadedBy: string;
+     }): Promise<EvidenceUploadResponse>;
+
+     /**
+      * Get evidence metadata
+      */
+     static async getEvidence(id: string): Promise<EvidenceResponse>;
+
+     /**
+      * Stream evidence artifact
+      * 1. Fetch from S3
+      * 2. Verify hash matches stored hash
+      * 3. Return stream if valid
+      * 4. Throw IntegrityError if hash mismatch
+      */
+     static async getArtifact(id: string): Promise<{
+       stream: Readable;
+       mimeType: string;
+       filename: string;
+       hash: string;
+     }>;
+
+     /**
+      * Link evidence to product/components
+      */
+     static async linkToProduct(params: {
+       evidenceId: string;
+       productId: string;
+       componentIds?: string[];
+       linkedBy: string;
+       notes?: string;
+     }): Promise<void>;
+
+     /**
+      * Get all evidence for a product
+      */
+     static async getByProductId(productId: string): Promise<EvidenceResponse[]>;
+
+     /**
+      * Check evidence expiry status
+      */
+     static async checkExpiry(evidenceId: string): Promise<ExpiryStatus>;
+
+     /**
+      * Verify hash integrity
+      */
+     static async verifyIntegrity(evidenceId: string): Promise<IntegrityCheckResult>;
+   }
+   ```
+
+2. STORAGE ADAPTER (S3)
+   File: src/adapters/storage.adapter.ts
+
+   ```typescript
+   export class StorageAdapter {
+     /**
+      * Upload file to S3 with WORM configuration
+      * Object Lock mode: GOVERNANCE or COMPLIANCE
+      * Retention period: configurable (e.g., 7 years)
+      */
+     static async upload(params: {
+       key: string;
+       body: Buffer;
+       contentType: string;
+       metadata?: Record<string, string>;
+     }): Promise<{ uri: string; etag: string }>;
+
+     /**
+      * Get file as stream
+      */
+     static async getStream(uri: string): Promise<Readable>;
+
+     /**
+      * Check if object exists
+      */
+     static async exists(uri: string): Promise<boolean>;
+
+     /**
+      * Get object metadata without downloading
+      */
+     static async headObject(uri: string): Promise<S3HeadResponse>;
+   }
+   ```
+
+3. HASH UTILITIES
+   File: src/utils/hash.ts
+
+   ```typescript
+   import { createHash } from 'crypto';
+
+   /**
+    * Calculate SHA-256 hash of buffer
+    */
+   export function sha256(buffer: Buffer): string;
+
+   /**
+    * Calculate SHA-256 hash of stream
+    */
+   export async function sha256Stream(stream: Readable): Promise<string>;
+
+   /**
+    * Verify buffer against expected hash
+    */
+   export function verifyHash(buffer: Buffer, expectedHash: string): boolean;
+   ```
+
+4. EVIDENCE REPOSITORY
+   File: src/repositories/evidence.repository.ts
+
+   ```typescript
+   export class EvidenceRepository {
+     static async create(evidence: CreateEvidenceParams): Promise<string>;
+     static async findById(id: string): Promise<EvidenceRow | null>;
+     static async findByProductId(productId: string): Promise<EvidenceRow[]>;
+     static async findExpiringSoon(withinDays: number): Promise<EvidenceRow[]>;
+     static async findExpired(): Promise<EvidenceRow[]>;
+     static async softDelete(id: string, reason: string): Promise<void>;
+     
+     // Note: NO hard delete, NO update of core fields
+   }
+   ```
+
+5. METADATA SCHEMAS
+   File: src/schemas/evidence-metadata.schema.ts
+
+   ```typescript
+   import { z } from 'zod';
+
+   export const labReportMetadataSchema = z.object({
+     lab_name: z.string().min(1),
+     accreditation: z.string().optional(),
+     method: z.string().min(1),
+     method_reference: z.string().optional(),
+     analyte_list_ref: z.string().optional(),
+     analyte_count: z.number().int().positive().optional(),
+     lod_ng_g: z.number().positive(),
+     loq_ng_g: z.number().positive(),
+     sample_scope: z.object({
+       units: z.number().int().positive(),
+       lots: z.number().int().positive(),
+       component_ids: z.array(z.string()),
+     }),
+     collection_date: z.string().datetime(),
+     report_date: z.string().datetime(),
+     result_summary: z.string().min(1),
+   });
+
+   export const brandStatementMetadataSchema = z.object({
+     statement_text: z.string().min(10),
+     statement_date: z.string().datetime(),
+     signatory: z.string().optional(),
+   });
+
+   export const screenshotMetadataSchema = z.object({
+     source_url: z.string().url(),
+     captured_at: z.string().datetime(),
+     description: z.string().min(1),
+   });
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+EXPIRY RULES
+───────────────────────────────────────────────────────────────────────────────
+
+Calculate expires_at on upload:
+
+| Evidence Type     | Expiry Period |
+|-------------------|---------------|
+| lab_report        | 24 months     |
+| brand_statement   | 12 months     |
+| policy_document   | 12 months     |
+| screenshot        | 6 months      |
+| correspondence    | 12 months     |
+
+───────────────────────────────────────────────────────────────────────────────
+INTEGRITY VERIFICATION
+───────────────────────────────────────────────────────────────────────────────
+
+On EVERY artifact retrieval:
+
+```typescript
+async function getArtifact(id: string) {
+  const evidence = await EvidenceRepository.findById(id);
+  if (!evidence) throw new NotFoundError('Evidence not found');
+  
+  const stream = await StorageAdapter.getStream(evidence.storage_uri);
+  const downloadedBuffer = await streamToBuffer(stream);
+  
+  const computedHash = sha256(downloadedBuffer);
+  if (computedHash !== evidence.sha256_hash) {
+    await AuditService.logIntegrityFailure(id, evidence.sha256_hash, computedHash);
+    throw new IntegrityError('Evidence artifact integrity check failed');
+  }
+  
+  return { buffer: downloadedBuffer, ... };
+}
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ SHA-256 hash calculated BEFORE upload, stored in DB
+□ Hash verified on EVERY download
+□ S3 Object Lock enabled (WORM)
+□ No UPDATE of storage_uri or sha256_hash after creation
+□ Soft delete only (deleted_at timestamp)
+□ All uploads logged to audit
+
+File size limit: 10MB
+Allowed MIME types: application/pdf, image/png, image/jpeg
+
+───────────────────────────────────────────────────────────────────────────────
+ENVIRONMENT VARIABLES
+───────────────────────────────────────────────────────────────────────────────
+
+```
+S3_BUCKET=pfas-evidence-bucket
+S3_REGION=us-east-1
+S3_ACCESS_KEY=xxx
+S3_SECRET_KEY=xxx
+S3_OBJECT_LOCK_MODE=GOVERNANCE
+S3_RETENTION_DAYS=2555  # ~7 years
+EVIDENCE_MAX_SIZE_MB=10
+```

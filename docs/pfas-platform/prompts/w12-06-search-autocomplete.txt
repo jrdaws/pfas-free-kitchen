@@ -1,0 +1,428 @@
+================================================================================
+WAVE 12-06: SEARCH WITH AUTOCOMPLETE
+================================================================================
+ACTIVATION: "Execute Wave 12-06: Search with Autocomplete"
+AGENT: Website Agent
+DEPENDS ON: Wave 12-01
+================================================================================
+
+CONTEXT
+-------
+Implement professional search experience like Newegg/Wayfair:
+- Autocomplete suggestions as you type
+- Recent searches
+- Popular/trending searches
+- Category suggestions
+- Keyboard navigation
+
+================================================================================
+TASK 1: SEARCH INPUT COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/search/SearchInput.tsx`:
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ ┌─────────────────────────────────────────────────────────────────────────┐  │
+│ │ 🔍  cast ir|                                                    ⌘K     │  │
+│ └─────────────────────────────────────────────────────────────────────────┘  │
+│ ┌─────────────────────────────────────────────────────────────────────────┐  │
+│ │ Products                                                                │  │
+│ │ ─────────                                                               │  │
+│ │   [img] Lodge Cast Iron 12" Skillet                    Tier 2           │  │
+│ │   [img] Staub Cast Iron Dutch Oven                     Tier 3           │  │
+│ │   [img] Le Creuset Enameled Cast Iron                  Tier 3           │  │
+│ │                                                                         │  │
+│ │ Categories                                                              │  │
+│ │ ──────────                                                              │  │
+│ │   🍳 Cast Iron Cookware                                15 products      │  │
+│ │   🫕 Dutch Ovens                                       8 products       │  │
+│ │                                                                         │  │
+│ │ Materials                                                               │  │
+│ │ ─────────                                                               │  │
+│ │   Cast Iron                                            28 products      │  │
+│ │   Enameled Cast Iron                                   12 products      │  │
+│ │                                                                         │  │
+│ │ ─────────────────────────────────────────────────────────────────────── │  │
+│ │ Press Enter to search all results for "cast ir"                         │  │
+│ └─────────────────────────────────────────────────────────────────────────┘  │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 2: SEARCH SUGGESTIONS DROPDOWN
+================================================================================
+
+Create `src/pfas-web/components/search/SearchSuggestions.tsx`:
+
+SECTIONS:
+1. **Products** (top 3-5 matching products with thumbnails)
+2. **Categories** (matching categories with product counts)
+3. **Materials** (matching materials with product counts)
+4. **Recent Searches** (if no query, show user's recent)
+5. **Popular Searches** (if no query, show trending)
+
+EMPTY STATE (no query):
+```
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Recent Searches                                                 [Clear] │
+│ ─────────────────                                                       │
+│   🕐 stainless steel skillet                                           │
+│   🕐 le creuset dutch oven                                             │
+│   🕐 glass containers                                                  │
+│                                                                         │
+│ Popular Searches                                                        │
+│ ────────────────                                                        │
+│   🔥 cast iron                                                         │
+│   🔥 ceramic cookware                                                  │
+│   🔥 food storage                                                      │
+│   🔥 baking sheets                                                     │
+└─────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 3: KEYBOARD NAVIGATION
+================================================================================
+
+KEYBOARD SHORTCUTS:
+- `⌘K` or `/` - Focus search input from anywhere
+- `↓↑` - Navigate suggestions
+- `Enter` - Select highlighted suggestion or search
+- `Escape` - Close dropdown
+- `Tab` - Move to next section
+
+ACCESSIBILITY:
+- `role="combobox"` on input
+- `role="listbox"` on suggestions
+- `aria-activedescendant` for current selection
+- `aria-expanded` for dropdown state
+- Screen reader announcements for suggestion counts
+
+================================================================================
+TASK 4: DEBOUNCED SEARCH API
+================================================================================
+
+Create `src/pfas-web/hooks/useSearchSuggestions.ts`:
+
+```tsx
+export function useSearchSuggestions(query: string) {
+  const [suggestions, setSuggestions] = useState<Suggestions | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  useEffect(() => {
+    if (!query || query.length < 2) {
+      setSuggestions(null);
+      return;
+    }
+    
+    const controller = new AbortController();
+    const debounce = setTimeout(async () => {
+      setIsLoading(true);
+      try {
+        const res = await fetch(
+          `/api/v1/search/suggestions?q=${encodeURIComponent(query)}`,
+          { signal: controller.signal }
+        );
+        const data = await res.json();
+        setSuggestions(data);
+      } catch (e) {
+        if (e.name !== 'AbortError') console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 200);  // 200ms debounce
+    
+    return () => {
+      clearTimeout(debounce);
+      controller.abort();
+    };
+  }, [query]);
+  
+  return { suggestions, isLoading };
+}
+```
+
+================================================================================
+TASK 5: RECENT SEARCHES (localStorage)
+================================================================================
+
+Create `src/pfas-web/hooks/useRecentSearches.ts`:
+
+```tsx
+const MAX_RECENT = 5;
+const STORAGE_KEY = 'pfas-recent-searches';
+
+export function useRecentSearches() {
+  const [recent, setRecent] = useState<string[]>([]);
+  
+  // Load from localStorage on mount
+  useEffect(() => {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      setRecent(JSON.parse(stored));
+    }
+  }, []);
+  
+  const addSearch = useCallback((query: string) => {
+    setRecent(prev => {
+      const filtered = prev.filter(s => s !== query);
+      const updated = [query, ...filtered].slice(0, MAX_RECENT);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+      return updated;
+    });
+  }, []);
+  
+  const clearRecent = useCallback(() => {
+    localStorage.removeItem(STORAGE_KEY);
+    setRecent([]);
+  }, []);
+  
+  return { recent, addSearch, clearRecent };
+}
+```
+
+================================================================================
+TASK 6: SEARCH BAR IN HEADER (Integration)
+================================================================================
+
+Update `src/pfas-web/components/layout/SearchBar.tsx`:
+
+```tsx
+'use client';
+
+export function SearchBar() {
+  const [query, setQuery] = useState('');
+  const [isOpen, setIsOpen] = useState(false);
+  const [highlightIndex, setHighlightIndex] = useState(-1);
+  
+  const { suggestions, isLoading } = useSearchSuggestions(query);
+  const { recent, addSearch, clearRecent } = useRecentSearches();
+  
+  const inputRef = useRef<HTMLInputElement>(null);
+  
+  // Global keyboard shortcut
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+      if (e.key === '/' && !isInputFocused()) {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, []);
+  
+  const handleSearch = (searchQuery: string) => {
+    addSearch(searchQuery);
+    router.push(`/search?q=${encodeURIComponent(searchQuery)}`);
+    setIsOpen(false);
+  };
+  
+  return (
+    <div className="search-bar-wrapper">
+      <div className="search-bar">
+        <SearchIcon className="search-icon" />
+        <input
+          ref={inputRef}
+          type="text"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setIsOpen(true)}
+          onKeyDown={handleKeyDown}
+          placeholder="Search verified cookware, bakeware, storage..."
+          role="combobox"
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-autocomplete="list"
+        />
+        <kbd className="search-shortcut">⌘K</kbd>
+      </div>
+      
+      {isOpen && (
+        <SearchSuggestions
+          query={query}
+          suggestions={suggestions}
+          recent={recent}
+          isLoading={isLoading}
+          highlightIndex={highlightIndex}
+          onSelect={handleSearch}
+          onClearRecent={clearRecent}
+        />
+      )}
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 7: MOCK API ENDPOINT
+================================================================================
+
+Update mock server to add suggestions endpoint:
+
+```typescript
+// GET /api/v1/search/suggestions?q=cast
+app.get('/api/v1/search/suggestions', (req, res) => {
+  const { q } = req.query;
+  const query = String(q || '').toLowerCase();
+  
+  // Filter products
+  const products = MOCK_PRODUCTS
+    .filter(p => 
+      p.name.toLowerCase().includes(query) ||
+      p.brand.name.toLowerCase().includes(query)
+    )
+    .slice(0, 5)
+    .map(p => ({
+      id: p.id,
+      name: p.name,
+      slug: p.slug,
+      thumbnail: p.primary_image_url,
+      tier: p.verification.tier,
+    }));
+  
+  // Filter categories
+  const categories = MOCK_CATEGORIES
+    .flatMap(c => [c, ...c.children])
+    .filter(c => c.name.toLowerCase().includes(query))
+    .slice(0, 3);
+  
+  // Filter materials
+  const materials = ['Stainless Steel', 'Cast Iron', 'Carbon Steel', 'Ceramic', 'Glass', 'Enameled']
+    .filter(m => m.toLowerCase().includes(query))
+    .slice(0, 3);
+  
+  res.json({
+    products,
+    categories,
+    materials,
+    query: q,
+  });
+});
+```
+
+================================================================================
+TASK 8: STYLING
+================================================================================
+
+```css
+.search-bar-wrapper {
+  position: relative;
+  flex: 1;
+  max-width: 600px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2) var(--space-4);
+  transition: all var(--transition-fast);
+}
+
+.search-bar:focus-within {
+  background: white;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-100);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  outline: none;
+}
+
+.search-shortcut {
+  font-size: 12px;
+  padding: 2px 6px;
+  background: var(--color-gray-100);
+  border-radius: var(--radius-sm);
+  color: var(--color-gray-500);
+}
+
+.search-suggestions {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-height: 480px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.suggestion-section {
+  padding: var(--space-3) var(--space-4);
+  border-bottom: 1px solid var(--color-gray-100);
+}
+
+.suggestion-section:last-child {
+  border-bottom: none;
+}
+
+.suggestion-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-2) var(--space-3);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+.suggestion-item:hover,
+.suggestion-item[data-highlighted="true"] {
+  background: var(--color-gray-50);
+}
+
+.suggestion-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Search suggestions appear after 2+ characters
+□ Products shown with thumbnail, name, and tier badge
+□ Categories shown with product count
+□ Materials shown with product count
+□ Recent searches shown when no query
+□ Recent searches persisted in localStorage
+□ Clear recent searches functionality
+□ Keyboard navigation (↓↑ Enter Escape)
+□ ⌘K shortcut focuses search from anywhere
+□ 200ms debounce on API calls
+□ Loading state while fetching
+□ Click outside closes dropdown
+□ Mobile: Full-screen search overlay
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/search/SearchInput.tsx
+- src/pfas-web/components/search/SearchSuggestions.tsx
+- src/pfas-web/hooks/useSearchSuggestions.ts
+- src/pfas-web/hooks/useRecentSearches.ts
+
+MODIFY:
+- src/pfas-web/components/layout/SearchBar.tsx
+- src/pfas-api/src/mock-server.ts (add suggestions endpoint)
+
+================================================================================

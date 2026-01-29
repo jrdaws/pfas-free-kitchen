@@ -1,0 +1,151 @@
+/* SearchInput.module.css */
+
+.wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Size variants */
+.sm .inputContainer {
+  padding: var(--space-xs) var(--space-sm);
+}
+
+.sm .input {
+  font-size: var(--text-sm);
+}
+
+.md .inputContainer {
+  padding: var(--space-sm) var(--space-md);
+}
+
+.md .input {
+  font-size: var(--text-base);
+}
+
+.lg .inputContainer {
+  padding: var(--space-md) var(--space-lg);
+}
+
+.lg .input {
+  font-size: var(--text-lg);
+}
+
+/* Input Container */
+.inputContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all var(--transition-fast);
+}
+
+.inputContainer:hover {
+  border-color: var(--color-border);
+  background: var(--color-surface);
+}
+
+.inputContainer.focused {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(26, 95, 74, 0.1);
+}
+
+/* Icon */
+.icon {
+  flex-shrink: 0;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+}
+
+.focused .icon {
+  color: var(--color-primary);
+}
+
+/* Input */
+.input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-text);
+  outline: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-muted);
+}
+
+/* Clear Button */
+.clearButton {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-full);
+  background: transparent;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.clearButton:hover {
+  background: var(--color-bg-alt);
+  color: var(--color-text);
+}
+
+/* Keyboard Shortcut */
+.shortcut {
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  padding: 2px 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-muted);
+}
+
+/* Loading Indicator */
+.loadingIndicator {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--color-border);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .shortcut {
+    display: none;
+  }
+
+  .md .inputContainer,
+  .lg .inputContainer {
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .md .input,
+  .lg .input {
+    font-size: var(--text-base);
+  }
+}

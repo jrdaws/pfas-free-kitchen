@@ -1,0 +1,6 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield background -->
+  <path d="M24 4L6 12V22C6 33.1 13.5 43.1 24 46C34.5 43.1 42 33.1 42 22V12L24 4Z" fill="#6B7280" stroke="#4B5563" stroke-width="2"/>
+  <!-- Dot icon -->
+  <circle cx="24" cy="24" r="5" fill="white"/>
+</svg>

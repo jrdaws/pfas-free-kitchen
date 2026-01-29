@@ -1,0 +1,345 @@
+================================================================================
+WAVE 13-04: EDUCATIONAL CONTENT - WHAT IS PFAS
+================================================================================
+ACTIVATION: "Execute Wave 13-04: Educational Content What is PFAS"
+AGENT: Content Agent / Website Agent
+DEPENDS ON: Wave 12-09 (page structure created)
+================================================================================
+
+CONTEXT
+-------
+Fill in the educational content pages with accurate, well-researched, and
+properly cited information. All health claims must cite authoritative sources.
+Content must be accessible to general audience while remaining accurate.
+
+================================================================================
+TASK 1: WHAT IS PFAS PAGE CONTENT
+================================================================================
+
+Create/Update `src/pfas-web/app/learn/what-is-pfas/page.tsx`:
+
+CONTENT STRUCTURE:
+
+```markdown
+# What is PFAS?
+
+## The Basics
+
+PFAS (pronounced "PEE-fass") stands for **per- and polyfluoroalkyl substances** — 
+a family of over 15,000 synthetic chemicals that have been manufactured since 
+the 1940s.
+
+These chemicals contain strong carbon-fluorine bonds, which are among the 
+strongest bonds in organic chemistry. This makes PFAS extremely stable and 
+resistant to:
+- Heat
+- Water
+- Oil
+- Stains
+- Chemical degradation
+
+Because they don't break down easily in the environment or in the human body, 
+PFAS are often called **"forever chemicals."**
+
+---
+
+## Where Are PFAS Found?
+
+PFAS are used in many consumer and industrial products:
+
+### Kitchen Products
+- **Nonstick cookware** (Teflon and similar coatings)
+- **Stain-resistant food packaging** (microwave popcorn bags, fast food wrappers)
+- **Some food storage containers** (treated plastics)
+- **Certain kitchen textiles** (stain-resistant tablecloths)
+
+### Other Products
+- Waterproof clothing and outdoor gear
+- Stain-resistant carpets and upholstery  
+- Firefighting foams (AFFF)
+- Some cosmetics and personal care products
+- Industrial applications
+
+---
+
+## PFAS in Cookware: A Brief History
+
+### 1938: Discovery of PTFE
+Roy Plunkett accidentally discovered polytetrafluoroethylene (PTFE) at DuPont. 
+The substance was trademarked as "Teflon" in 1945.
+
+### 1954: First Nonstick Pan
+French engineer Marc Grégoire applied PTFE to fishing gear, then his wife 
+suggested using it on cookware. The company Tefal was born.
+
+### 1961: US Introduction
+Tefal cookware launched in the United States, becoming popular throughout 
+the 1960s and 70s.
+
+### 2000s: Health Concerns Emerge
+Research began linking PFOA (a chemical used to make PTFE) to health effects. 
+DuPont and other manufacturers faced lawsuits.
+
+### 2006: EPA Stewardship Program
+Major manufacturers agreed to phase out PFOA by 2015.
+
+### 2015-Present: PFOA Phaseout
+PFOA largely eliminated in US manufacturing, but:
+- Replaced with other PFAS (e.g., GenX, PFBS)
+- PTFE itself still contains fluorine
+- Concerns about the entire class of PFAS chemicals continue
+
+---
+
+## Health Concerns
+
+Research has associated PFAS exposure with various health effects. According 
+to the EPA and peer-reviewed studies:
+
+### Established Associations
+- Increased cholesterol levels
+- Changes in liver enzyme levels
+- Decreased vaccine response in children
+- Increased risk of kidney cancer (PFOA)
+- Increased risk of testicular cancer (PFOA)
+
+### Areas of Active Research
+- Thyroid disease
+- Immune system effects
+- Reproductive effects
+- Developmental effects
+
+### Important Context
+
+**Exposure routes matter.** Most PFAS exposure comes from:
+1. Drinking water (near contaminated sites)
+2. Food (from packaging or bioaccumulation)
+3. Consumer products (direct contact or dust)
+
+The relative contribution of cookware to overall PFAS exposure is debated 
+and depends on many factors, including cooking temperature and cookware condition.
+
+**We are not medical professionals.** This information is for educational 
+purposes only. Consult your healthcare provider for medical advice.
+
+---
+
+## PFAS-Free Alternatives for Cookware
+
+Materials that do not contain PFAS:
+
+### Naturally PFAS-Free
+| Material | Notes |
+|----------|-------|
+| **Stainless Steel** | Contains no coatings. Excellent for searing. |
+| **Cast Iron** | Seasoned with oil, not synthetic coatings. |
+| **Carbon Steel** | Similar to cast iron, lighter weight. |
+| **Glass** | Inherently inert and non-reactive. |
+| **Ceramic (true)** | Kiln-fired clay glazes. Not the same as "ceramic coating." |
+| **Enameled Cast Iron** | Glass-based enamel coating on cast iron. |
+
+### Often Marketed as PFAS-Free (Verify Carefully)
+| Material | Caution |
+|----------|---------|
+| **"Ceramic Coating"** | Sol-gel coatings may or may not contain PFAS. Verify with manufacturer. |
+| **Anodized Aluminum** | Often combined with nonstick coatings. Uncoated versions are PFAS-free. |
+
+---
+
+## Understanding "PFOA-Free" vs "PFAS-Free"
+
+**These are not the same thing.**
+
+- **PFOA** (perfluorooctanoic acid) is ONE specific PFAS compound
+- **PFAS** is the entire CLASS of over 15,000 compounds
+
+A product labeled "PFOA-Free" may still contain:
+- PTFE (Teflon) — a type of PFAS
+- Other PFAS compounds (PFOS, GenX, PFBS, etc.)
+
+**True PFAS-free** means no fluoropolymers or fluorinated compounds in any 
+component.
+
+---
+
+## Sources & Further Reading
+
+### Government Sources
+- [EPA PFAS Homepage](https://www.epa.gov/pfas)
+- [CDC ATSDR PFAS Fact Sheet](https://www.atsdr.cdc.gov/pfas/)
+- [FDA PFAS in Food](https://www.fda.gov/food/chemicals/and-polyfluoroalkyl-substances-pfas)
+
+### Scientific Literature
+- Sunderland EM, et al. (2019). "A review of the pathways of human exposure to poly- and perfluoroalkyl substances (PFASs) and present understanding of health effects." *J Expo Sci Environ Epidemiol.*
+- Cousins IT, et al. (2020). "The high persistence of PFAS is sufficient for their management as a chemical class." *Environ Sci Process Impacts.*
+
+### Consumer Resources
+- Environmental Working Group (EWG)
+- Green Science Policy Institute
+- PFAS-Free Products Directory
+
+---
+
+*Last updated: January 2026*
+*This content is provided for educational purposes and does not constitute medical advice.*
+```
+
+================================================================================
+TASK 2: CREATE SOURCES DATA FILE
+================================================================================
+
+Create `src/pfas-web/data/sources.ts`:
+
+```typescript
+export const SOURCES = {
+  epa_pfas: {
+    name: "EPA PFAS Homepage",
+    url: "https://www.epa.gov/pfas",
+    type: "government",
+    accessed: "2026-01-28",
+  },
+  cdc_atsdr: {
+    name: "CDC ATSDR PFAS Fact Sheet",
+    url: "https://www.atsdr.cdc.gov/pfas/",
+    type: "government",
+    accessed: "2026-01-28",
+  },
+  fda_pfas: {
+    name: "FDA PFAS Information",
+    url: "https://www.fda.gov/food/chemicals/and-polyfluoroalkyl-substances-pfas",
+    type: "government",
+    accessed: "2026-01-28",
+  },
+  sunderland_2019: {
+    name: "Sunderland et al. 2019",
+    title: "A review of the pathways of human exposure to poly- and perfluoroalkyl substances (PFASs)",
+    journal: "Journal of Exposure Science & Environmental Epidemiology",
+    year: 2019,
+    doi: "10.1038/s41370-018-0094-1",
+    type: "peer_reviewed",
+  },
+  cousins_2020: {
+    name: "Cousins et al. 2020",
+    title: "The high persistence of PFAS is sufficient for their management as a chemical class",
+    journal: "Environmental Science: Processes & Impacts",
+    year: 2020,
+    doi: "10.1039/D0EM00240B",
+    type: "peer_reviewed",
+  },
+};
+```
+
+================================================================================
+TASK 3: CREATE HEALTH DISCLAIMER COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/content/HealthDisclaimer.tsx`:
+
+```tsx
+export function HealthDisclaimer() {
+  return (
+    <aside className="health-disclaimer" role="note" aria-label="Health disclaimer">
+      <div className="disclaimer-icon">⚠️</div>
+      <div className="disclaimer-content">
+        <strong>Health Information Disclaimer</strong>
+        <p>
+          The information on this page is for educational purposes only and 
+          does not constitute medical advice. We are not healthcare professionals. 
+          Consult your doctor or a qualified healthcare provider for medical advice.
+        </p>
+        <p>
+          Health information is based on peer-reviewed research and government 
+          sources cited on this page.
+        </p>
+      </div>
+    </aside>
+  );
+}
+```
+
+================================================================================
+TASK 4: CREATE CITATION COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/content/Citation.tsx`:
+
+```tsx
+interface CitationProps {
+  source: string;
+  inline?: boolean;
+}
+
+export function Citation({ source, inline = false }: CitationProps) {
+  const sourceData = SOURCES[source];
+  
+  if (inline) {
+    return (
+      <sup className="citation-inline">
+        <a href={sourceData.url} target="_blank" rel="noopener noreferrer">
+          [{sourceData.name}]
+        </a>
+      </sup>
+    );
+  }
+  
+  return (
+    <div className="citation-full">
+      {sourceData.type === 'peer_reviewed' ? (
+        <p>
+          {sourceData.name}. "{sourceData.title}." 
+          <em>{sourceData.journal}</em>, {sourceData.year}. 
+          DOI: <a href={`https://doi.org/${sourceData.doi}`}>{sourceData.doi}</a>
+        </p>
+      ) : (
+        <p>
+          <a href={sourceData.url} target="_blank" rel="noopener noreferrer">
+            {sourceData.name}
+          </a>. Accessed {sourceData.accessed}.
+        </p>
+      )}
+    </div>
+  );
+}
+```
+
+================================================================================
+TASK 5: IMPLEMENT THE PAGE
+================================================================================
+
+Implement the full page with:
+- Table of contents (sticky sidebar on desktop)
+- Proper heading hierarchy (h1 → h2 → h3)
+- Expandable sections for detailed content
+- Health disclaimer prominently displayed
+- All citations linked to sources
+- Last updated date
+- Print-friendly styling
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All health claims cite authoritative sources
+□ Health disclaimer is prominently displayed
+□ Content is accurate and not alarmist
+□ "PFOA-free vs PFAS-free" distinction is clear
+□ Material alternatives are accurately described
+□ Sources section lists all citations
+□ Page is accessible (proper headings, alt text)
+□ Page is responsive
+□ Table of contents works on desktop
+□ Content is scannable with clear sections
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/data/sources.ts
+- src/pfas-web/components/content/HealthDisclaimer.tsx
+- src/pfas-web/components/content/Citation.tsx
+
+MODIFY:
+- src/pfas-web/app/learn/what-is-pfas/page.tsx
+
+================================================================================

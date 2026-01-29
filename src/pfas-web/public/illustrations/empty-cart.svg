@@ -1,0 +1,16 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shopping bag -->
+  <path d="M50 60 L50 160 Q50 175 65 175 L135 175 Q150 175 150 160 L150 60" fill="#F3F4F6" stroke="#9CA3AF" stroke-width="3"/>
+  
+  <!-- Bag handles -->
+  <path d="M70 60 L70 40 Q70 25 100 25 Q130 25 130 40 L130 60" fill="none" stroke="#9CA3AF" stroke-width="3"/>
+  
+  <!-- Empty state lines inside bag -->
+  <path d="M70 100 L130 100" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M70 120 L130 120" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5 5"/>
+  <path d="M70 140 L130 140" stroke="#D1D5DB" stroke-width="2" stroke-dasharray="5 5"/>
+  
+  <!-- Sad face on bag -->
+  <circle cx="85" cy="90" r="4" fill="#9CA3AF"/>
+  <circle cx="115" cy="90" r="4" fill="#9CA3AF"/>
+</svg>

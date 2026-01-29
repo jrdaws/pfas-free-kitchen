@@ -1,0 +1,251 @@
+.page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-4);
+  display: grid;
+  gap: var(--space-8);
+}
+
+@media (min-width: 1024px) {
+  .page {
+    grid-template-columns: 1fr 300px;
+  }
+}
+
+.header {
+  grid-column: 1 / -1;
+  margin-bottom: var(--space-4);
+}
+
+.header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.header p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.label,
+.legend {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.required {
+  color: var(--color-error);
+}
+
+.optional {
+  font-weight: 400;
+  color: var(--text-muted);
+}
+
+.input,
+.textarea {
+  padding: var(--space-3);
+  font-size: 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: border-color 0.2s;
+}
+
+.input:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+  font-family: inherit;
+}
+
+.hint {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+}
+
+/* Radio Group */
+.radioGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin-top: var(--space-3);
+}
+
+.radioCard {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.radioCard:hover {
+  border-color: var(--color-primary-light);
+  background: var(--bg-secondary);
+}
+
+.radioCard.selected {
+  border-color: var(--color-primary);
+  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+}
+
+.radioInput {
+  margin-top: 2px;
+  accent-color: var(--color-primary);
+}
+
+.radioContent {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.radioLabel {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.radioDescription {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  gap: var(--space-3);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Sidebar */
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+@media (max-width: 1023px) {
+  .sidebar {
+    grid-column: 1 / -1;
+  }
+}
+
+.infoBox {
+  padding: var(--space-4);
+  background: var(--bg-secondary);
+  border-radius: var(--border-radius-lg);
+}
+
+.infoBox h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.infoBox p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.infoBox ol {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  padding-left: var(--space-5);
+  margin: 0;
+}
+
+.infoBox li {
+  margin-bottom: var(--space-2);
+}
+
+.infoBox a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.infoBox a:hover {
+  text-decoration: underline;
+}
+
+/* Success State */
+.successContainer {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: var(--space-12) var(--space-4);
+}
+
+.successIcon {
+  width: 80px;
+  height: 80px;
+  margin: 0 auto var(--space-6);
+  background: var(--color-success);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+}
+
+.successContainer h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: var(--space-4);
+}
+
+.successContainer > p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 500px;
+  margin: 0 auto var(--space-4);
+}
+
+.timeline {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-6);
+}
+
+.successActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: center;
+}

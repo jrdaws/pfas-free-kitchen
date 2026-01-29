@@ -1,0 +1,46 @@
+<svg width="1200" height="600" viewBox="0 0 1200 600" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="600" fill="#FDF8F6"/>
+  
+  <!-- Background pattern -->
+  <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+    <circle cx="15" cy="15" r="1.5" fill="#F5E6E0"/>
+  </pattern>
+  <rect width="1200" height="600" fill="url(#dots)"/>
+  
+  <!-- Sheet pan (large, back) -->
+  <g transform="translate(150, 120)">
+    <rect x="0" y="0" width="400" height="280" rx="8" fill="#F5E6E0" stroke="#D97706" stroke-width="3"/>
+    <rect x="15" y="15" width="370" height="250" rx="4" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+  </g>
+  
+  <!-- Muffin pan (center) -->
+  <g transform="translate(500, 200)">
+    <rect x="0" y="0" width="280" height="180" rx="6" fill="#F5E6E0" stroke="#D97706" stroke-width="2"/>
+    <!-- Muffin cups - row 1 -->
+    <circle cx="55" cy="50" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <circle cx="140" cy="50" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <circle cx="225" cy="50" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <!-- Muffin cups - row 2 -->
+    <circle cx="55" cy="130" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <circle cx="140" cy="130" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <circle cx="225" cy="130" r="35" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+  </g>
+  
+  <!-- Baking dish (right) -->
+  <g transform="translate(800, 150)">
+    <path d="M20 0 L280 0 L300 30 L300 170 L280 200 L20 200 L0 170 L0 30 Z" fill="#FEF3E2" stroke="#D97706" stroke-width="2"/>
+    <rect x="20" y="20" width="260" height="160" rx="4" fill="#F5E6E0" stroke="#D97706" stroke-width="1"/>
+    <!-- Handles -->
+    <ellipse cx="-15" cy="100" rx="20" ry="12" fill="none" stroke="#D97706" stroke-width="2"/>
+    <ellipse cx="315" cy="100" rx="20" ry="12" fill="none" stroke="#D97706" stroke-width="2"/>
+  </g>
+  
+  <!-- Decorative elements - oven mitts pattern -->
+  <g transform="translate(100, 420)" opacity="0.3">
+    <path d="M0 40 Q10 0 40 0 L60 0 Q90 0 100 40 L100 100 L0 100 Z" stroke="#D97706" stroke-width="2" fill="none"/>
+  </g>
+  
+  <!-- Text label -->
+  <text x="600" y="520" font-family="system-ui, sans-serif" font-size="32" font-weight="600" fill="#D97706" text-anchor="middle">Bakeware</text>
+  <text x="600" y="555" font-family="system-ui, sans-serif" font-size="18" fill="#6B7280" text-anchor="middle">Sheet Pans, Baking Dishes, Muffin Pans & More</text>
+</svg>

@@ -1,0 +1,351 @@
+================================================================================
+WAVE 12-07: MOBILE EXPERIENCE
+================================================================================
+ACTIVATION: "Execute Wave 12-07: Mobile Experience"
+AGENT: Website Agent
+DEPENDS ON: Wave 12-01 through 12-06
+================================================================================
+
+CONTEXT
+-------
+Ensure all components work flawlessly on mobile devices:
+- Touch-friendly interactions
+- Proper sizing (44px minimum touch targets)
+- Mobile-specific navigation patterns
+- Performance optimization
+
+================================================================================
+TASK 1: MOBILE HEADER
+================================================================================
+
+Update `src/pfas-web/components/layout/Header.tsx`:
+
+MOBILE HEADER (< 768px):
+```
+┌─────────────────────────────────────────────┐
+│ [☰]   PFAS-Free Kitchen    [🔍] [⚖] [♡]   │
+└─────────────────────────────────────────────┘
+```
+
+- Hamburger menu (left)
+- Logo (center, smaller)
+- Icon buttons (right): Search, Compare, Saved
+- Search icon opens full-screen search overlay
+
+================================================================================
+TASK 2: MOBILE NAVIGATION DRAWER
+================================================================================
+
+Create `src/pfas-web/components/layout/MobileNav.tsx`:
+
+```
+┌─────────────────────────────────────────────┐
+│ [←]                    PFAS-Free Kitchen    │
+├─────────────────────────────────────────────┤
+│                                             │
+│  🍳 Cookware                            [>] │
+│  🥧 Bakeware                            [>] │
+│  📦 Storage                             [>] │
+│  🥄 Utensils                            [>] │
+│  ⚙️ Appliances                          [>] │
+│                                             │
+│  ─────────────────────────────────────────  │
+│                                             │
+│  ⭐ Highest Verified                        │
+│  🆕 New Arrivals                            │
+│                                             │
+│  ─────────────────────────────────────────  │
+│                                             │
+│  📖 What is PFAS?                           │
+│  🔬 How We Verify                           │
+│  📋 About Us                                │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+SUB-NAVIGATION (drill-down):
+```
+┌─────────────────────────────────────────────┐
+│ [←] Cookware                                │
+├─────────────────────────────────────────────┤
+│                                             │
+│  All Cookware                    45 items   │
+│                                             │
+│  By Type                                    │
+│  ─────────────────────────────────────────  │
+│  Skillets & Pans                 18 items   │
+│  Saucepans                       12 items   │
+│  Dutch Ovens                      8 items   │
+│  Stock Pots                       7 items   │
+│                                             │
+│  By Material                                │
+│  ─────────────────────────────────────────  │
+│  Stainless Steel                 15 items   │
+│  Cast Iron                       12 items   │
+│  Carbon Steel                     8 items   │
+│  Ceramic Coated                  10 items   │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+BEHAVIOR:
+- Slides in from left (300px width max, full on small screens)
+- Background overlay that closes on tap
+- Swipe right to close
+- History stack for back button
+- Body scroll locked when open
+
+================================================================================
+TASK 3: MOBILE SEARCH OVERLAY
+================================================================================
+
+Create `src/pfas-web/components/search/MobileSearchOverlay.tsx`:
+
+```
+┌─────────────────────────────────────────────┐
+│ [←]  🔍 Search...                   [Cancel]│
+├─────────────────────────────────────────────┤
+│                                             │
+│ Recent Searches                     [Clear] │
+│ ─────────────────                           │
+│ 🕐 stainless steel skillet                  │
+│ 🕐 cast iron pan                            │
+│                                             │
+│ Popular                                     │
+│ ─────────────────                           │
+│ 🔥 cast iron                                │
+│ 🔥 ceramic cookware                         │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+- Full screen overlay
+- Auto-focus on input
+- Virtual keyboard considerations (viewport resize)
+- Large touch targets for suggestions
+
+================================================================================
+TASK 4: MOBILE FILTER SHEET
+================================================================================
+
+Update `src/pfas-web/components/search/FilterSidebar.tsx`:
+
+MOBILE: Bottom sheet instead of sidebar
+
+```
+┌─────────────────────────────────────────────┐
+│ ══════════════════════════════════════════  │  <- Drag handle
+│ Filters                      [Reset] [Done] │
+├─────────────────────────────────────────────┤
+│                                             │
+│ Verification Tier                           │
+│ ┌─────┐ ┌─────┐ ┌─────┐ ┌─────┐            │
+│ │ T4  │ │ T3  │ │ T2  │ │ T1  │            │
+│ │ ✓   │ │ ✓   │ │     │ │     │            │
+│ └─────┘ └─────┘ └─────┘ └─────┘            │
+│                                             │
+│ Category                               [▼]  │
+│ ─────────────────────────────────────────── │
+│                                             │
+│ Material                               [▼]  │
+│ ─────────────────────────────────────────── │
+│                                             │
+│ Brand                                  [▼]  │
+│ ─────────────────────────────────────────── │
+│                                             │
+│ Features                               [▼]  │
+│ ─────────────────────────────────────────── │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+BEHAVIOR:
+- Slides up from bottom
+- Draggable (snap points: 50%, 90%, closed)
+- Collapsible sections
+- "Done" applies filters
+- Badge shows active filter count
+
+================================================================================
+TASK 5: MOBILE PRODUCT CARD
+================================================================================
+
+Update `src/pfas-web/components/product/ProductCard.tsx`:
+
+MOBILE LAYOUT (< 640px):
+```
+┌─────────────────────────────────────────────┐
+│ ┌─────────┐  All-Clad                       │
+│ │         │  D3 Stainless Steel Skillet     │
+│ │ [Image] │  ████ TIER 3 · Lab Tested       │
+│ │         │  Stainless Steel · Uncoated     │
+│ └─────────┘  [☐ Compare]        [View →]    │
+└─────────────────────────────────────────────┘
+```
+
+- Horizontal card layout on mobile
+- Image on left, details on right
+- Smaller image (80-100px)
+- Essential info only
+- Full-width tap target
+
+================================================================================
+TASK 6: TOUCH INTERACTIONS
+================================================================================
+
+Create `src/pfas-web/hooks/useSwipe.ts`:
+
+```tsx
+export function useSwipe(
+  ref: RefObject<HTMLElement>,
+  { onSwipeLeft, onSwipeRight, threshold = 50 }
+) {
+  // Track touch start/end positions
+  // Call handlers if threshold exceeded
+  // Prevent scroll during horizontal swipe
+}
+```
+
+Apply to:
+- Mobile nav (swipe right to close)
+- Filter sheet (swipe down to close)
+- Image galleries (swipe to change)
+- Comparison cards (swipe between products)
+
+================================================================================
+TASK 7: MOBILE-SPECIFIC STYLES
+================================================================================
+
+Create `src/pfas-web/styles/mobile.css`:
+
+```css
+/* Touch target minimums */
+@media (max-width: 768px) {
+  button,
+  a,
+  [role="button"],
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  /* Increase tap padding on small targets */
+  .icon-button {
+    padding: 12px;
+  }
+  
+  /* Prevent zoom on input focus (iOS) */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+  
+  /* Safe area insets for notched phones */
+  .mobile-nav,
+  .mobile-filter-sheet {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  /* Disable hover effects on touch */
+  @media (hover: none) {
+    .product-card:hover {
+      transform: none;
+      box-shadow: var(--shadow-sm);
+    }
+  }
+}
+
+/* Landscape phone */
+@media (max-width: 768px) and (orientation: landscape) {
+  .mobile-nav {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
+}
+```
+
+================================================================================
+TASK 8: PERFORMANCE OPTIMIZATIONS
+================================================================================
+
+1. **Lazy load images below fold**
+   ```tsx
+   <Image
+     src={product.image}
+     loading="lazy"
+     placeholder="blur"
+     blurDataURL={product.blurPlaceholder}
+   />
+   ```
+
+2. **Reduce motion for users who prefer it**
+   ```css
+   @media (prefers-reduced-motion: reduce) {
+     * {
+       animation-duration: 0.01ms !important;
+       transition-duration: 0.01ms !important;
+     }
+   }
+   ```
+
+3. **Skeleton loading states** (already created)
+
+4. **Virtual scrolling for long lists** (if > 100 items)
+
+================================================================================
+TASK 9: TEST ON DEVICES
+================================================================================
+
+DEVICE MATRIX TO TEST:
+- iPhone SE (small, 375px)
+- iPhone 14 Pro (medium, 393px)  
+- iPhone 14 Pro Max (large, 430px)
+- iPad Mini (tablet, 744px)
+- Android small (360px)
+- Android large (412px)
+
+THINGS TO VERIFY:
+□ Nav drawer doesn't overflow
+□ Search overlay keyboard doesn't cut off
+□ Filter sheet snaps correctly
+□ Product cards are readable
+□ Touch targets are large enough
+□ No horizontal scroll on any page
+□ Forms don't zoom on focus (iOS)
+□ Safe areas respected (notch, home indicator)
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Mobile nav drawer works with swipe gestures
+□ Search is full-screen overlay on mobile
+□ Filters use bottom sheet pattern
+□ Product cards use horizontal layout on mobile
+□ All touch targets ≥ 44px
+□ No horizontal overflow/scroll
+□ Safe area insets respected
+□ No zoom on input focus
+□ Reduced motion respected
+□ Works on iPhone SE (375px)
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/layout/MobileNav.tsx
+- src/pfas-web/components/search/MobileSearchOverlay.tsx
+- src/pfas-web/components/ui/BottomSheet.tsx
+- src/pfas-web/hooks/useSwipe.ts
+- src/pfas-web/styles/mobile.css
+
+MODIFY:
+- src/pfas-web/components/layout/Header.tsx (mobile variant)
+- src/pfas-web/components/search/FilterSidebar.tsx (bottom sheet)
+- src/pfas-web/components/product/ProductCard.tsx (horizontal layout)
+- src/pfas-web/app/globals.css (import mobile.css)
+
+================================================================================

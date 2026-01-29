@@ -1,0 +1,342 @@
+ACTIVATION: w7-affiliate-service
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Backend Engineer Agent
+MISSION: Implement affiliate link generation and click tracking
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Affiliate links must:
+- Use retailer-specific templates with proper params
+- Include FTC-compliant disclosure requirements
+- Track clicks without invasive fingerprinting
+- Detect and filter bot traffic
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "2.4 Affiliate Links Service" API contracts
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. AFFILIATE LINK SERVICE
+   File: src/services/affiliate.service.ts
+
+   ```typescript
+   export class AffiliateService {
+     /**
+      * Generate affiliate links for a product
+      */
+     static async getLinks(productId: string): Promise<AffiliateLinksResponse> {
+       const [product, retailerLinks] = await Promise.all([
+         ProductRepository.findById(productId),
+         RetailerLinkRepository.findByProductId(productId),
+       ]);
+
+       const links = await Promise.all(
+         retailerLinks.map(link => this.generateLink(product, link))
+       );
+
+       return {
+         product_id: productId,
+         links: links.filter(l => l !== null),
+         grid_disclosure: 'Affiliate links may appear in results.',
+       };
+     }
+
+     /**
+      * Generate a single affiliate link
+      */
+     private static async generateLink(
+       product: Product,
+       retailerLink: RetailerLink
+     ): Promise<AffiliateLink | null> {
+       const template = await LinkTemplateRepository.findByRetailerId(retailerLink.retailer_id);
+       if (!template || !template.active) return null;
+
+       const retailer = await RetailerRepository.findById(retailerLink.retailer_id);
+       const program = await AffiliateProgramRepository.findById(retailer.affiliate_program_id);
+
+       // Build URL from template
+       const url = this.buildUrl(template.template, {
+         product_id: product.id,
+         asin: retailerLink.external_id,
+         sku: retailerLink.external_id,
+         affiliate_id: program.affiliate_id,
+         tracking_id: this.generateTrackingId(product.id, retailer.id),
+       });
+
+       // Add UTM params
+       const finalUrl = this.addUtmParams(url, {
+         source: 'pfasfreekitchen',
+         medium: 'affiliate',
+         campaign: product.category_slug,
+       });
+
+       return {
+         retailer_id: retailer.id,
+         retailer_name: retailer.name,
+         retailer_icon: retailer.icon_name,
+         affiliate_url: finalUrl,
+         disclosure_required: true,
+         disclosure_text: 'Affiliate link: We may earn a commission if you purchase through this link.',
+       };
+     }
+
+     /**
+      * Build URL from template with variable substitution
+      */
+     private static buildUrl(template: string, params: Record<string, string>): string {
+       let url = template;
+       for (const [key, value] of Object.entries(params)) {
+         url = url.replace(`{${key}}`, encodeURIComponent(value || ''));
+       }
+       // Remove any unreplaced placeholders
+       url = url.replace(/\{[^}]+\}/g, '');
+       return url;
+     }
+
+     private static addUtmParams(url: string, utm: Record<string, string>): string {
+       const urlObj = new URL(url);
+       for (const [key, value] of Object.entries(utm)) {
+         urlObj.searchParams.set(`utm_${key}`, value);
+       }
+       return urlObj.toString();
+     }
+
+     private static generateTrackingId(productId: string, retailerId: string): string {
+       // Short hash for tracking without PII
+       const input = `${productId}-${retailerId}-${Date.now()}`;
+       return createHash('md5').update(input).digest('hex').slice(0, 12);
+     }
+   }
+   ```
+
+2. CLICK TRACKING SERVICE
+   File: src/services/click-tracking.service.ts
+
+   ```typescript
+   export class ClickTrackingService {
+     /**
+      * Record an affiliate click
+      */
+     static async trackClick(params: {
+       productId: string;
+       variantId?: string;
+       retailerId: string;
+       sessionId?: string;
+       referrerPage?: string;
+       userAgentHash?: string;
+     }): Promise<{ clickId: string; tracked: boolean }> {
+       // Bot detection
+       const botCheck = await this.detectBot(params);
+       if (botCheck.isBot) {
+         // Still record but flag as bot
+         const clickId = await ClickRepository.create({
+           ...params,
+           is_bot: true,
+           bot_detection_reason: botCheck.reason,
+         });
+         return { clickId, tracked: false };
+       }
+
+       // Duplicate click detection (same session, same product, within 5 min)
+       const isDuplicate = await this.isDuplicateClick(params);
+       if (isDuplicate) {
+         return { clickId: '', tracked: false };
+       }
+
+       // Record click
+       const clickId = await ClickRepository.create({
+         ...params,
+         is_bot: false,
+       });
+
+       // Publish event for analytics
+       await EventBus.publish('click.tracked', {
+         clickId,
+         productId: params.productId,
+         retailerId: params.retailerId,
+         timestamp: new Date(),
+       });
+
+       return { clickId, tracked: true };
+     }
+
+     /**
+      * Bot detection heuristics
+      */
+     private static async detectBot(params: ClickParams): Promise<BotCheckResult> {
+       // Check for known bot user agents
+       if (this.isKnownBotUserAgent(params.userAgentHash)) {
+         return { isBot: true, reason: 'known_bot_ua' };
+       }
+
+       // Check click velocity (same session)
+       const recentClicks = await ClickRepository.countRecentBySession(
+         params.sessionId,
+         { withinMinutes: 1 }
+       );
+       if (recentClicks > 10) {
+         return { isBot: true, reason: 'high_velocity' };
+       }
+
+       // Check for missing referrer on tracked pages
+       if (!params.referrerPage) {
+         // Not definitive, but suspicious
+         return { isBot: false, reason: null };
+       }
+
+       return { isBot: false, reason: null };
+     }
+
+     private static async isDuplicateClick(params: ClickParams): Promise<boolean> {
+       const recent = await ClickRepository.findRecent({
+         sessionId: params.sessionId,
+         productId: params.productId,
+         retailerId: params.retailerId,
+         withinMinutes: 5,
+       });
+       return recent !== null;
+     }
+
+     /**
+      * Get click analytics (admin)
+      */
+     static async getAnalytics(params: {
+       dateRange: DateRange;
+       groupBy: 'day' | 'retailer' | 'product' | 'category';
+     }): Promise<ClickAnalytics> {
+       return ClickRepository.aggregate(params);
+     }
+   }
+   ```
+
+3. LINK TEMPLATES
+   File: src/config/link-templates.ts
+
+   ```typescript
+   // Default templates per retailer
+   export const RETAILER_TEMPLATES: Record<string, LinkTemplate> = {
+     amazon: {
+       retailer_id: 'ret_amazon',
+       template: 'https://www.amazon.com/dp/{asin}?tag={affiliate_id}&linkCode=ll1&camp=1789&creative=9325',
+       param_rules: {
+         asin: { required: true, pattern: /^[A-Z0-9]{10}$/ },
+         affiliate_id: { required: true },
+       },
+     },
+     williams_sonoma: {
+       retailer_id: 'ret_williams',
+       template: 'https://www.williams-sonoma.com/products/{sku}?cm_ven=afshoppromo&cm_pla=CJ&cm_ite={affiliate_id}',
+       param_rules: {
+         sku: { required: true },
+         affiliate_id: { required: true },
+       },
+     },
+     sur_la_table: {
+       retailer_id: 'ret_surlatable',
+       template: 'https://www.surlatable.com/product/{sku}?&affsrc={affiliate_id}',
+       param_rules: {
+         sku: { required: true },
+         affiliate_id: { required: true },
+       },
+     },
+   };
+   ```
+
+4. CLICK REPOSITORY
+   File: src/repositories/click.repository.ts
+
+   ```typescript
+   export class ClickRepository {
+     static async create(click: CreateClickParams): Promise<string> {
+       const result = await db.query(`
+         INSERT INTO affiliate_clicks (
+           product_id, variant_id, retailer_id, session_id,
+           referrer_page, user_agent_hash, is_bot, bot_detection_reason
+         ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+         RETURNING id
+       `, [
+         click.productId,
+         click.variantId,
+         click.retailerId,
+         click.sessionId,
+         click.referrerPage,
+         click.userAgentHash,
+         click.is_bot,
+         click.bot_detection_reason,
+       ]);
+       return result.rows[0].id;
+     }
+
+     static async countRecentBySession(
+       sessionId: string,
+       { withinMinutes }: { withinMinutes: number }
+     ): Promise<number> {
+       const result = await db.query(`
+         SELECT COUNT(*) as count
+         FROM affiliate_clicks
+         WHERE session_id = $1
+           AND created_at > NOW() - INTERVAL '${withinMinutes} minutes'
+           AND is_bot = false
+       `, [sessionId]);
+       return parseInt(result.rows[0].count);
+     }
+
+     static async aggregate(params: AggregateParams): Promise<ClickAnalytics> {
+       // Group by day, retailer, product, or category
+       // Return counts, unique sessions, bot-filtered stats
+     }
+   }
+   ```
+
+5. API ROUTES
+   File: src/routes/affiliate.routes.ts
+
+   ```typescript
+   router.get('/products/:productId/affiliate-links', async (req, res) => {
+     const links = await AffiliateService.getLinks(req.params.productId);
+     res.json({ data: links });
+   });
+
+   router.post('/affiliate-clicks', async (req, res) => {
+     const { product_id, retailer_id, session_id, referrer_page } = req.body;
+     
+     // Hash user agent for bot detection without storing raw UA
+     const userAgentHash = hashUserAgent(req.headers['user-agent']);
+     
+     const result = await ClickTrackingService.trackClick({
+       productId: product_id,
+       retailerId: retailer_id,
+       sessionId: session_id,
+       referrerPage: referrer_page,
+       userAgentHash,
+     });
+     
+     res.status(201).json({ data: result });
+   });
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Affiliate ID never exposed to end users (server-side generation)
+□ Bot filtering prevents click fraud
+□ No PII stored (user agent hashed, no IP logged)
+□ Disclosure text included with every link response
+□ UTM params for attribution tracking
+□ Audit log captures link generation (not clicks)
+
+───────────────────────────────────────────────────────────────────────────────
+AMAZON-SPECIFIC RULES
+───────────────────────────────────────────────────────────────────────────────
+
+Per Amazon Associates Operating Agreement:
+□ No price display (MVP compliant by default)
+□ No Amazon reviews displayed
+□ Link format follows Associates requirements
+□ "Buy at Amazon" button uses Amazon branding guidelines
+□ Tag parameter included in all Amazon links

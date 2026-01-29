@@ -1,0 +1,164 @@
+.form {
+  max-width: 600px;
+}
+
+/* Honeypot - invisible to humans */
+.honeypot {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Form Groups */
+.formGroup {
+  margin-bottom: var(--space-5);
+}
+
+.label {
+  display: block;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+  margin-bottom: var(--space-2);
+}
+
+.required {
+  color: var(--color-red-500);
+}
+
+.helpText {
+  font-size: 0.8125rem;
+  color: var(--color-gray-500);
+  margin: var(--space-1) 0 0;
+}
+
+/* Input Styles */
+.input,
+.select,
+.textarea {
+  width: 100%;
+  padding: var(--space-3);
+  font-size: 1rem;
+  border: 1px solid var(--color-gray-300);
+  border-radius: var(--radius-md);
+  background: white;
+  color: var(--color-gray-900);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input:focus,
+.select:focus,
+.textarea:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px rgba(var(--color-primary-500-rgb, 99, 102, 241), 0.15);
+}
+
+.input::placeholder,
+.textarea::placeholder {
+  color: var(--color-gray-400);
+}
+
+.select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right var(--space-3) center;
+  padding-right: var(--space-10);
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Error State */
+.input:invalid:not(:placeholder-shown),
+.textarea:invalid:not(:placeholder-shown) {
+  border-color: var(--color-red-500);
+}
+
+/* Error Message */
+.errorMessage {
+  padding: var(--space-3);
+  background: var(--color-red-50);
+  border: 1px solid var(--color-red-200);
+  border-radius: var(--radius-md);
+  color: var(--color-red-700);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-4);
+}
+
+/* Success Message */
+.successMessage {
+  text-align: center;
+  padding: var(--space-8);
+  background: var(--color-green-50);
+  border: 1px solid var(--color-green-200);
+  border-radius: var(--radius-lg);
+}
+
+.successIcon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-4);
+  font-size: 2rem;
+  font-weight: bold;
+  color: var(--color-green-600);
+  background: white;
+  border-radius: 50%;
+  border: 3px solid var(--color-green-500);
+}
+
+.successMessage h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-green-800);
+  margin: 0 0 var(--space-3);
+}
+
+.successMessage p {
+  font-size: 1rem;
+  color: var(--color-green-700);
+  margin: 0 0 var(--space-4);
+  line-height: 1.6;
+}
+
+/* Form Actions */
+.formActions {
+  margin-top: var(--space-6);
+}
+
+/* Privacy Note */
+.privacyNote {
+  margin-top: var(--space-4);
+  font-size: 0.8125rem;
+  color: var(--color-gray-500);
+}
+
+.privacyNote a {
+  color: var(--color-primary-600);
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .form {
+    max-width: 100%;
+  }
+
+  .input,
+  .select,
+  .textarea {
+    font-size: 16px; /* Prevent iOS zoom */
+  }
+
+  .successMessage {
+    padding: var(--space-6);
+  }
+}

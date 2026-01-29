@@ -1,0 +1,291 @@
+================================================================================
+WAVE 13-01: PRODUCT DATABASE - COOKWARE
+================================================================================
+ACTIVATION: "Execute Wave 13-01: Product Database Cookware"
+AGENT: Data Agent / Research Agent
+DEPENDS ON: Mock API server running
+================================================================================
+
+CONTEXT
+-------
+Populate the database with REAL PFAS-free cookware products. Research actual 
+products from major brands that are genuinely PFAS-free (stainless steel, 
+cast iron, carbon steel, enameled cast iron).
+
+IMPORTANT: All product information must be accurate and verifiable. Do not
+fabricate claims. If verification status is uncertain, assign Tier 1 or 0.
+
+================================================================================
+TASK 1: RESEARCH & CREATE SKILLET/FRYING PAN PRODUCTS
+================================================================================
+
+Research and add 15-20 real skillets/frying pans. Include:
+
+STAINLESS STEEL SKILLETS:
+1. All-Clad D3 Stainless 8", 10", 12" Skillets
+2. All-Clad D5 Stainless 10", 12" Skillets
+3. Made In Stainless Steel Frying Pan 10", 12"
+4. Demeyere Industry 5-Ply 9.5", 11" Fry Pans
+5. Cuisinart MultiClad Pro 8", 10", 12" Skillets
+6. Tramontina Tri-Ply Clad 8", 10", 12" Fry Pans
+7. Calphalon Premier Stainless Steel 10", 12"
+
+CAST IRON SKILLETS:
+8. Lodge Cast Iron Skillet 8", 10", 12", 15"
+9. Lodge Blacklock Triple Seasoned 10.25", 12"
+10. Finex Cast Iron Skillet 8", 10", 12"
+11. Smithey Ironware No. 10, No. 12 Skillets
+12. Butter Pat Industries Joan 10", 12"
+13. Borough Furnace Skillet
+14. Field Company No. 8, No. 10, No. 12
+
+CARBON STEEL:
+15. Made In Blue Carbon Steel 10", 12"
+16. de Buyer Mineral B 9.5", 11", 12.5"
+17. Matfer Bourgeat Black Steel 9.5", 11.8"
+18. BK Carbon Steel 10", 12"
+19. Misen Carbon Steel 10", 12"
+
+DATA STRUCTURE PER PRODUCT:
+```typescript
+{
+  id: "prd_cookware_001",
+  name: "All-Clad D3 Stainless Steel 12-Inch Fry Pan",
+  slug: "all-clad-d3-stainless-steel-12-inch-fry-pan",
+  description: "Tri-ply bonded stainless steel with aluminum core for even heating. Made in USA. Professional-grade construction with flared edges for drip-free pouring.",
+  brand_id: "brd_allclad",
+  category_id: "cat_skillets",
+  
+  // Materials - BE ACCURATE
+  material_summary: "Tri-Ply Stainless Steel",
+  coating_summary: "None (uncoated)",
+  
+  // Components - food contact analysis
+  components: [
+    {
+      name: "Cooking surface",
+      material: "18/10 Stainless Steel",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free", // Material cannot contain PFAS
+    },
+    {
+      name: "Pan body",
+      material: "Aluminum core with stainless exterior",
+      coating: null,
+      food_contact: false,
+      pfas_status: "inherently_free",
+    },
+    {
+      name: "Handle",
+      material: "Stainless Steel",
+      coating: null,
+      food_contact: false,
+      pfas_status: "inherently_free",
+    },
+    {
+      name: "Rivets",
+      material: "Stainless Steel",
+      coating: null,
+      food_contact: true,
+      pfas_status: "inherently_free",
+    }
+  ],
+  
+  // Verification - BE CONSERVATIVE
+  verification: {
+    tier: 2, // Policy reviewed - inherent material properties
+    tier_label: "Policy Reviewed",
+    claim_type: "A", // No intentionally added PFAS
+    rationale: "Stainless steel is an inherently PFAS-free material. No coatings applied to cooking surface.",
+    scope: "food_contact",
+    unknowns: [],
+    evidence: [
+      {
+        type: "material_analysis",
+        description: "Stainless steel (18/10 chromium-nickel) contains no fluoropolymers by composition",
+        source: "Material science documentation",
+      }
+    ]
+  },
+  
+  // Features - VERIFY FROM MANUFACTURER
+  features: {
+    diameter_inches: 12,
+    weight_lbs: 2.9,
+    induction_compatible: true,
+    oven_safe: true,
+    oven_safe_temp_f: 600,
+    broiler_safe: true,
+    dishwasher_safe: true,
+    made_in: "USA",
+    warranty: "Lifetime",
+  },
+  
+  // Retailers - REAL AFFILIATE PROGRAMS
+  retailers: [
+    { retailer_id: "ret_amazon", available: true },
+    { retailer_id: "ret_williams_sonoma", available: true },
+    { retailer_id: "ret_sur_la_table", available: true },
+    { retailer_id: "ret_bed_bath", available: true },
+  ],
+  
+  // SEO
+  meta_title: "All-Clad D3 12-Inch Stainless Steel Fry Pan | PFAS-Free",
+  meta_description: "All-Clad D3 tri-ply stainless steel fry pan. Naturally PFAS-free with no coatings. Made in USA with lifetime warranty.",
+  
+  status: "active",
+  created_at: "2026-01-28T00:00:00Z",
+}
+```
+
+================================================================================
+TASK 2: RESEARCH & CREATE SAUCEPAN PRODUCTS
+================================================================================
+
+Add 10-12 real saucepans:
+
+STAINLESS STEEL:
+1. All-Clad D3 1.5qt, 2qt, 3qt, 4qt Saucepans
+2. All-Clad D5 2qt, 3qt Saucepans
+3. Made In Stainless Saucepan 2qt, 3qt
+4. Demeyere Industry 5-Ply 1.5qt, 2qt, 3qt
+5. Cuisinart MultiClad Pro 1.5qt, 2qt, 3qt
+6. Tramontina Tri-Ply Clad 1.5qt, 2qt, 3qt
+
+================================================================================
+TASK 3: RESEARCH & CREATE DUTCH OVEN PRODUCTS
+================================================================================
+
+Add 12-15 Dutch ovens (enameled cast iron):
+
+ENAMELED CAST IRON:
+1. Le Creuset Signature Round 2.75qt, 3.5qt, 4.5qt, 5.5qt, 7.25qt, 9qt
+2. Le Creuset Signature Oval 5qt, 6.75qt
+3. Staub Round Cocotte 4qt, 5.5qt, 7qt
+4. Staub Oval Cocotte 5.75qt, 7qt
+5. Lodge Enameled Dutch Oven 3qt, 4.5qt, 6qt
+6. Cuisinart Chef's Classic Enameled 5qt, 7qt
+7. Milo Dutch Oven 5.5qt
+8. Great Jones The Dutchess 6.75qt
+9. Our Place Perfect Pot (verify coating - may be ceramic)
+
+VERIFICATION NOTES FOR ENAMEL:
+- Enamel is glass-based, inherently PFAS-free
+- Verify brand doesn't use PTFE in lid seals
+- Check handles for any coatings
+
+================================================================================
+TASK 4: RESEARCH & CREATE STOCK POT PRODUCTS
+================================================================================
+
+Add 8-10 stock pots:
+
+1. All-Clad D3 Stainless 8qt, 12qt Stock Pots
+2. All-Clad Stainless 12qt, 16qt Pasta Pots
+3. Made In Stainless Stock Pot 8qt
+4. Cuisinart MultiClad Pro 8qt, 12qt
+5. Tramontina Tri-Ply Clad 8qt, 12qt
+6. Demeyere Industry 5-Ply 8.5qt
+
+================================================================================
+TASK 5: UPDATE MOCK DATA FILE
+================================================================================
+
+Update `src/pfas-api/src/mock/data.ts` with all researched products.
+
+Organize by category:
+- MOCK_SKILLETS (15-20 products)
+- MOCK_SAUCEPANS (10-12 products)
+- MOCK_DUTCH_OVENS (12-15 products)
+- MOCK_STOCK_POTS (8-10 products)
+
+Combine into MOCK_PRODUCTS for API:
+```typescript
+export const MOCK_PRODUCTS = [
+  ...MOCK_SKILLETS,
+  ...MOCK_SAUCEPANS,
+  ...MOCK_DUTCH_OVENS,
+  ...MOCK_STOCK_POTS,
+];
+```
+
+================================================================================
+TASK 6: CREATE BRAND DATA
+================================================================================
+
+Create comprehensive brand entries:
+
+```typescript
+export const MOCK_BRANDS = [
+  {
+    id: "brd_allclad",
+    name: "All-Clad",
+    slug: "all-clad",
+    description: "American cookware manufacturer known for bonded stainless steel. Founded in 1971 in Canonsburg, Pennsylvania.",
+    website: "https://www.all-clad.com",
+    country: "USA",
+    founded: 1971,
+    pfas_policy: "All-Clad stainless steel and hard-anodized cookware does not contain PFAS coatings.",
+    policy_url: null,
+    logo_url: "/brands/all-clad.svg",
+  },
+  {
+    id: "brd_lodge",
+    name: "Lodge",
+    slug: "lodge",
+    description: "America's oldest cast iron cookware manufacturer. Founded in 1896 in South Pittsburg, Tennessee.",
+    website: "https://www.lodgecastiron.com",
+    country: "USA",
+    founded: 1896,
+    pfas_policy: "Lodge cast iron is seasoned with vegetable oil only. No synthetic coatings.",
+    policy_url: "https://www.lodgecastiron.com/discover/our-seasoning",
+    logo_url: "/brands/lodge.svg",
+  },
+  // ... Continue for all brands:
+  // Le Creuset, Staub, Made In, de Buyer, Demeyere, Cuisinart, 
+  // Tramontina, Finex, Smithey, Field Company, Matfer Bourgeat,
+  // BK, Misen, Great Jones, Our Place, Butter Pat, Borough Furnace
+];
+```
+
+================================================================================
+VERIFICATION TIER ASSIGNMENTS
+================================================================================
+
+TIER 2 (Policy Reviewed) - Inherently PFAS-free materials:
+- All stainless steel cookware (no coatings)
+- All cast iron cookware (seasoned with oil only)
+- All carbon steel cookware (seasoned with oil only)
+- All enameled cast iron (enamel is glass-based)
+
+TIER 1 (Brand Statement) - Needs verification:
+- Ceramic-coated products (verify coating composition)
+- Products with silicone components (verify silicone type)
+
+TIER 0 (Unknown) - Insufficient information:
+- Products where coating composition is unclear
+- New products without documentation
+
+DO NOT assign Tier 3 or 4 without actual lab reports.
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ 45-55 real cookware products added
+□ All product names match actual products
+□ All specifications verified from manufacturer
+□ All brands have complete profiles
+□ Verification tiers are conservative and accurate
+□ No fabricated claims or fake lab reports
+□ Retailer availability is accurate
+□ Images referenced with placeholder paths
+
+================================================================================
+FILES TO MODIFY
+================================================================================
+
+- src/pfas-api/src/mock/data.ts
+
+================================================================================

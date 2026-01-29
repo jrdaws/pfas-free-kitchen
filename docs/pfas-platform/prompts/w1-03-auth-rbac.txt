@@ -1,0 +1,175 @@
+ACTIVATION: w1-auth-rbac
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Security Engineer Agent
+MISSION: Implement authentication and role-based access control for admin console
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+The platform has two access levels:
+- Public: Anonymous browsing of products (no auth required)
+- Admin: Authenticated access for reviewers and administrators
+
+Admin roles: viewer, editor, reviewer, super_admin
+
+SPEC REFERENCE
+Read: docs/pfas-platform/03-ADMIN-CONSOLE-SPEC.md
+Sections: "1.2 User Roles", "1.3 Access Control"
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. AUTH MIDDLEWARE
+   File: src/middleware/auth.ts
+
+   ```typescript
+   export interface AuthenticatedRequest extends Request {
+     user?: {
+       id: string;
+       email: string;
+       name: string;
+       role: 'viewer' | 'editor' | 'reviewer' | 'super_admin';
+     };
+   }
+
+   // Middleware: requireAuth - validates JWT, attaches user
+   // Middleware: requireRole(roles: string[]) - checks user.role
+   ```
+
+2. ROLE PERMISSION MATRIX
+   File: src/config/permissions.ts
+
+   ```typescript
+   export const PERMISSIONS = {
+     // Catalog operations
+     'catalog:read': ['viewer', 'editor', 'reviewer', 'super_admin'],
+     'catalog:create': ['editor', 'reviewer', 'super_admin'],
+     'catalog:update': ['editor', 'reviewer', 'super_admin'],
+     'catalog:delete': ['super_admin'],
+     
+     // Verification operations
+     'verification:read': ['viewer', 'editor', 'reviewer', 'super_admin'],
+     'verification:decide': ['reviewer', 'super_admin'],
+     
+     // Evidence operations
+     'evidence:read': ['viewer', 'editor', 'reviewer', 'super_admin'],
+     'evidence:upload': ['editor', 'reviewer', 'super_admin'],
+     'evidence:link': ['reviewer', 'super_admin'],
+     
+     // Report operations
+     'reports:read': ['reviewer', 'super_admin'],
+     'reports:resolve': ['reviewer', 'super_admin'],
+     
+     // Admin operations
+     'users:read': ['super_admin'],
+     'users:manage': ['super_admin'],
+     'settings:manage': ['super_admin'],
+     'audit:read': ['super_admin'],
+   } as const;
+   ```
+
+3. SSO INTEGRATION
+   File: src/auth/sso.ts
+
+   Support OAuth 2.0 / OIDC with:
+   - Google Workspace
+   - Okta (optional)
+   
+   Flow:
+   1. /auth/login -> redirect to IdP
+   2. /auth/callback -> exchange code for tokens
+   3. Create/update admin_users record
+   4. Issue session JWT
+
+4. SESSION MANAGEMENT
+   File: src/auth/session.ts
+
+   - JWT-based sessions
+   - 8 hour expiry (configurable)
+   - Refresh token rotation
+   - Session revocation support
+
+5. MFA ENFORCEMENT
+   For reviewer and super_admin roles:
+   - Check MFA status from IdP claims
+   - Block access if MFA not enabled
+   - Grace period configurable (for onboarding)
+
+───────────────────────────────────────────────────────────────────────────────
+ROUTE PROTECTION PATTERNS
+───────────────────────────────────────────────────────────────────────────────
+
+```typescript
+// Public route - no auth
+router.get('/products', listProducts);
+
+// Admin route - any authenticated user
+router.get('/admin/queue', requireAuth, listQueue);
+
+// Role-restricted route
+router.post('/admin/verification/decide', 
+  requireAuth, 
+  requireRole(['reviewer', 'super_admin']),
+  submitDecision
+);
+
+// Permission-based route
+router.delete('/admin/products/:id',
+  requireAuth,
+  requirePermission('catalog:delete'),
+  deleteProduct
+);
+```
+
+───────────────────────────────────────────────────────────────────────────────
+AUDIT LOGGING INTEGRATION
+───────────────────────────────────────────────────────────────────────────────
+
+Every admin action must log to audit_log:
+- actor_type: 'admin'
+- actor_id: user.id
+- actor_ip_hash: hashed IP
+
+Create utility:
+```typescript
+// src/utils/audit.ts
+export async function logAdminAction(
+  user: AuthenticatedUser,
+  action: string,
+  entityType: string,
+  entityId: string,
+  oldValues?: object,
+  newValues?: object
+): Promise<void>
+```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Public endpoints NEVER require auth
+□ All /admin/* routes require auth
+□ Role checks are enforced server-side (never trust client)
+□ MFA required for reviewer/super_admin (check IdP claims)
+□ Session timeout: 8 hours
+□ All auth events logged to audit_log
+
+───────────────────────────────────────────────────────────────────────────────
+TECH STACK
+───────────────────────────────────────────────────────────────────────────────
+
+- jose (JWT handling)
+- openid-client (OIDC)
+- bcrypt (if local passwords needed)
+
+ENVIRONMENT VARIABLES:
+```
+AUTH_ISSUER=https://accounts.google.com
+AUTH_CLIENT_ID=xxx
+AUTH_CLIENT_SECRET=xxx
+AUTH_REDIRECT_URI=https://admin.pfasfreekitchen.com/auth/callback
+JWT_SECRET=xxx
+SESSION_EXPIRY_HOURS=8
+MFA_GRACE_PERIOD_DAYS=7
+```

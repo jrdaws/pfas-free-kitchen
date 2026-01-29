@@ -1,0 +1,128 @@
+/* Inline citation */
+.inline {
+  font-size: 0.75em;
+  vertical-align: super;
+  line-height: 0;
+  margin-left: 1px;
+}
+
+.inlineLink {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+
+.inlineLink:hover {
+  color: var(--color-primary-700);
+  text-decoration: underline;
+}
+
+/* Full citation */
+.full {
+  margin: 0;
+}
+
+.citation {
+  margin: 0;
+  font-size: 0.875rem;
+  color: var(--color-gray-700);
+  line-height: 1.6;
+}
+
+.citation a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+}
+
+.citation a:hover {
+  text-decoration: underline;
+}
+
+.citation em {
+  font-style: italic;
+}
+
+.doi {
+  word-break: break-all;
+}
+
+/* Bibliography section */
+.bibliography {
+  margin-top: var(--space-12);
+  padding-top: var(--space-8);
+  border-top: 1px solid var(--color-gray-200);
+}
+
+.bibliographyTitle {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-6);
+}
+
+.sourceGroup {
+  margin-bottom: var(--space-6);
+}
+
+.groupTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-3);
+  padding-left: var(--space-4);
+  border-left: 3px solid var(--color-primary-400);
+}
+
+.sourceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sourceList li {
+  margin-bottom: var(--space-3);
+  padding: var(--space-3);
+  background: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.sourceList li:last-child {
+  margin-bottom: 0;
+}
+
+/* Print styles */
+@media print {
+  .inlineLink {
+    color: inherit;
+  }
+
+  .inlineLink::after {
+    content: ' [' attr(href) ']';
+    font-size: 0.65em;
+  }
+
+  .bibliography {
+    page-break-before: always;
+  }
+
+  .sourceList li {
+    background: none;
+    border: 1px solid var(--color-gray-300);
+  }
+}
+
+/* Mobile */
+@media (max-width: 480px) {
+  .bibliographyTitle {
+    font-size: 1.25rem;
+  }
+
+  .sourceList li {
+    padding: var(--space-2);
+  }
+
+  .citation {
+    font-size: 0.8125rem;
+  }
+}

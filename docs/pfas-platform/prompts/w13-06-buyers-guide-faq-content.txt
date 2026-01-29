@@ -1,0 +1,447 @@
+================================================================================
+WAVE 13-06: BUYER'S GUIDE & FAQ CONTENT
+================================================================================
+ACTIVATION: "Execute Wave 13-06: Buyers Guide and FAQ Content"
+AGENT: Content Agent / Website Agent
+DEPENDS ON: Wave 12-09, Wave 13-04
+================================================================================
+
+CONTEXT
+-------
+Create comprehensive buyer's guide and FAQ content to help users make 
+informed purchasing decisions. Content should be practical, honest, and 
+acknowledge trade-offs between materials.
+
+================================================================================
+TASK 1: BUYER'S GUIDE PAGE CONTENT
+================================================================================
+
+Create/Update `src/pfas-web/app/learn/buyers-guide/page.tsx`:
+
+```markdown
+# PFAS-Free Cookware Buyer's Guide
+
+Switching to PFAS-free cookware doesn't mean giving up on great cooking. 
+This guide will help you choose the right materials for your cooking style.
+
+---
+
+## Quick Comparison
+
+| Material | Best For | Learning Curve | Maintenance | Price Range |
+|----------|----------|----------------|-------------|-------------|
+| **Stainless Steel** | Searing, sauces, versatility | Medium | Low | $$ - $$$$ |
+| **Cast Iron** | Searing, baking, frying | Medium | Medium | $ - $$ |
+| **Carbon Steel** | High-heat cooking, woks | Medium-High | Medium | $$ |
+| **Enameled Cast Iron** | Braising, soups, baking | Low | Low | $$$ - $$$$ |
+| **Glass** | Baking, storage | Low | Low | $ |
+
+---
+
+## Stainless Steel
+
+### Who It's For
+- Home cooks who want versatility
+- Those who prioritize low maintenance
+- Professional-style cooking
+- Anyone avoiding nonstick coatings
+
+### Pros
+✓ Durable and long-lasting (lifetime with care)
+✓ Oven and broiler safe to high temperatures
+✓ Dishwasher safe
+✓ Non-reactive (won't affect food flavors)
+✓ Even heating (with aluminum or copper core)
+✓ Professional appearance
+✓ No seasoning required
+
+### Cons
+✗ Food can stick without proper technique
+✗ Higher quality = higher price
+✗ Heavier than aluminum nonstick
+✗ Requires preheating for best results
+
+### Tips for Success
+
+**The Water Test:**
+Heat your pan over medium heat. Flick water droplets on the surface:
+- If they evaporate immediately: too hot
+- If they sizzle and disappear in 1-2 seconds: too hot
+- If they form beads that dance across the surface: perfect!
+
+**Use enough fat:**
+Don't be stingy with oil or butter. A thin, even layer helps prevent sticking.
+
+**Let food release naturally:**
+Food will release when it's ready. If it's sticking, it's not done searing.
+Wait 30-60 seconds longer before trying to flip.
+
+**Deglaze for easy cleanup:**
+After cooking, add a splash of wine, broth, or water while the pan is hot. 
+This creates a sauce AND makes cleanup easier.
+
+### Our Top Picks
+[Link to stainless steel filtered search]
+
+---
+
+## Cast Iron
+
+### Who It's For
+- Those who love searing and frying
+- Home bakers (corn bread, pizza, biscuits)
+- Budget-conscious cooks
+- Anyone who enjoys building a patina over time
+
+### Pros
+✓ Excellent heat retention
+✓ Naturally nonstick when seasoned
+✓ Induction compatible
+✓ Can last generations
+✓ Affordable entry point
+✓ Goes from stovetop to oven seamlessly
+✓ Adds trace iron to food
+
+### Cons
+✗ Heavy (12" skillet weighs 8+ lbs)
+✗ Requires seasoning maintenance
+✗ Slow to heat and cool
+✗ Can rust if not dried properly
+✗ Not for acidic foods (tomatoes, wine) during long cooking
+✗ Not dishwasher safe
+
+### Seasoning 101
+
+**What is seasoning?**
+Seasoning is a layer of polymerized oil baked onto the iron surface. It 
+creates a natural nonstick coating and protects against rust.
+
+**How to maintain it:**
+1. After cooking, rinse with hot water
+2. Use a brush or scraper for stuck bits (soap is fine occasionally)
+3. Dry immediately and thoroughly
+4. Apply a thin layer of oil while warm
+5. Heat briefly to evaporate excess
+
+**How to restore:**
+If your pan becomes rusty or loses its seasoning:
+1. Scrub with steel wool to remove rust
+2. Wash and dry completely
+3. Apply thin layer of oil (flaxseed, vegetable, or cast iron conditioner)
+4. Bake upside-down at 450°F for 1 hour
+5. Repeat 2-3 times for best results
+
+### Our Top Picks
+[Link to cast iron filtered search]
+
+---
+
+## Carbon Steel
+
+### Who It's For
+- Wok cooking enthusiasts
+- Those who want cast iron benefits but lighter weight
+- Professional-style cooking
+- High-heat searing
+
+### Pros
+✓ Lighter than cast iron (same 12" pan weighs ~5 lbs)
+✓ Heats faster than cast iron
+✓ Excellent for high-heat cooking
+✓ Develops natural nonstick patina
+✓ Oven safe to very high temperatures
+✓ Popular with professional chefs
+
+### Cons
+✗ Requires seasoning (like cast iron)
+✗ Not for acidic foods during long cooking
+✗ Can warp if heated/cooled too quickly
+✗ Not dishwasher safe
+✗ Learning curve for seasoning
+
+### Carbon Steel vs Cast Iron
+
+| Factor | Carbon Steel | Cast Iron |
+|--------|--------------|-----------|
+| Weight | Lighter (~5 lbs for 12") | Heavier (~8 lbs for 12") |
+| Heat response | Faster | Slower |
+| Sides | Sloped (good for tossing) | Straight (good for capacity) |
+| Price | $$ | $ - $$ |
+| Durability | Very durable | Extremely durable |
+
+### Our Top Picks
+[Link to carbon steel filtered search]
+
+---
+
+## Enameled Cast Iron
+
+### Who It's For
+- Dutch oven enthusiasts
+- Those who want cast iron benefits without maintenance
+- Slow-cooking and braising fans
+- Anyone who wants color options
+
+### Pros
+✓ No seasoning required
+✓ Non-reactive (can cook acidic foods)
+✓ Easy to clean
+✓ Excellent heat retention
+✓ Beautiful colors and designs
+✓ Oven safe
+✓ Lifetime durability (with care)
+
+### Cons
+✗ More expensive than bare cast iron
+✗ Enamel can chip if dropped or abused
+✗ Not for high-heat searing (enamel limit ~500°F)
+✗ Heavy
+✗ Doesn't develop nonstick patina like bare cast iron
+
+### Care Tips
+- Don't use metal utensils (can scratch enamel)
+- Avoid thermal shock (don't go from freezer to hot oven)
+- Let cool before washing
+- Use non-abrasive cleaners
+
+### Our Top Picks
+[Link to enameled cast iron filtered search]
+
+---
+
+## What About "Ceramic" Nonstick?
+
+You'll see many pans marketed as "ceramic" nonstick. Here's what you need 
+to know:
+
+### "Ceramic Coating" is NOT Ceramic
+
+True ceramic is kiln-fired clay. "Ceramic coating" is a sol-gel (silica-based) 
+coating applied at low temperatures. It's a different category entirely.
+
+### Are Sol-Gel Coatings PFAS-Free?
+
+**It depends.** Some brands (like GreenPan's Thermolon) claim to be PFAS-free. 
+Others may use PTFE or other fluoropolymers as additives.
+
+**We recommend:**
+1. Check our verification tier for specific products
+2. Look for brands that explicitly state "no PTFE" and "no PFAS"
+3. Contact manufacturers directly if uncertain
+
+### Sol-Gel Coating Limitations
+- Shorter lifespan than stainless or cast iron (1-5 years typical)
+- Nonstick properties degrade over time
+- Not oven safe to high temperatures
+- Can be damaged by metal utensils
+
+---
+
+## Building Your PFAS-Free Kitchen
+
+### Essential Starter Set
+
+If you're starting fresh, we recommend:
+
+1. **12" Stainless Steel Skillet** — Your everyday workhorse
+2. **10" Cast Iron Skillet** — For searing and baking
+3. **5.5 Qt Dutch Oven** — For soups, braises, and bread
+4. **3 Qt Saucepan** — For sauces, grains, and reheating
+
+### Replacing Nonstick
+
+Use Case | PFAS-Free Alternative | Notes |
+|---------|----------------------|-------|
+| Eggs | Well-seasoned cast iron or carbon steel | Butter helps! |
+| Fish | Stainless steel with enough oil | Let it release naturally |
+| Pancakes | Cast iron griddle | Preheat evenly |
+| Stir-fry | Carbon steel wok | High heat is key |
+| Crepes | Carbon steel crepe pan | Seasoning matters |
+
+---
+
+## Red Flags to Watch For
+
+### 🚩 "PFOA-Free" (without mentioning PFAS)
+PFOA is just one PFAS compound. Product may still contain PTFE or other PFAS.
+
+### 🚩 "Non-Toxic" Without Specifics
+Marketing term with no regulated definition. Ask for specifics.
+
+### 🚩 "Green" or "Eco-Friendly" Coating
+Doesn't mean PFAS-free. May still contain fluoropolymers.
+
+### 🚩 "Ceramic" Without Clarification
+Could be true ceramic (kiln-fired) OR sol-gel coating. Ask which.
+
+### 🚩 No Response to PFAS Questions
+If a brand won't answer PFAS questions, consider it a yellow flag.
+
+---
+
+## Questions to Ask Before Buying
+
+1. **Is this product PFAS-free?** (Not just PFOA-free)
+2. **What is the cooking surface made of?**
+3. **Is any coating applied to the cooking surface?**
+4. **If coated, what is the coating made of?**
+5. **Has the product been tested by an independent lab?**
+
+---
+
+*Last updated: January 2026*
+```
+
+================================================================================
+TASK 2: FAQ PAGE CONTENT
+================================================================================
+
+Create/Update `src/pfas-web/app/faq/page.tsx`:
+
+```typescript
+const FAQ_DATA = [
+  {
+    category: "General Questions",
+    questions: [
+      {
+        q: "What are PFAS?",
+        a: "PFAS (per- and polyfluoroalkyl substances) are a family of over 15,000 synthetic chemicals. They're called 'forever chemicals' because they don't break down easily in the environment or the human body. In cookware, PFAS are most commonly found in nonstick coatings like PTFE (Teflon)."
+      },
+      {
+        q: "Why should I care about PFAS in my cookware?",
+        a: "PFAS have been linked to various health concerns in scientific studies, including effects on the immune system, thyroid, and liver. While the contribution of cookware to overall PFAS exposure is debated, many consumers prefer to reduce exposure where possible. We provide information so you can make informed choices."
+      },
+      {
+        q: "Is Teflon the same as PFAS?",
+        a: "Teflon is a brand name for PTFE (polytetrafluoroethylene), which is one type of PFAS. So yes, traditional Teflon coatings contain PFAS. However, 'Teflon' as a brand has expanded to include other coatings, some of which may have different compositions."
+      },
+      {
+        q: "What does 'PFOA-free' mean? Is it the same as PFAS-free?",
+        a: "No, they're different. PFOA is ONE specific PFAS compound that was largely phased out by 2015. A product labeled 'PFOA-free' may still contain PTFE or other PFAS compounds. 'PFAS-free' means no fluorinated compounds in any component."
+      },
+    ]
+  },
+  {
+    category: "About Our Ratings",
+    questions: [
+      {
+        q: "How do you verify products?",
+        a: "We use a four-tier system. Tier 4 (Monitored) products have ongoing lab testing. Tier 3 (Lab Tested) products have at least one independent lab report on file. Tier 2 (Policy Reviewed) products have documentation or are made from inherently PFAS-free materials. Tier 1 (Brand Statement) products have only unverified brand claims."
+      },
+      {
+        q: "Can brands pay to be listed or get higher ratings?",
+        a: "Absolutely not. Verification status is never influenced by payment, advertising, or affiliate relationships. We earn affiliate commissions when you purchase through our links, but this never affects how we rate products."
+      },
+      {
+        q: "Why are some products listed as 'Unknown'?",
+        a: "If we can't verify a product's PFAS status through documentation, lab testing, or material analysis, we mark it as Unknown. This is different from 'PFAS-free' — it means we simply don't have enough information to make a determination."
+      },
+      {
+        q: "How often do you retest products?",
+        a: "Tier 4 products are on active retest schedules, typically annually. Other products are updated when we receive new information. Manufacturing can change, so we always display the date of our most recent verification."
+      },
+    ]
+  },
+  {
+    category: "Shopping Questions",
+    questions: [
+      {
+        q: "Do you sell products directly?",
+        a: "No. We are an information and review site. When you're ready to buy, we link to retailers like Amazon, Williams Sonoma, and others. We earn affiliate commissions on some purchases, which helps support our research and operations."
+      },
+      {
+        q: "How do affiliate links work?",
+        a: "When you click a link to a retailer and make a purchase, we may earn a commission at no extra cost to you. This commission comes from the retailer, not from you. We disclose all affiliate relationships clearly. Our ratings are never influenced by affiliate commissions."
+      },
+      {
+        q: "Why don't you show prices?",
+        a: "Retailer agreements (including Amazon's) restrict how we can display pricing. Prices also change frequently. We link directly to retailers where you can see current pricing and availability."
+      },
+      {
+        q: "Are products available outside the US?",
+        a: "Our primary focus is the US market. Product availability, formulations, and even PFAS status may differ in other countries. We recommend checking with manufacturers for international availability and specifications."
+      },
+    ]
+  },
+  {
+    category: "Product Questions",
+    questions: [
+      {
+        q: "Is 'ceramic coating' safe?",
+        a: "It depends on the specific coating. 'Ceramic' nonstick is typically a sol-gel (silica-based) coating, not true kiln-fired ceramic. Some brands like GreenPan claim their ceramic coating is PFAS-free, while others may contain fluoropolymers. Check our individual product ratings for specifics."
+      },
+      {
+        q: "Are all stainless steel pans PFAS-free?",
+        a: "Uncoated stainless steel (the cooking surface) is inherently PFAS-free. However, some stainless steel pans have nonstick coatings on the interior. Look for pans with bare stainless steel cooking surfaces."
+      },
+      {
+        q: "Is cast iron safe?",
+        a: "Cast iron seasoned with oil is naturally PFAS-free. The 'seasoning' is polymerized oil, not a synthetic coating. Pre-seasoned cast iron from reputable brands uses vegetable oil or similar, not fluoropolymers."
+      },
+      {
+        q: "What about silicone bakeware?",
+        a: "Silicone itself does not contain PFAS. However, the manufacturing process and additives matter. Look for 'platinum-cured' or 'food-grade' silicone from reputable brands. We verify silicone products individually."
+      },
+      {
+        q: "Can I use my existing nonstick pans?",
+        a: "This is a personal choice. If you choose to keep using nonstick pans: avoid overheating (stay under 500°F), replace when scratched or degraded, and use only wooden or silicone utensils. We provide information so you can make informed decisions."
+      },
+    ]
+  },
+];
+```
+
+================================================================================
+TASK 3: CREATE FAQ ACCORDION COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/faq/FAQAccordion.tsx`:
+
+Features:
+- Category headers
+- Expandable question/answer items
+- Smooth animations
+- Keyboard accessible
+- Deep linking to specific questions (?q=question-slug)
+- Schema.org FAQPage structured data
+
+================================================================================
+TASK 4: CREATE FAQ SEARCH
+================================================================================
+
+Create `src/pfas-web/components/faq/FAQSearch.tsx`:
+
+Features:
+- Live filtering of questions
+- Highlight matching text
+- "No results" state with suggestions
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Buyer's guide covers all major materials
+□ Honest about trade-offs and limitations
+□ Red flags section warns about marketing terms
+□ FAQ covers all common questions
+□ FAQ is searchable
+□ FAQ has proper structured data (FAQPage schema)
+□ All content is accurate and well-researched
+□ Pages are accessible and responsive
+□ Deep linking to FAQ questions works
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/data/faq.ts
+- src/pfas-web/components/faq/FAQAccordion.tsx
+- src/pfas-web/components/faq/FAQSearch.tsx
+- src/pfas-web/components/faq/FAQSchema.tsx
+
+MODIFY:
+- src/pfas-web/app/learn/buyers-guide/page.tsx
+- src/pfas-web/app/faq/page.tsx
+
+================================================================================

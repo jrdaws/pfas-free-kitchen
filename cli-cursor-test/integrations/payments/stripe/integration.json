@@ -1,0 +1,20 @@
+{
+  "provider": "stripe",
+  "type": "payments",
+  "version": "1.0.0",
+  "description": "Stripe payments with subscription management, webhooks, and customer portal",
+  "dependencies": {
+    "stripe": "^14.21.0"
+  },
+  "envVars": [
+    "STRIPE_SECRET_KEY",
+    "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY",
+    "STRIPE_WEBHOOK_SECRET"
+  ],
+  "files": {
+    "lib": ["lib/stripe.ts"],
+    "app": ["app/api/stripe/**"],
+    "components": ["components/pricing/**"]
+  },
+  "postInstallInstructions": "Create a Stripe account at https://stripe.com, get your API keys from https://dashboard.stripe.com/apikeys, and set up webhook endpoint for subscription events"
+}

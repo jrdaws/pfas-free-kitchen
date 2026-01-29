@@ -1,0 +1,86 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--space-12) var(--space-6);
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.illustration {
+  margin-bottom: var(--space-6);
+}
+
+.title {
+  margin: 0 0 var(--space-3);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+}
+
+.description {
+  margin: 0 0 var(--space-8);
+  font-size: 1rem;
+  color: var(--color-gray-600);
+  line-height: 1.6;
+}
+
+.instructions {
+  background: var(--color-gray-50);
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  margin-bottom: var(--space-8);
+  width: 100%;
+  text-align: left;
+}
+
+.instructionsTitle {
+  margin: 0 0 var(--space-3);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-gray-700);
+}
+
+.instructionsList {
+  margin: 0;
+  padding-left: var(--space-6);
+  color: var(--color-gray-600);
+  font-size: 0.875rem;
+  line-height: 1.8;
+}
+
+.instructionsList li {
+  margin-bottom: var(--space-1);
+}
+
+.instructionsList li:last-child {
+  margin-bottom: 0;
+}
+
+.actions {
+  display: flex;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-8) var(--space-4);
+  }
+
+  .title {
+    font-size: 1.25rem;
+  }
+
+  .actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .actions > * {
+    width: 100%;
+  }
+}

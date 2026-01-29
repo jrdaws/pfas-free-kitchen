@@ -1,0 +1,358 @@
+================================================================================
+WAVE 13-05: VERIFICATION METHODOLOGY CONTENT
+================================================================================
+ACTIVATION: "Execute Wave 13-05: Verification Methodology Content"
+AGENT: Content Agent / Website Agent
+DEPENDS ON: Wave 12-09
+================================================================================
+
+CONTEXT
+-------
+Create comprehensive content explaining the verification methodology.
+This is critical for user trust and differentiates the platform from
+competitors who may make unverified claims.
+
+================================================================================
+TASK 1: HOW WE VERIFY PAGE CONTENT
+================================================================================
+
+Create/Update `src/pfas-web/app/learn/how-we-verify/page.tsx`:
+
+```markdown
+# How We Verify Products
+
+At PFAS-Free Kitchen, we don't just take manufacturers at their word. We use 
+a rigorous, multi-tier verification system to evaluate every product we list.
+
+---
+
+## Our Verification Philosophy
+
+### 1. Transparency Over Marketing
+We show you exactly what we know — and what we don't know — about each product.
+Every product page displays:
+- The verification tier
+- The type of evidence we have
+- Any unknowns or limitations
+
+### 2. Conservative Claims
+We never claim a product is "safer" or "healthier." We only state what we can 
+verify: whether PFAS are present or absent based on available evidence.
+
+### 3. Component-Level Analysis
+A product isn't just one thing. A pan has a cooking surface, handle, rivets, 
+and possibly a lid. We analyze each component that contacts food.
+
+### 4. No Pay-to-Play
+Verification status is never influenced by affiliate relationships or brand 
+partnerships. We do not accept payment for reviews or placement.
+
+---
+
+## The Four Verification Tiers
+
+### Tier 4: Monitored ✓✓
+**The highest level of verification**
+
+Products at this tier have:
+- Independent laboratory testing on file
+- A documented retest schedule (typically annual)
+- Ongoing access to new test results
+- Immediate updates if results change
+
+**How products reach Tier 4:**
+1. Meet all Tier 3 requirements first
+2. Brand commits to ongoing testing program
+3. We verify retest schedule and receive results
+4. Continued monitoring for at least one testing cycle
+
+**What Tier 4 means for you:**
+These products have the most robust verification. If something changes in 
+manufacturing or if new testing reveals issues, we'll know and update the 
+listing immediately.
+
+---
+
+### Tier 3: Lab Tested ✓
+**Independent laboratory verification**
+
+Products at this tier have:
+- At least one independent lab report on file
+- Testing method appropriate for PFAS detection
+- Clear documentation of what was tested
+- Results showing PFAS below detection limits OR quantified results
+
+**Types of lab testing we accept:**
+
+| Method | What It Detects | Detection Limit |
+|--------|-----------------|-----------------|
+| **LC-MS/MS** (Liquid Chromatography Mass Spectrometry) | 30-50+ specific PFAS compounds | 0.1-5 ng/g typically |
+| **Total Fluorine Screening** (CIC, PIGE) | Total organic fluorine (all PFAS) | 10-100 ppm typically |
+| **Total Organic Fluorine** (TOF) | All fluorinated organic compounds | Varies by method |
+
+**We verify:**
+- Lab is accredited (ISO 17025 or equivalent)
+- Test method is validated for the matrix (metal, ceramic, etc.)
+- Sample description matches the product
+- Detection limits are stated
+- Chain of custody is documented
+
+**Limitations:**
+- A single lab test represents one sample from one production run
+- Manufacturing can change over time
+- Lab tests don't guarantee future production
+
+---
+
+### Tier 2: Policy Reviewed ○
+**Documentation review without independent testing**
+
+Products at this tier have:
+- Written documentation from the manufacturer
+- Material specifications or safety data sheets
+- Supply chain documentation
+- OR materials that are inherently PFAS-free
+
+**Types of evidence at Tier 2:**
+
+**Inherent Material Analysis:**
+Some materials cannot contain PFAS by their nature:
+- Stainless steel (metal alloy, no coatings)
+- Cast iron (iron with oil seasoning only)
+- Carbon steel (iron alloy with oil seasoning)
+- Borosilicate glass (no coatings)
+- Kiln-fired ceramic (clay and mineral glazes)
+
+For these products, we verify the material composition and confirm no 
+additional coatings are applied.
+
+**Brand Documentation:**
+- Official PFAS-free policy on company letterhead
+- Material safety data sheets (MSDS/SDS)
+- Supplier certifications
+- Detailed ingredient/material lists
+
+**What Tier 2 means:**
+We have reasonable confidence based on documentation, but no independent 
+laboratory verification. The manufacturer's claims have not been tested 
+by a third party.
+
+---
+
+### Tier 1: Brand Statement ·
+**Unverified brand claims**
+
+Products at this tier have:
+- A public statement that the product is PFAS-free
+- Marketing materials claiming "non-toxic" or similar
+- Customer service confirmations
+
+**We have NOT verified:**
+- The accuracy of these claims
+- The basis for these claims
+- Whether claims apply to all components
+
+**Why we list Tier 1 products:**
+We include these products because consumers are searching for PFAS-free 
+options, and we want to be a comprehensive resource. However, we clearly 
+indicate that these claims are not independently verified.
+
+**What you should know:**
+Brand statements can be:
+- Accurate but unverified
+- Based on different definitions of "PFAS-free"
+- Outdated if manufacturing has changed
+- Limited to certain components only
+
+---
+
+### Tier 0: Unknown ?
+**No verification information available**
+
+Products at Tier 0:
+- Have no publicly available PFAS information
+- Have not responded to our information requests
+- Have ambiguous or unclear material composition
+
+**We typically do not list Tier 0 products** unless they are commonly 
+searched for and we want to inform consumers about the lack of information.
+
+---
+
+## Component-Level Verification
+
+### Why Components Matter
+
+Consider a typical nonstick pan:
+- **Cooking surface:** PTFE coating (contains PFAS)
+- **Pan body:** Aluminum (PFAS-free)
+- **Handle:** Bakelite with rubber grip (unknown)
+- **Rivets:** Stainless steel (PFAS-free)
+
+Even "PFAS-free" pans may have components we can't verify:
+- Handle coatings
+- Lid gaskets
+- Decorative elements
+
+### How We Report Components
+
+Each product page shows:
+1. **All identified components**
+2. **Which components contact food**
+3. **Material of each component**
+4. **Coating (if any) on each component**
+5. **PFAS status of each component**
+
+If we can't verify a component, we mark it as "Unknown" and note this as 
+a limitation.
+
+---
+
+## Evidence Types
+
+### Lab Reports (Strongest Evidence)
+- Independent third-party testing
+- Accredited laboratory
+- Validated test method
+- Clear sample identification
+- Quantitative results with detection limits
+
+### Material Analysis
+- Chemical composition documentation
+- Material safety data sheets
+- Engineering specifications
+- Industry standard materials
+
+### Brand Documentation
+- Official company policies
+- Supplier certifications
+- Manufacturing documentation
+- Responses to direct inquiries
+
+### Public Statements
+- Website claims
+- Marketing materials
+- Press releases
+- Social media statements
+
+---
+
+## How We Handle Unknowns
+
+We are transparent about what we don't know:
+
+### Unknown Components
+If we can't verify a component, we:
+1. List it as "Unknown" in the component table
+2. Note this limitation in the verification summary
+3. Lower the overall tier if the unknown affects food-contact surfaces
+
+### Changing Products
+Products can change without notice. We:
+1. Date all evidence
+2. Note when evidence was last updated
+3. Encourage users to verify current products with manufacturers
+4. Update listings when we receive new information
+
+### Regional Variations
+Some products have different formulations in different markets. We:
+1. Specify which region/market our verification applies to
+2. Note when we know about regional variations
+3. Default to US market unless otherwise specified
+
+---
+
+## Request Verification
+
+### For Consumers
+Found a product you'd like us to verify? 
+[Submit a product suggestion →]
+
+### For Brands
+Want your products verified? We offer several options:
+1. **Self-attestation** (Tier 2): Submit documentation
+2. **Lab testing** (Tier 3): Share existing lab reports
+3. **Monitoring program** (Tier 4): Enroll in ongoing verification
+
+[Contact us for brand verification →]
+
+---
+
+## Our Commitment
+
+We commit to:
+- **Accuracy:** Only stating what we can verify
+- **Transparency:** Showing our evidence and limitations
+- **Independence:** Never selling verification status
+- **Updates:** Revising listings when new information emerges
+
+If you find an error or have additional evidence, please [contact us].
+
+---
+
+*Last updated: January 2026*
+```
+
+================================================================================
+TASK 2: CREATE TIER EXPLANATION COMPONENTS
+================================================================================
+
+Create `src/pfas-web/components/verification/TierExplainer.tsx`:
+
+Interactive component that shows:
+- Tier badge
+- Expandable explanation
+- Evidence requirements
+- Example products at this tier
+- What it means for consumers
+
+================================================================================
+TASK 3: CREATE COMPONENT ANALYSIS VISUAL
+================================================================================
+
+Create `src/pfas-web/components/verification/ComponentDiagram.tsx`:
+
+SVG diagram showing:
+- Pan with labeled parts
+- Color-coded by verification status
+- Interactive tooltips on hover/tap
+- Legend explaining colors
+
+================================================================================
+TASK 4: CREATE EVIDENCE BADGE COMPONENT
+================================================================================
+
+Create `src/pfas-web/components/verification/EvidenceBadge.tsx`:
+
+Visual badges for evidence types:
+- 🧪 Lab Report
+- 📋 Material Analysis
+- 📄 Brand Documentation
+- 💬 Public Statement
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All four tiers clearly explained
+□ Component-level analysis concept is clear
+□ Evidence types are documented
+□ Process for handling unknowns is transparent
+□ Brand verification process is explained
+□ Interactive tier explainer works
+□ Component diagram is visually clear
+□ Page is accessible and responsive
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/verification/TierExplainer.tsx
+- src/pfas-web/components/verification/ComponentDiagram.tsx
+- src/pfas-web/components/verification/EvidenceBadge.tsx
+
+MODIFY:
+- src/pfas-web/app/learn/how-we-verify/page.tsx
+
+================================================================================

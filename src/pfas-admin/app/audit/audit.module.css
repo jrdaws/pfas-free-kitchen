@@ -1,0 +1,31 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.filters {
+  display: flex;
+  gap: var(--space-2);
+}
+
+.filters select,
+.filters input {
+  padding: var(--space-2);
+  min-width: 140px;
+}
+
+.timestamp {
+  display: flex;
+  flex-direction: column;
+}
+
+.date {
+  font-weight: 500;
+}
+
+.time {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+}

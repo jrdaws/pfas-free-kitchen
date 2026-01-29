@@ -1,0 +1,402 @@
+================================================================================
+WAVE 13-07: STATIC PAGES & LEGAL CONTENT
+================================================================================
+ACTIVATION: "Execute Wave 13-07: Static Pages and Legal Content"
+AGENT: Content Agent / Website Agent
+DEPENDS ON: Wave 12-09
+================================================================================
+
+CONTEXT
+-------
+Create all static pages including About, Contact, Disclosure, Privacy Policy,
+and Terms of Service. Legal pages must be compliant with FTC guidelines.
+
+================================================================================
+TASK 1: ABOUT PAGE CONTENT
+================================================================================
+
+Create/Update `src/pfas-web/app/about/page.tsx`:
+
+```markdown
+# About PFAS-Free Kitchen
+
+## Our Mission
+
+We believe everyone deserves access to clear, honest information about the 
+products they use every day.
+
+PFAS-Free Kitchen exists to help consumers find kitchen products that have 
+been verified to be free of per- and polyfluoroalkyl substances — without 
+the marketing spin or greenwashing.
+
+---
+
+## What We Do
+
+### Independent Verification
+We don't just list products that claim to be PFAS-free. We verify those 
+claims through:
+- Material analysis
+- Documentation review
+- Independent laboratory testing
+- Ongoing monitoring programs
+
+### Transparent Reporting
+Every product listing shows:
+- Exactly what we verified
+- What evidence we have
+- What we don't know
+- When the information was last updated
+
+### No Sponsored Rankings
+Our verification tiers are never influenced by:
+- Advertising relationships
+- Affiliate partnerships
+- Brand payments
+- Free products
+
+---
+
+## How We're Funded
+
+We earn money through affiliate commissions when you click through to 
+retailers and make a purchase. This comes from the retailer — not from you.
+
+**Important:** Affiliate relationships never influence our verification 
+ratings. A product's tier is determined solely by the quality of evidence 
+available, not by whether we can earn a commission on it.
+
+We also may earn revenue through:
+- Display advertising (clearly labeled)
+- Sponsored content (clearly disclosed)
+
+We do NOT accept payment for:
+- Product reviews
+- Verification ratings
+- Search ranking or placement
+
+---
+
+## Our Editorial Policy
+
+### Independence
+We maintain complete editorial independence. Our content team makes all 
+decisions about what to publish and how to rate products.
+
+### Accuracy
+We strive for accuracy in everything we publish. When we make mistakes, 
+we correct them promptly and transparently.
+
+### Updates
+Kitchen products can change. We date all our verifications and update 
+listings when we receive new information. If a product's status changes, 
+we update it — even if that change is negative.
+
+### Conflicts of Interest
+We disclose all material relationships that could influence our content, 
+including affiliate partnerships, advertising relationships, and any free 
+products we receive for review purposes.
+
+---
+
+## Contact Us
+
+### General Inquiries
+info@pfasfreekitchen.com
+
+### Press & Media
+press@pfasfreekitchen.com
+
+### Product Suggestions
+[Submit a product for review →](/suggest)
+
+### Brand Verification Inquiries
+brands@pfasfreekitchen.com
+
+### Report an Error
+If you believe any information on our site is incorrect:
+[Submit a correction →](/corrections)
+
+---
+
+## Connect
+
+- Twitter: @pfasfreekitchen
+- Instagram: @pfasfreekitchen
+- Newsletter: [Subscribe →](/newsletter)
+
+---
+
+*PFAS-Free Kitchen is an independent consumer information resource. We are 
+not affiliated with any cookware manufacturer or retailer.*
+```
+
+================================================================================
+TASK 2: DISCLOSURE PAGE (FTC COMPLIANT)
+================================================================================
+
+Create/Update `src/pfas-web/app/disclosure/page.tsx`:
+
+```markdown
+# Affiliate Disclosure
+
+**Last Updated: January 2026**
+
+This page contains important disclosures about how PFAS-Free Kitchen earns 
+money and our relationships with the companies whose products we discuss.
+
+---
+
+## How We Earn Money
+
+PFAS-Free Kitchen is a participant in various affiliate programs. When you 
+click on links to retailers and make a purchase, we may earn a commission 
+at no additional cost to you.
+
+### Amazon Associates Program
+
+PFAS-Free Kitchen is a participant in the Amazon Services LLC Associates 
+Program, an affiliate advertising program designed to provide a means for 
+sites to earn advertising fees by advertising and linking to Amazon.com.
+
+**As an Amazon Associate, we earn from qualifying purchases.**
+
+### Other Affiliate Programs
+
+We may also participate in affiliate programs with:
+- Williams Sonoma
+- Sur La Table
+- Target
+- Walmart
+- Other retailers as disclosed on individual product pages
+
+---
+
+## What This Means for You
+
+### No Extra Cost
+When you purchase through our affiliate links, the price you pay is the 
+same as if you visited the retailer directly. The commission comes from 
+the retailer, not from you.
+
+### Our Commitment to Honesty
+Affiliate relationships **never** influence:
+- Our verification ratings
+- Product recommendations
+- Search results or rankings
+- Editorial content
+
+A product's verification tier is determined solely by the quality of 
+evidence available — not by whether we earn a commission.
+
+### Products Without Affiliate Links
+We list many products for which we have no affiliate relationship. We 
+believe comprehensive coverage is more important than only listing products 
+where we can earn commissions.
+
+---
+
+## How to Identify Affiliate Links
+
+Links to retailers on our site may be affiliate links. You can generally 
+identify these because:
+- They link to product pages on retailer websites
+- They may contain tracking parameters in the URL
+- They appear in "Shop This Product" sections
+
+When you see a link to buy a product, assume it may be an affiliate link.
+
+---
+
+## Editorial Independence
+
+Our editorial team maintains complete independence from our business team. 
+Decisions about what products to list, how to rate them, and what content 
+to publish are made without regard to affiliate relationships.
+
+**We do not:**
+- Accept payment for positive reviews
+- Allow affiliates to influence ratings
+- Remove negative information because of business relationships
+- Prioritize products based on commission rates
+
+---
+
+## Product Review Disclosure
+
+### Products We Purchase
+Most products we review are purchased by us at retail price. These purchases 
+are funded by affiliate commissions and other revenue.
+
+### Products Provided for Review
+Occasionally, manufacturers provide products for review purposes. When this 
+occurs, we disclose it on the product page. Receiving a free product does 
+not guarantee a positive review or any particular rating.
+
+### Lab Testing Costs
+Laboratory testing is expensive. In some cases, brands may pay for or 
+provide lab testing results. We disclose the source of all lab reports on 
+product pages. Regardless of who paid for testing, our interpretation of 
+results is independent.
+
+---
+
+## Questions?
+
+If you have questions about our affiliate relationships or disclosures, 
+contact us at: disclosure@pfasfreekitchen.com
+
+---
+
+*This disclosure was prepared in accordance with the Federal Trade Commission's 
+Guides Concerning the Use of Endorsements and Testimonials in Advertising 
+(16 CFR Part 255).*
+```
+
+================================================================================
+TASK 3: PRIVACY POLICY
+================================================================================
+
+Create `src/pfas-web/app/privacy/page.tsx`:
+
+Standard privacy policy covering:
+- Information collected (analytics, cookies, email)
+- How information is used
+- Third-party services (Google Analytics, affiliate networks)
+- User rights (CCPA, GDPR)
+- Cookie policy
+- Data retention
+- Contact information for privacy inquiries
+
+================================================================================
+TASK 4: TERMS OF SERVICE
+================================================================================
+
+Create `src/pfas-web/app/terms/page.tsx`:
+
+Standard terms covering:
+- Acceptance of terms
+- Use of the site
+- Intellectual property
+- User submissions
+- Disclaimers (not medical advice)
+- Limitation of liability
+- Indemnification
+- Governing law
+
+================================================================================
+TASK 5: CONTACT PAGE
+================================================================================
+
+Create `src/pfas-web/app/contact/page.tsx`:
+
+```markdown
+# Contact Us
+
+## How Can We Help?
+
+### General Questions
+For general inquiries about our site or PFAS-free products.
+**Email:** info@pfasfreekitchen.com
+
+### Suggest a Product
+Know of a PFAS-free product we should review?
+[Submit a product suggestion →](/suggest)
+
+### Report an Error
+If you believe any information on our site is incorrect.
+[Report a correction →](/corrections)
+
+### Brand Inquiries
+For manufacturers interested in verification.
+**Email:** brands@pfasfreekitchen.com
+
+### Press & Media
+For media inquiries and interview requests.
+**Email:** press@pfasfreekitchen.com
+
+### Advertising
+For advertising partnership inquiries.
+**Email:** advertising@pfasfreekitchen.com
+
+---
+
+## Response Times
+
+We aim to respond to all inquiries within:
+- **General questions:** 2-3 business days
+- **Product suggestions:** 5-7 business days
+- **Error reports:** 1-2 business days
+- **Brand inquiries:** 3-5 business days
+
+---
+
+## Before You Contact Us
+
+Many common questions are answered in our:
+- [FAQ →](/faq)
+- [How We Verify →](/learn/how-we-verify)
+- [Buyer's Guide →](/learn/buyers-guide)
+```
+
+================================================================================
+TASK 6: PRODUCT SUGGESTION FORM
+================================================================================
+
+Create `src/pfas-web/app/suggest/page.tsx`:
+
+Form with fields:
+- Product name (required)
+- Brand (required)
+- Category (dropdown)
+- Where to buy (URL)
+- Why you think it's PFAS-free
+- Your email (optional, for follow-up)
+- Honeypot field (spam prevention)
+
+================================================================================
+TASK 7: ERROR CORRECTION FORM
+================================================================================
+
+Create `src/pfas-web/app/corrections/page.tsx`:
+
+Form with fields:
+- URL of page with error
+- Description of error
+- Correct information (if known)
+- Source for correct information
+- Your email (optional)
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ About page explains mission and funding model
+□ Disclosure page is FTC-compliant
+□ Privacy policy covers required elements
+□ Terms of service are comprehensive
+□ Contact page has all needed email addresses
+□ Product suggestion form works
+□ Error correction form works
+□ All legal pages have "Last Updated" dates
+□ All pages are accessible
+□ Forms have spam prevention
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/app/privacy/page.tsx
+- src/pfas-web/app/terms/page.tsx
+- src/pfas-web/app/contact/page.tsx
+- src/pfas-web/app/suggest/page.tsx
+- src/pfas-web/app/corrections/page.tsx
+- src/pfas-web/components/forms/SuggestionForm.tsx
+- src/pfas-web/components/forms/CorrectionForm.tsx
+
+MODIFY:
+- src/pfas-web/app/about/page.tsx
+- src/pfas-web/app/disclosure/page.tsx
+
+================================================================================

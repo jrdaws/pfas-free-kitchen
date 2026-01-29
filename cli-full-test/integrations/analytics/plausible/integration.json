@@ -1,0 +1,16 @@
+{
+  "provider": "plausible",
+  "type": "analytics",
+  "version": "1.0.0",
+  "description": "Plausible Analytics - Simple, privacy-friendly analytics with no cookies",
+  "dependencies": {
+    "next-plausible": "^3.12.0"
+  },
+  "envVars": [
+    "NEXT_PUBLIC_PLAUSIBLE_DOMAIN"
+  ],
+  "files": {
+    "components": ["components/analytics/**"]
+  },
+  "postInstallInstructions": "Add your site to Plausible at https://plausible.io/sites and configure your domain"
+}

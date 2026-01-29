@@ -1,0 +1,402 @@
+================================================================================
+WAVE 12-08: VISUAL POLISH & ASSETS
+================================================================================
+ACTIVATION: "Execute Wave 12-08: Visual Polish and Assets"
+AGENT: Website Agent / Media Agent
+DEPENDS ON: Wave 12-01 through 12-07
+================================================================================
+
+CONTEXT
+-------
+Add the finishing touches that make the site feel professional:
+- Custom icons and illustrations
+- Placeholder images for products
+- Micro-interactions and animations
+- Loading states and transitions
+
+================================================================================
+TASK 1: ICON SYSTEM
+================================================================================
+
+Create `src/pfas-web/components/icons/index.tsx`:
+
+REQUIRED ICONS (use Lucide or create custom SVG):
+
+**Navigation:**
+- SearchIcon, MenuIcon, CloseIcon, ChevronDownIcon, ChevronRightIcon
+- HomeIcon, GridIcon, ListIcon
+
+**Actions:**
+- CompareIcon (scales), HeartIcon, ShareIcon, PrintIcon
+- FilterIcon, SortIcon, CheckIcon, PlusIcon, MinusIcon
+
+**Verification Tiers:**
+- TierBadgeIcon (shield with checkmark)
+- LabFlaskIcon, DocumentIcon, EyeIcon, AlertIcon
+
+**Categories:**
+- CookwareIcon (pan), BakewareIcon (muffin tin), StorageIcon (container)
+- UtensilsIcon (spatula), AppliancesIcon (mixer)
+
+**Materials:**
+- SteelIcon, CastIronIcon, CeramicIcon, GlassIcon
+
+**Retailers:**
+- AmazonIcon, TargetIcon, WilliamsSonomaIcon, GenericRetailerIcon
+
+ICON COMPONENT PATTERN:
+```tsx
+interface IconProps {
+  size?: number;
+  className?: string;
+  'aria-label'?: string;
+}
+
+export function CompareIcon({ size = 24, className, ...props }: IconProps) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      className={className}
+      {...props}
+    >
+      {/* ... */}
+    </svg>
+  );
+}
+```
+
+================================================================================
+TASK 2: PLACEHOLDER PRODUCT IMAGES
+================================================================================
+
+Create placeholder images in `public/placeholders/`:
+
+- `product-cookware.svg` - Generic pan silhouette
+- `product-bakeware.svg` - Generic baking dish
+- `product-storage.svg` - Generic container
+- `product-utensils.svg` - Generic utensil
+- `product-default.svg` - Generic kitchen item
+
+PLACEHOLDER STYLE:
+- Light gray background (#F5F5F5)
+- Darker gray icon (#BDBDBD)
+- Simple, recognizable silhouette
+- Square aspect ratio (1:1)
+- SVG for scalability
+
+================================================================================
+TASK 3: EMPTY STATE ILLUSTRATIONS
+================================================================================
+
+Create illustrations in `public/illustrations/`:
+
+- `empty-search.svg` - No search results (magnifying glass with question mark)
+- `empty-compare.svg` - No items to compare (empty scales)
+- `empty-saved.svg` - No saved items (empty heart)
+- `error-404.svg` - Page not found (confused pan)
+- `error-500.svg` - Server error (broken pan)
+
+ILLUSTRATION STYLE:
+- Line art style, single accent color
+- Consistent stroke weight (2px)
+- Primary color: var(--color-primary-500)
+- 200x200px default size
+- Friendly, not corporate
+
+================================================================================
+TASK 4: VERIFICATION TIER BADGES
+================================================================================
+
+Create `src/pfas-web/components/ui/TierBadge.tsx`:
+
+TIER 4 (MONITORED):
+```
+┌─────────────────────────────────┐
+│ ✓✓ TIER 4 · Monitored          │
+│    Ongoing testing program      │
+└─────────────────────────────────┘
+Background: #E8F5E9 | Border: #66BB6A | Text: #2D8A3E
+```
+
+TIER 3 (LAB TESTED):
+```
+┌─────────────────────────────────┐
+│ ✓ TIER 3 · Lab Tested          │
+│   Independent lab results       │
+└─────────────────────────────────┘
+Background: #E3F2FD | Border: #64B5F6 | Text: #1565C0
+```
+
+TIER 2 (POLICY REVIEWED):
+```
+┌─────────────────────────────────┐
+│ ○ TIER 2 · Policy Reviewed     │
+│   Manufacturing policy verified │
+└─────────────────────────────────┘
+Background: #F3E5F5 | Border: #BA68C8 | Text: #7B5EA7
+```
+
+TIER 1 (BRAND STATEMENT):
+```
+┌─────────────────────────────────┐
+│ · TIER 1 · Brand Statement     │
+│   Unverified brand claim        │
+└─────────────────────────────────┘
+Background: #F5F5F5 | Border: #BDBDBD | Text: #757575
+```
+
+TIER 0 (UNKNOWN):
+```
+┌─────────────────────────────────┐
+│ ? TIER 0 · Unknown             │
+│   No verification data          │
+└─────────────────────────────────┘
+Background: #FAFAFA | Border: #E0E0E0 | Text: #9E9E9E
+```
+
+VARIANTS:
+- `compact` - Single line, just "TIER 3 · Lab Tested"
+- `full` - Two lines with description
+- `icon-only` - Just the tier icon with tooltip
+
+================================================================================
+TASK 5: MICRO-INTERACTIONS
+================================================================================
+
+Add subtle animations throughout:
+
+**Button hover:**
+```css
+.btn-primary {
+  transition: transform var(--transition-fast), 
+              box-shadow var(--transition-fast);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+.btn-primary:active {
+  transform: translateY(0);
+}
+```
+
+**Card hover:**
+```css
+.product-card {
+  transition: transform var(--transition-normal),
+              box-shadow var(--transition-normal);
+}
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+```
+
+**Compare checkbox:**
+```css
+.compare-checkbox input:checked + .checkmark {
+  animation: check-pop 200ms ease;
+}
+@keyframes check-pop {
+  0% { transform: scale(0.8); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+```
+
+**Filter apply:**
+```css
+.filter-count-badge {
+  animation: badge-pulse 300ms ease;
+}
+@keyframes badge-pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+```
+
+**Page transitions:**
+```tsx
+// Use next/navigation with View Transitions API
+// Fade between pages
+```
+
+================================================================================
+TASK 6: LOADING STATES
+================================================================================
+
+Create consistent loading patterns:
+
+**Skeleton Cards:**
+```tsx
+export function ProductCardSkeleton() {
+  return (
+    <div className="product-card-skeleton">
+      <div className="skeleton skeleton-image" />
+      <div className="skeleton skeleton-badge" />
+      <div className="skeleton skeleton-text w-1/3" />
+      <div className="skeleton skeleton-text w-full" />
+      <div className="skeleton skeleton-text w-2/3" />
+      <div className="skeleton skeleton-button" />
+    </div>
+  );
+}
+```
+
+**Skeleton Animation:**
+```css
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-gray-100) 0%,
+    var(--color-gray-50) 50%,
+    var(--color-gray-100) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+```
+
+**Spinner:**
+```tsx
+export function Spinner({ size = 24 }) {
+  return (
+    <svg className="spinner" width={size} height={size} viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" fill="none" strokeDasharray="31.4 31.4" />
+    </svg>
+  );
+}
+```
+
+================================================================================
+TASK 7: TOAST NOTIFICATIONS
+================================================================================
+
+Create `src/pfas-web/components/ui/Toast.tsx`:
+
+```
+┌─────────────────────────────────────────────┐
+│ ✓ Added to compare                    [×]   │
+└─────────────────────────────────────────────┘
+```
+
+VARIANTS:
+- Success (green): "Added to compare", "Filters applied"
+- Info (blue): "Viewing 24 of 156 products"
+- Warning (amber): "Maximum 4 items in compare"
+- Error (red): "Failed to load products"
+
+BEHAVIOR:
+- Slide in from bottom right
+- Auto-dismiss after 4 seconds
+- Stack up to 3 toasts
+- Click to dismiss
+- Keyboard accessible
+
+================================================================================
+TASK 8: FOCUS STYLES
+================================================================================
+
+Create accessible focus indicators:
+
+```css
+/* Remove default outline */
+*:focus {
+  outline: none;
+}
+
+/* Custom focus ring */
+*:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
+
+/* High contrast for buttons */
+.btn-primary:focus-visible {
+  outline-color: white;
+  box-shadow: 0 0 0 4px var(--color-primary-500);
+}
+
+/* Skip link */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: var(--color-primary-800);
+  color: white;
+  padding: 8px 16px;
+  z-index: 1000;
+  transition: top var(--transition-fast);
+}
+.skip-link:focus {
+  top: 0;
+}
+```
+
+================================================================================
+TASK 9: DARK MODE SUPPORT (Optional Enhancement)
+================================================================================
+
+If time permits, add dark mode toggle:
+
+```css
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-bg: #1A1A1A;
+    --color-surface: #2D2D2D;
+    --color-text: #F5F5F5;
+    /* ... invert color tokens ... */
+  }
+}
+
+[data-theme="dark"] {
+  /* Manual dark mode toggle */
+}
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All icons are consistent in style and size
+□ Placeholder images for missing product photos
+□ Empty state illustrations for all empty screens
+□ Tier badges are color-coded and clear
+□ Hover states on interactive elements
+□ Loading skeletons match component dimensions
+□ Toast notifications for user feedback
+□ Focus indicators visible and accessible
+□ Skip link for keyboard navigation
+□ No jarring layout shifts during loading
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/icons/index.tsx
+- src/pfas-web/components/ui/TierBadge.tsx
+- src/pfas-web/components/ui/Toast.tsx
+- src/pfas-web/components/ui/Spinner.tsx
+- src/pfas-web/components/ui/Skeleton.tsx
+- src/pfas-web/contexts/ToastContext.tsx
+- public/placeholders/*.svg (5 files)
+- public/illustrations/*.svg (5 files)
+
+MODIFY:
+- src/pfas-web/app/globals.css (animations, focus styles)
+- src/pfas-web/app/layout.tsx (ToastProvider, skip link)
+
+================================================================================

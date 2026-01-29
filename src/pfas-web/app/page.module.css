@@ -1,0 +1,36 @@
+/* ============================================================
+   Homepage - Page container and section styling
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+}
+
+/* ============================================================
+   SECTION CONTAINERS
+   ============================================================ */
+
+.homeSection {
+  /* Default transparent background - children handle their own padding */
+}
+
+/* Subtle background variant for alternating sections */
+.bgSubtle {
+  background: var(--color-gray-50);
+}
+
+.sectionInner {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+
+@media (max-width: 768px) {
+  /* Reduce section padding on mobile */
+  .homeSection {
+    /* Components handle their own responsive padding */
+  }
+}

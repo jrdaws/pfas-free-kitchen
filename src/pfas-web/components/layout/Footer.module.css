@@ -1,0 +1,148 @@
+.footer {
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+  margin-top: auto;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: var(--space-12) var(--space-4);
+}
+
+/* Main Section */
+.main {
+  display: grid;
+  gap: var(--space-10);
+  margin-bottom: var(--space-8);
+}
+
+@media (min-width: 768px) {
+  .main {
+    grid-template-columns: 1fr 2fr;
+  }
+}
+
+/* Brand */
+.brand {
+  max-width: 300px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  text-decoration: none;
+  color: var(--text-primary);
+  margin-bottom: var(--space-3);
+}
+
+.logoIcon {
+  font-size: 1.5rem;
+}
+
+.logoText {
+  font-size: 1.125rem;
+  font-weight: 700;
+}
+
+.logoAccent {
+  color: var(--color-primary);
+}
+
+.tagline {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Columns */
+.columns {
+  display: grid;
+  gap: var(--space-8);
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.column {
+  list-style: none;
+}
+
+.columnTitle {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.columnLinks {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.link {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.link:hover {
+  color: var(--color-primary);
+}
+
+/* Disclosure */
+.disclosure {
+  background: var(--bg-tertiary);
+  padding: var(--space-4);
+  border-radius: var(--border-radius-md);
+  margin-bottom: var(--space-8);
+}
+
+.disclosure p {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  margin: 0;
+  line-height: 1.6;
+}
+
+.disclosureLink {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+/* Bottom */
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding-top: var(--space-6);
+  border-top: 1px solid var(--border-color);
+}
+
+@media (min-width: 640px) {
+  .bottom {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.copyright {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.disclaimer {
+  font-size: 0.8125rem;
+  color: var(--text-muted);
+  margin: 0;
+  max-width: 500px;
+}

@@ -1,0 +1,519 @@
+================================================================================
+WAVE 14-06: PRODUCTION VALIDATION & LAUNCH CHECKLIST
+================================================================================
+ACTIVATION: "Execute Wave 14-06: Production Validation and Launch"
+AGENT: QA Agent
+DEPENDS ON: Waves 14-01 through 14-05
+================================================================================
+
+CONTEXT
+-------
+Final validation to ensure 100% functionality before launch. Every link,
+every image, every page must work correctly.
+
+================================================================================
+TASK 1: COMPREHENSIVE LINK AUDIT
+================================================================================
+
+Create `scripts/audit-links.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🔍 PFAS-Free Kitchen Link Audit"
+echo "================================"
+echo ""
+
+BASE_URL="http://localhost:3000"
+API_URL="http://localhost:3001"
+
+# Test internal pages
+echo "📄 Testing internal pages..."
+PAGES=(
+  "/"
+  "/search"
+  "/search?category=cookware"
+  "/search?category=bakeware"
+  "/search?category=storage"
+  "/search?tier=3,4"
+  "/new-arrivals"
+  "/highest-verified"
+  "/compare"
+  "/learn/what-is-pfas"
+  "/learn/how-we-verify"
+  "/learn/buyers-guide"
+  "/about"
+  "/faq"
+  "/disclosure"
+  "/privacy"
+  "/terms"
+  "/contact"
+)
+
+FAILED=0
+for page in "${PAGES[@]}"; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL$page")
+  if [ "$STATUS" == "200" ]; then
+    echo "  ✓ $page"
+  else
+    echo "  ✗ $page (HTTP $STATUS)"
+    FAILED=$((FAILED + 1))
+  fi
+done
+
+echo ""
+echo "📦 Testing product pages..."
+
+# Get product slugs from API
+PRODUCTS=$(curl -s "$API_URL/api/v1/products?limit=100" | jq -r '.data[].slug')
+PRODUCT_COUNT=0
+PRODUCT_FAILED=0
+
+for slug in $PRODUCTS; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$BASE_URL/product/$slug")
+  PRODUCT_COUNT=$((PRODUCT_COUNT + 1))
+  if [ "$STATUS" == "200" ]; then
+    echo "  ✓ /product/$slug"
+  else
+    echo "  ✗ /product/$slug (HTTP $STATUS)"
+    PRODUCT_FAILED=$((PRODUCT_FAILED + 1))
+  fi
+done
+
+echo ""
+echo "🔗 Testing affiliate links..."
+
+# Get affiliate links
+AFFILIATE_LINKS=$(curl -s "$API_URL/api/v1/products?limit=100" | jq -r '.data[].retailer_links[]?.url' | head -20)
+AFFILIATE_COUNT=0
+AFFILIATE_FAILED=0
+
+for url in $AFFILIATE_LINKS; do
+  if [ -n "$url" ]; then
+    # Just check if URL is reachable (allow redirects)
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L "$url" --max-time 10)
+    AFFILIATE_COUNT=$((AFFILIATE_COUNT + 1))
+    if [ "$STATUS" == "200" ] || [ "$STATUS" == "301" ] || [ "$STATUS" == "302" ]; then
+      echo "  ✓ $(echo $url | cut -c1-60)..."
+    else
+      echo "  ✗ $(echo $url | cut -c1-60)... (HTTP $STATUS)"
+      AFFILIATE_FAILED=$((AFFILIATE_FAILED + 1))
+    fi
+  fi
+done
+
+echo ""
+echo "================================"
+echo "📊 AUDIT SUMMARY"
+echo "================================"
+echo "Internal Pages: $((${#PAGES[@]} - FAILED))/${#PAGES[@]} passed"
+echo "Product Pages: $((PRODUCT_COUNT - PRODUCT_FAILED))/$PRODUCT_COUNT passed"
+echo "Affiliate Links: $((AFFILIATE_COUNT - AFFILIATE_FAILED))/$AFFILIATE_COUNT passed"
+echo ""
+
+if [ $FAILED -eq 0 ] && [ $PRODUCT_FAILED -eq 0 ] && [ $AFFILIATE_FAILED -eq 0 ]; then
+  echo "✅ ALL TESTS PASSED!"
+  exit 0
+else
+  echo "❌ SOME TESTS FAILED"
+  exit 1
+fi
+```
+
+================================================================================
+TASK 2: IMAGE VALIDATION
+================================================================================
+
+Create `scripts/audit-images.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🖼️ Image Audit"
+echo "=============="
+
+API_URL="http://localhost:3001"
+
+# Get all product images
+IMAGES=$(curl -s "$API_URL/api/v1/products?limit=100" | jq -r '.data[].primary_image_url')
+
+TOTAL=0
+VALID=0
+BROKEN=0
+PLACEHOLDER=0
+
+for img in $IMAGES; do
+  TOTAL=$((TOTAL + 1))
+  
+  if [[ "$img" == *"placeholder"* ]]; then
+    echo "  ⚠️ Placeholder: $img"
+    PLACEHOLDER=$((PLACEHOLDER + 1))
+  elif [[ "$img" == http* ]]; then
+    STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$img" --max-time 5)
+    if [ "$STATUS" == "200" ]; then
+      echo "  ✓ Valid: $(echo $img | cut -c1-60)..."
+      VALID=$((VALID + 1))
+    else
+      echo "  ✗ Broken ($STATUS): $(echo $img | cut -c1-60)..."
+      BROKEN=$((BROKEN + 1))
+    fi
+  else
+    echo "  ? Unknown format: $img"
+  fi
+done
+
+echo ""
+echo "=============="
+echo "Total: $TOTAL"
+echo "Valid: $VALID"
+echo "Placeholder: $PLACEHOLDER"
+echo "Broken: $BROKEN"
+```
+
+================================================================================
+TASK 3: AFFILIATE DISCLOSURE VERIFICATION
+================================================================================
+
+Create `scripts/audit-disclosures.sh`:
+
+```bash
+#!/bin/bash
+
+echo "📋 Affiliate Disclosure Audit"
+echo "=============================="
+
+BASE_URL="http://localhost:3000"
+
+# Pages that should have affiliate disclosure
+PAGES_WITH_PRODUCTS=(
+  "/"
+  "/search"
+  "/highest-verified"
+  "/new-arrivals"
+)
+
+# Check for disclosure text
+check_disclosure() {
+  local url=$1
+  local content=$(curl -s "$url")
+  
+  # Check for Amazon disclosure
+  if echo "$content" | grep -qi "amazon associate"; then
+    echo "  ✓ Amazon Associate disclosure found"
+  else
+    echo "  ⚠️ Missing Amazon Associate disclosure"
+  fi
+  
+  # Check for general affiliate disclosure
+  if echo "$content" | grep -qi "affiliate\|commission\|earn"; then
+    echo "  ✓ General affiliate disclosure found"
+  else
+    echo "  ⚠️ Missing affiliate disclosure"
+  fi
+}
+
+for page in "${PAGES_WITH_PRODUCTS[@]}"; do
+  echo ""
+  echo "Checking $page..."
+  check_disclosure "$BASE_URL$page"
+done
+
+# Check disclosure page itself
+echo ""
+echo "Checking /disclosure page..."
+DISCLOSURE=$(curl -s "$BASE_URL/disclosure")
+
+if echo "$DISCLOSURE" | grep -qi "amazon services llc associates program"; then
+  echo "  ✓ Full Amazon Associates disclosure found"
+else
+  echo "  ✗ Missing full Amazon Associates disclosure"
+fi
+
+if echo "$DISCLOSURE" | grep -qi "ftc"; then
+  echo "  ✓ FTC reference found"
+else
+  echo "  ⚠️ Consider adding FTC reference"
+fi
+```
+
+================================================================================
+TASK 4: MOBILE RESPONSIVENESS CHECK
+================================================================================
+
+Create `scripts/audit-mobile.ts` (using Playwright):
+
+```typescript
+import { chromium, devices } from 'playwright';
+
+const VIEWPORTS = [
+  { name: 'iPhone SE', ...devices['iPhone SE'] },
+  { name: 'iPhone 14 Pro', ...devices['iPhone 14 Pro'] },
+  { name: 'Pixel 5', ...devices['Pixel 5'] },
+  { name: 'iPad Mini', ...devices['iPad Mini'] },
+];
+
+const PAGES = [
+  '/',
+  '/search',
+  '/product/lodge-pre-seasoned-cast-iron-skillet-12-inch',
+  '/learn/what-is-pfas',
+];
+
+async function main() {
+  const browser = await chromium.launch();
+  
+  for (const viewport of VIEWPORTS) {
+    console.log(`\n📱 Testing ${viewport.name}...`);
+    
+    const context = await browser.newContext({ ...viewport });
+    const page = await context.newPage();
+    
+    for (const url of PAGES) {
+      await page.goto(`http://localhost:3000${url}`);
+      
+      // Check for horizontal scroll
+      const hasHorizontalScroll = await page.evaluate(() => 
+        document.body.scrollWidth > document.body.clientWidth
+      );
+      
+      if (hasHorizontalScroll) {
+        console.log(`  ✗ ${url} - Has horizontal scroll`);
+      } else {
+        console.log(`  ✓ ${url}`);
+      }
+      
+      // Screenshot for manual review
+      await page.screenshot({ 
+        path: `audit-screenshots/${viewport.name.replace(/\s/g, '-')}-${url.replace(/\//g, '_')}.png` 
+      });
+    }
+    
+    await context.close();
+  }
+  
+  await browser.close();
+}
+
+main().catch(console.error);
+```
+
+================================================================================
+TASK 5: SEO VALIDATION
+================================================================================
+
+Create `scripts/audit-seo.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🔍 SEO Audit"
+echo "============"
+
+BASE_URL="http://localhost:3000"
+
+check_seo() {
+  local url=$1
+  local content=$(curl -s "$url")
+  
+  echo ""
+  echo "Checking $url..."
+  
+  # Title tag
+  if echo "$content" | grep -q "<title>"; then
+    TITLE=$(echo "$content" | grep -o '<title>[^<]*</title>' | head -1)
+    echo "  ✓ Title: $TITLE"
+  else
+    echo "  ✗ Missing title tag"
+  fi
+  
+  # Meta description
+  if echo "$content" | grep -qi 'meta.*description'; then
+    echo "  ✓ Meta description present"
+  else
+    echo "  ⚠️ Missing meta description"
+  fi
+  
+  # H1 tag
+  if echo "$content" | grep -q "<h1"; then
+    echo "  ✓ H1 tag present"
+  else
+    echo "  ⚠️ Missing H1 tag"
+  fi
+  
+  # Open Graph
+  if echo "$content" | grep -qi 'og:title'; then
+    echo "  ✓ Open Graph tags present"
+  else
+    echo "  ⚠️ Missing Open Graph tags"
+  fi
+  
+  # Canonical
+  if echo "$content" | grep -qi 'rel="canonical"'; then
+    echo "  ✓ Canonical tag present"
+  else
+    echo "  ⚠️ Missing canonical tag"
+  fi
+}
+
+PAGES=(
+  "/"
+  "/search"
+  "/learn/what-is-pfas"
+  "/about"
+)
+
+for page in "${PAGES[@]}"; do
+  check_seo "$BASE_URL$page"
+done
+
+# Check robots.txt
+echo ""
+echo "Checking robots.txt..."
+ROBOTS=$(curl -s "$BASE_URL/robots.txt")
+if [ -n "$ROBOTS" ]; then
+  echo "  ✓ robots.txt exists"
+else
+  echo "  ⚠️ Missing robots.txt"
+fi
+
+# Check sitemap
+echo ""
+echo "Checking sitemap..."
+SITEMAP=$(curl -s "$BASE_URL/sitemap.xml")
+if echo "$SITEMAP" | grep -q "urlset"; then
+  echo "  ✓ sitemap.xml exists and valid"
+else
+  echo "  ⚠️ Missing or invalid sitemap.xml"
+fi
+```
+
+================================================================================
+TASK 6: FINAL LAUNCH CHECKLIST
+================================================================================
+
+Create `LAUNCH_CHECKLIST.md`:
+
+```markdown
+# PFAS-Free Kitchen Launch Checklist
+
+## Pre-Launch
+
+### Affiliate Accounts
+- [ ] Amazon Associates account approved
+- [ ] Amazon Associates tag configured in env
+- [ ] Other affiliate accounts set up (if applicable)
+- [ ] Disclosure page complete and FTC compliant
+
+### Products
+- [ ] 50+ products with valid ASINs
+- [ ] All affiliate links tested and working
+- [ ] Product images loading correctly
+- [ ] Verification tiers accurately assigned
+- [ ] Product descriptions accurate
+
+### Technical
+- [ ] All internal links working (no 404s)
+- [ ] Mobile responsive on all viewports
+- [ ] Page load time < 3 seconds
+- [ ] No console errors
+- [ ] SSL certificate configured
+- [ ] Domain DNS configured
+
+### SEO
+- [ ] All pages have unique titles
+- [ ] All pages have meta descriptions
+- [ ] sitemap.xml generated
+- [ ] robots.txt configured
+- [ ] Open Graph tags on all pages
+- [ ] Canonical URLs set
+
+### Legal
+- [ ] Privacy Policy complete
+- [ ] Terms of Service complete
+- [ ] Affiliate Disclosure complete
+- [ ] Cookie consent (if needed)
+
+### Analytics
+- [ ] Google Analytics configured
+- [ ] Conversion tracking set up
+- [ ] Error tracking (Sentry) configured
+
+## Launch Day
+
+- [ ] Deploy to production
+- [ ] Verify all pages load
+- [ ] Test affiliate links on production
+- [ ] Submit sitemap to Google Search Console
+- [ ] Test on real mobile devices
+- [ ] Monitor error logs
+
+## Post-Launch (First Week)
+
+- [ ] Monitor Google Search Console for issues
+- [ ] Check affiliate dashboard for clicks/conversions
+- [ ] Address any user-reported bugs
+- [ ] Monitor page performance
+- [ ] Review analytics data
+```
+
+================================================================================
+TASK 7: RUN ALL AUDITS
+================================================================================
+
+Create master audit script `scripts/audit-all.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🚀 Running Full Site Audit"
+echo "=========================="
+echo ""
+
+# Make scripts executable
+chmod +x scripts/audit-*.sh
+
+# Run all audits
+./scripts/audit-links.sh
+echo ""
+
+./scripts/audit-images.sh
+echo ""
+
+./scripts/audit-disclosures.sh
+echo ""
+
+./scripts/audit-seo.sh
+echo ""
+
+echo ""
+echo "=========================="
+echo "🏁 Audit Complete!"
+echo "=========================="
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All internal links return 200
+□ All product pages load correctly
+□ All affiliate links reach retailer sites
+□ No broken images
+□ Affiliate disclosures present where required
+□ Mobile responsive (no horizontal scroll)
+□ SEO basics in place
+□ Launch checklist 100% complete
+
+================================================================================
+FILES TO CREATE
+================================================================================
+
+- scripts/audit-links.sh
+- scripts/audit-images.sh
+- scripts/audit-disclosures.sh
+- scripts/audit-mobile.ts
+- scripts/audit-seo.sh
+- scripts/audit-all.sh
+- LAUNCH_CHECKLIST.md
+
+================================================================================

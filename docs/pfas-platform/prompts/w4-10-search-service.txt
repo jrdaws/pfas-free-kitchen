@@ -1,0 +1,474 @@
+ACTIVATION: w4-search-service
+
+═══════════════════════════════════════════════════════════════════════════════
+ROLE: Search Engineer Agent
+MISSION: Implement OpenSearch index and search API with faceted filtering
+═══════════════════════════════════════════════════════════════════════════════
+
+CONTEXT
+Search is the primary discovery mechanism with:
+- Full-text search on product name, brand, description
+- Faceted filtering with live counts
+- Trust-weighted ranking (higher tier = higher rank)
+- Autocomplete suggestions
+
+SPEC REFERENCE
+Read: docs/pfas-platform/02-TECHNICAL-DESIGN.md
+Sections: "4. Search Index Mappings", "2.5 Search Service" API contracts
+
+───────────────────────────────────────────────────────────────────────────────
+DELIVERABLES
+───────────────────────────────────────────────────────────────────────────────
+
+1. INDEX SETUP SCRIPT
+   File: scripts/setup-search-index.ts
+
+   ```typescript
+   import { Client } from '@opensearch-project/opensearch';
+
+   const INDEX_NAME = 'products';
+
+   const INDEX_SETTINGS = {
+     settings: {
+       number_of_shards: 2,
+       number_of_replicas: 1,
+       analysis: {
+         analyzer: {
+           product_analyzer: {
+             type: 'custom',
+             tokenizer: 'standard',
+             filter: ['lowercase', 'asciifolding', 'product_synonyms', 'english_stemmer'],
+           },
+           autocomplete_analyzer: {
+             type: 'custom',
+             tokenizer: 'standard',
+             filter: ['lowercase', 'asciifolding', 'autocomplete_filter'],
+           },
+         },
+         filter: {
+           product_synonyms: {
+             type: 'synonym',
+             synonyms: [
+               'skillet, frying pan, frypan',
+               'dutch oven, cocotte, french oven',
+               'sheet pan, baking sheet, cookie sheet',
+               'saucepan, sauce pan',
+               'stainless, stainless steel',
+               'cast iron, castiron',
+             ],
+           },
+           english_stemmer: { type: 'stemmer', language: 'english' },
+           autocomplete_filter: { type: 'edge_ngram', min_gram: 2, max_gram: 20 },
+         },
+       },
+     },
+     mappings: {
+       properties: {
+         id: { type: 'keyword' },
+         name: {
+           type: 'text',
+           analyzer: 'product_analyzer',
+           fields: {
+             autocomplete: { type: 'text', analyzer: 'autocomplete_analyzer' },
+             keyword: { type: 'keyword' },
+           },
+         },
+         slug: { type: 'keyword' },
+         description: { type: 'text', analyzer: 'product_analyzer' },
+         brand_id: { type: 'keyword' },
+         brand_name: {
+           type: 'text',
+           analyzer: 'product_analyzer',
+           fields: { keyword: { type: 'keyword' } },
+         },
+         category_id: { type: 'keyword' },
+         category_path: { type: 'keyword' },
+         material_summary: { type: 'text', fields: { keyword: { type: 'keyword' } } },
+         coating_summary: { type: 'text', fields: { keyword: { type: 'keyword' } } },
+         
+         // Verification
+         tier: { type: 'integer' },
+         claim_type: { type: 'keyword' },
+         has_evidence: { type: 'boolean' },
+         evidence_count: { type: 'integer' },
+         
+         // Facets
+         materials: { type: 'keyword' },
+         coating_type: { type: 'keyword' },
+         food_contact_surface: { type: 'keyword' },
+         retailer_ids: { type: 'keyword' },
+         
+         // Features
+         induction_compatible: { type: 'boolean' },
+         oven_safe_temp_f: { type: 'integer' },
+         dishwasher_safe: { type: 'boolean' },
+         
+         // Ranking
+         tier_boost: { type: 'float' },
+         freshness_score: { type: 'float' },
+         
+         // Timestamps
+         published_at: { type: 'date' },
+         updated_at: { type: 'date' },
+       },
+     },
+   };
+
+   export async function createIndex(client: Client) {
+     const exists = await client.indices.exists({ index: INDEX_NAME });
+     if (!exists.body) {
+       await client.indices.create({ index: INDEX_NAME, body: INDEX_SETTINGS });
+       console.log(`Created index: ${INDEX_NAME}`);
+     }
+   }
+   ```
+
+2. SEARCH SERVICE
+   File: src/services/search.service.ts
+
+   ```typescript
+   export class SearchService {
+     private client: Client;
+
+     /**
+      * Search products with facets
+      */
+     async search(params: SearchParams): Promise<SearchResponse> {
+       const query = this.buildQuery(params);
+       const result = await this.client.search({
+         index: 'products',
+         body: query,
+       });
+
+       return {
+         query: params.q,
+         total_count: result.body.hits.total.value,
+         results: result.body.hits.hits.map(this.transformHit),
+         facets: this.extractFacets(result.body.aggregations),
+         suggestions: this.extractSuggestions(result.body),
+         education_banner: this.checkEducationBanner(params.q),
+       };
+     }
+
+     /**
+      * Autocomplete suggestions
+      */
+     async autocomplete(query: string, limit: number = 5): Promise<AutocompleteResponse> {
+       const result = await this.client.search({
+         index: 'products',
+         body: {
+           size: 0,
+           suggest: {
+             product_suggest: {
+               prefix: query,
+               completion: {
+                 field: 'name.autocomplete',
+                 size: limit,
+                 skip_duplicates: true,
+               },
+             },
+             brand_suggest: {
+               prefix: query,
+               completion: {
+                 field: 'brand_name.autocomplete',
+                 size: 3,
+                 skip_duplicates: true,
+               },
+             },
+           },
+         },
+       });
+
+       return {
+         suggestions: [
+           ...this.extractSuggestions(result.body.suggest.product_suggest, 'product'),
+           ...this.extractSuggestions(result.body.suggest.brand_suggest, 'brand'),
+         ].slice(0, limit),
+       };
+     }
+
+     /**
+      * Build OpenSearch query from params
+      */
+     private buildQuery(params: SearchParams): object {
+       const must: object[] = [];
+       const filter: object[] = [];
+
+       // Full-text search
+       if (params.q) {
+         must.push({
+           multi_match: {
+             query: params.q,
+             fields: ['name^3', 'brand_name^2', 'description', 'material_summary^1.5'],
+             type: 'best_fields',
+             fuzziness: 'AUTO',
+           },
+         });
+       }
+
+       // Filters
+       if (params.category_id) {
+         filter.push({ term: { category_id: params.category_id } });
+       }
+       if (params.tiers?.length) {
+         filter.push({ terms: { tier: params.tiers } });
+       }
+       if (params.materials?.length) {
+         filter.push({ terms: { materials: params.materials } });
+       }
+       if (params.coating_types?.length) {
+         filter.push({ terms: { coating_type: params.coating_types } });
+       }
+       if (params.retailer_id) {
+         filter.push({ term: { retailer_ids: params.retailer_id } });
+       }
+       if (params.induction !== undefined) {
+         filter.push({ term: { induction_compatible: params.induction } });
+       }
+       if (params.oven_safe_min) {
+         filter.push({ range: { oven_safe_temp_f: { gte: params.oven_safe_min } } });
+       }
+
+       // Build aggregations for facets
+       const aggs = this.buildAggregations(filter);
+
+       // Sorting with trust boost
+       const sort = this.buildSort(params.sort);
+
+       return {
+         from: (params.page - 1) * params.limit,
+         size: params.limit,
+         query: {
+           function_score: {
+             query: {
+               bool: {
+                 must: must.length ? must : [{ match_all: {} }],
+                 filter,
+               },
+             },
+             functions: [
+               // Trust boost by tier
+               { filter: { term: { tier: 4 } }, weight: 2.0 },
+               { filter: { term: { tier: 3 } }, weight: 1.8 },
+               { filter: { term: { tier: 2 } }, weight: 1.4 },
+               { filter: { term: { tier: 1 } }, weight: 1.2 },
+               { filter: { term: { tier: 0 } }, weight: 0.8 },
+               // Freshness boost
+               {
+                 gauss: {
+                   updated_at: {
+                     origin: 'now',
+                     scale: '180d',
+                     decay: 0.5,
+                   },
+                 },
+                 weight: 1.2,
+               },
+             ],
+             score_mode: 'multiply',
+             boost_mode: 'multiply',
+           },
+         },
+         aggs,
+         sort,
+         highlight: {
+           fields: {
+             name: {},
+             description: { fragment_size: 150 },
+           },
+           pre_tags: ['<em>'],
+           post_tags: ['</em>'],
+         },
+       };
+     }
+
+     private buildAggregations(activeFilters: object[]): object {
+       return {
+         tier_facet: {
+           terms: { field: 'tier', size: 5 },
+         },
+         material_facet: {
+           terms: { field: 'materials', size: 20 },
+         },
+         coating_type_facet: {
+           terms: { field: 'coating_type', size: 10 },
+         },
+         retailer_facet: {
+           terms: { field: 'retailer_ids', size: 20 },
+         },
+         category_facet: {
+           terms: { field: 'category_id', size: 50 },
+         },
+         induction_facet: {
+           terms: { field: 'induction_compatible' },
+         },
+         oven_temp_ranges: {
+           range: {
+             field: 'oven_safe_temp_f',
+             ranges: [
+               { key: 'up_to_400', to: 401 },
+               { key: '400_to_500', from: 400, to: 501 },
+               { key: '500_plus', from: 500 },
+             ],
+           },
+         },
+       };
+     }
+
+     private buildSort(sortOption: string): object[] {
+       const sorts: Record<string, object[]> = {
+         tier_desc: [{ tier: 'desc' }, { _score: 'desc' }, { name: 'asc' }],
+         tier_asc: [{ tier: 'asc' }, { _score: 'desc' }, { name: 'asc' }],
+         name_asc: [{ 'name.keyword': 'asc' }],
+         name_desc: [{ 'name.keyword': 'desc' }],
+         newest: [{ published_at: 'desc' }, { _score: 'desc' }],
+         relevance: [{ _score: 'desc' }, { tier: 'desc' }],
+       };
+       return sorts[sortOption] || sorts.tier_desc;
+     }
+
+     private checkEducationBanner(query: string): EducationBanner | null {
+       if (/pfoa.?free/i.test(query)) {
+         return {
+           type: 'pfoa_clarification',
+           title: 'PFOA-free ≠ PFAS-free',
+           message: 'PFOA is one of thousands of PFAS chemicals. A product labeled "PFOA-free" may still contain other PFAS.',
+           link: '/education/pfoa-vs-pfas',
+           link_text: 'Learn more about PFAS →',
+         };
+       }
+       return null;
+     }
+   }
+   ```
+
+3. INDEXER SERVICE
+   File: src/services/indexer.service.ts
+
+   ```typescript
+   export class IndexerService {
+     /**
+      * Index a single product
+      */
+     async indexProduct(productId: string): Promise<void> {
+       const product = await this.buildIndexDocument(productId);
+       await this.client.index({
+         index: 'products',
+         id: productId,
+         body: product,
+         refresh: true,
+       });
+     }
+
+     /**
+      * Remove product from index
+      */
+     async deindexProduct(productId: string): Promise<void> {
+       await this.client.delete({
+         index: 'products',
+         id: productId,
+         refresh: true,
+       });
+     }
+
+     /**
+      * Bulk reindex all published products
+      */
+     async reindexAll(): Promise<void> {
+       const products = await ProductRepository.findAllPublished();
+       const operations = products.flatMap(p => [
+         { index: { _index: 'products', _id: p.id } },
+         await this.buildIndexDocument(p.id),
+       ]);
+
+       await this.client.bulk({ body: operations, refresh: true });
+     }
+
+     private async buildIndexDocument(productId: string): Promise<IndexDocument> {
+       const [product, components, verification, retailers] = await Promise.all([
+         ProductRepository.findById(productId),
+         ComponentRepository.findByProductId(productId),
+         VerificationRepository.findByProductId(productId),
+         RetailerLinkRepository.findByProductId(productId),
+       ]);
+
+       return {
+         id: product.id,
+         name: product.name,
+         slug: product.slug,
+         description: product.description,
+         brand_id: product.brand_id,
+         brand_name: product.brand_name,
+         category_id: product.category_id,
+         category_path: product.category_path,
+         material_summary: product.material_summary,
+         coating_summary: product.coating_summary,
+         
+         tier: verification?.tier || 0,
+         claim_type: verification?.claim_type,
+         has_evidence: (verification?.evidence_ids?.length || 0) > 0,
+         evidence_count: verification?.evidence_ids?.length || 0,
+         
+         materials: components.map(c => c.material_slug).filter(Boolean),
+         coating_type: this.getCoatingType(components),
+         food_contact_surface: this.getFoodContactSurface(components),
+         retailer_ids: retailers.map(r => r.retailer_id),
+         
+         induction_compatible: product.features?.induction_compatible,
+         oven_safe_temp_f: product.features?.oven_safe_temp_f,
+         dishwasher_safe: product.features?.dishwasher_safe,
+         
+         tier_boost: this.calculateTierBoost(verification?.tier || 0),
+         freshness_score: this.calculateFreshnessScore(verification?.decision_date),
+         
+         published_at: product.published_at,
+         updated_at: product.updated_at,
+       };
+     }
+   }
+   ```
+
+4. SEARCH EVENT HANDLERS
+   File: src/handlers/search-events.handler.ts
+
+   ```typescript
+   // Subscribe to product events and update index
+   export class SearchEventHandlers {
+     @Subscribe('product.published')
+     async onProductPublished(event: { productId: string }) {
+       await IndexerService.indexProduct(event.productId);
+     }
+
+     @Subscribe('product.suspended')
+     async onProductSuspended(event: { productId: string }) {
+       await IndexerService.deindexProduct(event.productId);
+     }
+
+     @Subscribe('verification.completed')
+     async onVerificationCompleted(event: { productId: string }) {
+       await IndexerService.indexProduct(event.productId);
+     }
+   }
+   ```
+
+───────────────────────────────────────────────────────────────────────────────
+CRITICAL REQUIREMENTS
+───────────────────────────────────────────────────────────────────────────────
+
+□ Only published products in index
+□ Trust-weighted ranking (tier influences score)
+□ Facet counts reflect current filters
+□ Education banner for "PFOA-free" searches
+□ Autocomplete for products and brands
+□ Real-time index updates on product changes
+
+───────────────────────────────────────────────────────────────────────────────
+ENVIRONMENT VARIABLES
+───────────────────────────────────────────────────────────────────────────────
+
+```
+OPENSEARCH_NODE=https://search.example.com
+OPENSEARCH_USERNAME=admin
+OPENSEARCH_PASSWORD=xxx
+OPENSEARCH_INDEX=products
+```

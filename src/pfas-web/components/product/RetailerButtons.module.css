@@ -1,0 +1,70 @@
+.container {
+  margin-top: var(--space-4);
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.retailerButton {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-primary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--border-radius-md);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.retailerButton:hover {
+  background: rgba(15, 118, 110, 0.05);
+}
+
+.logo {
+  height: 24px;
+  width: auto;
+  object-fit: contain;
+}
+
+.name {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.price {
+  margin-left: auto;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.arrow {
+  color: var(--color-primary);
+}
+
+.noRetailers {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Modal */
+.modalContent p {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-3);
+}
+
+.modalDisclosure {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.modalActions {
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+  margin-top: var(--space-6);
+}

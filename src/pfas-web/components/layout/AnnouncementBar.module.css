@@ -1,0 +1,147 @@
+/* ============================================================
+   AnnouncementBar - Trust message banner
+   Dismissible with localStorage persistence
+   ============================================================ */
+
+.bar {
+  background: linear-gradient(135deg, var(--color-primary-800) 0%, var(--color-primary-700) 100%);
+  color: var(--color-white);
+  padding: var(--space-2-5) 0;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-100%);
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.bar.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Subtle pattern overlay */
+.bar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='1' fill='rgba(255,255,255,0.05)'/%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.container {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex: 1;
+  justify-content: center;
+}
+
+/* Trust badge */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  background: rgba(255, 255, 255, 0.15);
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-full);
+  font-family: var(--font-display);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.badgeIcon {
+  width: 14px;
+  height: 14px;
+  color: var(--color-accent-400);
+}
+
+/* Message text */
+.message {
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: 0.01em;
+}
+
+/* Dismiss button */
+.dismissButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  border-radius: var(--radius-md);
+  color: rgba(255, 255, 255, 0.8);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.dismissButton:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: var(--color-white);
+}
+
+.dismissButton:focus-visible {
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
+}
+
+.dismissIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 var(--space-3);
+  }
+  
+  .badge {
+    display: none;
+  }
+  
+  .message {
+    font-size: var(--text-xs);
+    text-align: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .bar {
+    padding: var(--space-2) 0;
+  }
+  
+  .message {
+    font-size: 11px;
+  }
+  
+  .dismissButton {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .dismissIcon {
+    width: 14px;
+    height: 14px;
+  }
+}

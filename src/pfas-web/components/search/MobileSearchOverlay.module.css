@@ -1,0 +1,217 @@
+/* ============================================================
+   MobileSearchOverlay - Full-screen search for mobile
+   ============================================================ */
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--color-white);
+  z-index: var(--z-modal);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(100%);
+  transition: transform var(--transition-normal);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.overlay.open {
+  transform: translateY(0);
+}
+
+/* ============================================================
+   HEADER
+   ============================================================ */
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-3);
+  border-bottom: 1px solid var(--color-gray-200);
+  flex-shrink: 0;
+}
+
+.backButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text);
+  padding: 0;
+  flex-shrink: 0;
+  margin-left: calc(var(--space-2) * -1);
+}
+
+.backButton svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================================
+   SEARCH FORM
+   ============================================================ */
+
+.searchForm {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-lg);
+  padding: 0 var(--space-3);
+  height: 44px;
+}
+
+.searchIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: 16px; /* Prevent iOS zoom */
+  color: var(--color-text);
+  outline: none;
+  min-width: 0;
+  padding: 0;
+}
+
+.searchInput::placeholder {
+  color: var(--color-gray-400);
+}
+
+.cancelButton {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-primary);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  padding: var(--space-2);
+  margin-right: calc(var(--space-2) * -1);
+  min-width: 60px;
+  min-height: 44px;
+  flex-shrink: 0;
+}
+
+.cancelButton:active {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   CONTENT
+   ============================================================ */
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* ============================================================
+   SECTIONS
+   ============================================================ */
+
+.section {
+  padding: var(--space-4) 0;
+}
+
+.section + .section {
+  border-top: 1px solid var(--color-gray-100);
+}
+
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 var(--space-4) var(--space-2);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  font-family: var(--font-body);
+  font-size: var(--text-sm);
+  color: var(--color-primary);
+  cursor: pointer;
+  padding: var(--space-1) var(--space-2);
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.clearButton:active {
+  opacity: 0.7;
+}
+
+/* ============================================================
+   SEARCH LIST
+   ============================================================ */
+
+.searchList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.searchItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: none;
+  border: none;
+  color: var(--color-text);
+  text-align: left;
+  cursor: pointer;
+  min-height: 48px;
+  -webkit-tap-highlight-color: transparent;
+  transition: background var(--transition-fast);
+}
+
+.searchItem:active {
+  background: var(--color-gray-100);
+}
+
+.itemIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--color-gray-400);
+  flex-shrink: 0;
+}
+
+.searchItem span {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    transition-duration: 0.01ms;
+  }
+}

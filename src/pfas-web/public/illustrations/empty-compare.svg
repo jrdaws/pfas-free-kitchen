@@ -1,0 +1,20 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Empty scales -->
+  <circle cx="100" cy="30" r="8" stroke="#1a5f4a" stroke-width="3" fill="none"/>
+  <line x1="100" y1="38" x2="100" y2="60" stroke="#1a5f4a" stroke-width="3"/>
+  <!-- Balance beam -->
+  <line x1="40" y1="60" x2="160" y2="60" stroke="#1a5f4a" stroke-width="3"/>
+  <!-- Left plate strings -->
+  <line x1="50" y1="60" x2="40" y2="100" stroke="#1a5f4a" stroke-width="2"/>
+  <line x1="70" y1="60" x2="80" y2="100" stroke="#1a5f4a" stroke-width="2"/>
+  <!-- Right plate strings -->
+  <line x1="130" y1="60" x2="120" y2="100" stroke="#1a5f4a" stroke-width="2"/>
+  <line x1="150" y1="60" x2="160" y2="100" stroke="#1a5f4a" stroke-width="2"/>
+  <!-- Left plate (empty) -->
+  <ellipse cx="60" cy="110" rx="35" ry="12" stroke="#1a5f4a" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+  <!-- Right plate (empty) -->
+  <ellipse cx="140" cy="110" rx="35" ry="12" stroke="#1a5f4a" stroke-width="3" fill="none" stroke-dasharray="6 4"/>
+  <!-- Base -->
+  <path d="M85 140 L100 180 L115 140" stroke="#1a5f4a" stroke-width="3" fill="none"/>
+  <line x1="80" y1="180" x2="120" y2="180" stroke="#1a5f4a" stroke-width="3" stroke-linecap="round"/>
+</svg>

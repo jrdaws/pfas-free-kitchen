@@ -1,0 +1,84 @@
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 var(--space-4);
+}
+
+.header {
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: var(--space-8);
+}
+
+.headerContent {
+  max-width: 600px;
+}
+
+.title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: var(--space-2);
+}
+
+.description {
+  font-size: 1.0625rem;
+  color: var(--text-secondary);
+  margin-bottom: var(--space-2);
+}
+
+.count {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.content {
+  padding-bottom: var(--space-12);
+}
+
+/* Empty State */
+.empty {
+  text-align: center;
+  padding: var(--space-16) var(--space-4);
+}
+
+.emptyTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: var(--space-2);
+}
+
+.emptyText {
+  color: var(--text-secondary);
+}
+
+/* Loading State */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-16) var(--space-4);
+  gap: var(--space-4);
+  color: var(--text-muted);
+}
+
+/* Error State */
+.error {
+  text-align: center;
+  padding: var(--space-16) var(--space-4);
+  background: rgba(239, 68, 68, 0.05);
+  border-radius: var(--border-radius-lg);
+}
+
+.errorTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #dc2626;
+  margin-bottom: var(--space-2);
+}
+
+.errorText {
+  color: var(--text-secondary);
+  margin-bottom: var(--space-1);
+}

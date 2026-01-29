@@ -1,0 +1,20 @@
+{
+  "provider": "resend",
+  "type": "email",
+  "version": "1.0.0",
+  "description": "Resend email API for transactional emails with React email templates",
+  "dependencies": {
+    "resend": "^3.2.0",
+    "react-email": "^2.1.0",
+    "@react-email/components": "^0.0.15"
+  },
+  "envVars": [
+    "RESEND_API_KEY"
+  ],
+  "files": {
+    "lib": ["lib/resend.ts"],
+    "app": ["app/api/email/**"],
+    "emails": ["emails/**"]
+  },
+  "postInstallInstructions": "Create a Resend account at https://resend.com, get your API key from https://resend.com/api-keys, and verify your domain"
+}

@@ -1,0 +1,310 @@
+================================================================================
+WAVE 12-02: PRODUCT LISTING PAGE (PLP)
+================================================================================
+ACTIVATION: "Execute Wave 12-02: Product Listing Page"
+AGENT: Website Agent
+DEPENDS ON: Wave 12-01 (Layout Foundation)
+================================================================================
+
+CONTEXT
+-------
+Create a Newegg/Wayfair-style product listing page with:
+- Left sidebar filters (collapsible on mobile)
+- Product grid with dense, informative cards
+- Sort and view options
+- Pagination
+
+================================================================================
+TASK 1: FILTER SIDEBAR
+================================================================================
+
+Create `src/pfas-web/components/search/FilterSidebar.tsx`:
+
+STRUCTURE:
+```
+┌─────────────────────────┐
+│ Filters          [Clear]│
+├─────────────────────────┤
+│ ▼ Verification Tier     │
+│   ☑ Monitored (Tier 4)  │
+│   ☑ Lab Tested (Tier 3) │
+│   ☐ Policy Reviewed     │
+│   ☐ Brand Statement     │
+├─────────────────────────┤
+│ ▼ Category              │
+│   ☐ Cookware (24)       │
+│   ☐ Bakeware (12)       │
+│   ☐ Storage (18)        │
+│   ☐ Utensils (8)        │
+├─────────────────────────┤
+│ ▼ Material              │
+│   ☐ Stainless Steel (15)│
+│   ☐ Cast Iron (12)      │
+│   ☐ Carbon Steel (8)    │
+│   ☐ Ceramic Coated (10) │
+│   ☐ Glass (6)           │
+│   + Show more           │
+├─────────────────────────┤
+│ ▼ Brand                 │
+│   [Search brands...]    │
+│   ☐ All-Clad (8)        │
+│   ☐ Lodge (12)          │
+│   ☐ Le Creuset (6)      │
+│   + Show more           │
+├─────────────────────────┤
+│ ▼ Features              │
+│   ☐ Induction Compatible│
+│   ☐ Dishwasher Safe     │
+│   ☐ Oven Safe 500°F+    │
+└─────────────────────────┘
+```
+
+BEHAVIOR:
+- Accordion sections, all expanded by default
+- Checkboxes update URL params (enables sharing filtered results)
+- Show count next to each option
+- "Show more" expands truncated lists
+- Brand filter has inline search
+- Mobile: Full-screen overlay with "Apply Filters" button
+
+================================================================================
+TASK 2: PRODUCT GRID
+================================================================================
+
+Create `src/pfas-web/components/search/ProductGrid.tsx`:
+
+HEADER BAR:
+```
+┌────────────────────────────────────────────────────────────────────────────┐
+│ 156 products found for "cookware"    Sort: [Best Match ▼]  View: [≡] [⊞]  │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+- Result count with active query/filters
+- Sort dropdown: Best Match, Verification (High→Low), Name A-Z, Name Z-A, Newest
+- View toggle: List view / Grid view
+
+GRID LAYOUT:
+- Desktop: 3-4 columns
+- Tablet: 2-3 columns  
+- Mobile: 1-2 columns
+- Gap: 16px
+
+================================================================================
+TASK 3: PRODUCT CARD (Grid View)
+================================================================================
+
+Create `src/pfas-web/components/product/ProductCard.tsx`:
+
+```
+┌─────────────────────────────┐
+│ [Compare ☐]    [♡ Save]     │ <- Top right icons
+├─────────────────────────────┤
+│                             │
+│    [Product Image]          │ <- Square aspect ratio
+│                             │
+├─────────────────────────────┤
+│ ████ TIER 3 · Lab Tested    │ <- Verification badge (colored)
+├─────────────────────────────┤
+│ All-Clad                    │ <- Brand (small, gray)
+│ D3 Stainless Steel 12"      │ <- Product name (bold, 2 lines max)
+│ Skillet                     │
+├─────────────────────────────┤
+│ Material: Stainless Steel   │ <- Key specs (small)
+│ Coating: None (uncoated)    │
+├─────────────────────────────┤
+│ ★★★★☆ 4.5 (2 reviews)       │ <- Rating (if available)
+├─────────────────────────────┤
+│ [View Details]              │ <- CTA button
+│ Available at: 🛒 🎯          │ <- Retailer icons
+└─────────────────────────────┘
+```
+
+VERIFICATION BADGE STYLES:
+```css
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tier-4 { background: #E8F5E9; color: #2D8A3E; border: 1px solid #A5D6A7; }
+.tier-3 { background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; }
+.tier-2 { background: #F3E5F5; color: #7B5EA7; border: 1px solid #CE93D8; }
+.tier-1 { background: #F5F5F5; color: #757575; border: 1px solid #E0E0E0; }
+.tier-0 { background: #FAFAFA; color: #9E9E9E; border: 1px solid #EEEEEE; }
+```
+
+HOVER STATE:
+- Subtle shadow elevation
+- "Quick View" button appears over image
+- Compare checkbox more prominent
+
+================================================================================
+TASK 4: PRODUCT CARD (List View)
+================================================================================
+
+Create `src/pfas-web/components/product/ProductCardList.tsx`:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│ ┌─────────┐  All-Clad D3 Stainless Steel 12" Skillet                        │
+│ │         │  Brand: All-Clad                                                 │
+│ │ [Image] │  ████ TIER 3 · Lab Tested · 2 evidence documents                │
+│ │         │  ──────────────────────────────────────────────────────────────  │
+│ │         │  Material: Stainless Steel │ Coating: None │ Induction: Yes     │
+│ └─────────┘  ★★★★☆ 4.5 (2 reviews)                                          │
+│              ──────────────────────────────────────────────────────────────  │
+│              "Professional-grade tri-ply stainless steel skillet with..."   │
+│                                                           [☐ Compare] [View]│
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+================================================================================
+TASK 5: PAGINATION
+================================================================================
+
+Create `src/pfas-web/components/ui/Pagination.tsx`:
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│  [← Prev]  1  2  [3]  4  5  ...  12  [Next →]    Show: [24 ▼]     │
+└────────────────────────────────────────────────────────────────────┘
+```
+
+- Current page highlighted
+- First, last, and surrounding pages shown
+- Ellipsis for gaps
+- Items per page selector: 12, 24, 48, 96
+
+================================================================================
+TASK 6: SEARCH PAGE ASSEMBLY
+================================================================================
+
+Update `src/pfas-web/app/search/page.tsx`:
+
+```tsx
+export default function SearchPage() {
+  return (
+    <EcommerceShell breadcrumbs={[{ label: 'Search' }]}>
+      <div className="search-layout">
+        {/* Mobile filter toggle */}
+        <MobileFilterButton />
+        
+        <aside className="filter-sidebar">
+          <FilterSidebar />
+        </aside>
+        
+        <main className="search-main">
+          <SearchHeader 
+            resultCount={data.meta.total}
+            query={searchParams.q}
+          />
+          
+          {/* Active filter pills */}
+          <ActiveFilters />
+          
+          <ProductGrid 
+            products={data.data}
+            viewMode={viewMode}
+          />
+          
+          <Pagination 
+            total={data.meta.total}
+            page={currentPage}
+            perPage={perPage}
+          />
+        </main>
+      </div>
+    </EcommerceShell>
+  );
+}
+```
+
+LAYOUT CSS:
+```css
+.search-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: var(--space-6);
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+
+@media (max-width: 1024px) {
+  .search-layout {
+    grid-template-columns: 1fr;
+  }
+  .filter-sidebar {
+    display: none; /* Use mobile overlay instead */
+  }
+}
+```
+
+================================================================================
+TASK 7: EMPTY & LOADING STATES
+================================================================================
+
+EMPTY STATE (no results):
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                                                                 │
+│              [Illustration: Empty pan with sparkles]            │
+│                                                                 │
+│              No products found for "teflon skillet"             │
+│                                                                 │
+│     We only list verified PFAS-free products. Try searching     │
+│     for materials like "stainless steel" or "cast iron".        │
+│                                                                 │
+│              [Browse All Products]  [Clear Filters]             │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+LOADING STATE:
+- Skeleton cards matching ProductCard dimensions
+- Pulsing animation
+- 8-12 skeleton cards
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ Filter sidebar with all filter types (tier, category, material, brand, features)
+□ Filters update URL params for shareable links
+□ Mobile: Filters in full-screen overlay
+□ Product grid with 3-4 columns on desktop
+□ Product cards show verification tier prominently
+□ Grid/List view toggle works
+□ Sort dropdown functional
+□ Pagination with items-per-page selector
+□ Empty state is helpful and on-brand
+□ Loading state with skeleton cards
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-web/components/search/FilterSidebar.tsx
+- src/pfas-web/components/search/ProductGrid.tsx
+- src/pfas-web/components/search/SearchHeader.tsx
+- src/pfas-web/components/search/ActiveFilters.tsx
+- src/pfas-web/components/search/MobileFilterButton.tsx
+- src/pfas-web/components/product/ProductCard.tsx
+- src/pfas-web/components/product/ProductCardList.tsx
+- src/pfas-web/components/product/ProductCardSkeleton.tsx
+- src/pfas-web/components/ui/Pagination.tsx
+- src/pfas-web/components/search/EmptyResults.tsx
+
+MODIFY:
+- src/pfas-web/app/search/page.tsx
+
+================================================================================

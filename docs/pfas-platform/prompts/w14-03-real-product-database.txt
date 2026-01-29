@@ -1,0 +1,507 @@
+================================================================================
+WAVE 14-03: REAL PRODUCT DATABASE WITH AFFILIATE LINKS
+================================================================================
+ACTIVATION: "Execute Wave 14-03: Real Product Database with Affiliate Links"
+AGENT: Data Agent
+DEPENDS ON: Wave 14-02 (Affiliate accounts set up)
+REQUIRES: Amazon Associates Tag from user
+================================================================================
+
+CONTEXT
+-------
+Replace placeholder products with REAL products that have:
+- Actual Amazon ASINs
+- Real product names and descriptions
+- Working affiliate links
+- Accurate specifications
+
+================================================================================
+TASK 1: RESEARCH REAL AMAZON ASINS
+================================================================================
+
+For each product category, find the actual Amazon ASINs. 
+
+HOW TO FIND ASINS:
+1. Go to amazon.com
+2. Search for the product
+3. The ASIN is in the URL: amazon.com/dp/B00XXXX or in product details
+
+VERIFIED PFAS-FREE COOKWARE ASINS:
+
+**All-Clad Stainless Steel:**
+```typescript
+{
+  name: "All-Clad D3 Stainless Steel 12-Inch Fry Pan with Lid",
+  asin: "B00005RUGJ",
+  brand: "All-Clad",
+  material: "Tri-Ply Stainless Steel",
+  category: "skillets",
+  verification_tier: 2,
+  rationale: "Uncoated stainless steel - inherently PFAS-free",
+}
+```
+
+```typescript
+{
+  name: "All-Clad D3 Stainless Steel 10-Inch Fry Pan",
+  asin: "B00005RUGI",
+  brand: "All-Clad",
+}
+```
+
+```typescript
+{
+  name: "All-Clad D3 Stainless Steel 8-Inch Fry Pan",
+  asin: "B004T6MCEE",
+  brand: "All-Clad",
+}
+```
+
+**Lodge Cast Iron:**
+```typescript
+{
+  name: "Lodge Pre-Seasoned Cast Iron Skillet 12-Inch",
+  asin: "B00006JSUA",
+  brand: "Lodge",
+  material: "Cast Iron",
+  category: "skillets",
+  verification_tier: 2,
+  rationale: "Cast iron seasoned with vegetable oil - no synthetic coatings",
+}
+```
+
+```typescript
+{
+  name: "Lodge Pre-Seasoned Cast Iron Skillet 10.25-Inch",
+  asin: "B00006JSUB",
+  brand: "Lodge",
+}
+```
+
+```typescript
+{
+  name: "Lodge Enameled Cast Iron Dutch Oven 6-Quart",
+  asin: "B000N501BK",
+  brand: "Lodge",
+  material: "Enameled Cast Iron",
+  category: "dutch-ovens",
+}
+```
+
+**Le Creuset:**
+```typescript
+{
+  name: "Le Creuset Signature Enameled Cast Iron Round Dutch Oven 5.5-Quart",
+  asin: "B00005QFQB",
+  brand: "Le Creuset",
+  material: "Enameled Cast Iron",
+  category: "dutch-ovens",
+  verification_tier: 2,
+}
+```
+
+```typescript
+{
+  name: "Le Creuset Signature Enameled Cast Iron Round Dutch Oven 7.25-Quart",
+  asin: "B0076NOSOS",
+  brand: "Le Creuset",
+}
+```
+
+**Staub:**
+```typescript
+{
+  name: "Staub Cast Iron Round Cocotte 5.5-Quart",
+  asin: "B003M8WJK6",
+  brand: "Staub",
+  material: "Enameled Cast Iron",
+  category: "dutch-ovens",
+}
+```
+
+**Made In:**
+```typescript
+{
+  name: "Made In Blue Carbon Steel Frying Pan 12-Inch",
+  asin: "B07TWWWFQX",
+  brand: "Made In",
+  material: "Carbon Steel",
+  category: "skillets",
+}
+```
+
+**de Buyer:**
+```typescript
+{
+  name: "de Buyer Mineral B Carbon Steel Fry Pan 12.5-Inch",
+  asin: "B00462QP0W",
+  brand: "de Buyer",
+  material: "Carbon Steel",
+  category: "skillets",
+}
+```
+
+**Pyrex (Bakeware/Storage):**
+```typescript
+{
+  name: "Pyrex Easy Grab 8-Piece Glass Bakeware Set",
+  asin: "B01LXOXZ17",
+  brand: "Pyrex",
+  material: "Borosilicate Glass",
+  category: "baking-dishes",
+}
+```
+
+```typescript
+{
+  name: "Pyrex Simply Store 10-Piece Glass Food Storage Set",
+  asin: "B00005B8K5",
+  brand: "Pyrex",
+  material: "Glass",
+  category: "glass-containers",
+}
+```
+
+**Nordic Ware:**
+```typescript
+{
+  name: "Nordic Ware Natural Aluminum Commercial Baker's Half Sheet",
+  asin: "B000G0KJG4",
+  brand: "Nordic Ware",
+  material: "Aluminum",
+  category: "sheet-pans",
+}
+```
+
+================================================================================
+TASK 2: CREATE COMPREHENSIVE PRODUCT DATABASE
+================================================================================
+
+Create `src/pfas-api/src/data/products.ts`:
+
+```typescript
+export interface RealProduct {
+  id: string;
+  name: string;
+  slug: string;
+  asin: string;
+  brand: string;
+  brand_slug: string;
+  description: string;
+  category_id: string;
+  category_name: string;
+  category_path: string[];
+  
+  // Materials
+  material_primary: string;
+  coating: string | null;
+  
+  // Verification
+  verification: {
+    tier: 0 | 1 | 2 | 3 | 4;
+    tier_label: string;
+    rationale: string;
+    scope: string;
+    unknowns: string[];
+  };
+  
+  // Features
+  features: {
+    size?: string;
+    capacity?: string;
+    weight?: string;
+    dimensions?: string;
+    induction_compatible?: boolean;
+    oven_safe_temp_f?: number;
+    dishwasher_safe?: boolean;
+    made_in?: string;
+  };
+  
+  // Affiliate
+  affiliate_links: {
+    amazon?: { asin: string; available: boolean };
+    williams_sonoma?: { url: string; available: boolean };
+    sur_la_table?: { url: string; available: boolean };
+    target?: { url: string; available: boolean };
+  };
+  
+  // Images (from Amazon or placeholder)
+  images: {
+    primary: string;
+    gallery: string[];
+  };
+  
+  // Metadata
+  created_at: string;
+  updated_at: string;
+  status: 'active' | 'discontinued' | 'unavailable';
+}
+
+// Full product database with 100+ real products
+export const REAL_PRODUCTS: RealProduct[] = [
+  // SKILLETS - STAINLESS STEEL
+  {
+    id: "prod_001",
+    name: "All-Clad D3 Stainless Steel 12-Inch Fry Pan with Lid",
+    slug: "all-clad-d3-stainless-12-inch-fry-pan-with-lid",
+    asin: "B00005RUGJ",
+    brand: "All-Clad",
+    brand_slug: "all-clad",
+    description: "Professional-grade tri-ply stainless steel fry pan with aluminum core for even heating. Made in the USA with a lifetime warranty. The cooking surface is pure 18/10 stainless steel with no coatings.",
+    category_id: "cat_skillets",
+    category_name: "Skillets & Frying Pans",
+    category_path: ["Cookware", "Skillets & Frying Pans"],
+    material_primary: "Tri-Ply Stainless Steel",
+    coating: null,
+    verification: {
+      tier: 2,
+      tier_label: "Policy Reviewed",
+      rationale: "Uncoated stainless steel cooking surface. Stainless steel is inherently PFAS-free as it contains no fluoropolymers.",
+      scope: "Food-contact surfaces",
+      unknowns: [],
+    },
+    features: {
+      size: "12 inches",
+      weight: "2.9 lbs",
+      induction_compatible: true,
+      oven_safe_temp_f: 600,
+      dishwasher_safe: true,
+      made_in: "USA",
+    },
+    affiliate_links: {
+      amazon: { asin: "B00005RUGJ", available: true },
+      williams_sonoma: { url: "https://www.williams-sonoma.com/products/all-clad-d3-stainless-steel-fry-pan-12-inch/", available: true },
+    },
+    images: {
+      primary: "https://m.media-amazon.com/images/I/71YLu6h4OQL._AC_SL1500_.jpg",
+      gallery: [],
+    },
+    created_at: "2026-01-28T00:00:00Z",
+    updated_at: "2026-01-28T00:00:00Z",
+    status: "active",
+  },
+  
+  // Continue for 100+ products...
+  // SKILLETS - CAST IRON
+  {
+    id: "prod_010",
+    name: "Lodge Pre-Seasoned Cast Iron Skillet 12-Inch",
+    slug: "lodge-pre-seasoned-cast-iron-skillet-12-inch",
+    asin: "B00006JSUA",
+    brand: "Lodge",
+    brand_slug: "lodge",
+    description: "America's original cast iron skillet, pre-seasoned and ready to use. Made in the USA since 1896. The seasoning is 100% natural vegetable oil - no synthetic coatings.",
+    category_id: "cat_skillets",
+    category_name: "Skillets & Frying Pans",
+    category_path: ["Cookware", "Skillets & Frying Pans"],
+    material_primary: "Cast Iron",
+    coating: "Vegetable Oil Seasoning",
+    verification: {
+      tier: 2,
+      tier_label: "Policy Reviewed",
+      rationale: "Cast iron pre-seasoned with vegetable oil only. Lodge confirms no synthetic coatings are used.",
+      scope: "All components",
+      unknowns: [],
+    },
+    features: {
+      size: "12 inches",
+      weight: "8 lbs",
+      induction_compatible: true,
+      oven_safe_temp_f: 650,
+      dishwasher_safe: false,
+      made_in: "USA",
+    },
+    affiliate_links: {
+      amazon: { asin: "B00006JSUA", available: true },
+      target: { url: "https://www.target.com/p/lodge-12-cast-iron-skillet/", available: true },
+    },
+    images: {
+      primary: "https://m.media-amazon.com/images/I/91wLwbvfPML._AC_SL1500_.jpg",
+      gallery: [],
+    },
+    created_at: "2026-01-28T00:00:00Z",
+    updated_at: "2026-01-28T00:00:00Z",
+    status: "active",
+  },
+  
+  // ... Continue with all products
+];
+```
+
+================================================================================
+TASK 3: CREATE AFFILIATE LINK GENERATOR
+================================================================================
+
+Create `src/pfas-api/src/lib/affiliate-links.ts`:
+
+```typescript
+const AMAZON_TAG = process.env.AMAZON_ASSOCIATE_TAG || 'pfasfreekitch-20';
+
+export function generateAmazonLink(asin: string): string {
+  return `https://www.amazon.com/dp/${asin}?tag=${AMAZON_TAG}`;
+}
+
+export function generateAffiliateLinks(product: RealProduct): AffiliateLink[] {
+  const links: AffiliateLink[] = [];
+  
+  if (product.affiliate_links.amazon?.available) {
+    links.push({
+      retailer_id: 'amazon',
+      retailer_name: 'Amazon',
+      url: generateAmazonLink(product.affiliate_links.amazon.asin),
+      icon: 'amazon',
+    });
+  }
+  
+  if (product.affiliate_links.williams_sonoma?.available) {
+    links.push({
+      retailer_id: 'williams_sonoma',
+      retailer_name: 'Williams Sonoma',
+      url: product.affiliate_links.williams_sonoma.url,
+      icon: 'williams-sonoma',
+    });
+  }
+  
+  // Add other retailers...
+  
+  return links;
+}
+```
+
+================================================================================
+TASK 4: UPDATE API TO USE REAL PRODUCTS
+================================================================================
+
+Update `src/pfas-api/src/mock-server.ts`:
+
+```typescript
+import { REAL_PRODUCTS, RealProduct } from './data/products';
+import { generateAffiliateLinks } from './lib/affiliate-links';
+
+// Transform products for API response
+function transformProduct(product: RealProduct) {
+  return {
+    id: product.id,
+    name: product.name,
+    slug: product.slug,
+    description: product.description,
+    brand: {
+      id: product.brand_slug,
+      name: product.brand,
+      slug: product.brand_slug,
+    },
+    category: {
+      id: product.category_id,
+      name: product.category_name,
+      path: product.category_path,
+    },
+    primary_image_url: product.images.primary,
+    images: product.images.gallery,
+    material_summary: product.material_primary,
+    coating_summary: product.coating || 'None',
+    verification: product.verification,
+    features: product.features,
+    retailer_links: generateAffiliateLinks(product),
+    status: product.status,
+  };
+}
+
+// Products endpoint
+app.get('/api/v1/products', (req, res) => {
+  const products = REAL_PRODUCTS
+    .filter(p => p.status === 'active')
+    .map(transformProduct);
+  
+  // Apply filters, sort, paginate...
+  
+  res.json({ data: products, meta: { total: products.length } });
+});
+```
+
+================================================================================
+TASK 5: ADD PRODUCT IMAGES
+================================================================================
+
+For each product, get the primary image URL from Amazon:
+
+1. Go to the Amazon product page
+2. Right-click the main image → "Copy Image Address"
+3. Use that URL in the product data
+
+Example Amazon image URLs:
+```
+https://m.media-amazon.com/images/I/71YLu6h4OQL._AC_SL1500_.jpg
+```
+
+**Alternative: Use Next.js Image Optimization**
+```typescript
+// next.config.js
+module.exports = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        pathname: '/images/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images-na.ssl-images-amazon.com',
+        pathname: '/**',
+      },
+    ],
+  },
+};
+```
+
+================================================================================
+TASK 6: VERIFY ALL LINKS WORK
+================================================================================
+
+Create a test script to verify affiliate links:
+
+```bash
+#!/bin/bash
+# scripts/verify-affiliate-links.sh
+
+echo "Verifying affiliate links..."
+
+# Get all products
+PRODUCTS=$(curl -s http://localhost:3001/api/v1/products | jq -r '.data[].retailer_links[].url')
+
+for url in $PRODUCTS; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "$url")
+  if [ "$STATUS" == "200" ] || [ "$STATUS" == "301" ] || [ "$STATUS" == "302" ]; then
+    echo "✓ $url"
+  else
+    echo "✗ $url (HTTP $STATUS)"
+  fi
+done
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ 50+ real products with valid ASINs
+□ All affiliate links use real Amazon Associate tag
+□ Product images load from Amazon CDN
+□ Product descriptions are accurate
+□ Verification tiers are honest (mostly Tier 2)
+□ All products are actually PFAS-free
+□ Links open correct Amazon product pages
+
+================================================================================
+FILES TO CREATE/MODIFY
+================================================================================
+
+CREATE:
+- src/pfas-api/src/data/products.ts (100+ products)
+- src/pfas-api/src/lib/affiliate-links.ts
+- scripts/verify-affiliate-links.sh
+
+MODIFY:
+- src/pfas-api/src/mock-server.ts
+- next.config.js (image domains)
+
+================================================================================

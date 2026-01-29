@@ -1,0 +1,541 @@
+================================================================================
+WAVE 13-10: INTEGRATION & FUNCTIONAL TESTING
+================================================================================
+ACTIVATION: "Execute Wave 13-10: Integration and Functional Testing"
+AGENT: QA Agent / Website Agent
+DEPENDS ON: All Wave 13 prompts (13-01 through 13-09)
+================================================================================
+
+CONTEXT
+-------
+Final testing wave to ensure all content is properly integrated, all links
+work, all pages render correctly, and the site functions as a complete
+e-commerce browsing experience.
+
+================================================================================
+TASK 1: PAGE RENDERING VERIFICATION
+================================================================================
+
+Create `src/pfas-web/tests/pages.spec.ts`:
+
+Test that every page renders without errors:
+
+```typescript
+const PAGES_TO_TEST = [
+  // Static pages
+  { path: '/', name: 'Homepage' },
+  { path: '/search', name: 'Search (empty)' },
+  { path: '/search?q=skillet', name: 'Search with query' },
+  { path: '/search?category=cookware', name: 'Search with category' },
+  { path: '/compare', name: 'Compare (empty)' },
+  
+  // Product pages (sample)
+  { path: '/product/all-clad-d3-stainless-steel-12-inch-fry-pan', name: 'Product - All-Clad' },
+  { path: '/product/lodge-cast-iron-12-inch-skillet', name: 'Product - Lodge' },
+  { path: '/product/le-creuset-signature-dutch-oven-5-5qt', name: 'Product - Le Creuset' },
+  
+  // Education pages
+  { path: '/learn/what-is-pfas', name: 'What is PFAS' },
+  { path: '/learn/how-we-verify', name: 'How We Verify' },
+  { path: '/learn/buyers-guide', name: 'Buyer\'s Guide' },
+  
+  // Static pages
+  { path: '/about', name: 'About' },
+  { path: '/faq', name: 'FAQ' },
+  { path: '/disclosure', name: 'Disclosure' },
+  { path: '/privacy', name: 'Privacy' },
+  { path: '/terms', name: 'Terms' },
+  { path: '/contact', name: 'Contact' },
+];
+
+for (const page of PAGES_TO_TEST) {
+  test(`${page.name} renders without errors`, async ({ page: p }) => {
+    const response = await p.goto(page.path);
+    expect(response?.status()).toBeLessThan(400);
+    
+    // Check no console errors
+    const errors: string[] = [];
+    p.on('console', msg => {
+      if (msg.type() === 'error') errors.push(msg.text());
+    });
+    
+    // Wait for content
+    await p.waitForLoadState('networkidle');
+    
+    expect(errors).toHaveLength(0);
+  });
+}
+```
+
+================================================================================
+TASK 2: PRODUCT DATA VALIDATION
+================================================================================
+
+Create `src/pfas-web/tests/product-data.spec.ts`:
+
+```typescript
+test.describe('Product Data Integrity', () => {
+  
+  test('All products have required fields', async ({ request }) => {
+    const response = await request.get('/api/v1/products?limit=100');
+    const { data } = await response.json();
+    
+    for (const product of data) {
+      expect(product.id).toBeTruthy();
+      expect(product.name).toBeTruthy();
+      expect(product.slug).toBeTruthy();
+      expect(product.brand).toBeTruthy();
+      expect(product.category).toBeTruthy();
+      expect(product.verification).toBeTruthy();
+      expect(product.verification.tier).toBeGreaterThanOrEqual(0);
+      expect(product.verification.tier).toBeLessThanOrEqual(4);
+      expect(product.components).toBeInstanceOf(Array);
+      expect(product.components.length).toBeGreaterThan(0);
+    }
+  });
+  
+  test('All products have valid verification tiers', async ({ request }) => {
+    const response = await request.get('/api/v1/products?limit=100');
+    const { data } = await response.json();
+    
+    const tierCounts = { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0 };
+    for (const product of data) {
+      tierCounts[product.verification.tier]++;
+    }
+    
+    // Should have products in multiple tiers
+    const tiersWithProducts = Object.values(tierCounts).filter(c => c > 0).length;
+    expect(tiersWithProducts).toBeGreaterThanOrEqual(2);
+  });
+  
+  test('All products have at least one retailer', async ({ request }) => {
+    const response = await request.get('/api/v1/products?limit=100');
+    const { data } = await response.json();
+    
+    for (const product of data) {
+      expect(product.retailer_links?.length || product.retailers?.length).toBeGreaterThan(0);
+    }
+  });
+  
+  test('All product slugs are unique', async ({ request }) => {
+    const response = await request.get('/api/v1/products?limit=200');
+    const { data } = await response.json();
+    
+    const slugs = data.map(p => p.slug);
+    const uniqueSlugs = new Set(slugs);
+    expect(uniqueSlugs.size).toBe(slugs.length);
+  });
+  
+});
+```
+
+================================================================================
+TASK 3: LINK VERIFICATION
+================================================================================
+
+Create `src/pfas-web/tests/links.spec.ts`:
+
+```typescript
+test.describe('Internal Links', () => {
+  
+  test('All navigation links work', async ({ page }) => {
+    await page.goto('/');
+    
+    // Get all internal links
+    const links = await page.$$eval('a[href^="/"]', els => 
+      els.map(el => el.getAttribute('href'))
+    );
+    
+    const uniqueLinks = [...new Set(links)];
+    
+    for (const link of uniqueLinks.slice(0, 20)) { // Test first 20
+      const response = await page.goto(link);
+      expect(response?.status(), `Link ${link} failed`).toBeLessThan(400);
+    }
+  });
+  
+  test('Product links go to valid products', async ({ page }) => {
+    await page.goto('/search');
+    
+    const productLinks = await page.$$eval('a[href^="/product/"]', els =>
+      els.map(el => el.getAttribute('href')).slice(0, 10)
+    );
+    
+    for (const link of productLinks) {
+      const response = await page.goto(link);
+      expect(response?.status()).toBeLessThan(400);
+      
+      // Should show product name
+      const title = await page.title();
+      expect(title).not.toContain('Not Found');
+    }
+  });
+  
+});
+
+test.describe('External Links', () => {
+  
+  test('Affiliate links have correct attributes', async ({ page }) => {
+    await page.goto('/product/all-clad-d3-stainless-steel-12-inch-fry-pan');
+    
+    const affiliateLinks = await page.$$('a[rel*="sponsored"]');
+    expect(affiliateLinks.length).toBeGreaterThan(0);
+    
+    for (const link of affiliateLinks) {
+      const rel = await link.getAttribute('rel');
+      expect(rel).toContain('noopener');
+      expect(rel).toContain('sponsored');
+      
+      const target = await link.getAttribute('target');
+      expect(target).toBe('_blank');
+    }
+  });
+  
+});
+```
+
+================================================================================
+TASK 4: SEARCH FUNCTIONALITY TESTING
+================================================================================
+
+Create `src/pfas-web/tests/search.spec.ts`:
+
+```typescript
+test.describe('Search Functionality', () => {
+  
+  test('Search returns relevant results', async ({ page }) => {
+    await page.goto('/search?q=cast+iron');
+    
+    const results = await page.$$('[data-testid="product-card"]');
+    expect(results.length).toBeGreaterThan(0);
+    
+    // Results should contain "cast iron" somewhere
+    const firstResult = await results[0].textContent();
+    expect(firstResult?.toLowerCase()).toContain('cast');
+  });
+  
+  test('Category filter works', async ({ page }) => {
+    await page.goto('/search?category=bakeware');
+    
+    const results = await page.$$('[data-testid="product-card"]');
+    expect(results.length).toBeGreaterThan(0);
+  });
+  
+  test('Tier filter works', async ({ page }) => {
+    await page.goto('/search?tier=3');
+    
+    const results = await page.$$('[data-testid="product-card"]');
+    
+    // All results should be tier 3
+    for (const result of results.slice(0, 5)) {
+      const tierBadge = await result.$('[data-testid="tier-badge"]');
+      const tierText = await tierBadge?.textContent();
+      expect(tierText).toContain('Tier 3');
+    }
+  });
+  
+  test('Empty search shows message', async ({ page }) => {
+    await page.goto('/search?q=xyznonexistent123');
+    
+    const emptyState = await page.$('[data-testid="empty-results"]');
+    expect(emptyState).toBeTruthy();
+  });
+  
+});
+```
+
+================================================================================
+TASK 5: COMPARISON FUNCTIONALITY TESTING
+================================================================================
+
+Create `src/pfas-web/tests/compare.spec.ts`:
+
+```typescript
+test.describe('Comparison Feature', () => {
+  
+  test('Can add products to compare', async ({ page }) => {
+    await page.goto('/search');
+    
+    // Click compare on first two products
+    const compareButtons = await page.$$('[data-testid="compare-button"]');
+    await compareButtons[0].click();
+    await compareButtons[1].click();
+    
+    // Compare tray should show
+    const tray = await page.$('[data-testid="compare-tray"]');
+    expect(tray).toBeTruthy();
+    
+    // Should show 2 items
+    const count = await page.$('[data-testid="compare-count"]');
+    const countText = await count?.textContent();
+    expect(countText).toContain('2');
+  });
+  
+  test('Compare page shows products side by side', async ({ page }) => {
+    await page.goto('/search');
+    
+    // Add two products
+    const compareButtons = await page.$$('[data-testid="compare-button"]');
+    await compareButtons[0].click();
+    await compareButtons[1].click();
+    
+    // Go to compare page
+    await page.goto('/compare');
+    
+    // Should show comparison table
+    const table = await page.$('[data-testid="compare-table"]');
+    expect(table).toBeTruthy();
+    
+    // Should have at least 2 product columns
+    const columns = await page.$$('[data-testid="compare-column"]');
+    expect(columns.length).toBeGreaterThanOrEqual(2);
+  });
+  
+  test('Can remove products from compare', async ({ page }) => {
+    await page.goto('/search');
+    
+    // Add a product
+    const compareButton = await page.$('[data-testid="compare-button"]');
+    await compareButton?.click();
+    
+    // Remove it
+    const removeButton = await page.$('[data-testid="compare-remove"]');
+    await removeButton?.click();
+    
+    // Tray should be empty/hidden
+    const tray = await page.$('[data-testid="compare-tray"]');
+    const isVisible = await tray?.isVisible();
+    expect(isVisible).toBeFalsy();
+  });
+  
+});
+```
+
+================================================================================
+TASK 6: CONTENT VERIFICATION
+================================================================================
+
+Create `src/pfas-web/tests/content.spec.ts`:
+
+```typescript
+test.describe('Content Pages', () => {
+  
+  test('What is PFAS page has required sections', async ({ page }) => {
+    await page.goto('/learn/what-is-pfas');
+    
+    // Should have health disclaimer
+    const disclaimer = await page.$('[data-testid="health-disclaimer"]');
+    expect(disclaimer).toBeTruthy();
+    
+    // Should have sources section
+    const sources = await page.$('text=Sources');
+    expect(sources).toBeTruthy();
+    
+    // Should not have placeholder text
+    const content = await page.content();
+    expect(content).not.toContain('TBD');
+    expect(content).not.toContain('Lorem ipsum');
+    expect(content).not.toContain('TODO');
+  });
+  
+  test('FAQ page has expandable questions', async ({ page }) => {
+    await page.goto('/faq');
+    
+    // Should have FAQ items
+    const faqItems = await page.$$('[data-testid="faq-item"]');
+    expect(faqItems.length).toBeGreaterThan(10);
+    
+    // Clicking should expand
+    await faqItems[0].click();
+    const expanded = await page.$('[data-testid="faq-answer"]:visible');
+    expect(expanded).toBeTruthy();
+  });
+  
+  test('Disclosure page has Amazon statement', async ({ page }) => {
+    await page.goto('/disclosure');
+    
+    const content = await page.content();
+    expect(content).toContain('Amazon Associate');
+    expect(content).toContain('qualifying purchases');
+  });
+  
+});
+```
+
+================================================================================
+TASK 7: MOBILE RESPONSIVENESS TESTING
+================================================================================
+
+Create `src/pfas-web/tests/mobile.spec.ts`:
+
+```typescript
+test.describe('Mobile Responsiveness', () => {
+  
+  test.use({ viewport: { width: 375, height: 667 } }); // iPhone SE
+  
+  test('Homepage is mobile-friendly', async ({ page }) => {
+    await page.goto('/');
+    
+    // No horizontal scroll
+    const scrollWidth = await page.evaluate(() => document.body.scrollWidth);
+    const clientWidth = await page.evaluate(() => document.body.clientWidth);
+    expect(scrollWidth).toBeLessThanOrEqual(clientWidth + 1);
+    
+    // Hamburger menu is visible
+    const hamburger = await page.$('[data-testid="mobile-menu-button"]');
+    expect(hamburger).toBeTruthy();
+  });
+  
+  test('Search page works on mobile', async ({ page }) => {
+    await page.goto('/search');
+    
+    // Filter button should be visible
+    const filterButton = await page.$('[data-testid="mobile-filter-button"]');
+    expect(filterButton).toBeTruthy();
+    
+    // Product cards should be visible
+    const cards = await page.$$('[data-testid="product-card"]');
+    expect(cards.length).toBeGreaterThan(0);
+  });
+  
+  test('Product page works on mobile', async ({ page }) => {
+    await page.goto('/product/lodge-cast-iron-12-inch-skillet');
+    
+    // Product info should be visible
+    const productName = await page.$('h1');
+    expect(productName).toBeTruthy();
+    
+    // Tabs should be accessible
+    const tabs = await page.$$('[role="tab"]');
+    expect(tabs.length).toBeGreaterThan(0);
+  });
+  
+});
+```
+
+================================================================================
+TASK 8: ACCESSIBILITY VERIFICATION
+================================================================================
+
+```typescript
+test.describe('Accessibility', () => {
+  
+  test('Skip link works', async ({ page }) => {
+    await page.goto('/');
+    
+    // Tab to skip link
+    await page.keyboard.press('Tab');
+    
+    const skipLink = await page.$(':focus');
+    const text = await skipLink?.textContent();
+    expect(text?.toLowerCase()).toContain('skip');
+  });
+  
+  test('Images have alt text', async ({ page }) => {
+    await page.goto('/search');
+    
+    const images = await page.$$('img');
+    for (const img of images) {
+      const alt = await img.getAttribute('alt');
+      expect(alt).toBeTruthy();
+    }
+  });
+  
+  test('Forms have labels', async ({ page }) => {
+    await page.goto('/suggest');
+    
+    const inputs = await page.$$('input:not([type="hidden"])');
+    for (const input of inputs) {
+      const id = await input.getAttribute('id');
+      if (id) {
+        const label = await page.$(`label[for="${id}"]`);
+        expect(label).toBeTruthy();
+      }
+    }
+  });
+  
+});
+```
+
+================================================================================
+TASK 9: FINAL VALIDATION CHECKLIST
+================================================================================
+
+Create `scripts/validate-content.sh`:
+
+```bash
+#!/bin/bash
+
+echo "🔍 Content Validation Checklist"
+echo "================================"
+
+# Count products
+PRODUCTS=$(curl -s http://localhost:3001/api/v1/products | jq '.meta.total')
+echo "✓ Products in database: $PRODUCTS"
+
+# Count categories
+CATEGORIES=$(curl -s http://localhost:3001/api/v1/categories | jq '.data | length')
+echo "✓ Categories defined: $CATEGORIES"
+
+# Count brands
+BRANDS=$(curl -s http://localhost:3001/api/v1/brands | jq '.data | length')
+echo "✓ Brands defined: $BRANDS"
+
+# Check static pages
+PAGES=(
+  "/"
+  "/search"
+  "/learn/what-is-pfas"
+  "/learn/how-we-verify"
+  "/learn/buyers-guide"
+  "/about"
+  "/faq"
+  "/disclosure"
+)
+
+echo ""
+echo "Checking pages..."
+for page in "${PAGES[@]}"; do
+  STATUS=$(curl -s -o /dev/null -w "%{http_code}" "http://localhost:3000$page")
+  if [ "$STATUS" == "200" ]; then
+    echo "✓ $page"
+  else
+    echo "✗ $page (HTTP $STATUS)"
+  fi
+done
+
+echo ""
+echo "Validation complete!"
+```
+
+================================================================================
+ACCEPTANCE CRITERIA
+================================================================================
+
+□ All pages render without console errors
+□ All products have required fields
+□ All product slugs are unique
+□ All internal links work
+□ Affiliate links have correct attributes
+□ Search returns relevant results
+□ Filters work correctly
+□ Comparison feature works end-to-end
+□ Content pages have no placeholder text
+□ Mobile viewport has no horizontal scroll
+□ Accessibility basics pass
+□ Validation script reports all green
+
+================================================================================
+FILES TO CREATE
+================================================================================
+
+- src/pfas-web/tests/pages.spec.ts
+- src/pfas-web/tests/product-data.spec.ts
+- src/pfas-web/tests/links.spec.ts
+- src/pfas-web/tests/search.spec.ts
+- src/pfas-web/tests/compare.spec.ts
+- src/pfas-web/tests/content.spec.ts
+- src/pfas-web/tests/mobile.spec.ts
+- scripts/validate-content.sh
+
+================================================================================

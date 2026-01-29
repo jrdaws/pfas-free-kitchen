@@ -1,0 +1,11 @@
+<svg width="400" height="400" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="400" height="400" fill="#F5F5F5"/>
+  <g transform="translate(50, 120)">
+    <!-- Pan body -->
+    <ellipse cx="130" cy="130" rx="120" ry="30" fill="#E0E0E0" stroke="#9E9E9E" stroke-width="2"/>
+    <ellipse cx="130" cy="110" rx="120" ry="30" fill="#EEEEEE" stroke="#9E9E9E" stroke-width="2"/>
+    <!-- Handle -->
+    <path d="M250 110 L340 90" stroke="#9E9E9E" stroke-width="10" stroke-linecap="round"/>
+    <ellipse cx="340" cy="90" rx="15" ry="6" fill="none" stroke="#9E9E9E" stroke-width="2"/>
+  </g>
+</svg>

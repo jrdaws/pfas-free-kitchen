@@ -1,0 +1,247 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+/* Tier Card */
+.tierCard {
+  border: 1px solid var(--color-gray-200);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: white;
+  transition: all 0.2s ease;
+  border-left: 4px solid var(--tier-color);
+}
+
+.tierCard:hover {
+  border-color: var(--color-gray-300);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tierCard.expanded {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+/* Header */
+.tierHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  width: 100%;
+  padding: var(--space-4) var(--space-5);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tierHeader:hover {
+  background: var(--color-gray-50);
+}
+
+/* Badge */
+.tierBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg, var(--tier-color), color-mix(in srgb, var(--tier-color) 70%, black));
+  color: white;
+  flex-shrink: 0;
+}
+
+.tierNumber {
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.tierSymbol {
+  font-size: 0.75rem;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* Meta */
+.tierMeta {
+  flex: 1;
+  min-width: 0;
+}
+
+.tierName {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-gray-900);
+  margin: 0 0 var(--space-1);
+}
+
+.tierTagline {
+  font-size: 0.875rem;
+  color: var(--color-gray-500);
+  margin: 0;
+}
+
+/* Expand Icon */
+.expandIcon {
+  font-size: 1.5rem;
+  font-weight: 300;
+  color: var(--color-gray-400);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--color-gray-100);
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.expanded .expandIcon {
+  background: var(--tier-color);
+  color: white;
+}
+
+/* Content */
+.tierContent {
+  padding: 0 var(--space-5) var(--space-5);
+  border-top: 1px solid var(--color-gray-100);
+  background: linear-gradient(to bottom, var(--color-gray-50), white);
+  animation: slideDown 0.2s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.description {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: var(--color-gray-700);
+  margin: var(--space-4) 0;
+  padding: var(--space-4);
+  background: white;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-gray-200);
+}
+
+/* Sections */
+.evidenceSection,
+.howToSection,
+.meaningSection,
+.limitationsSection,
+.examplesSection {
+  margin-top: var(--space-4);
+}
+
+.tierContent h4 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-gray-800);
+  margin: 0 0 var(--space-2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.tierContent ul,
+.tierContent ol {
+  margin: 0;
+  padding-left: var(--space-5);
+}
+
+.tierContent li {
+  font-size: 0.9375rem;
+  color: var(--color-gray-600);
+  padding: var(--space-1) 0;
+  line-height: 1.6;
+}
+
+.tierContent ul li::marker {
+  color: var(--tier-color);
+}
+
+.tierContent ol li::marker {
+  color: var(--tier-color);
+  font-weight: 600;
+}
+
+.meaningSection p {
+  font-size: 0.9375rem;
+  color: var(--color-gray-600);
+  margin: 0;
+  line-height: 1.7;
+  padding: var(--space-3);
+  background: rgba(var(--tier-color), 0.05);
+  border-left: 3px solid var(--tier-color);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+
+.limitationsSection {
+  background: var(--color-yellow-50);
+  border: 1px solid var(--color-yellow-200);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+}
+
+.limitationsSection h4 {
+  color: var(--color-yellow-800);
+}
+
+.limitationsSection li {
+  color: var(--color-yellow-700);
+}
+
+/* Examples */
+.examplesList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+.exampleTag {
+  display: inline-block;
+  padding: var(--space-1) var(--space-3);
+  background: var(--color-gray-100);
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  color: var(--color-gray-600);
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .tierHeader {
+    padding: var(--space-3) var(--space-4);
+  }
+
+  .tierBadge {
+    width: 48px;
+    height: 48px;
+  }
+
+  .tierNumber {
+    font-size: 1rem;
+  }
+
+  .tierName {
+    font-size: 1rem;
+  }
+
+  .tierTagline {
+    font-size: 0.8125rem;
+  }
+
+  .tierContent {
+    padding: 0 var(--space-4) var(--space-4);
+  }
+}
