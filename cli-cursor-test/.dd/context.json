@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "generatedAt": "2025-12-22T06:40:43.740Z",
   "project": {
-    "name": "cli-full-test",
+    "name": "cli-cursor-test",
     "template": "saas",
-    "token": "cli-full-5469"
+    "token": "cli-cursor-5469"
   },
   "context": {
     "vision": "Complete SaaS application with all integrations",
