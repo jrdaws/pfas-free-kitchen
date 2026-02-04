@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a73c6adbc9
 
 ## Recent changes
+- 2c4f695 2026-02-04 chore: trigger vercel rebuild
 - 48f18cf 2026-02-03 fix: resolve trackClick export conflict between data.ts and tracking.ts
 - a39ef9d 2026-02-03 docs: add project cleanup report for PFAS transition
 - 02419fa 2026-01-29 fix: correct project name mismatch in cli-cursor-test metadata
@@ -28,7 +29,6 @@ Hash: a73c6adbc9
 - 1aee286 2026-01-06 feat(patterns): create pattern library foundation
 - 943b048 2026-01-06 feat(patterns): add Firecrawl + WYSIWYG preview integration plan
 - e494025 2026-01-06 feat: implement composer mode differentiation - registry/hybrid/auto
-- 4f96a29 2026-01-06 fix: preview header overflow + Hero image support
 
 ## Agent Governance Structure
 
