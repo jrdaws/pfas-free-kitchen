@@ -3,7 +3,7 @@
 import { useState, useCallback } from 'react';
 import Image from 'next/image';
 import type { RetailerLink } from '@/lib/types';
-import { trackClick, type AffiliateLink } from '@/lib/data';
+import { trackClickAPI, type AffiliateLink } from '@/lib/data';
 import { Button } from '../ui/Button';
 import { Modal } from '../ui/Modal';
 import { AffiliateDisclosure } from '../layout/AffiliateDisclosure';
@@ -42,7 +42,7 @@ export function RetailerButtons({ retailers, productId, affiliateLinks }: Retail
 
       try {
         // Track the click via API
-        await trackClick({
+        await trackClickAPI({
           productId,
           retailerId: selectedRetailer.retailer.id,
           sessionId: getSessionId(),

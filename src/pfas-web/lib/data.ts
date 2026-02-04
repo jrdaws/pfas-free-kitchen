@@ -266,9 +266,10 @@ export async function fetchAffiliateLinks(productId: string): Promise<AffiliateL
 }
 
 /**
- * Track an affiliate link click.
+ * Track an affiliate link click via API.
+ * @deprecated Use trackClick from tracking.ts instead - it includes deduplication and GA.
  */
-export async function trackClick(data: {
+export async function trackClickAPI(data: {
   productId: string;
   retailerId: string;
   sessionId?: string;
