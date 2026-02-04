@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a73c6adbc9
 
 ## Recent changes
+- 48f18cf 2026-02-03 fix: resolve trackClick export conflict between data.ts and tracking.ts
 - a39ef9d 2026-02-03 docs: add project cleanup report for PFAS transition
 - 02419fa 2026-01-29 fix: correct project name mismatch in cli-cursor-test metadata
 - 7379fc6 2026-01-29 fix: remove orphaned submodule references for Cloudflare build
@@ -28,7 +29,6 @@ Hash: a73c6adbc9
 - 943b048 2026-01-06 feat(patterns): add Firecrawl + WYSIWYG preview integration plan
 - e494025 2026-01-06 feat: implement composer mode differentiation - registry/hybrid/auto
 - 4f96a29 2026-01-06 fix: preview header overflow + Hero image support
-- fc11c89 2026-01-06 fix: standardize theme colors - use --primary CSS variable consistently
 
 ## Agent Governance Structure
 
