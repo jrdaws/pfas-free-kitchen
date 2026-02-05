@@ -1,6 +1,6 @@
 'use client';
 
-import type { Product } from '@/lib/types';
+import type { Product, SearchFacets } from '@/lib/types';
 import { useCompare } from '@/contexts/CompareContext';
 import { ProductCard } from './ProductCard';
 import styles from './ProductGrid.module.css';
@@ -8,9 +8,10 @@ import styles from './ProductGrid.module.css';
 interface ProductGridProps {
   products: Product[];
   showCompare?: boolean;
+  facets?: SearchFacets; // Optional facets for future filter UI
 }
 
-export function ProductGrid({ products, showCompare = true }: ProductGridProps) {
+export function ProductGrid({ products, showCompare = true, facets: _facets }: ProductGridProps) {
   const { items, toggleItem, isInCompare, canAdd } = useCompare();
 
   if (products.length === 0) {
