@@ -13,9 +13,10 @@ const nextConfig = {
     ],
     formats: ['image/avif', 'image/webp'],
   },
-  experimental: {
-    typedRoutes: true,
-  },
+  // Disabled typedRoutes - causes build errors with dynamic routes
+  // experimental: {
+  //   typedRoutes: true,
+  // },
 };
 
 module.exports = nextConfig;

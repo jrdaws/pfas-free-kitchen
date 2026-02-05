@@ -12,6 +12,7 @@ import type {
   Pagination,
   VerificationTier,
   RetailerLink,
+  EducationBanner,
 } from './types';
 
 // ============================================================
@@ -65,13 +66,7 @@ export interface SearchSuggestions {
   relatedTerms: string[];
 }
 
-export interface EducationBanner {
-  type: string;
-  title: string;
-  message: string;
-  link: string;
-  linkText: string;
-}
+// EducationBanner is defined in types.ts
 
 export interface AutocompleteResponse {
   suggestions: AutocompleteSuggestion[];

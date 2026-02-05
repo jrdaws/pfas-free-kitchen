@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a73c6adbc9
 
 ## Recent changes
+- e88b6c5 2026-02-05 fix: add facets prop to ProductGrid component
 - acb961f 2026-02-04 chore: force vercel redeploy with latest fix
 - 2c4f695 2026-02-04 chore: trigger vercel rebuild
 - 48f18cf 2026-02-03 fix: resolve trackClick export conflict between data.ts and tracking.ts
@@ -28,7 +29,6 @@ Hash: a73c6adbc9
 - 03590ea 2026-01-06 feat(research): create website analysis script + pattern library specs
 - 9ed157a 2026-01-06 chore: move completed tasks to done folder
 - 1aee286 2026-01-06 feat(patterns): create pattern library foundation
-- 943b048 2026-01-06 feat(patterns): add Firecrawl + WYSIWYG preview integration plan
 
 ## Agent Governance Structure
 

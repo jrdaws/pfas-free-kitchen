@@ -46,7 +46,7 @@ const MOCK_RESULTS: Product[] = [
     brand: { id: 'b2', name: 'All-Clad', slug: 'all-clad' },
     category: { id: 'c1', name: 'Skillets', slug: 'skillets', path: [] },
     materialSummary: 'Stainless steel, aluminum core',
-    coatingSummary: null,
+    coatingSummary: undefined,
     verification: { tier: 4, unknowns: [], hasEvidence: true, evidenceCount: 3 },
     components: [],
     retailers: [
@@ -94,7 +94,7 @@ const MOCK_RESULTS: Product[] = [
     brand: { id: 'b5', name: 'Demeyere', slug: 'demeyere' },
     category: { id: 'c3', name: 'Saucepans', slug: 'saucepans', path: [] },
     materialSummary: 'Stainless steel, 5-ply',
-    coatingSummary: null,
+    coatingSummary: undefined,
     verification: { tier: 4, unknowns: [], hasEvidence: true, evidenceCount: 3 },
     components: [],
     retailers: [{ id: 'r6', retailer: { id: 'ret1', name: 'Amazon' }, url: '#' }],

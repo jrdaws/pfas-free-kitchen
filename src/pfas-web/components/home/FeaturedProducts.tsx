@@ -7,7 +7,8 @@ import type { Product } from '@/lib/types';
 import styles from './FeaturedProducts.module.css';
 
 // Mock data for featured products - replace with API call
-const FEATURED_PRODUCTS: Product[] = [
+// Using type assertion as mock data doesn't have all required Product fields
+const FEATURED_PRODUCTS = [
   {
     id: '1',
     slug: 'all-clad-d3-stainless-steel-fry-pan',
@@ -20,6 +21,7 @@ const FEATURED_PRODUCTS: Product[] = [
       tier: 4,
       hasEvidence: true,
       evidenceCount: 3,
+      unknowns: [],
     },
     retailers: [],
   },
@@ -35,6 +37,7 @@ const FEATURED_PRODUCTS: Product[] = [
       tier: 4,
       hasEvidence: true,
       evidenceCount: 2,
+      unknowns: [],
     },
     retailers: [],
   },
@@ -50,6 +53,7 @@ const FEATURED_PRODUCTS: Product[] = [
       tier: 3,
       hasEvidence: true,
       evidenceCount: 4,
+      unknowns: [],
     },
     retailers: [],
   },
@@ -65,6 +69,7 @@ const FEATURED_PRODUCTS: Product[] = [
       tier: 4,
       hasEvidence: true,
       evidenceCount: 2,
+      unknowns: [],
     },
     retailers: [],
   },
@@ -80,10 +85,11 @@ const FEATURED_PRODUCTS: Product[] = [
       tier: 3,
       hasEvidence: true,
       evidenceCount: 2,
+      unknowns: [],
     },
     retailers: [],
   },
-];
+] as unknown as Product[];
 
 export function FeaturedProducts() {
   const scrollRef = useRef<HTMLDivElement>(null);
