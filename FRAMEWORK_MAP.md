@@ -4,6 +4,7 @@ Generated: (deterministic)
 Hash: a73c6adbc9
 
 ## Recent changes
+- a44e55e 2026-02-05 fix: resolve TypeScript errors for production build
 - e88b6c5 2026-02-05 fix: add facets prop to ProductGrid component
 - acb961f 2026-02-04 chore: force vercel redeploy with latest fix
 - 2c4f695 2026-02-04 chore: trigger vercel rebuild
@@ -28,7 +29,6 @@ Hash: a73c6adbc9
 - 9a67c90 2026-01-06 feat: implement ProjectDefinition type system
 - 03590ea 2026-01-06 feat(research): create website analysis script + pattern library specs
 - 9ed157a 2026-01-06 chore: move completed tasks to done folder
-- 1aee286 2026-01-06 feat(patterns): create pattern library foundation
 
 ## Agent Governance Structure
 
