@@ -1,7 +1,0 @@
-{
-  "template": "flagship-saas",
-  "version": "0.1.0",
-  "capabilities": ["auth", "billing", "subscriptions", "user-management", "analytics", "multi-tenancy"],
-  "description": "Enterprise-grade SaaS application with advanced features",
-  "framework_version": "0.3.0"
-}

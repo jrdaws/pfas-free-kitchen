@@ -1,7 +1,0 @@
-{
-  "template": "dashboard",
-  "version": "0.1.0",
-  "capabilities": [],
-  "description": "Dashboard template with Next.js",
-  "framework_version": "0.3.0"
-}

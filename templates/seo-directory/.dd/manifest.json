@@ -1,7 +1,0 @@
-{
-  "template": "seo-directory",
-  "version": "0.1.0",
-  "capabilities": ["seo", "directory-listing", "search", "filtering"],
-  "description": "SEO-optimized directory template",
-  "framework_version": "0.3.0"
-}

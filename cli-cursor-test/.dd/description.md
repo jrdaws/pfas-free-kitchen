@@ -1,1 +1,0 @@
-Full-featured test project with all required integrations

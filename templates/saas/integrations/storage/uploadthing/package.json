@@ -1,9 +1,0 @@
-{
-  "name": "@dawson-does/integration-uploadthing",
-  "version": "1.0.0",
-  "private": true,
-  "dependencies": {
-    "uploadthing": "^7.4.0",
-    "@uploadthing/react": "^7.1.0"
-  }
-}

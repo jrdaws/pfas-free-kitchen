@@ -1,8 +1,0 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <!-- Magnifying glass -->
-  <circle cx="10" cy="10" r="6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  <path d="M14.5 14.5L20 20" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-  <!-- Sparkle accent -->
-  <path d="M17 4L17.5 5.5L19 6L17.5 6.5L17 8L16.5 6.5L15 6L16.5 5.5L17 4Z" fill="currentColor"/>
-</svg>
-

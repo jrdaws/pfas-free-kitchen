@@ -1,7 +1,0 @@
-{
-  "dependencies": {
-    "@novu/node": "^0.24.0",
-    "@novu/notification-center": "^0.24.0"
-  }
-}
-

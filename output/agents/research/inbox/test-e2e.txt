@@ -1,8 +1,0 @@
-PROJECT: E2E Test Project
-TYPE: SaaS Application
-STYLE: Modern, minimal
-ASSET TARGET: TEMPLATE
-TEMPLATE NAME: saas
-
-NEEDED ASSETS:
-- 1 Hero image (test)

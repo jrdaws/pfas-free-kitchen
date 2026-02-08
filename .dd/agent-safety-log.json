@@ -1,9 +1,0 @@
-[
-  {
-    "timestamp": "2025-12-20T10:54:06.701Z",
-    "checkpointId": "agent-checkpoint-1766228046570",
-    "description": "Test checkpoint from CLI",
-    "action": "created",
-    "error": null
-  }
-]
