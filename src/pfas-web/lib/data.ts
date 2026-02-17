@@ -1,10 +1,18 @@
 /**
  * PFAS-Free Kitchen - Data Fetching Functions
- * 
+ *
  * Server-side data fetching for Next.js pages.
+ * Uses local product data when API is unavailable (no backend deployed).
  */
 
 import { APIClient, APIError, isAPIError } from './api';
+import {
+  getLocalProducts,
+  getLocalProduct,
+  getLocalCategories,
+  getLocalRelatedProducts,
+  getLocalSearchResults,
+} from './localData';
 import type {
   Product,
   Category,
@@ -111,6 +119,7 @@ export interface ClickTrackResponse {
 
 /**
  * Fetch products with filters and pagination.
+ * Falls back to local product data when API is unavailable.
  */
 export async function fetchProducts(params: {
   category?: string;
@@ -124,34 +133,45 @@ export async function fetchProducts(params: {
   limit?: number;
   sort?: string;
 }): Promise<ProductListResponse> {
-  const searchParams = new URLSearchParams();
+  try {
+    const searchParams = new URLSearchParams();
+    if (params.category) searchParams.set('category_id', params.category);
+    if (params.tier?.length) {
+      params.tier.forEach(t => searchParams.append('tier', t.toString()));
+    }
+    if (params.material?.length) {
+      params.material.forEach(m => searchParams.append('material', m));
+    }
+    if (params.coating?.length) {
+      params.coating.forEach(c => searchParams.append('coating_type', c));
+    }
+    if (params.retailer) searchParams.set('retailer_id', params.retailer);
+    if (params.induction !== undefined) searchParams.set('induction_compatible', String(params.induction));
+    if (params.ovenSafeMin) searchParams.set('oven_safe_min_temp', params.ovenSafeMin.toString());
+    if (params.page) searchParams.set('page', params.page.toString());
+    if (params.limit) searchParams.set('limit', params.limit.toString());
+    if (params.sort) searchParams.set('sort', params.sort);
 
-  if (params.category) searchParams.set('category_id', params.category);
-  if (params.tier?.length) {
-    params.tier.forEach(t => searchParams.append('tier', t.toString()));
+    const queryString = searchParams.toString();
+    const endpoint = queryString ? `/products?${queryString}` : '/products';
+    return await APIClient.get<ProductListResponse>(endpoint);
+  } catch (error) {
+    return getLocalProducts({
+      category: params.category,
+      tier: params.tier,
+      material: params.material,
+      coating: params.coating,
+      page: params.page,
+      limit: params.limit,
+      sort: params.sort,
+    });
   }
-  if (params.material?.length) {
-    params.material.forEach(m => searchParams.append('material', m));
-  }
-  if (params.coating?.length) {
-    params.coating.forEach(c => searchParams.append('coating_type', c));
-  }
-  if (params.retailer) searchParams.set('retailer_id', params.retailer);
-  if (params.induction !== undefined) searchParams.set('induction_compatible', String(params.induction));
-  if (params.ovenSafeMin) searchParams.set('oven_safe_min_temp', params.ovenSafeMin.toString());
-  if (params.page) searchParams.set('page', params.page.toString());
-  if (params.limit) searchParams.set('limit', params.limit.toString());
-  if (params.sort) searchParams.set('sort', params.sort);
-
-  const queryString = searchParams.toString();
-  const endpoint = queryString ? `/products?${queryString}` : '/products';
-
-  return APIClient.get<ProductListResponse>(endpoint);
 }
 
 /**
  * Fetch a single product by slug or ID.
  * Returns null if not found.
+ * Falls back to local product data when API is unavailable.
  */
 export async function fetchProduct(slugOrId: string): Promise<ProductDetailResponse | null> {
   try {
@@ -160,19 +180,28 @@ export async function fetchProduct(slugOrId: string): Promise<ProductDetailRespo
     if (isAPIError(error) && error.isNotFound) {
       return null;
     }
-    throw error;
+    const local = getLocalProduct(slugOrId);
+    return local ?? null;
   }
 }
 
 /**
  * Fetch comparison data for multiple products.
+ * Falls back to local product data when API is unavailable.
  */
 export async function fetchProductComparison(productIds: string[]): Promise<{
   products: Product[];
   differences: string[];
 }> {
-  const ids = productIds.join(',');
-  return APIClient.get(`/products/compare?ids=${ids}`);
+  try {
+    const ids = productIds.join(',');
+    return await APIClient.get(`/products/compare?ids=${ids}`);
+  } catch {
+    const products = productIds
+      .map(id => getLocalProduct(id))
+      .filter((p): p is Product => p !== null);
+    return { products, differences: [] };
+  }
 }
 
 /**
@@ -204,14 +233,20 @@ export async function fetchVerification(productId: string): Promise<{
 
 /**
  * Fetch all categories with hierarchy.
+ * Falls back to local categories when API is unavailable.
  */
 export async function fetchCategories(): Promise<CategoryNode[]> {
-  const response = await APIClient.get<CategoryTreeResponse>('/categories');
-  return response.data;
+  try {
+    const response = await APIClient.get<CategoryTreeResponse | CategoryNode[]>('/categories');
+    return Array.isArray(response) ? response : (response.data ?? []);
+  } catch {
+    return getLocalCategories();
+  }
 }
 
 /**
  * Search products.
+ * Falls back to local search when API is unavailable.
  */
 export async function searchProducts(
   query: string,
@@ -224,22 +259,29 @@ export async function searchProducts(
     limit?: number;
   }
 ): Promise<SearchResponse> {
-  const params = new URLSearchParams({ q: query });
-
-  if (filters) {
-    if (filters.categoryId) params.set('category_id', filters.categoryId);
-    if (filters.tier?.length) {
-      filters.tier.forEach(t => params.append('tier', t.toString()));
+  try {
+    const params = new URLSearchParams({ q: query });
+    if (filters) {
+      if (filters.categoryId) params.set('category_id', filters.categoryId);
+      if (filters.tier?.length) {
+        filters.tier.forEach(t => params.append('tier', t.toString()));
+      }
+      if (filters.material?.length) {
+        filters.material.forEach(m => params.append('material', m));
+      }
+      if (filters.sort) params.set('sort', filters.sort);
+      if (filters.page) params.set('page', filters.page.toString());
+      if (filters.limit) params.set('limit', filters.limit.toString());
     }
-    if (filters.material?.length) {
-      filters.material.forEach(m => params.append('material', m));
-    }
-    if (filters.sort) params.set('sort', filters.sort);
-    if (filters.page) params.set('page', filters.page.toString());
-    if (filters.limit) params.set('limit', filters.limit.toString());
+    return await APIClient.get(`/search?${params.toString()}`);
+  } catch {
+    return getLocalSearchResults(query, {
+      categoryId: filters?.categoryId,
+      tier: filters?.tier,
+      page: filters?.page,
+      limit: filters?.limit,
+    });
   }
-
-  return APIClient.get(`/search?${params.toString()}`);
 }
 
 /**
@@ -255,9 +297,34 @@ export async function fetchAutocomplete(query: string, limit?: number): Promise<
 
 /**
  * Fetch affiliate links for a product.
+ * Falls back to building links from product retailers when API is unavailable.
  */
 export async function fetchAffiliateLinks(productId: string): Promise<AffiliateLinksResponse> {
-  return APIClient.get(`/products/${productId}/affiliate-links`);
+  try {
+    return await APIClient.get(`/products/${productId}/affiliate-links`);
+  } catch {
+    const product = getLocalProduct(productId);
+    if (!product?.retailers?.length) {
+      return {
+        productId,
+        links: [],
+        gridDisclosure: 'As an Amazon Associate and affiliate partner, we earn from qualifying purchases.',
+      };
+    }
+    const links: AffiliateLink[] = product.retailers.map(r => ({
+      retailerId: r.retailer.id,
+      retailerName: r.retailer.name,
+      retailerIcon: r.retailer.logoUrl || '',
+      affiliateUrl: r.url,
+      disclosureRequired: true,
+      disclosureText: 'We earn a commission when you purchase through our links.',
+    }));
+    return {
+      productId,
+      links,
+      gridDisclosure: 'As an Amazon Associate and affiliate partner, we earn from qualifying purchases.',
+    };
+  }
 }
 
 /**
@@ -319,6 +386,7 @@ export async function fetchEvidence(evidenceId: string): Promise<{
 
 /**
  * Fetch related products for a category.
+ * Falls back to local products when API is unavailable.
  */
 export async function fetchRelatedProducts(
   categoryId?: string,
@@ -326,7 +394,7 @@ export async function fetchRelatedProducts(
   limit: number = 8
 ): Promise<Product[]> {
   if (!categoryId) return [];
-  
+
   try {
     const params = new URLSearchParams({
       category_id: categoryId,
@@ -335,12 +403,10 @@ export async function fetchRelatedProducts(
     if (excludeProductId) {
       params.set('exclude', excludeProductId);
     }
-    
     const response = await APIClient.get<ProductListResponse>(`/products?${params.toString()}`);
     return response.data.filter(p => p.id !== excludeProductId).slice(0, limit);
-  } catch (error) {
-    console.error('Failed to fetch related products:', error);
-    return [];
+  } catch {
+    return getLocalRelatedProducts(categoryId, excludeProductId, limit);
   }
 }
 

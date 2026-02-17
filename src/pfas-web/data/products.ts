@@ -1,34 +1,12 @@
 /**
  * PFAS-Free Kitchen Products Database
- * 
+ *
  * Real product data with affiliate links for Amazon, CJ Affiliate, and Awin networks.
- * 
- * AFFILIATE LINK SETUP:
- * - Amazon: Replace YOUR_AMAZON_TAG with your Associates tag (e.g., "pfasfreekitchen-20")
- * - CJ: Replace YOUR_CJ_PID with your CJ publisher ID
- * - Awin: Replace YOUR_AWIN_ID with your Awin publisher ID
+ * Uses affiliate IDs from lib/affiliate.ts
  */
 
 import type { Product, Brand, Category, VerificationTier } from '../lib/types';
-
-// ============================================================
-// AFFILIATE CONFIGURATION
-// ============================================================
-
-export const AFFILIATE_CONFIG = {
-  amazon: {
-    tag: 'YOUR_AMAZON_TAG', // Replace with your Amazon Associates tag
-    baseUrl: 'https://www.amazon.com/dp/',
-  },
-  cj: {
-    publisherId: 'YOUR_CJ_PID', // Replace with your CJ publisher ID
-    // CJ links are generated per-advertiser
-  },
-  awin: {
-    publisherId: 'YOUR_AWIN_ID', // Replace with your Awin publisher ID
-    baseUrl: 'https://www.awin1.com/cread.php',
-  },
-} as const;
+import { generateAmazonLink } from '../lib/affiliate';
 
 // ============================================================
 // BRANDS
@@ -191,29 +169,6 @@ export const RETAILERS = {
     logoUrl: '/images/retailers/sur-la-table.png',
   },
 } as const;
-
-// ============================================================
-// HELPER: Generate Amazon affiliate link
-// ============================================================
-
-export function generateAmazonLink(asin: string, tag?: string): string {
-  const affiliateTag = tag || AFFILIATE_CONFIG.amazon.tag;
-  return `${AFFILIATE_CONFIG.amazon.baseUrl}${asin}?tag=${affiliateTag}`;
-}
-
-// ============================================================
-// HELPER: Generate Awin affiliate link
-// ============================================================
-
-export function generateAwinLink(
-  merchantId: string, 
-  destinationUrl: string, 
-  publisherId?: string
-): string {
-  const pubId = publisherId || AFFILIATE_CONFIG.awin.publisherId;
-  const encodedUrl = encodeURIComponent(destinationUrl);
-  return `${AFFILIATE_CONFIG.awin.baseUrl}?awinmid=${merchantId}&awinaffid=${pubId}&ued=${encodedUrl}`;
-}
 
 // ============================================================
 // PRODUCTS DATABASE

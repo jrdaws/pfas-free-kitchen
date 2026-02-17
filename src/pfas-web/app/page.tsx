@@ -7,9 +7,16 @@ import {
   TrustSection,
   RecentlyViewed,
 } from '@/components/home';
+import { fetchProducts } from '@/lib';
 import styles from './page.module.css';
 
-export default function HomePage() {
+export default async function HomePage() {
+  const { data: featuredProducts } = await fetchProducts({
+    tier: [3, 4],
+    limit: 6,
+    sort: 'tier_desc',
+  });
+
   return (
     <div className={styles.page}>
       <HeroSection />
@@ -20,7 +27,7 @@ export default function HomePage() {
       
       <section className={`${styles.homeSection} ${styles.bgSubtle}`}>
         <div className={styles.sectionInner}>
-          <FeaturedProducts />
+          <FeaturedProducts products={featuredProducts} />
         </div>
       </section>
       

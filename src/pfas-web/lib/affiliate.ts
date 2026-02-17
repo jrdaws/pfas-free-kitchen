@@ -16,13 +16,13 @@ import { trackClick, generateUTMParams } from './tracking';
 export const AFFILIATE_IDS = {
   // Amazon Associates
   amazon: {
-    tag: 'YOUR_AMAZON_TAG', // e.g., 'pfasfreekitchen-20'
+    tag: 'pfasfreekitch-20', // e.g., 'pfasfreekitchen-20'
     enabled: true,
   },
 
   // CJ Affiliate (Commission Junction)
   cj: {
-    publisherId: 'YOUR_CJ_PID', // Your CJ Publisher ID
+    publisherId: '101660610', // Your CJ Publisher ID
     enabled: true,
     // Merchant-specific IDs (CJ calls these "advertisers")
     merchants: {
@@ -33,7 +33,7 @@ export const AFFILIATE_IDS = {
 
   // Awin
   awin: {
-    publisherId: 'YOUR_AWIN_ID', // Your Awin Publisher ID
+    publisherId: '2764342', // Your Awin Publisher ID
     enabled: true,
     // Merchant IDs (Awin calls these "merchants" or "advertisers")
     merchants: {
@@ -41,7 +41,7 @@ export const AFFILIATE_IDS = {
       // 'brand-name': '12345',
     } as Record<string, string>,
   },
-} as const;
+};
 
 // ============================================================
 // AFFILIATE NETWORK TYPES
