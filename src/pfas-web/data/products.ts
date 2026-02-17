@@ -3,10 +3,14 @@
  *
  * Real product data with affiliate links for Amazon, CJ Affiliate, and Awin networks.
  * Uses affiliate IDs from lib/affiliate.ts
+ * Amazon product images: populate data/amazon-images.json via npm run fetch-amazon-images
  */
 
 import type { Product, Brand, Category, VerificationTier } from '../lib/types';
 import { generateAmazonLink } from '../lib/affiliate';
+import amazonImages from './amazon-images.json';
+
+type AmazonImagesMap = Record<string, string | null>;
 
 // ============================================================
 // BRANDS
@@ -933,28 +937,64 @@ export const PRODUCTS: Product[] = [
 ];
 
 // ============================================================
+// AMAZON IMAGE ENRICHMENT
+// ============================================================
+
+function extractAsinFromUrl(url: string): string | null {
+  const match = url.match(/amazon\.(?:com|co\.uk|de|fr|it|es|ca)\/dp\/([A-Z0-9]{10})/i);
+  return match ? match[1].toUpperCase() : null;
+}
+
+function getAmazonImageForProduct(product: Product): string | null {
+  const amazonRetailer = product.retailers?.find(r =>
+    r.retailer.id === 'amazon' || r.url?.includes('amazon.')
+  );
+  if (!amazonRetailer?.url) return null;
+  const asin = extractAsinFromUrl(amazonRetailer.url);
+  if (!asin) return null;
+  const imageUrl = (amazonImages as AmazonImagesMap)[asin];
+  return imageUrl && typeof imageUrl === 'string' ? imageUrl : null;
+}
+
+function enrichWithAmazonImage(product: Product): Product {
+  const amazonImageUrl = getAmazonImageForProduct(product);
+  if (!amazonImageUrl) return product;
+
+  return {
+    ...product,
+    imageUrl: amazonImageUrl,
+    images: [
+      { url: amazonImageUrl, alt: product.name, isPrimary: true },
+      ...product.images.filter(img => img.url !== product.imageUrl).slice(0, 4),
+    ],
+  };
+}
+
+// ============================================================
 // HELPER FUNCTIONS
 // ============================================================
 
 /**
- * Get all products
+ * Get all products (with Amazon images when available)
  */
 export function getAllProducts(): Product[] {
-  return PRODUCTS;
+  return PRODUCTS.map(enrichWithAmazonImage);
 }
 
 /**
  * Get product by ID
  */
 export function getProductById(id: string): Product | undefined {
-  return PRODUCTS.find(p => p.id === id);
+  const product = PRODUCTS.find(p => p.id === id);
+  return product ? enrichWithAmazonImage(product) : undefined;
 }
 
 /**
  * Get product by slug
  */
 export function getProductBySlug(slug: string): Product | undefined {
-  return PRODUCTS.find(p => p.slug === slug);
+  const product = PRODUCTS.find(p => p.slug === slug);
+  return product ? enrichWithAmazonImage(product) : undefined;
 }
 
 /**

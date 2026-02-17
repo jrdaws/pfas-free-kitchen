@@ -22,7 +22,8 @@
     "lighthouse:ci": "npx @lhci/cli autorun",
     "validate": "npx tsx scripts/validation-report.ts",
     "validate:quick": "npm run typecheck && npm run lint && npm run build",
-    "precommit": "npm run typecheck && npm run lint"
+    "precommit": "npm run typecheck && npm run lint",
+    "fetch-amazon-images": "node scripts/fetch-amazon-images.mjs"
   },
   "dependencies": {
     "next": "^14.1.0",

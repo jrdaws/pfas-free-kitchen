@@ -32,6 +32,14 @@ const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
     name: 'Appliance Accessories',
     description: 'PFAS-free accessories for kitchen appliances',
   },
+  appliances: {
+    name: 'Appliances',
+    description: 'PFAS-free kitchen appliances and accessories',
+  },
+  utensils: {
+    name: 'Utensils',
+    description: 'PFAS-free kitchen utensils and tools',
+  },
 };
 
 interface CategoryPageProps {

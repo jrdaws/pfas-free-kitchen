@@ -10,6 +10,11 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      {
+        protocol: 'https',
+        hostname: 'm.media-amazon.com',
+        pathname: '/images/I/**',
+      },
     ],
     formats: ['image/avif', 'image/webp'],
   },

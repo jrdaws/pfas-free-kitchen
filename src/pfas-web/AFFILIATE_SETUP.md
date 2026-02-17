@@ -139,6 +139,18 @@ Some brands have direct affiliate programs with higher commissions:
 
 ---
 
+## Amazon Product Images
+
+To show the **exact same images** as Amazon (instead of placeholders):
+
+1. Apply for [Product Advertising API](https://affiliate-program.amazon.com/) access
+2. Add credentials to `.env.local`: `AMAZON_ACCESS_KEY`, `AMAZON_SECRET_KEY`
+3. Run: `npm install amazon-paapi && npm run fetch-amazon-images`
+
+See `docs/AMAZON_IMAGES_SETUP.md` for full instructions.
+
+---
+
 ## Next Steps
 
 1. [ ] Replace `YOUR_AMAZON_TAG` with your actual Amazon Associates tag
