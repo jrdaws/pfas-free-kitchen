@@ -14,6 +14,7 @@ const NAV_ITEMS = [
   { href: '/cookware', label: 'Cookware' },
   { href: '/bakeware', label: 'Bakeware' },
   { href: '/food-storage', label: 'Food Storage' },
+  { href: '/appliances', label: 'Appliances' },
   { href: '/education', label: 'Learn' },
 ];
 

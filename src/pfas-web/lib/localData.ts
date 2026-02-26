@@ -15,9 +15,9 @@ import { TOP_PICKS_BY_CATEGORY } from '../data/top-picks';
 // Map browse route slugs to product category slugs
 const BROWSE_TO_PRODUCT_CATEGORY: Record<string, string[]> = {
   cookware: ['fry-pans', 'cookware-sets', 'dutch-ovens', 'sauce-pans', 'cutting-boards'],
-  bakeware: ['bakeware', 'baking-dishes', 'baking-sheets'],
-  storage: ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags'],
-  'food-storage': ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags'],
+  bakeware: ['bakeware', 'baking-dishes', 'baking-sheets', 'silicone-mats'],
+  storage: ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags', 'beeswax-wraps'],
+  'food-storage': ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags', 'beeswax-wraps'],
   utensils: [],
   'utensils-tools': [],
   appliances: ['blenders', 'coffee-makers', 'kettles', 'rice-cookers', 'slow-cookers', 'toaster-ovens', 'espresso-machines', 'induction-cooktops', 'food-processors', 'stand-mixers', 'air-fryers'],
@@ -146,16 +146,11 @@ export function getLocalCategories() {
   slugs.add('cookware');
   slugs.add('bakeware');
   slugs.add('storage');
+  slugs.add('appliances');
 
   return Array.from(slugs).map(slug => {
     const subCats = BROWSE_TO_PRODUCT_CATEGORY[slug] || [];
-    const count = slug === 'cookware' 
-      ? getAllProducts().filter(p => matchesBrowseCategory(p, 'cookware')).length
-      : slug === 'storage'
-        ? getAllProducts().filter(p => matchesBrowseCategory(p, 'storage')).length
-        : slug === 'bakeware'
-          ? getAllProducts().filter(p => matchesBrowseCategory(p, 'bakeware')).length
-          : 0;
+    const count = getAllProducts().filter(p => matchesBrowseCategory(p, slug)).length;
     return {
       id: slug,
       name: slug.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
