@@ -129,6 +129,11 @@ export async function fetchProducts(params: {
   brand?: string[];
   features?: string[];
   coating?: string[];
+  price?: string[];
+  size?: string[];
+  productType?: string[];
+  handle?: string[];
+  origin?: string[];
   retailer?: string;
   induction?: boolean;
   ovenSafeMin?: number;
@@ -154,6 +159,21 @@ export async function fetchProducts(params: {
     if (params.coating?.length) {
       params.coating.forEach(c => searchParams.append('coating_type', c));
     }
+    if (params.price?.length) {
+      params.price.forEach(p => searchParams.append('price', p));
+    }
+    if (params.size?.length) {
+      params.size.forEach(s => searchParams.append('size', s));
+    }
+    if (params.productType?.length) {
+      params.productType.forEach(t => searchParams.append('product_type', t));
+    }
+    if (params.handle?.length) {
+      params.handle.forEach(h => searchParams.append('handle', h));
+    }
+    if (params.origin?.length) {
+      params.origin.forEach(o => searchParams.append('origin', o));
+    }
     if (params.retailer) searchParams.set('retailer_id', params.retailer);
     if (params.induction !== undefined) searchParams.set('induction_compatible', String(params.induction));
     if (params.ovenSafeMin) searchParams.set('oven_safe_min_temp', params.ovenSafeMin.toString());
@@ -172,6 +192,11 @@ export async function fetchProducts(params: {
       brand: params.brand,
       features: params.features,
       coating: params.coating,
+      price: params.price,
+      size: params.size,
+      productType: params.productType,
+      handle: params.handle,
+      origin: params.origin,
       page: params.page,
       limit: params.limit,
       sort: params.sort,

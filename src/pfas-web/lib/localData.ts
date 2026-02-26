@@ -84,22 +84,205 @@ function matchesBrand(product: Product, brandFilters: string[]): boolean {
 
 // Check if product matches feature filters
 function matchesFeatures(product: Product, featureFilters: string[]): boolean {
-  if (!product.features) return false;
-  
   for (const feature of featureFilters) {
     switch (feature) {
       case 'induction':
-        if (!product.features.inductionCompatible) return false;
+        if (!product.features?.inductionCompatible) return false;
         break;
       case 'dishwasher':
-        if (!product.features.dishwasherSafe) return false;
+        if (!product.features?.dishwasherSafe) return false;
         break;
       case 'oven-500':
-        if (!product.features.ovenSafeTempF || product.features.ovenSafeTempF < 500) return false;
+        if (!product.features?.ovenSafeTempF || product.features.ovenSafeTempF < 500) return false;
+        break;
+      case 'plastic-free':
+        if (!isPlasticFree(product)) return false;
+        break;
+      case 'lid-included':
+        if (!hasLidIncluded(product)) return false;
         break;
     }
   }
   return true;
+}
+
+// Check if product has no plastic food contact
+function isPlasticFree(product: Product): boolean {
+  const plasticKeywords = ['plastic', 'tritan', 'bpa-free plastic', 'copolyester'];
+  const searchText = [
+    product.materialSummary || '',
+    ...product.components.map(c => c.material?.name || ''),
+  ].join(' ').toLowerCase();
+  
+  return !plasticKeywords.some(keyword => searchText.includes(keyword));
+}
+
+// Check if product includes a lid
+function hasLidIncluded(product: Product): boolean {
+  const lidKeywords = ['with lid', 'lid included', 'includes lid', 'w/ lid'];
+  const searchText = [
+    product.name,
+    product.description || '',
+  ].join(' ').toLowerCase();
+  
+  return lidKeywords.some(keyword => searchText.includes(keyword));
+}
+
+// Check if product matches price range
+function matchesPrice(product: Product, priceFilters: string[]): boolean {
+  const price = product.retailers?.[0]?.price;
+  if (!price) return false;
+  
+  for (const range of priceFilters) {
+    switch (range) {
+      case 'under-50':
+        if (price < 50) return true;
+        break;
+      case '50-100':
+        if (price >= 50 && price <= 100) return true;
+        break;
+      case '100-200':
+        if (price > 100 && price <= 200) return true;
+        break;
+      case '200-plus':
+        if (price > 200) return true;
+        break;
+    }
+  }
+  return false;
+}
+
+// Country/origin keywords mapping
+const ORIGIN_KEYWORDS: Record<string, string[]> = {
+  'usa': ['made in usa', 'made in the usa', 'made in america', 'american made', 'usa made'],
+  'france': ['made in france', 'french made'],
+  'germany': ['made in germany', 'german made'],
+  'japan': ['made in japan', 'japanese made'],
+  'italy': ['made in italy', 'italian made'],
+  'belgium': ['made in belgium', 'belgian made'],
+  'china': ['made in china', 'chinese made'],
+};
+
+// Check if product matches origin
+function matchesOrigin(product: Product, originFilters: string[]): boolean {
+  const searchText = [
+    product.name,
+    product.description || '',
+    product.brand.name,
+  ].join(' ').toLowerCase();
+  
+  for (const origin of originFilters) {
+    const keywords = ORIGIN_KEYWORDS[origin] || [];
+    if (keywords.some(keyword => searchText.includes(keyword))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Size keywords mapping
+const SIZE_KEYWORDS: Record<string, string[]> = {
+  '8-inch': ['8 inch', '8"', '8-inch', '20cm', '20 cm'],
+  '10-inch': ['10 inch', '10"', '10-inch', '10.25"', '10.5"', '25cm', '26cm'],
+  '12-inch': ['12 inch', '12"', '12-inch', '30cm', '30 cm'],
+  '14-inch': ['14 inch', '14"', '14-inch', '35cm', '36cm'],
+};
+
+// Check if product matches size
+function matchesSize(product: Product, sizeFilters: string[]): boolean {
+  const searchText = [
+    product.name,
+    product.description || '',
+  ].join(' ').toLowerCase();
+  
+  for (const size of sizeFilters) {
+    const keywords = SIZE_KEYWORDS[size] || [];
+    if (keywords.some(keyword => searchText.includes(keyword))) {
+      return true;
+    }
+  }
+  return false;
+}
+
+// Coating keywords mapping
+const COATING_KEYWORDS: Record<string, string[]> = {
+  'ceramic': ['ceramic', 'thermolon', 'cerastone'],
+  'enameled': ['enamel', 'enameled', 'porcelain enamel'],
+  'seasoned': ['seasoned', 'pre-seasoned'],
+  'none': ['bare', 'uncoated', 'raw'],
+};
+
+// Check if product matches coating type
+function matchesCoating(product: Product, coatingFilters: string[]): boolean {
+  const searchText = [
+    product.coatingSummary || '',
+    product.materialSummary || '',
+    product.description || '',
+  ].join(' ').toLowerCase();
+  
+  for (const coating of coatingFilters) {
+    if (coating === 'none') {
+      // Check for no coating / bare metal / glass
+      const noCoatingIndicators = ['none', 'no coating', 'uncoated', 'bare'];
+      const hasNoCoating = noCoatingIndicators.some(k => searchText.includes(k)) ||
+        (!product.coatingSummary || product.coatingSummary.toLowerCase() === 'none');
+      if (hasNoCoating) return true;
+    } else {
+      const keywords = COATING_KEYWORDS[coating] || [];
+      if (keywords.some(keyword => searchText.includes(keyword))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// Check if product is a set or single piece
+function matchesProductType(product: Product, typeFilters: string[]): boolean {
+  const searchText = [
+    product.name,
+    product.description || '',
+  ].join(' ').toLowerCase();
+  
+  for (const type of typeFilters) {
+    if (type === 'set') {
+      const setKeywords = ['set', 'piece set', '-piece', 'kit', 'collection'];
+      if (setKeywords.some(keyword => searchText.includes(keyword))) {
+        return true;
+      }
+    } else if (type === 'single') {
+      const setKeywords = ['set', 'piece set', '-piece', 'kit', 'collection'];
+      if (!setKeywords.some(keyword => searchText.includes(keyword))) {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
+// Handle type keywords mapping
+const HANDLE_KEYWORDS: Record<string, string[]> = {
+  'stay-cool': ['stay-cool', 'stay cool', 'cool-grip', 'cool grip', 'heat-resistant handle', 'cool touch'],
+  'metal': ['stainless steel handle', 'metal handle', 'steel handle', 'iron handle'],
+  'removable': ['removable handle', 'detachable handle'],
+  'silicone': ['silicone handle', 'silicone grip', 'silicone-wrapped'],
+};
+
+// Check if product matches handle type
+function matchesHandle(product: Product, handleFilters: string[]): boolean {
+  const searchText = [
+    product.name,
+    product.description || '',
+    product.materialSummary || '',
+  ].join(' ').toLowerCase();
+  
+  for (const handle of handleFilters) {
+    const keywords = HANDLE_KEYWORDS[handle] || [];
+    if (keywords.some(keyword => searchText.includes(keyword))) {
+      return true;
+    }
+  }
+  return false;
 }
 
 function buildEmptyFacets(): SearchFacets {
@@ -147,6 +330,11 @@ export interface ProductListParams {
   brand?: string[];
   features?: string[];
   coating?: string[];
+  price?: string[];
+  size?: string[];
+  productType?: string[];
+  handle?: string[];
+  origin?: string[];
   page?: number;
   limit?: number;
   sort?: string;
@@ -189,6 +377,36 @@ export function getLocalProducts(params: ProductListParams): {
   // Filter by features
   if (params.features?.length) {
     products = products.filter(p => matchesFeatures(p, params.features!));
+  }
+
+  // Filter by price range
+  if (params.price?.length) {
+    products = products.filter(p => matchesPrice(p, params.price!));
+  }
+
+  // Filter by coating type
+  if (params.coating?.length) {
+    products = products.filter(p => matchesCoating(p, params.coating!));
+  }
+
+  // Filter by size
+  if (params.size?.length) {
+    products = products.filter(p => matchesSize(p, params.size!));
+  }
+
+  // Filter by product type (set vs single)
+  if (params.productType?.length) {
+    products = products.filter(p => matchesProductType(p, params.productType!));
+  }
+
+  // Filter by handle type
+  if (params.handle?.length) {
+    products = products.filter(p => matchesHandle(p, params.handle!));
+  }
+
+  // Filter by country of origin
+  if (params.origin?.length) {
+    products = products.filter(p => matchesOrigin(p, params.origin!));
   }
 
   // Sort

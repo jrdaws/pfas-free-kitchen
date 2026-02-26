@@ -104,6 +104,57 @@ const FEATURE_OPTIONS: FilterOption[] = [
   { value: 'induction', label: 'Induction Compatible' },
   { value: 'dishwasher', label: 'Dishwasher Safe' },
   { value: 'oven-500', label: 'Oven Safe 500°F+' },
+  { value: 'plastic-free', label: 'No Plastic Food Contact' },
+  { value: 'lid-included', label: 'Lid Included' },
+];
+
+// Price range filter options
+const PRICE_OPTIONS: FilterOption[] = [
+  { value: 'under-50', label: 'Under $50' },
+  { value: '50-100', label: '$50 - $100' },
+  { value: '100-200', label: '$100 - $200' },
+  { value: '200-plus', label: '$200+' },
+];
+
+// Country of origin filter options
+const ORIGIN_OPTIONS: FilterOption[] = [
+  { value: 'usa', label: 'Made in USA' },
+  { value: 'france', label: 'Made in France' },
+  { value: 'germany', label: 'Made in Germany' },
+  { value: 'japan', label: 'Made in Japan' },
+  { value: 'italy', label: 'Made in Italy' },
+  { value: 'belgium', label: 'Made in Belgium' },
+  { value: 'china', label: 'Made in China' },
+];
+
+// Size filter options (for cookware)
+const SIZE_OPTIONS: FilterOption[] = [
+  { value: '8-inch', label: '8 inch' },
+  { value: '10-inch', label: '10 inch' },
+  { value: '12-inch', label: '12 inch' },
+  { value: '14-inch', label: '14 inch' },
+];
+
+// Coating type filter options
+const COATING_OPTIONS: FilterOption[] = [
+  { value: 'ceramic', label: 'Ceramic Coated' },
+  { value: 'enameled', label: 'Enameled' },
+  { value: 'seasoned', label: 'Seasoned (Cast Iron)' },
+  { value: 'none', label: 'No Coating (Bare Metal/Glass)' },
+];
+
+// Product type filter options
+const PRODUCT_TYPE_OPTIONS: FilterOption[] = [
+  { value: 'single', label: 'Single Piece' },
+  { value: 'set', label: 'Set' },
+];
+
+// Handle type filter options
+const HANDLE_OPTIONS: FilterOption[] = [
+  { value: 'stay-cool', label: 'Stay-Cool Handles' },
+  { value: 'metal', label: 'Metal Handles' },
+  { value: 'removable', label: 'Removable Handles' },
+  { value: 'silicone', label: 'Silicone Handles' },
 ];
 
 export interface FilterSidebarProps {
@@ -199,7 +250,7 @@ export function FilterSidebar({ facets, onClose, isMobile = false }: FilterSideb
 
   // Check if any filters are active
   const hasActiveFilters = () => {
-    const filterParams = ['tier', 'category', 'material', 'brand', 'features'];
+    const filterParams = ['tier', 'category', 'material', 'brand', 'features', 'price', 'coating', 'size', 'productType', 'handle', 'origin'];
     return filterParams.some(param => searchParams.has(param));
   };
 
@@ -300,10 +351,16 @@ export function FilterSidebar({ facets, onClose, isMobile = false }: FilterSideb
       
       <div className={styles.sections}>
         {renderSection('tier', 'Verification Tier', facets?.tiers || TIER_OPTIONS, 'tier')}
+        {renderSection('price', 'Price Range', PRICE_OPTIONS, 'price')}
         {renderSection('category', 'Category', facets?.categories || CATEGORY_OPTIONS, 'category')}
         {renderSection('material', 'Material', facets?.materials || MATERIAL_OPTIONS, 'material')}
+        {renderSection('coating', 'Coating Type', COATING_OPTIONS, 'coating')}
         {renderSection('brand', 'Brand', facets?.brands || BRAND_OPTIONS, 'brand', true, 5)}
         {renderSection('features', 'Features', facets?.features || FEATURE_OPTIONS, 'features')}
+        {renderSection('size', 'Size', SIZE_OPTIONS, 'size')}
+        {renderSection('productType', 'Product Type', PRODUCT_TYPE_OPTIONS, 'productType')}
+        {renderSection('handle', 'Handle Type', HANDLE_OPTIONS, 'handle')}
+        {renderSection('origin', 'Country of Origin', ORIGIN_OPTIONS, 'origin')}
       </div>
       
       {isMobile && (
