@@ -84,6 +84,7 @@ export const BRANDS: Record<string, Brand> = {
   tatung: { id: 'tatung', name: 'Tatung', slug: 'tatung', logoUrl: undefined },
   breville: { id: 'breville', name: 'Breville', slug: 'breville', logoUrl: undefined },
   bincoo: { id: 'bincoo', name: 'Bincoo', slug: 'bincoo', logoUrl: undefined },
+  tribest: { id: 'tribest', name: 'Tribest', slug: 'tribest', logoUrl: undefined },
   duxtop: { id: 'duxtop', name: 'Duxtop', slug: 'duxtop', logoUrl: undefined },
   kitchenaid: { id: 'kitchenaid', name: 'KitchenAid', slug: 'kitchenaid', logoUrl: undefined },
   fritaire: { id: 'fritaire', name: 'Fritaire', slug: 'fritaire', logoUrl: undefined },
@@ -2485,6 +2486,41 @@ export const PRODUCTS: Product[] = [
     features: { dishwasherSafe: true },
   },
 
+  // User-requested cutting boards
+  {
+    id: 'xl-titanium-ebony-cutting-board',
+    name: 'XL Double Sided Titanium Stainless Steel & Ebony Wood Cutting Board 17.7" x 11.6"',
+    slug: 'xl-titanium-ebony-cutting-board',
+    description: 'Premium double-sided cutting board with titanium stainless steel on one side and ebony wood on the other. Features juice groove, non-toxic, and dishwasher safe.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'XL Titanium Ebony Cutting Board', isPrimary: true }],
+    brand: BRANDS.generic,
+    category: CATEGORIES['cutting-boards'],
+    materialSummary: 'Titanium stainless steel / Ebony wood',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All metal and wood products', rationale: 'Titanium stainless steel and natural wood are inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'metal-side', role: 'body', roleLabel: 'Metal Side', material: { id: 'titanium-stainless', name: 'Titanium Stainless Steel', slug: 'titanium-stainless' }, pfasStatus: 'verified_free' }, { id: 'wood-side', role: 'body', roleLabel: 'Wood Side', material: { id: 'ebony-wood', name: 'Ebony Wood', slug: 'ebony-wood' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'xl-titanium-ebony-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0D7M64ZHQ'), price: 60, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  {
+    id: 'teakhaus-edge-grain-handles',
+    name: 'Teakhaus Edge Grain Teak Cutting Board with Handles',
+    slug: 'teakhaus-edge-grain-handles',
+    description: 'FSC-certified teak edge grain cutting board with built-in handles. Naturally antimicrobial and knife-friendly.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Teakhaus Cutting Board', isPrimary: true }],
+    brand: BRANDS.teakhaus,
+    category: CATEGORIES['cutting-boards'],
+    materialSummary: 'FSC-certified teak wood',
+    coatingSummary: 'None - natural wood',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All wood products', rationale: 'Natural teak wood is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Board', material: { id: 'teak-wood', name: 'Teak Wood', slug: 'teak-wood' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'teakhaus-edge-handles-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0725F78LB'), price: 55, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
   // ============================================================
   // ADDITIONAL BAKEWARE
   // ============================================================
@@ -3217,6 +3253,24 @@ export const PRODUCTS: Product[] = [
     components: [{ id: 'container', role: 'body', roleLabel: 'Container', material: { id: 'tritan', name: 'Eastman Tritan', slug: 'tritan' }, pfasStatus: 'verified_free' }],
     retailers: [{ id: 'vitamix-advance-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0150AJMM6'), price: 150, currency: 'USD', inStock: true }],
     features: { dishwasherSafe: false },
+  },
+
+  // Tribest Glass Blender - ZERO PLASTIC FOOD CONTACT
+  {
+    id: 'tribest-glass-personal-blender',
+    name: 'Tribest Glass Personal Blender PBG-5050',
+    slug: 'tribest-glass-personal-blender',
+    description: 'Personal blender with tempered glass containers and stainless steel blades. Zero plastic food contact - glass and stainless steel only.',
+    imageUrl: '/placeholders/products/container-placeholder.svg',
+    images: [{ url: '/placeholders/products/container-placeholder.svg', alt: 'Tribest Glass Personal Blender', isPrimary: true }],
+    brand: BRANDS.tribest,
+    category: CATEGORIES['blenders'],
+    materialSummary: 'Tempered glass container, stainless steel blades',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Glass blenders', rationale: 'Zero plastic food contact - tempered glass container and stainless steel blades are inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'container', role: 'body', roleLabel: 'Container', material: { id: 'tempered-glass', name: 'Tempered Glass', slug: 'tempered-glass' }, pfasStatus: 'verified_free' }, { id: 'blades', role: 'other', roleLabel: 'Blades', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'tribest-glass-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00GGFHPGY'), price: 179, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
   },
 
   {
