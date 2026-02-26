@@ -7,6 +7,7 @@ export { SearchHeader, type SearchHeaderProps, type SortOption, type ViewMode } 
 export { ActiveFilters } from './ActiveFilters';
 export { MobileFilterButton } from './MobileFilterButton';
 export { EmptyResults } from './EmptyResults';
+export { SortDropdown } from './SortDropdown';
 
 // Mobile components
 export { MobileSearchOverlay } from './MobileSearchOverlay';

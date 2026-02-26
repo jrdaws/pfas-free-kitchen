@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { AffiliateDisclosure } from '@/components/layout';
 import { ProductGrid, CategoryTopPicks } from '@/components/product';
+import { FilterSidebar, SortDropdown, MobileFilterButton } from '@/components/search';
 import { Pagination, LoadingSpinner } from '@/components/ui';
 import { fetchProducts, fetchCategories, fetchTopPicks, isAPIError } from '@/lib';
 import styles from './category.module.css';
@@ -82,6 +83,7 @@ async function CategoryContent({
             topThree={topPicks.topThree}
           />
         )}
+        <SortDropdown totalCount={data.pagination.totalCount} />
         <ProductGrid products={data.data} facets={data.facets} />
         <Pagination
           page={data.pagination.page}
@@ -131,14 +133,27 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         </div>
       </header>
 
-      <div className={styles.content}>
-        {/* Affiliate Disclosure */}
-        <AffiliateDisclosure />
+      <div className={styles.layout}>
+        {/* Filter Sidebar - Desktop */}
+        <aside className={styles.sidebar}>
+          <FilterSidebar />
+        </aside>
 
-        {/* Product Grid with Suspense */}
-        <Suspense fallback={<LoadingState />}>
-          <CategoryContent category={params.category} searchParams={searchParams} />
-        </Suspense>
+        {/* Main Content */}
+        <div className={styles.main}>
+          {/* Mobile Filter Button */}
+          <div className={styles.mobileControls}>
+            <MobileFilterButton />
+          </div>
+
+          {/* Affiliate Disclosure */}
+          <AffiliateDisclosure />
+
+          {/* Product Grid with Suspense */}
+          <Suspense fallback={<LoadingState />}>
+            <CategoryContent category={params.category} searchParams={searchParams} />
+          </Suspense>
+        </div>
       </div>
     </div>
   );
