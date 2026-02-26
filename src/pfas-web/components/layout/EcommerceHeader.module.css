@@ -52,6 +52,11 @@
   height: 100%;
 }
 
+.logoImage {
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
 .logoText {
   display: flex;
   flex-direction: column;

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import styles from './Footer.module.css';
 
 const FOOTER_LINKS = {
@@ -40,7 +41,13 @@ export function Footer() {
           {/* Brand */}
           <div className={styles.brand}>
             <Link href="/" className={styles.logo}>
-              <span className={styles.logoIcon}>🍳</span>
+              <Image 
+                src="/logo.png" 
+                alt="PFAS-Free Kitchen" 
+                width={36} 
+                height={36} 
+                className={styles.logoImage}
+              />
               <span className={styles.logoText}>
                 PFAS-Free<span className={styles.logoAccent}>Kitchen</span>
               </span>

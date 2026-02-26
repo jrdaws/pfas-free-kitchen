@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Navigation } from './Navigation';
 import { SearchBar } from '../search/SearchBar';
@@ -14,7 +15,14 @@ export function Header() {
       <div className={styles.container}>
         {/* Logo */}
         <Link href="/" className={styles.logo}>
-          <span className={styles.logoIcon}>🍳</span>
+          <Image 
+            src="/logo.png" 
+            alt="PFAS-Free Kitchen" 
+            width={40} 
+            height={40} 
+            className={styles.logoImage}
+            priority
+          />
           <span className={styles.logoText}>
             PFAS-Free<span className={styles.logoAccent}>Kitchen</span>
           </span>

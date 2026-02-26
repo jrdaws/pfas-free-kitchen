@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useCompare } from '@/contexts/CompareContext';
 import { EcommerceSearchBar } from './EcommerceSearchBar';
 import { MegaMenu } from './MegaMenu';
@@ -54,29 +55,19 @@ export function EcommerceHeader() {
 
             {/* Logo */}
             <Link href="/" className={styles.logo}>
-            <div className={styles.logoIcon}>
-              <svg viewBox="0 0 32 32" fill="none" aria-hidden="true">
-                <circle cx="16" cy="16" r="14" fill="currentColor" opacity="0.1" />
-                <path 
-                  d="M16 6C10.477 6 6 10.477 6 16s4.477 10 10 10 10-4.477 10-10S21.523 6 16 6zm0 2c4.411 0 8 3.589 8 8s-3.589 8-8 8-8-3.589-8-8 3.589-8 8-8z" 
-                  fill="currentColor" 
-                  opacity="0.3"
-                />
-                <path 
-                  d="M16 10a6 6 0 00-6 6c0 1.5.5 2.8 1.4 3.8l.1.1c.1.1.2.2.4.3.2.2.5.4.8.5.5.3 1.1.5 1.7.6.5.1 1 .2 1.6.2s1.1-.1 1.6-.2c.6-.1 1.2-.3 1.7-.6.3-.2.6-.4.8-.5.1-.1.3-.2.4-.3l.1-.1A6 6 0 0016 10z" 
-                  fill="currentColor"
-                />
-                <path 
-                  d="M13 14.5c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5S15.3 16 14.5 16 13 15.3 13 14.5zM16 14.5c0-.8.7-1.5 1.5-1.5s1.5.7 1.5 1.5S18.3 16 17.5 16 16 15.3 16 14.5z" 
-                  fill="var(--color-primary-100)"
-                />
-              </svg>
-            </div>
-            <div className={styles.logoText}>
-              <span className={styles.logoMain}>PFAS-Free</span>
-              <span className={styles.logoSub}>Kitchen</span>
-            </div>
-          </Link>
+              <Image 
+                src="/logo.png" 
+                alt="PFAS-Free Kitchen" 
+                width={44} 
+                height={44} 
+                className={styles.logoImage}
+                priority
+              />
+              <div className={styles.logoText}>
+                <span className={styles.logoMain}>PFAS-Free</span>
+                <span className={styles.logoSub}>Kitchen</span>
+              </div>
+            </Link>
 
           {/* Search - desktop */}
           <div className={styles.searchWrapper}>
