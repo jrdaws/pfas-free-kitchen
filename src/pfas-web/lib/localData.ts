@@ -32,18 +32,18 @@ function matchesBrowseCategory(product: Product, browseSlug: string): boolean {
 
 // Material slug mapping - maps filter values to keywords found in product data
 const MATERIAL_KEYWORDS: Record<string, string[]> = {
-  'stainless-steel': ['stainless steel', 'stainless', '18/10', '18/8', '304', '316', 'tri-ply', '5-ply', 'clad'],
-  'cast-iron': ['cast iron', 'cast-iron'],
-  'carbon-steel': ['carbon steel', 'carbon-steel'],
-  'ceramic': ['ceramic', 'thermolon', 'cerastone'],
+  'stainless-steel': ['stainless steel', 'stainless', '18/10', '18/8', '304', '316', 'tri-ply', '5-ply', 'clad', '3-ply', '7-ply'],
+  'cast-iron': ['cast iron', 'cast-iron', 'castiron'],
+  'carbon-steel': ['carbon steel', 'carbon-steel', 'blue steel'],
+  'ceramic': ['ceramic', 'thermolon', 'cerastone', 'ceramic-coated', 'ceramic coated'],
   'glass': ['glass', 'borosilicate', 'pyrex', 'tempered glass'],
-  'enamel': ['enamel', 'enameled', 'porcelain enamel'],
-  'titanium': ['titanium'],
-  'copper': ['copper'],
-  'aluminum': ['aluminum', 'aluminium', 'hard-anodized'],
-  'silicone': ['silicone'],
-  'wood': ['wood', 'teak', 'maple', 'acacia', 'walnut', 'bamboo', 'ebony'],
-  'plastic': ['plastic', 'tritan', 'bpa-free'],
+  'enamel': ['enamel', 'enameled', 'porcelain enamel', 'enamel coating', 'enamel interior'],
+  'titanium': ['titanium', '100% titanium', 'pure titanium'],
+  'copper': ['copper', 'copper core', 'copper element'],
+  'aluminum': ['aluminum', 'aluminium', 'hard-anodized', 'hard anodized', 'anodized', 'aluminized'],
+  'silicone': ['silicone', 'platinum silicone', 'food-grade silicone'],
+  'wood': ['wood', 'teak', 'maple', 'acacia', 'walnut', 'bamboo', 'ebony', 'wooden'],
+  'plastic': ['plastic', 'tritan', 'bpa-free plastic', 'copolyester'],
 };
 
 // Extract normalized material slugs from a product
@@ -52,6 +52,7 @@ function getProductMaterials(product: Product): string[] {
   const searchText = [
     product.materialSummary || '',
     product.coatingSummary || '',
+    product.description || '',
     ...product.components.map(c => c.material?.name || ''),
     ...product.components.map(c => c.material?.slug || ''),
   ].join(' ').toLowerCase();
@@ -154,13 +155,53 @@ function matchesPrice(product: Product, priceFilters: string[]): boolean {
 
 // Country/origin keywords mapping
 const ORIGIN_KEYWORDS: Record<string, string[]> = {
-  'usa': ['made in usa', 'made in the usa', 'made in america', 'american made', 'usa made'],
-  'france': ['made in france', 'french made'],
-  'germany': ['made in germany', 'german made'],
-  'japan': ['made in japan', 'japanese made'],
-  'italy': ['made in italy', 'italian made'],
-  'belgium': ['made in belgium', 'belgian made'],
-  'china': ['made in china', 'chinese made'],
+  'usa': ['made in usa', 'made in the usa', 'made in america', 'american made', 'usa made', 'american-made', 'made in indiana', 'made in tennessee', 'since 1896'],
+  'france': ['made in france', 'french made', 'french-made', 'france', 'french carbon steel', 'french ceramic', 'since 1925'],
+  'germany': ['made in germany', 'german made', 'german-made', 'germany', 'german-engineered', 'german engineering'],
+  'japan': ['made in japan', 'japanese made', 'japanese-made', 'japan', 'japanese'],
+  'italy': ['made in italy', 'italian made', 'italian-made', 'italy', 'italian'],
+  'belgium': ['made in belgium', 'belgian made', 'belgian-made', 'belgium', 'belgian'],
+  'china': ['made in china', 'chinese made', 'chinese-made', 'china'],
+};
+
+// Brand to country mapping (known brand origins)
+const BRAND_ORIGINS: Record<string, string> = {
+  'le-creuset': 'france',
+  'lecreuset': 'france',
+  'staub': 'france',
+  'de-buyer': 'france',
+  'debuyer': 'france',
+  'matfer-bourgeat': 'france',
+  'matferbourgeat': 'france',
+  'emile-henry': 'france',
+  'emilehenry': 'france',
+  'silpat': 'france',
+  'demeyere': 'belgium',
+  'zwilling': 'germany',
+  'lodge': 'usa',
+  'field-company': 'usa',
+  'fieldcompany': 'usa',
+  'finex': 'usa',
+  'smithey': 'usa',
+  'usa-pan': 'usa',
+  'usapan': 'usa',
+  'pyrex': 'usa',
+  'anchor-hocking': 'usa',
+  'anchorhocking': 'usa',
+  'vitamix': 'usa',
+  'blendtec': 'usa',
+  'kitchenaid': 'usa',
+  'cuisinart': 'usa',
+  'all-clad': 'usa',
+  'allclad': 'usa',
+  'made-in': 'usa',
+  'madein': 'usa',
+  'john-boos': 'usa',
+  'johnboos': 'usa',
+  'nordic-ware': 'usa',
+  'nordicware': 'usa',
+  'zojirushi': 'japan',
+  'tatung': 'japan',
 };
 
 // Check if product matches origin
@@ -172,6 +213,13 @@ function matchesOrigin(product: Product, originFilters: string[]): boolean {
   ].join(' ').toLowerCase();
   
   for (const origin of originFilters) {
+    // Check brand origin mapping first
+    const brandSlug = product.brand.slug || product.brand.id;
+    if (BRAND_ORIGINS[brandSlug] === origin) {
+      return true;
+    }
+    
+    // Then check keywords in product text
     const keywords = ORIGIN_KEYWORDS[origin] || [];
     if (keywords.some(keyword => searchText.includes(keyword))) {
       return true;
@@ -206,10 +254,10 @@ function matchesSize(product: Product, sizeFilters: string[]): boolean {
 
 // Coating keywords mapping
 const COATING_KEYWORDS: Record<string, string[]> = {
-  'ceramic': ['ceramic', 'thermolon', 'cerastone'],
-  'enameled': ['enamel', 'enameled', 'porcelain enamel'],
-  'seasoned': ['seasoned', 'pre-seasoned'],
-  'none': ['bare', 'uncoated', 'raw'],
+  'ceramic': ['ceramic', 'thermolon', 'cerastone', 'ceramic coated', 'ceramic-coated'],
+  'enameled': ['enamel', 'enameled', 'porcelain enamel', 'enamel coating', 'enamel interior', 'matte enamel'],
+  'seasoned': ['seasoned', 'pre-seasoned', 'preseasoned', 'vegetable oil seasoning', 'oil seasoning'],
+  'none': ['bare', 'uncoated', 'raw', 'no coating', 'no synthetic', 'none'],
 };
 
 // Check if product matches coating type
@@ -218,15 +266,31 @@ function matchesCoating(product: Product, coatingFilters: string[]): boolean {
     product.coatingSummary || '',
     product.materialSummary || '',
     product.description || '',
+    ...product.components.map(c => c.coating?.name || ''),
   ].join(' ').toLowerCase();
   
   for (const coating of coatingFilters) {
     if (coating === 'none') {
-      // Check for no coating / bare metal / glass
-      const noCoatingIndicators = ['none', 'no coating', 'uncoated', 'bare'];
-      const hasNoCoating = noCoatingIndicators.some(k => searchText.includes(k)) ||
-        (!product.coatingSummary || product.coatingSummary.toLowerCase() === 'none');
-      if (hasNoCoating) return true;
+      // Check for no coating / bare metal / glass / stainless steel / cast iron without enamel
+      const coatingSummary = (product.coatingSummary || '').toLowerCase();
+      const isNoCoating = 
+        !coatingSummary || 
+        coatingSummary === 'none' || 
+        coatingSummary.includes('no coating') ||
+        coatingSummary.includes('none -') ||
+        coatingSummary.includes('uncoated') ||
+        coatingSummary.includes('natural');
+      
+      // Also check for bare materials like stainless steel, glass, titanium
+      const bareMaterials = ['stainless steel', 'glass', 'titanium', 'aluminum', 'copper'];
+      const isBare = bareMaterials.some(m => 
+        product.materialSummary?.toLowerCase().includes(m) && 
+        !searchText.includes('coated') && 
+        !searchText.includes('enamel') &&
+        !searchText.includes('ceramic')
+      );
+      
+      if (isNoCoating || isBare) return true;
     } else {
       const keywords = COATING_KEYWORDS[coating] || [];
       if (keywords.some(keyword => searchText.includes(keyword))) {
