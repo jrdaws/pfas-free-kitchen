@@ -117,6 +117,26 @@ export const CATEGORIES: Record<string, Category> = {
     id: 'cutting-boards', name: 'Cutting Boards', slug: 'cutting-boards',
     path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'cutting-boards', name: 'Cutting Boards', slug: 'cutting-boards' }],
   },
+  'skillets': {
+    id: 'skillets', name: 'Skillets & Frying Pans', slug: 'skillets',
+    path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'skillets', name: 'Skillets', slug: 'skillets' }],
+  },
+  'saucepans': {
+    id: 'saucepans', name: 'Saucepans', slug: 'saucepans',
+    path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'saucepans', name: 'Saucepans', slug: 'saucepans' }],
+  },
+  'stock-pots': {
+    id: 'stock-pots', name: 'Stock Pots', slug: 'stock-pots',
+    path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'stock-pots', name: 'Stock Pots', slug: 'stock-pots' }],
+  },
+  'woks': {
+    id: 'woks', name: 'Woks', slug: 'woks',
+    path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'woks', name: 'Woks', slug: 'woks' }],
+  },
+  'grill-pans': {
+    id: 'grill-pans', name: 'Grill Pans', slug: 'grill-pans',
+    path: [{ id: 'cookware', name: 'Cookware', slug: 'cookware' }, { id: 'grill-pans', name: 'Grill Pans', slug: 'grill-pans' }],
+  },
 
   // Bakeware
   'bakeware': {
@@ -130,6 +150,26 @@ export const CATEGORIES: Record<string, Category> = {
   'baking-sheets': {
     id: 'baking-sheets', name: 'Baking Sheets', slug: 'baking-sheets',
     path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'baking-sheets', name: 'Baking Sheets', slug: 'baking-sheets' }],
+  },
+  'sheets': {
+    id: 'sheets', name: 'Baking Sheets', slug: 'sheets',
+    path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'sheets', name: 'Baking Sheets', slug: 'sheets' }],
+  },
+  'cake-pans': {
+    id: 'cake-pans', name: 'Cake Pans', slug: 'cake-pans',
+    path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'cake-pans', name: 'Cake Pans', slug: 'cake-pans' }],
+  },
+  'muffin-tins': {
+    id: 'muffin-tins', name: 'Muffin Tins', slug: 'muffin-tins',
+    path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'muffin-tins', name: 'Muffin Tins', slug: 'muffin-tins' }],
+  },
+  'loaf-pans': {
+    id: 'loaf-pans', name: 'Loaf Pans', slug: 'loaf-pans',
+    path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'loaf-pans', name: 'Loaf Pans', slug: 'loaf-pans' }],
+  },
+  'pie-dishes': {
+    id: 'pie-dishes', name: 'Pie Dishes', slug: 'pie-dishes',
+    path: [{ id: 'bakeware', name: 'Bakeware', slug: 'bakeware' }, { id: 'pie-dishes', name: 'Pie Dishes', slug: 'pie-dishes' }],
   },
 
   // Food Storage
@@ -3869,7 +3909,333 @@ export const PRODUCTS: Product[] = [
     retailers: [{ id: 'kitchenaid-mixing-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0CZ129K8L'), price: 70, currency: 'USD', inStock: true }],
     features: { dishwasherSafe: true },
   },
+
+  // ============================================================
+  // WOKS
+  // ============================================================
+
+  {
+    id: 'lodge-cast-iron-wok-14',
+    name: 'Lodge 14 Inch Cast Iron Wok',
+    slug: 'lodge-cast-iron-wok-14',
+    description: 'Pre-seasoned cast iron wok for high-heat stir-frying. Made in USA. Flat bottom works on all cooktops.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Lodge Cast Iron Wok', isPrimary: true }],
+    brand: BRANDS.lodge,
+    category: CATEGORIES['woks'],
+    materialSummary: 'Cast iron',
+    coatingSummary: 'Pre-seasoned with vegetable oil',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All Lodge cast iron', rationale: 'Cast iron with natural oil seasoning is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Wok Body', material: { id: 'cast-iron', name: 'Cast Iron', slug: 'cast-iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'lodge-wok-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00063RWUM'), price: 50, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: false },
+  },
+
+  {
+    id: 'debuyer-carbon-steel-wok',
+    name: 'de Buyer Mineral B Carbon Steel Wok 12.5"',
+    slug: 'debuyer-carbon-steel-wok',
+    description: 'French carbon steel wok with beeswax finish. 99% iron construction, develops natural non-stick patina.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'de Buyer Carbon Steel Wok', isPrimary: true }],
+    brand: BRANDS.debuyer,
+    category: CATEGORIES['woks'],
+    materialSummary: 'Carbon steel',
+    coatingSummary: 'Organic beeswax finish',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All carbon steel', rationale: 'Carbon steel with natural beeswax is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Wok Body', material: { id: 'carbon-steel', name: 'Carbon Steel', slug: 'carbon-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'debuyer-wok-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00462QP0W'), price: 90, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 600, dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // GRILL PANS
+  // ============================================================
+
+  {
+    id: 'lodge-grill-pan-square',
+    name: 'Lodge Square Cast Iron Grill Pan 10.5"',
+    slug: 'lodge-grill-pan-square',
+    description: 'Pre-seasoned cast iron grill pan with raised ridges. Perfect for indoor grilling. Made in USA.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Lodge Grill Pan', isPrimary: true }],
+    brand: BRANDS.lodge,
+    category: CATEGORIES['grill-pans'],
+    materialSummary: 'Cast iron',
+    coatingSummary: 'Pre-seasoned with vegetable oil',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All Lodge cast iron', rationale: 'Cast iron with natural oil seasoning is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'cast-iron', name: 'Cast Iron', slug: 'cast-iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'lodge-grillpan-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00008GKDQ'), price: 30, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: false },
+  },
+
+  {
+    id: 'lecreuset-grill-pan-square',
+    name: 'Le Creuset Signature Square Skillet Grill 10.25"',
+    slug: 'lecreuset-grill-pan-square',
+    description: 'Enameled cast iron grill pan made in France. Interior enamel is PFAS-free.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Le Creuset Grill Pan', isPrimary: true }],
+    brand: BRANDS.lecreuset,
+    category: CATEGORIES['grill-pans'],
+    materialSummary: 'Enameled cast iron',
+    coatingSummary: 'Enamel coating',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All Le Creuset enameled cast iron', rationale: 'Enamel is glass-based and inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'cast-iron', name: 'Enameled Cast Iron', slug: 'cast-iron' }, coating: { id: 'enamel', name: 'Enamel', slug: 'enamel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'lecreuset-grillpan-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00005QFSP'), price: 200, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // STOCK POTS
+  // ============================================================
+
+  {
+    id: 'allclad-d3-stockpot-8qt',
+    name: 'All-Clad D3 Stainless 8 Qt Stock Pot with Lid',
+    slug: 'allclad-d3-stockpot-8qt',
+    description: '3-ply stainless steel stock pot made in USA. No coatings - inherently PFAS-free.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'All-Clad Stock Pot', isPrimary: true }],
+    brand: BRANDS.allclad,
+    category: CATEGORIES['stock-pots'],
+    materialSummary: '3-ply stainless steel with aluminum core',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel cookware', rationale: 'Stainless steel is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pot Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'allclad-stockpot-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00005RGQM'), price: 250, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 600, dishwasherSafe: true },
+  },
+
+  {
+    id: 'tramontina-stockpot-12qt',
+    name: 'Tramontina Gourmet Tri-Ply Clad 12 Qt Stock Pot',
+    slug: 'tramontina-stockpot-12qt',
+    description: 'Tri-ply stainless steel stock pot. Large capacity for stocks, soups, and batch cooking.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Tramontina Stock Pot', isPrimary: true }],
+    brand: BRANDS.tramontina,
+    category: CATEGORIES['stock-pots'],
+    materialSummary: 'Tri-ply stainless steel',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel cookware', rationale: 'Stainless steel is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pot Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'tramontina-stockpot-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B009HBKQ16'), price: 100, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // SAUCEPANS
+  // ============================================================
+
+  {
+    id: 'allclad-d3-saucepan-2qt',
+    name: 'All-Clad D3 Stainless 2 Qt Sauce Pan with Lid',
+    slug: 'allclad-d3-saucepan-2qt',
+    description: '3-ply stainless steel saucepan made in USA. Perfect for sauces, grains, and reheating.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'All-Clad Saucepan', isPrimary: true }],
+    brand: BRANDS.allclad,
+    category: CATEGORIES['saucepans'],
+    materialSummary: '3-ply stainless steel with aluminum core',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel cookware', rationale: 'Stainless steel is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'allclad-saucepan-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00005RGQU'), price: 150, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 600, dishwasherSafe: true },
+  },
+
+  {
+    id: 'demeyere-saucepan-2qt',
+    name: 'Demeyere Industry 5-Ply 2 Qt Saucepan',
+    slug: 'demeyere-saucepan-2qt',
+    description: 'Belgian-made 5-ply stainless steel saucepan. TriplInduc technology for perfect induction performance.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Demeyere Saucepan', isPrimary: true }],
+    brand: BRANDS.demeyere,
+    category: CATEGORIES['saucepans'],
+    materialSummary: '5-ply stainless steel',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel cookware', rationale: 'Stainless steel is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'demeyere-saucepan-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00027HUOK'), price: 160, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // CAKE PANS
+  // ============================================================
+
+  {
+    id: 'nordicware-bundt-pan',
+    name: 'Nordic Ware Original Bundt Pan 12 Cup',
+    slug: 'nordicware-bundt-pan',
+    description: 'Cast aluminum bundt pan made in USA. Legendary quality for over 75 years.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Nordic Ware Bundt Pan', isPrimary: true }],
+    brand: BRANDS.nordicware,
+    category: CATEGORIES['cake-pans'],
+    materialSummary: 'Cast aluminum',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All aluminum bakeware', rationale: 'Uncoated aluminum is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminum', name: 'Cast Aluminum', slug: 'aluminum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'nordicware-bundt-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00004S1CT'), price: 35, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 400, dishwasherSafe: true },
+  },
+
+  {
+    id: 'fatdaddios-cake-pan-round-9',
+    name: "Fat Daddio's Round Cake Pan 9\" x 2\"",
+    slug: 'fatdaddios-cake-pan-round-9',
+    description: 'Professional anodized aluminum cake pan. No coating - naturally non-reactive.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: "Fat Daddio's Cake Pan", isPrimary: true }],
+    brand: BRANDS.fatdaddios,
+    category: CATEGORIES['cake-pans'],
+    materialSummary: 'Anodized aluminum',
+    coatingSummary: 'None - anodized surface',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All aluminum bakeware', rationale: 'Anodized aluminum is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminum', name: 'Anodized Aluminum', slug: 'aluminum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'fatdaddios-cake-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0014CVI2K'), price: 15, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 550, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // MUFFIN TINS
+  // ============================================================
+
+  {
+    id: 'usapan-muffin-12cup',
+    name: 'USA Pan 12 Cup Muffin Pan',
+    slug: 'usapan-muffin-12cup',
+    description: 'American-made aluminized steel with Americoat silicone-based coating. PFAS, PTFE, and BPA free.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'USA Pan Muffin Pan', isPrimary: true }],
+    brand: BRANDS.usapan,
+    category: CATEGORIES['muffin-tins'],
+    materialSummary: 'Aluminized steel',
+    coatingSummary: 'Americoat silicone-based non-stick',
+    verification: { tier: 4 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'All USA Pan products', rationale: 'USA Pan Americoat is silicone-based and certified PFAS, PTFE, PFOA, PFOS free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminized-steel', name: 'Aluminized Steel', slug: 'aluminized-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'usapan-muffin-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0029JQEPY'), price: 20, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'nordicware-muffin-12cup',
+    name: 'Nordic Ware Natural Aluminum Muffin Pan 12 Cup',
+    slug: 'nordicware-muffin-12cup',
+    description: 'Commercial-grade aluminum muffin pan made in USA. No coatings.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Nordic Ware Muffin Pan', isPrimary: true }],
+    brand: BRANDS.nordicware,
+    category: CATEGORIES['muffin-tins'],
+    materialSummary: 'Natural aluminum',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All aluminum bakeware', rationale: 'Uncoated aluminum is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminum', name: 'Natural Aluminum', slug: 'aluminum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'nordicware-muffin-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0049C2S7U'), price: 18, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 400, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // LOAF PANS
+  // ============================================================
+
+  {
+    id: 'usapan-loaf-pan',
+    name: 'USA Pan 1 Pound Loaf Pan',
+    slug: 'usapan-loaf-pan',
+    description: 'American-made aluminized steel with Americoat silicone coating. Perfect for bread and meatloaf.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'USA Pan Loaf Pan', isPrimary: true }],
+    brand: BRANDS.usapan,
+    category: CATEGORIES['loaf-pans'],
+    materialSummary: 'Aluminized steel',
+    coatingSummary: 'Americoat silicone-based non-stick',
+    verification: { tier: 4 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'All USA Pan products', rationale: 'USA Pan Americoat is silicone-based and certified PFAS, PTFE, PFOA, PFOS free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminized-steel', name: 'Aluminized Steel', slug: 'aluminized-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'usapan-loaf-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0029JOC6I'), price: 15, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'pyrex-loaf-dish-glass',
+    name: 'Pyrex Easy Grab Glass Loaf Dish 1.5 Qt',
+    slug: 'pyrex-loaf-dish-glass',
+    description: 'Tempered glass loaf dish made in USA. Safe for oven, microwave, and freezer.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Pyrex Loaf Dish', isPrimary: true }],
+    brand: BRANDS.pyrex,
+    category: CATEGORIES['loaf-pans'],
+    materialSummary: 'Tempered glass',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All glass products', rationale: 'Glass is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Dish', material: { id: 'glass', name: 'Tempered Glass', slug: 'glass' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'pyrex-loaf-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00004SZ7P'), price: 12, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // PIE DISHES
+  // ============================================================
+
+  {
+    id: 'pyrex-pie-plate-glass-9',
+    name: 'Pyrex Glass Pie Plate 9 Inch',
+    slug: 'pyrex-pie-plate-glass-9',
+    description: 'Classic tempered glass pie plate made in USA. Clear glass lets you monitor browning.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Pyrex Pie Plate', isPrimary: true }],
+    brand: BRANDS.pyrex,
+    category: CATEGORIES['pie-dishes'],
+    materialSummary: 'Tempered glass',
+    coatingSummary: 'None',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All glass products', rationale: 'Glass is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Plate', material: { id: 'glass', name: 'Tempered Glass', slug: 'glass' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'pyrex-pie-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00004SZ7O'), price: 8, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'emilehenry-pie-dish-ceramic',
+    name: 'Emile Henry Pie Dish 9 Inch',
+    slug: 'emilehenry-pie-dish-ceramic',
+    description: 'French HR (High Resistance) ceramic pie dish. Goes from freezer to oven to table.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Emile Henry Pie Dish', isPrimary: true }],
+    brand: BRANDS.emilehenry,
+    category: CATEGORIES['pie-dishes'],
+    materialSummary: 'HR ceramic',
+    coatingSummary: 'None - glazed ceramic',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All ceramic products', rationale: 'Glazed ceramic is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Dish', material: { id: 'ceramic', name: 'HR Ceramic', slug: 'ceramic' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'emilehenry-pie-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0001XNMPC'), price: 45, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // SKILLETS (alias for fry-pans)
+  // ============================================================
+
+  {
+    id: 'lodge-skillet-12-helper',
+    name: 'Lodge 12 Inch Cast Iron Skillet with Helper Handle',
+    slug: 'lodge-skillet-12-helper',
+    description: 'Pre-seasoned cast iron skillet made in USA. Helper handle for easy lifting.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Lodge 12 Inch Skillet', isPrimary: true }],
+    brand: BRANDS.lodge,
+    category: CATEGORIES['skillets'],
+    materialSummary: 'Cast iron',
+    coatingSummary: 'Pre-seasoned with vegetable oil',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All Lodge cast iron', rationale: 'Cast iron with natural oil seasoning is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Skillet Body', material: { id: 'cast-iron', name: 'Cast Iron', slug: 'cast-iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'lodge-skillet-12-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00006JSUB'), price: 35, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 500, dishwasherSafe: false },
+  },
 ];
+
 
 // ============================================================
 // AMAZON IMAGE ENRICHMENT

@@ -14,8 +14,8 @@ import { TOP_PICKS_BY_CATEGORY } from '../data/top-picks';
 
 // Map browse route slugs to product category slugs
 const BROWSE_TO_PRODUCT_CATEGORY: Record<string, string[]> = {
-  cookware: ['fry-pans', 'cookware-sets', 'dutch-ovens', 'sauce-pans', 'cutting-boards'],
-  bakeware: ['bakeware', 'baking-dishes', 'baking-sheets', 'silicone-mats'],
+  cookware: ['fry-pans', 'cookware-sets', 'dutch-ovens', 'sauce-pans', 'cutting-boards', 'skillets', 'saucepans', 'stock-pots', 'woks', 'grill-pans'],
+  bakeware: ['bakeware', 'baking-dishes', 'baking-sheets', 'silicone-mats', 'sheets', 'cake-pans', 'muffin-tins', 'loaf-pans', 'pie-dishes'],
   storage: ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags', 'beeswax-wraps'],
   'food-storage': ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags', 'beeswax-wraps'],
   utensils: [],

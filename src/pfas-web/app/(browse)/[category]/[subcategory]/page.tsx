@@ -72,6 +72,11 @@ const SUBCATEGORY_INFO: Record<string, { name: string; description: string; pare
     description: 'PFAS-free frying pans and skillets',
     parent: 'cookware',
   },
+  skillets: {
+    name: 'Skillets & Frying Pans',
+    description: 'PFAS-free skillets and frying pans',
+    parent: 'cookware',
+  },
   'cookware-sets': {
     name: 'Cookware Sets',
     description: 'Complete PFAS-free cookware sets',
@@ -85,6 +90,26 @@ const SUBCATEGORY_INFO: Record<string, { name: string; description: string; pare
   'sauce-pans': {
     name: 'Sauce Pans',
     description: 'PFAS-free sauce pans and sauciers',
+    parent: 'cookware',
+  },
+  saucepans: {
+    name: 'Saucepans',
+    description: 'PFAS-free saucepans for everyday cooking',
+    parent: 'cookware',
+  },
+  'stock-pots': {
+    name: 'Stock Pots',
+    description: 'PFAS-free stock pots for soups and broths',
+    parent: 'cookware',
+  },
+  woks: {
+    name: 'Woks',
+    description: 'PFAS-free woks for stir-frying',
+    parent: 'cookware',
+  },
+  'grill-pans': {
+    name: 'Grill Pans',
+    description: 'PFAS-free grill pans for indoor grilling',
     parent: 'cookware',
   },
   'cutting-boards': {
@@ -119,9 +144,34 @@ const SUBCATEGORY_INFO: Record<string, { name: string; description: string; pare
     description: 'PFAS-free baking sheets and cookie pans',
     parent: 'bakeware',
   },
+  sheets: {
+    name: 'Baking Sheets',
+    description: 'PFAS-free baking sheets and cookie pans',
+    parent: 'bakeware',
+  },
   'baking-dishes': {
     name: 'Baking Dishes',
     description: 'PFAS-free baking dishes and casseroles',
+    parent: 'bakeware',
+  },
+  'cake-pans': {
+    name: 'Cake Pans',
+    description: 'PFAS-free cake pans and springform pans',
+    parent: 'bakeware',
+  },
+  'muffin-tins': {
+    name: 'Muffin Tins',
+    description: 'PFAS-free muffin tins and cupcake pans',
+    parent: 'bakeware',
+  },
+  'loaf-pans': {
+    name: 'Loaf Pans',
+    description: 'PFAS-free loaf pans for bread and meatloaf',
+    parent: 'bakeware',
+  },
+  'pie-dishes': {
+    name: 'Pie Dishes',
+    description: 'PFAS-free pie dishes and tart pans',
     parent: 'bakeware',
   },
   'silicone-mats': {
