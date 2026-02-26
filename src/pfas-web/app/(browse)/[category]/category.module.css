@@ -13,6 +13,29 @@
   max-width: 600px;
 }
 
+/* Breadcrumb Navigation */
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: 0.875rem;
+  margin-bottom: var(--space-3);
+  color: var(--text-secondary);
+}
+
+.breadcrumbLink {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.breadcrumbLink:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbSeparator {
+  color: var(--text-muted);
+}
+
 .title {
   font-size: 2rem;
   font-weight: 700;

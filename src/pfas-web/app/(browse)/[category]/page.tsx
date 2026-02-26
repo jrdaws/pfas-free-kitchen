@@ -41,6 +41,51 @@ const CATEGORY_INFO: Record<string, { name: string; description: string }> = {
     name: 'Utensils',
     description: 'PFAS-free kitchen utensils and tools',
   },
+  // Appliance subcategories
+  blenders: {
+    name: 'Blenders',
+    description: 'PFAS-free blenders with safe containers',
+  },
+  'coffee-makers': {
+    name: 'Coffee Makers & Grinders',
+    description: 'PFAS-free coffee makers and grinders',
+  },
+  kettles: {
+    name: 'Electric Kettles',
+    description: 'PFAS-free electric kettles',
+  },
+  'rice-cookers': {
+    name: 'Rice Cookers',
+    description: 'PFAS-free rice cookers with safe inner pots',
+  },
+  'slow-cookers': {
+    name: 'Slow Cookers',
+    description: 'PFAS-free slow cookers and crockpots',
+  },
+  'toaster-ovens': {
+    name: 'Toaster Ovens',
+    description: 'PFAS-free toaster ovens and countertop ovens',
+  },
+  'espresso-machines': {
+    name: 'Espresso Machines',
+    description: 'PFAS-free espresso and coffee machines',
+  },
+  'induction-cooktops': {
+    name: 'Induction Cooktops',
+    description: 'PFAS-free portable induction cooktops',
+  },
+  'food-processors': {
+    name: 'Food Processors',
+    description: 'PFAS-free food processors and choppers',
+  },
+  'stand-mixers': {
+    name: 'Stand Mixers',
+    description: 'PFAS-free stand mixers with stainless steel bowls',
+  },
+  'air-fryers': {
+    name: 'Air Fryers',
+    description: 'PFAS-free air fryers with safe baskets',
+  },
 };
 
 interface CategoryPageProps {

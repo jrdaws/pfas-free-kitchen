@@ -141,12 +141,29 @@ const CATEGORIES: Category[] = [
     href: '/appliances',
     groups: [
       {
-        title: 'Small Appliances',
+        title: 'Cooking Appliances',
+        items: [
+          { name: 'Air Fryers', href: '/appliances/air-fryers' },
+          { name: 'Induction Cooktops', href: '/appliances/induction-cooktops' },
+          { name: 'Rice Cookers', href: '/appliances/rice-cookers' },
+          { name: 'Slow Cookers', href: '/appliances/slow-cookers' },
+          { name: 'Toaster Ovens', href: '/appliances/toaster-ovens' },
+        ],
+      },
+      {
+        title: 'Beverage Appliances',
         items: [
           { name: 'Blenders', href: '/appliances/blenders' },
           { name: 'Coffee Makers', href: '/appliances/coffee-makers' },
-          { name: 'Toasters', href: '/appliances/toasters' },
-          { name: 'Air Fryers', href: '/appliances/air-fryers' },
+          { name: 'Espresso Machines', href: '/appliances/espresso-machines' },
+          { name: 'Electric Kettles', href: '/appliances/kettles' },
+        ],
+      },
+      {
+        title: 'Food Prep',
+        items: [
+          { name: 'Food Processors', href: '/appliances/food-processors' },
+          { name: 'Stand Mixers', href: '/appliances/stand-mixers' },
         ],
       },
     ],

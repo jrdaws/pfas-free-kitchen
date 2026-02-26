@@ -85,9 +85,15 @@ export function getLocalProducts(params: ProductListParams): {
 } {
   let products = getAllProducts();
 
-  // Filter by browse category (cookware, storage, bakeware, etc.)
+  // Filter by category
   if (params.category) {
-    products = products.filter(p => matchesBrowseCategory(p, params.category!));
+    // Check if it's a top-level browse category (cookware, storage, appliances, etc.)
+    if (BROWSE_TO_PRODUCT_CATEGORY[params.category]) {
+      products = products.filter(p => matchesBrowseCategory(p, params.category!));
+    } else {
+      // It's a specific subcategory slug (kettles, blenders, fry-pans, etc.)
+      products = products.filter(p => p.category.slug === params.category);
+    }
   }
 
   // Filter by tier
