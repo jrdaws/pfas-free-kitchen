@@ -30,6 +30,78 @@ function matchesBrowseCategory(product: Product, browseSlug: string): boolean {
   return productSlugs.includes(product.category.slug);
 }
 
+// Material slug mapping - maps filter values to keywords found in product data
+const MATERIAL_KEYWORDS: Record<string, string[]> = {
+  'stainless-steel': ['stainless steel', 'stainless', '18/10', '18/8', '304', '316', 'tri-ply', '5-ply', 'clad'],
+  'cast-iron': ['cast iron', 'cast-iron'],
+  'carbon-steel': ['carbon steel', 'carbon-steel'],
+  'ceramic': ['ceramic', 'thermolon', 'cerastone'],
+  'glass': ['glass', 'borosilicate', 'pyrex', 'tempered glass'],
+  'enamel': ['enamel', 'enameled', 'porcelain enamel'],
+  'titanium': ['titanium'],
+  'copper': ['copper'],
+  'aluminum': ['aluminum', 'aluminium', 'hard-anodized'],
+  'silicone': ['silicone'],
+  'wood': ['wood', 'teak', 'maple', 'acacia', 'walnut', 'bamboo', 'ebony'],
+  'plastic': ['plastic', 'tritan', 'bpa-free'],
+};
+
+// Extract normalized material slugs from a product
+function getProductMaterials(product: Product): string[] {
+  const materials = new Set<string>();
+  const searchText = [
+    product.materialSummary || '',
+    product.coatingSummary || '',
+    ...product.components.map(c => c.material?.name || ''),
+    ...product.components.map(c => c.material?.slug || ''),
+  ].join(' ').toLowerCase();
+
+  for (const [slug, keywords] of Object.entries(MATERIAL_KEYWORDS)) {
+    for (const keyword of keywords) {
+      if (searchText.includes(keyword.toLowerCase())) {
+        materials.add(slug);
+        break;
+      }
+    }
+  }
+  return Array.from(materials);
+}
+
+// Check if product matches material filter
+function matchesMaterial(product: Product, materialFilters: string[]): boolean {
+  const productMaterials = getProductMaterials(product);
+  return materialFilters.some(m => productMaterials.includes(m));
+}
+
+// Check if product matches brand filter
+function matchesBrand(product: Product, brandFilters: string[]): boolean {
+  return brandFilters.some(b => 
+    product.brand.slug === b || 
+    product.brand.id === b ||
+    product.brand.name.toLowerCase().replace(/\s+/g, '-') === b
+  );
+}
+
+// Check if product matches feature filters
+function matchesFeatures(product: Product, featureFilters: string[]): boolean {
+  if (!product.features) return false;
+  
+  for (const feature of featureFilters) {
+    switch (feature) {
+      case 'induction':
+        if (!product.features.inductionCompatible) return false;
+        break;
+      case 'dishwasher':
+        if (!product.features.dishwasherSafe) return false;
+        break;
+      case 'oven-500':
+        if (!product.features.ovenSafeTempF || product.features.ovenSafeTempF < 500) return false;
+        break;
+    }
+  }
+  return true;
+}
+
 function buildEmptyFacets(): SearchFacets {
   return {
     tiers: [],
@@ -72,6 +144,8 @@ export interface ProductListParams {
   category?: string;
   tier?: number[];
   material?: string[];
+  brand?: string[];
+  features?: string[];
   coating?: string[];
   page?: number;
   limit?: number;
@@ -102,10 +176,19 @@ export function getLocalProducts(params: ProductListParams): {
     products = products.filter(p => tierSet.has(p.verification.tier));
   }
 
-  // Filter by material
+  // Filter by material (using keyword matching)
   if (params.material?.length) {
-    const matSet = new Set(params.material);
-    products = products.filter(p => p.materialSummary && matSet.has(p.materialSummary));
+    products = products.filter(p => matchesMaterial(p, params.material!));
+  }
+
+  // Filter by brand
+  if (params.brand?.length) {
+    products = products.filter(p => matchesBrand(p, params.brand!));
+  }
+
+  // Filter by features
+  if (params.features?.length) {
+    products = products.filter(p => matchesFeatures(p, params.features!));
   }
 
   // Sort

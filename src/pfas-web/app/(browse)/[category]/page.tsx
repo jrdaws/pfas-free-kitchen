@@ -104,6 +104,8 @@ async function CategoryContent({
     category,
     tier: searchParams.tier ? searchParams.tier.split(',').map(Number) : undefined,
     material: searchParams.material?.split(','),
+    brand: searchParams.brand?.split(','),
+    features: searchParams.features?.split(','),
     coating: searchParams.coating?.split(','),
     page: searchParams.page ? parseInt(searchParams.page, 10) : 1,
     limit: 24,

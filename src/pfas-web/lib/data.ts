@@ -126,6 +126,8 @@ export async function fetchProducts(params: {
   category?: string;
   tier?: number[];
   material?: string[];
+  brand?: string[];
+  features?: string[];
   coating?: string[];
   retailer?: string;
   induction?: boolean;
@@ -142,6 +144,12 @@ export async function fetchProducts(params: {
     }
     if (params.material?.length) {
       params.material.forEach(m => searchParams.append('material', m));
+    }
+    if (params.brand?.length) {
+      params.brand.forEach(b => searchParams.append('brand', b));
+    }
+    if (params.features?.length) {
+      params.features.forEach(f => searchParams.append('features', f));
     }
     if (params.coating?.length) {
       params.coating.forEach(c => searchParams.append('coating_type', c));
@@ -161,6 +169,8 @@ export async function fetchProducts(params: {
       category: params.category,
       tier: params.tier,
       material: params.material,
+      brand: params.brand,
+      features: params.features,
       coating: params.coating,
       page: params.page,
       limit: params.limit,
