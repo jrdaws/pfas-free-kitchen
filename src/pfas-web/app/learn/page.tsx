@@ -25,6 +25,13 @@ const LEARN_CARDS = [
     color: 'green',
   },
   {
+    title: 'Products to Avoid',
+    description: 'See our list of cookware and air fryers confirmed to contain PFAS based on testing and disclosures.',
+    href: '/learn/do-not-buy',
+    icon: '⚠️',
+    color: 'red',
+  },
+  {
     title: 'Buyer\'s Guide',
     description: 'Everything you need to know to choose PFAS-free cookware. Compare materials and avoid common pitfalls.',
     href: '/learn/buyers-guide',

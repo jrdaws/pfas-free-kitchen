@@ -4,6 +4,7 @@ export { ProductCard } from './ProductCard';
 export { ProductCardList } from './ProductCardList';
 export { ProductCardSkeleton, ProductGridSkeleton } from './ProductCardSkeleton';
 export { ProductGrid } from './ProductGrid';
+export { CategoryTopPicks } from './CategoryTopPicks';
 export { UnknownsPanel } from './UnknownsPanel';
 export { ComponentList } from './ComponentList';
 export { RetailerButtons } from './RetailerButtons';

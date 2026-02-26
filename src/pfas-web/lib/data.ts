@@ -12,6 +12,7 @@ import {
   getLocalCategories,
   getLocalRelatedProducts,
   getLocalSearchResults,
+  getLocalTopPicks,
 } from './localData';
 import type {
   Product,
@@ -229,6 +230,17 @@ export async function fetchVerification(productId: string): Promise<{
   unknowns: string[];
 }> {
   return APIClient.get(`/products/${productId}/verification`);
+}
+
+/**
+ * Fetch top picks for a browse category (top pick + top 3).
+ * Uses local data; API support can be added later.
+ */
+export async function fetchTopPicks(browseCategory: string): Promise<{
+  topPick: Product | null;
+  topThree: Product[];
+}> {
+  return getLocalTopPicks(browseCategory);
 }
 
 /**

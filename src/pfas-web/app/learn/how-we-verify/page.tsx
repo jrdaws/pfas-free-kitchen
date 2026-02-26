@@ -20,6 +20,7 @@ const TOC_HEADINGS = [
   { id: 'philosophy', text: 'Our Philosophy', level: 2 },
   { id: 'tiers', text: 'Verification Tiers', level: 2 },
   { id: 'component-analysis', text: 'Component Analysis', level: 2 },
+  { id: 'evaluation-methodology', text: 'How We Evaluate Products', level: 2 },
   { id: 'evidence-types', text: 'Evidence Types', level: 2 },
   { id: 'lab-testing', text: 'Lab Testing Methods', level: 2 },
   { id: 'unknowns', text: 'How We Handle Unknowns', level: 2 },
@@ -169,6 +170,43 @@ export default function HowWeVerifyPage() {
                 We note but don&apos;t penalize for non-food-contact components with unknown status. 
                 If a pan handle&apos;s silicone grip has unknown PFAS status but never touches food, 
                 this doesn&apos;t lower the product&apos;s tier — but we still disclose it.
+              </p>
+            </InfoBox>
+          </section>
+
+          {/* Evaluation Methodology Section */}
+          <section className={styles.section} id="evaluation-methodology">
+            <h2>How We Evaluate Products</h2>
+            
+            <p>
+              Our evaluation focuses on where your food actually meets the product — and under what 
+              conditions. Not all materials pose the same risk; context matters.
+            </p>
+
+            <h3>Food Contact & Heat</h3>
+            <p>
+              We prioritize surfaces that come into direct contact with food, especially when heat 
+              is involved. Heat can accelerate the migration of chemicals from materials into food, 
+              so we pay closest attention to cooking surfaces, pan interiors, and any plastic or 
+              coated components that touch hot food.
+            </p>
+
+            <h3>When Plastics May Be Acceptable</h3>
+            <p>
+              Some plastics and synthetic materials are acceptable in our evaluation when they are 
+              <strong> isolated from food contact</strong>. For example, a silicone handle grip that 
+              never touches your food, or plastic housing on an appliance base, does not affect the 
+              product&apos;s PFAS-free status for cooking. We still list these components for full 
+              transparency, but they do not lower a product&apos;s verification tier when they remain 
+              outside the food-contact zone.
+            </p>
+
+            <InfoBox type="info" title="Our Focus">
+              <p>
+                We concentrate our verification on the &quot;food contact zone&quot; — the surfaces that 
+                directly touch what you eat. Materials used only for handles, lids, or structural 
+                support are evaluated separately and disclosed, but do not determine the product&apos;s 
+                overall PFAS-free rating when they stay isolated from your food.
               </p>
             </InfoBox>
           </section>

@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation';
 import { Suspense } from 'react';
 import { AffiliateDisclosure } from '@/components/layout';
-import { ProductGrid } from '@/components/product';
+import { ProductGrid, CategoryTopPicks } from '@/components/product';
 import { Pagination, LoadingSpinner } from '@/components/ui';
-import { fetchProducts, fetchCategories, isAPIError } from '@/lib';
+import { fetchProducts, fetchCategories, fetchTopPicks, isAPIError } from '@/lib';
 import styles from './category.module.css';
 
 // Category display info (could also come from API)
@@ -65,7 +65,10 @@ async function CategoryContent({
   };
 
   try {
-    const data = await fetchProducts(filters);
+    const [data, topPicks] = await Promise.all([
+      fetchProducts(filters),
+      fetchTopPicks(category),
+    ]);
 
     if (data.data.length === 0) {
       return <EmptyState />;
@@ -73,6 +76,12 @@ async function CategoryContent({
 
     return (
       <>
+        {topPicks.topPick && (
+          <CategoryTopPicks
+            topPick={topPicks.topPick}
+            topThree={topPicks.topThree}
+          />
+        )}
         <ProductGrid products={data.data} facets={data.facets} />
         <Pagination
           page={data.pagination.page}

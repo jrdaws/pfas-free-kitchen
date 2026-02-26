@@ -1,0 +1,299 @@
+# PFAS-FREE KITCHEN PRODUCT RESEARCH PROMPT
+
+## Mission
+
+You are a product safety researcher specializing in PFAS (per- and polyfluoroalkyl substances) contamination in kitchen products. Your task is to systematically identify, verify, and catalog PFAS-free kitchen products across all categories using a rigorous evidence-based methodology.
+
+---
+
+## VERIFICATION METHODOLOGY (Mandatory)
+
+For EVERY product identified, you MUST document verification status for each criterion:
+
+| Code | Verification Method | How to Verify |
+|------|---------------------|---------------|
+| LAB | Lab Test Results Available | Search for "[Brand] PFAS lab test results" or "[Brand] third party testing" |
+| CERT | Third-Party Certification | Look for SGS, Intertek, NSF, MADE SAFE, OEKO-TEX, ISO 17025 certifications |
+| IND | Independent Testing | Search Mamavation, Consumer Reports, Ecology Center, LeafScore |
+| BRAND | Brand Testing Confirmed | Check brand website for testing claims, AB1200/Prop 65 disclosures |
+| SUPPLY | Supply Chain Verified | Check manufacturing location, material sourcing transparency |
+| MAT | Inherently Safe Material | Cast iron, stainless steel, carbon steel, glass, silicone = auto-qualify |
+
+**Scoring Formula:**
+- LAB = +2, CERT = +2, IND = +2, BRAND = +1, SUPPLY = +1, MAT = +2
+- Maximum Score: 10/10
+- **ONLY include products scoring 6/10 or higher**
+
+---
+
+## PRODUCT CATEGORIES TO RESEARCH
+
+### COOKWARE (Target: 100+ products)
+
+**Cast Iron (Inherently PFAS-Free - Score 10/10)**
+- Skillets (8", 10", 12", 14")
+- Dutch ovens (2qt, 4qt, 5qt, 6qt, 7qt, 8qt)
+- Grill pans, griddles
+- Woks, braisers
+- Brands to search: Lodge, Staub, Le Creuset (enamel only), Finex, Smithey, Butter Pat, Field Company, Borough Furnace, Marquette Castings, Victoria, Camp Chef
+
+**Carbon Steel (Inherently PFAS-Free - Score 6-10/10)**
+- Fry pans, woks, crepe pans
+- Brands: de Buyer, Made In, Matfer Bourgeat, BK, Vollrath, Mafter
+
+**Stainless Steel (Inherently PFAS-Free - Score 7-10/10)**
+- Fry pans, saucepans, stockpots, saute pans
+- Brands: All-Clad (non-nonstick lines ONLY), Tramontina, Cuisinart (stainless only), Calphalon (stainless only), Made In, Demeyere, Fissler, Zwilling
+
+**Ceramic-Coated (Lab-Verified PFAS-Free - Score 8/10)**
+- Full cookware sets, individual pieces
+- Brands: Caraway, GreenPan, GreenLife, Our Place, Xtrema (100% ceramic)
+
+**Enameled Cast Iron (Verify each brand)**
+- SAFE: Staub, Lodge Enamel
+- CHECK DISCLOSURE: Le Creuset (some lines contain PFAS per AB1200)
+
+---
+
+### BAKEWARE (Target: 30+ products)
+
+**Glass/Ceramic**
+- Pyrex, Anchor Hocking, Corningware
+- Emile Henry, Le Creuset stoneware
+
+**Ceramic-Coated**
+- Caraway bakeware, GreenLife bakeware
+
+**Stainless Steel/Aluminum (uncoated)**
+- Nordic Ware (check coating status)
+- USA Pan (check coating status)
+- Fat Daddio's (anodized aluminum)
+
+**Silicone**
+- Silpat mats
+- Freshware silicone molds
+
+---
+
+### FOOD STORAGE (Target: 30+ products)
+
+**Glass Containers**
+- Pyrex, Anchor Hocking, Glasslock, OXO, Rubbermaid Brilliance Glass
+
+**Silicone**
+- Stasher bags (all sizes), Zip Top, Souper Cubes
+
+**Stainless Steel**
+- LunchBots, ECOlunchbox, Dalcini Stainless, U-Konserve, Klean Kanteen food containers
+
+**Beeswax Wraps**
+- Bee's Wrap, Abeego
+
+---
+
+### SMALL APPLIANCES (Target: 50+ products)
+
+**Air Fryers (CRITICAL - Most contain PFAS)**
+- RESEARCH: Search "[Brand] [Model] PFAS disclosure" and check Mamavation guide
+- Known PFAS-Free: Fritaire (glass bowl), some GreenPan models
+- Known to contain PFAS: COSORI, Ninja (most models), Instant Pot, Cuisinart, Hamilton Beach (most), Dash, Bella
+
+**Blenders**
+- Search for Tritan (BPA-free) or glass containers
+- Brands: Vitamix, Blendtec, KitchenAid (glass), Oster (glass jar models)
+
+**Food Processors**
+- Stainless steel bowl models preferred
+- Brands: Cuisinart, KitchenAid, Breville, Magimix
+
+**Coffee Makers**
+- Glass carafe + stainless/glass components
+- Brands: Moccamaster, Bonavita, OXO, Ratio, Fellow
+
+**Electric Kettles**
+- Stainless steel interior (no plastic touching water)
+- Brands: Fellow, Bonavita, Cuisinart (stainless), OXO, Stagg
+
+**Rice Cookers**
+- Stainless steel inner pot (NOT non-stick)
+- Brands: Tatung (stainless models), Zojirushi (verify inner pot material), GreenPan
+
+**Slow Cookers/Multi-Cookers**
+- Ceramic or stainless insert
+- Search: "[Brand] [Model] AB1200 disclosure" or "PFAS chemical disclosure"
+- Known PFAS-Free: GreenLife, Hamilton Beach 9-in-1 PFAS-Free model
+
+**Toasters/Toaster Ovens**
+- Stainless steel construction
+- Watch for: Non-stick crumb trays, PTFE-coated accessories
+- Brands: Breville (check each model), Panasonic, Cuisinart
+
+**Espresso Machines**
+- Stainless steel boilers and portafilters
+- Brands: Breville, Gaggia, Rancilio, La Marzocco, Rocket
+
+**Waffle Makers/Griddles**
+- Stainless steel or cast iron plates (NOT non-stick)
+- Brands: All-Clad (stainless), Lodge (cast iron)
+
+**Coffee Grinders**
+- Stainless steel burrs and hoppers
+- Brands: Baratza, Cuisinart, Capresso, Fellow
+
+**Induction Cooktops**
+- Glass-ceramic surface (inherently PFAS-free)
+- Brands: Duxtop, NuWave, Breville, GE
+
+---
+
+## RESEARCH PROCESS (Step-by-Step)
+
+### Step 1: Identify Products
+For each category, search:
+```
+site:amazon.com [Brand] [Product Type] ASIN
+```
+Record: Product name, Brand, ASIN, Price
+
+### Step 2: Verify PFAS Status
+For each product, search in order:
+
+**A. Check Legal Disclosures (Required for CA/CO sales)**
+```
+site:[brand].com AB1200 chemical disclosure
+site:[brand].com california prop 65 cookware
+```
+
+**B. Check Independent Testing**
+```
+site:mamavation.com [Brand] [Product]
+site:consumerreports.org [Brand] PFAS
+site:leafscore.com [Brand] review
+site:ecocenter.org [Brand]
+```
+
+**C. Check Brand Testing Claims**
+```
+[Brand] PFAS free lab test
+[Brand] third party testing SGS Intertek
+[Brand] Thermolon certification (for GreenPan)
+```
+
+**D. Check for Red Flags**
+```
+[Brand] [Product] PFAS lawsuit
+[Brand] [Product] Prop 65 warning
+[Brand] cookware PTFE FEP PFA disclosure
+```
+
+### Step 3: Assign Score
+| Criteria Met | Score |
+|--------------|-------|
+| LAB + CERT + IND + BRAND + SUPPLY + MAT | 10/10 |
+| CERT + IND + BRAND + SUPPLY + MAT | 9/10 |
+| LAB + CERT + IND + BRAND | 8/10 |
+| CERT + BRAND + SUPPLY + MAT | 7/10 |
+| CERT + BRAND + MAT | 6/10 |
+| Below 6 | DO NOT INCLUDE |
+
+### Step 4: Document Evidence
+For each product, record:
+- Verification sources (URLs)
+- Date verified
+- Any caveats or warnings
+
+---
+
+## CRITICAL WARNINGS
+
+### Products to EXCLUDE (Confirmed PFAS)
+
+**Per California AB1200 Disclosures:**
+- Le Creuset nonstick lines (PTFE, FEP, PFA)
+- All-Clad nonstick lines (PTFE)
+- Instant Pot (PTFE, PFA, FEP on cooking surfaces)
+- Calphalon nonstick
+
+**Per Mamavation Testing:**
+- COSORI air fryers (all models)
+- Ninja air fryers (most models)
+- Cuisinart air fryers
+- Hamilton Beach air fryers (except PFAS-Free model)
+- Bella/Beautiful air fryers
+- Dash air fryers
+
+### Products Requiring Extra Verification
+- Any product claiming "PFOA-free" (may still contain other PFAS)
+- Products with "ceramic coating" (verify brand tests for all PFAS, not just PFOA)
+- Silicone products (verify platinum-grade, not food-grade)
+
+---
+
+## OUTPUT FORMAT
+
+For each verified product, provide:
+
+```
+| # | Product Name | Brand | Category | ASIN | Price | PFAS Score | Amazon URL |
+|---|--------------|-------|----------|------|-------|------------|------------|
+| X | [Name] | [Brand] | [Category] | [ASIN] | $XX | X/10 | https://www.amazon.com/dp/[ASIN] |
+```
+
+Plus verification evidence:
+```
+**[Product Name] - Verification Evidence:**
+- LAB: [Yes/No] - [Source if yes]
+- CERT: [Yes/No] - [Certifications]
+- IND: [Yes/No] - [Source: Mamavation/CR/etc.]
+- BRAND: [Yes/No] - [Brand statement/disclosure URL]
+- SUPPLY: [Yes/No] - [Manufacturing location]
+- MAT: [Yes/No] - [Material type]
+```
+
+---
+
+## DELIVERABLES
+
+1. **Cookware Table** (100+ products, score 6-10)
+2. **Bakeware Table** (30+ products, score 6-10)
+3. **Storage Table** (30+ products, score 6-10)
+4. **Appliances Table** (50+ products, score 6-10)
+5. **Verification Evidence Document** (sources for each product)
+6. **DO NOT BUY List** (products confirmed to contain PFAS)
+
+---
+
+## QUALITY STANDARDS
+
+- Accuracy over quantity - Only include products with verified evidence
+- Conservative scoring - When in doubt, score lower
+- Full transparency - Document all sources and limitations
+- Current data - Verify ASINs are active and products are in stock
+- No renewed/refurbished - Only new products
+
+---
+
+## ADDITIONAL RESOURCES
+
+**Independent Testing Organizations:**
+- Mamavation: mamavation.com/product-investigations
+- Consumer Reports: consumerreports.org
+- Ecology Center: ecocenter.org/healthy-stuff-lab
+- LeafScore: leafscore.com
+- Environmental Working Group: ewg.org
+
+**Regulatory Disclosures:**
+- California AB1200: Requires cookware PFAS disclosure
+- Colorado HB 22-1345: Similar disclosure requirements
+- Prop 65: Warning requirements for certain chemicals
+
+**Brand Testing Pages:**
+- Caraway: carawayhome.com (email for test results)
+- GreenPan: greenpan.us/pages/safety-of-our-product
+- Xtrema: xtrema.com/pages/product-testing
+- Lodge: lodgecastiron.com/blogs/story/non-toxic-cookware-cast-iron-made-without-pfas
+- All-Clad: all-clad.com/ab1200
+
+---
+
+**BEGIN RESEARCH NOW. Target: 200+ verified PFAS-free products across all categories.**

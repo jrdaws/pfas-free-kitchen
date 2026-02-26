@@ -10,16 +10,17 @@ import {
   getProductById,
   searchProducts,
 } from '../data/products';
+import { TOP_PICKS_BY_CATEGORY } from '../data/top-picks';
 
 // Map browse route slugs to product category slugs
 const BROWSE_TO_PRODUCT_CATEGORY: Record<string, string[]> = {
-  cookware: ['fry-pans', 'cookware-sets', 'dutch-ovens'],
-  bakeware: ['bakeware'],
-  storage: ['storage'],
-  'food-storage': ['storage'],
+  cookware: ['fry-pans', 'cookware-sets', 'dutch-ovens', 'sauce-pans', 'cutting-boards'],
+  bakeware: ['bakeware', 'baking-dishes', 'baking-sheets'],
+  storage: ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags'],
+  'food-storage': ['storage', 'glass-containers', 'stainless-containers', 'silicone-bags'],
   utensils: [],
   'utensils-tools': [],
-  appliances: [],
+  appliances: ['blenders', 'coffee-makers', 'kettles', 'rice-cookers', 'slow-cookers', 'toaster-ovens', 'espresso-machines', 'induction-cooktops', 'food-processors', 'stand-mixers', 'air-fryers'],
   'appliance-accessories': [],
 };
 
@@ -184,6 +185,23 @@ export function getLocalRelatedProducts(
     })
     .sort((a, b) => b.verification.tier - a.verification.tier)
     .slice(0, limit);
+}
+
+export function getLocalTopPicks(browseCategory: string): {
+  topPick: Product | null;
+  topThree: Product[];
+} {
+  const config = TOP_PICKS_BY_CATEGORY[browseCategory];
+  if (!config || !config.topPick) {
+    return { topPick: null, topThree: [] };
+  }
+
+  const topPick = getLocalProduct(config.topPick);
+  const topThree = config.topThree
+    .map(slug => getLocalProduct(slug))
+    .filter((p): p is Product => p !== null);
+
+  return { topPick, topThree };
 }
 
 export function getLocalSearchResults(

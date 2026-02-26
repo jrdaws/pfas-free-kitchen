@@ -34,7 +34,7 @@
 
 .cardsGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--space-6);
 }
 
@@ -68,6 +68,10 @@
 
 .card.orange {
   border-top: 4px solid var(--color-orange-500);
+}
+
+.card.red {
+  border-top: 4px solid var(--color-red-500);
 }
 
 .cardIcon {
@@ -177,10 +181,6 @@
 
   .subtitle {
     font-size: 1rem;
-  }
-
-  .cardsGrid {
-    grid-template-columns: 1fr;
   }
 
   .card {
