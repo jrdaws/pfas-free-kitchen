@@ -1,0 +1,184 @@
+{
+  "formName": "PFAS-Free Product Submission",
+  "description": "Submit products for review to be added to the PFAS-Free Kitchen database",
+  "settings": {
+    "sendEmailNotification": true,
+    "notificationEmails": ["admin@pfas-free.kitchen"],
+    "showProgressBar": true,
+    "submitButtonText": "Submit Product",
+    "thankYouMessage": "Thank you! Your product submission will be reviewed within 2-3 business days."
+  },
+  "sections": [
+    {
+      "title": "Product Information",
+      "description": "Basic product details",
+      "fields": [
+        {
+          "name": "productName",
+          "label": "Product Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "e.g., Lodge 12-Inch Cast Iron Skillet",
+          "helpText": "Enter the full product name as it appears on Amazon"
+        },
+        {
+          "name": "amazonUrl",
+          "label": "Amazon URL",
+          "type": "url",
+          "required": true,
+          "placeholder": "https://www.amazon.com/dp/B00006JSUA",
+          "helpText": "Paste the full Amazon product URL",
+          "validation": "Must contain amazon.com"
+        },
+        {
+          "name": "brand",
+          "label": "Brand Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "e.g., Lodge, GreenPan, Vitamix"
+        },
+        {
+          "name": "approximatePrice",
+          "label": "Approximate Price (USD)",
+          "type": "number",
+          "required": false,
+          "min": 1,
+          "max": 10000
+        }
+      ]
+    },
+    {
+      "title": "Category",
+      "fields": [
+        {
+          "name": "category",
+          "label": "Product Category",
+          "type": "dropdown",
+          "required": true,
+          "options": [
+            { "value": "cookware", "label": "Cookware (Pans, Pots, Dutch Ovens)" },
+            { "value": "bakeware", "label": "Bakeware (Baking Sheets, Dishes)" },
+            { "value": "storage", "label": "Food Storage (Containers, Bags)" },
+            { "value": "appliances", "label": "Appliances (Blenders, Coffee Makers)" },
+            { "value": "utensils", "label": "Utensils & Tools" },
+            { "value": "other", "label": "Other" }
+          ]
+        },
+        {
+          "name": "subcategory",
+          "label": "Specific Type",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g., Fry Pan, Dutch Oven, Blender"
+        }
+      ]
+    },
+    {
+      "title": "Materials & Coating",
+      "description": "What is the product made of?",
+      "fields": [
+        {
+          "name": "primaryMaterial",
+          "label": "Primary Material",
+          "type": "dropdown",
+          "required": true,
+          "options": [
+            { "value": "cast-iron", "label": "Cast Iron" },
+            { "value": "stainless-steel", "label": "Stainless Steel" },
+            { "value": "carbon-steel", "label": "Carbon Steel" },
+            { "value": "ceramic", "label": "Ceramic" },
+            { "value": "glass", "label": "Glass (Borosilicate)" },
+            { "value": "aluminum", "label": "Aluminum" },
+            { "value": "wood", "label": "Wood (Teak, Acacia, Maple)" },
+            { "value": "titanium", "label": "Titanium" },
+            { "value": "silicone", "label": "Silicone" },
+            { "value": "plastic-tritan", "label": "Tritan Plastic (BPA-Free)" },
+            { "value": "other", "label": "Other" }
+          ]
+        },
+        {
+          "name": "hasCoating",
+          "label": "Does this product have a non-stick or other coating?",
+          "type": "radio",
+          "required": true,
+          "options": [
+            { "value": "yes", "label": "Yes" },
+            { "value": "no", "label": "No" },
+            { "value": "unsure", "label": "Not sure" }
+          ]
+        },
+        {
+          "name": "coatingType",
+          "label": "Coating Type (if applicable)",
+          "type": "text",
+          "required": false,
+          "placeholder": "e.g., Thermolon ceramic, seasoned",
+          "conditional": { "field": "hasCoating", "value": "yes" }
+        }
+      ]
+    },
+    {
+      "title": "PFAS Verification",
+      "description": "Why do you believe this product is PFAS-free?",
+      "fields": [
+        {
+          "name": "pfasEvidence",
+          "label": "PFAS-Free Evidence",
+          "type": "checkboxes",
+          "required": false,
+          "options": [
+            { "value": "lab-tested", "label": "Lab tested PFAS-free" },
+            { "value": "certified", "label": "Third-party certified (Made Safe, etc.)" },
+            { "value": "brand-statement", "label": "Brand states PFAS-free" },
+            { "value": "inherent", "label": "Material is inherently PFAS-free (cast iron, glass, wood)" },
+            { "value": "independent-test", "label": "Tested by independent org (Mamavation, Consumer Reports)" }
+          ]
+        },
+        {
+          "name": "evidenceLinks",
+          "label": "Evidence Links",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Paste links to lab reports, certifications, brand policy pages, or articles",
+          "helpText": "One link per line"
+        },
+        {
+          "name": "additionalNotes",
+          "label": "Additional Notes",
+          "type": "textarea",
+          "required": false,
+          "placeholder": "Any other information that supports this product being PFAS-free"
+        }
+      ]
+    },
+    {
+      "title": "Submitter Information",
+      "fields": [
+        {
+          "name": "submitterName",
+          "label": "Your Name",
+          "type": "text",
+          "required": true,
+          "placeholder": "For tracking purposes"
+        },
+        {
+          "name": "submitterEmail",
+          "label": "Email (optional)",
+          "type": "email",
+          "required": false,
+          "helpText": "If you'd like to be notified when your submission is reviewed"
+        }
+      ]
+    }
+  ],
+  "integrations": {
+    "zapier": {
+      "webhookUrl": "https://hooks.zapier.com/hooks/catch/YOUR_ZAP_ID",
+      "triggerOn": "submission"
+    },
+    "slack": {
+      "notificationChannel": "#va-tasks",
+      "messageTemplate": "🆕 New product submitted: {{productName}} by {{submitterName}}"
+    }
+  }
+}

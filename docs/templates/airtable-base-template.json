@@ -1,0 +1,103 @@
+{
+  "name": "PFAS-Free Kitchen Products",
+  "description": "Product management base for VA content workflow",
+  "tables": [
+    {
+      "name": "Products",
+      "description": "All product submissions and research",
+      "fields": [
+        { "name": "Product Name", "type": "singleLineText", "required": true },
+        { "name": "Brand", "type": "singleLineText", "required": true },
+        { "name": "ASIN", "type": "singleLineText", "description": "10-character Amazon identifier" },
+        { "name": "Amazon URL", "type": "url" },
+        { "name": "Category", "type": "singleSelect", "options": ["Cookware", "Bakeware", "Food Storage", "Appliances", "Utensils"] },
+        { "name": "Subcategory", "type": "singleLineText" },
+        { "name": "Price", "type": "currency", "options": { "precision": 0, "symbol": "$" } },
+        { "name": "Primary Material", "type": "singleLineText" },
+        { "name": "Coating", "type": "singleLineText" },
+        { "name": "PFAS Score", "type": "number", "options": { "precision": 0 } },
+        { "name": "Lab Tested", "type": "checkbox" },
+        { "name": "Third-Party Certified", "type": "checkbox" },
+        { "name": "Independent Testing", "type": "checkbox" },
+        { "name": "Brand Statement", "type": "checkbox" },
+        { "name": "Supply Chain Verified", "type": "checkbox" },
+        { "name": "Inherently PFAS-Free", "type": "checkbox" },
+        { "name": "Evidence Links", "type": "multilineText" },
+        { "name": "Research Notes", "type": "multilineText" },
+        { "name": "Status", "type": "singleSelect", "options": ["New", "Researching", "Verified", "Published", "Rejected", "Needs Review"] },
+        { "name": "Sanity ID", "type": "singleLineText", "description": "ID after publishing to Sanity" },
+        { "name": "Submitted By", "type": "singleLineText" },
+        { "name": "Submitted Date", "type": "date" },
+        { "name": "Published Date", "type": "date" },
+        { "name": "Last Updated", "type": "date" }
+      ],
+      "views": [
+        { "name": "All Products", "type": "grid", "sort": [{ "field": "Submitted Date", "direction": "desc" }] },
+        { "name": "New Submissions", "type": "grid", "filter": "Status = 'New'" },
+        { "name": "VA Research Queue", "type": "kanban", "groupBy": "Status" },
+        { "name": "Ready to Publish", "type": "grid", "filter": "Status = 'Verified'" },
+        { "name": "Published", "type": "grid", "filter": "Status = 'Published'" },
+        { "name": "By Category", "type": "kanban", "groupBy": "Category" },
+        { "name": "High Score Products", "type": "grid", "filter": "PFAS Score >= 8", "sort": [{ "field": "PFAS Score", "direction": "desc" }] }
+      ]
+    },
+    {
+      "name": "Brands",
+      "description": "Brand registry with PFAS policies",
+      "fields": [
+        { "name": "Brand Name", "type": "singleLineText", "required": true },
+        { "name": "Website", "type": "url" },
+        { "name": "PFAS Policy URL", "type": "url" },
+        { "name": "Policy Summary", "type": "multilineText" },
+        { "name": "Trust Level", "type": "singleSelect", "options": ["High", "Medium", "Low", "Avoid"] },
+        { "name": "Products", "type": "linkToRecord", "linkedTable": "Products" },
+        { "name": "Last Verified", "type": "date" },
+        { "name": "Notes", "type": "multilineText" }
+      ]
+    },
+    {
+      "name": "Research Tasks",
+      "description": "Task queue for VA work",
+      "fields": [
+        { "name": "Task Title", "type": "singleLineText", "required": true },
+        { "name": "Product", "type": "linkToRecord", "linkedTable": "Products" },
+        { "name": "Task Type", "type": "singleSelect", "options": ["Verify PFAS", "Check Price", "Find Better Link", "Update Info", "Research Brand", "Find Alternatives"] },
+        { "name": "Priority", "type": "singleSelect", "options": ["High", "Medium", "Low"] },
+        { "name": "Assigned To", "type": "singleLineText" },
+        { "name": "Due Date", "type": "date" },
+        { "name": "Status", "type": "singleSelect", "options": ["Todo", "In Progress", "Done", "Blocked"] },
+        { "name": "Notes", "type": "multilineText" },
+        { "name": "Time Spent (mins)", "type": "number" }
+      ],
+      "views": [
+        { "name": "My Tasks", "type": "kanban", "groupBy": "Status" },
+        { "name": "By Priority", "type": "grid", "sort": [{ "field": "Priority", "direction": "asc" }] },
+        { "name": "Calendar", "type": "calendar", "dateField": "Due Date" }
+      ]
+    },
+    {
+      "name": "Activity Log",
+      "description": "Track all VA activities",
+      "fields": [
+        { "name": "Date", "type": "date", "required": true },
+        { "name": "VA Name", "type": "singleLineText" },
+        { "name": "Activity Type", "type": "singleSelect", "options": ["Product Research", "Price Update", "Publishing", "Admin", "Meeting", "Training"] },
+        { "name": "Products Processed", "type": "number" },
+        { "name": "Hours Worked", "type": "number", "options": { "precision": 1 } },
+        { "name": "Notes", "type": "multilineText" }
+      ]
+    }
+  ],
+  "automations": [
+    {
+      "name": "Auto-set Submitted Date",
+      "trigger": "When record created in Products",
+      "action": "Update record - Set Submitted Date to Today"
+    },
+    {
+      "name": "Auto-calculate PFAS Score",
+      "trigger": "When checkboxes updated",
+      "action": "Update PFAS Score = (Lab Tested * 2) + (Third-Party Certified * 2) + (Independent Testing * 2) + (Brand Statement * 1) + (Supply Chain Verified * 1) + (Inherently PFAS-Free * 2)"
+    }
+  ]
+}
