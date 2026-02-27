@@ -1,0 +1,751 @@
+================================================================================
+PFAS-FREE KITCHEN - COMPLETE VA GUIDE
+================================================================================
+
+This document contains everything a Virtual Assistant needs to manage product 
+information and make edits to the PFAS-Free Kitchen website.
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. SYSTEM OVERVIEW
+2. TOOLS & ACCESS
+3. DAILY WORKFLOW
+4. HOW TO UPDATE PRODUCT LINKS
+5. HOW TO ADD NEW PRODUCTS
+6. HOW TO ADD NEW BRANDS
+7. HOW TO ADD NEW CATEGORIES
+8. AIRTABLE SETUP
+9. JOTFORM SETUP
+10. ZAPIER AUTOMATIONS
+11. SANITY CMS SETUP
+12. PFAS SCORING SYSTEM
+13. MATERIALS REFERENCE
+14. TROUBLESHOOTING
+15. QUALITY CHECKLIST
+16. QUICK REFERENCE CARD
+
+================================================================================
+1. SYSTEM OVERVIEW
+================================================================================
+
+The VA content management workflow:
+
+    Input (Jotform) → Process (Airtable + VA) → Publish (Sanity) → Deploy (Vercel) → Automate (Zapier)
+
+Supporting tools:
+- Notion: Documentation & SOPs
+- Slack: Communication
+- RoboForm: Secure password sharing
+
+================================================================================
+2. TOOLS & ACCESS
+================================================================================
+
+TOOL            PURPOSE                         VA ACCESS LEVEL
+---------------------------------------------------------------------------
+Jotform         Product submission form         Submit only
+Airtable        Product staging & tracking      Full access
+Sanity          Content management              Editor access
+Vercel          Automatic deployment            View only
+Zapier          Automation between tools        Admin only (you don't touch)
+Notion          Documentation & SOPs            Full access
+Slack           Communication                   Full access
+GitHub          Code repository                 Push access (after training)
+
+ACCOUNTS TO REQUEST ACCESS TO:
+- Slack workspace invitation
+- Airtable base invitation
+- Sanity studio invitation
+- Notion workspace invitation
+- GitHub repository (if editing code directly)
+
+================================================================================
+3. DAILY WORKFLOW
+================================================================================
+
+MORNING ROUTINE (15 minutes)
+----------------------------
+1. Check Slack for messages
+2. Open Airtable → "New Submissions" view
+3. Note how many products need research
+4. Plan your day
+
+MAIN WORK: PRODUCT RESEARCH
+---------------------------
+For each product in "Researching" status:
+
+Step 1: Open the Product
+- Click on the product row in Airtable
+- Open the Amazon URL in a new tab
+- Have a notepad ready
+
+Step 2: Verify Product Exists
+- Is the product available?
+- Is it the NEW version (not "Renewed")?
+- What's the current price?
+
+Step 3: Extract ASIN
+The ASIN is in the Amazon URL:
+    https://www.amazon.com/dp/B00006JSUA
+                             ^^^^^^^^^^
+                             This is the ASIN (10 characters)
+
+Step 4: Research PFAS Status
+Check these sources in order:
+
+1. Brand Website
+   - Search: "[Brand name] PFAS policy"
+   - Look for: "PFAS-free", "PFOA-free", "PTFE-free"
+   - Screenshot any statements
+
+2. Product Materials
+   - What is it made of?
+   - Does it have a coating?
+   - Is the material inherently PFAS-free?
+
+3. Independent Testing
+   - Search: "[Product name] Mamavation"
+   - Search: "[Product name] Consumer Reports PFAS"
+   - Search: "[Brand name] lab test PFAS"
+
+4. Certifications
+   - Made Safe certified?
+   - Other certifications?
+
+Step 5: Calculate PFAS Score (see Section 12)
+
+Step 6: Update Airtable
+- Fill in ASIN
+- Update price
+- Enter PFAS Score
+- Add notes about findings
+- Update Status:
+  * "Verified" if score >= 6
+  * "Rejected" if score < 6
+  * "Needs Review" if unsure
+
+Step 7: Move to Next Product
+
+PUBLISHING PHASE
+----------------
+For "Verified" products:
+
+1. Open Sanity Studio
+2. Create new Product document
+3. Fill in all fields from Airtable
+4. Set status to "Draft"
+5. Request review (Slack message to admin)
+6. After approval, change to "Published"
+
+WEEKLY TASKS
+------------
+Friday Checklist:
+[ ] All new submissions processed
+[ ] Verified products published to Sanity
+[ ] Update Activity Log in Airtable
+[ ] Post weekly summary in Slack
+
+Monthly Tasks:
+[ ] Price check on 20 random published products
+[ ] Check for out-of-stock products
+[ ] Review rejected products (maybe new evidence?)
+
+================================================================================
+4. HOW TO UPDATE PRODUCT LINKS
+================================================================================
+
+FILE TO EDIT: src/pfas-web/data/products.ts
+
+WHEN TO USE:
+- Amazon link is broken or outdated
+- Product ASIN has changed
+- Price needs updating
+
+STEP-BY-STEP:
+
+1. Open the products file:
+   src/pfas-web/data/products.ts
+
+2. Find the product using Ctrl+F (Cmd+F on Mac)
+   - Search for the product name OR
+   - Search for the current ASIN
+
+3. Locate the Amazon link section:
+   
+   retailers: [
+     {
+       id: 'lodge-amazon',
+       retailer: RETAILERS.amazon,
+       url: generateAmazonLink('B00006JSUA'),  // <-- ASIN is here
+       price: 32,                               // <-- Price is here
+       currency: 'USD',
+       inStock: true,
+     },
+   ],
+
+4. Update the ASIN:
+   - Go to Amazon and find the correct product
+   - Get the ASIN from the URL: amazon.com/dp/B00006JSUA
+   - The 10-character code after /dp/ is the ASIN
+   - Replace the old ASIN with the new one
+
+5. Update the price:
+   - Change the price value to the current Amazon price
+   - Round to the nearest dollar (no cents)
+
+6. Save and commit:
+   
+   git add src/pfas-web/data/products.ts
+   git commit -m "fix: update [product name] Amazon link and price"
+   git push
+
+EXAMPLE - Updating Lodge Cast Iron Skillet:
+
+BEFORE:
+url: generateAmazonLink('B00006JSUA'),
+price: 32,
+
+AFTER (if ASIN changed and price increased):
+url: generateAmazonLink('B000NEW123'),
+price: 35,
+
+================================================================================
+5. HOW TO ADD NEW PRODUCTS
+================================================================================
+
+FILE TO EDIT: src/pfas-web/data/products.ts
+
+WHEN TO USE:
+- Adding a product from our research list
+- Adding a newly discovered PFAS-free product
+
+STEP-BY-STEP:
+
+1. Gather product information:
+   - Product name (official, from Amazon)
+   - Brand name
+   - Amazon ASIN
+   - Current price
+   - Product description
+   - Material information
+   - Category (cookware, bakeware, storage, appliances)
+
+2. Check if the brand exists:
+   Search for the brand in BRANDS section at the top of products.ts
+   - If it exists: note the brand key (e.g., BRANDS.lodge)
+   - If not: add it first (see Section 6)
+
+3. Check if the category exists:
+   Search in CATEGORIES section
+   - If it exists: note the category key (e.g., CATEGORIES['fry-pans'])
+   - If not: add it first (see Section 7)
+
+4. Add the product using this template:
+
+  {
+    id: 'brand-product-name',           // lowercase with hyphens
+    name: 'Brand Full Product Name',    // Exact name from Amazon
+    slug: 'brand-product-name',         // Same as id
+    description: 'Product description with PFAS-free info.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [
+      { url: '/placeholders/products/skillet-placeholder.svg', alt: 'Product Name', isPrimary: true },
+    ],
+    brand: BRANDS.brandkey,             // Use the brand key
+    category: CATEGORIES['category'],   // Use the category key
+    materialSummary: 'Main material',   // e.g., 'Cast iron'
+    coatingSummary: 'Coating type',     // e.g., 'None' or 'Ceramic non-stick'
+    verification: {
+      tier: 4 as VerificationTier,      // 4 = inherently safe, 3 = lab tested
+      claimType: 'inherently_pfas_free', // or 'intentionally_pfas_free'
+      scopeText: 'All products',
+      rationale: 'Why this is PFAS-free',
+      unknowns: [],
+      hasEvidence: true,
+      evidenceCount: 2,
+      decisionDate: '2026-02-16',       // Today's date
+    },
+    components: [
+      {
+        id: 'body',
+        role: 'body',
+        roleLabel: 'Product Body',
+        material: { id: 'material-id', name: 'Material Name', slug: 'material-slug' },
+        pfasStatus: 'verified_free',
+      },
+    ],
+    retailers: [
+      {
+        id: 'brand-amazon',
+        retailer: RETAILERS.amazon,
+        url: generateAmazonLink('B00XXXXXX'),  // Replace with real ASIN
+        price: 99,                              // Current price
+        currency: 'USD',
+        inStock: true,
+      },
+    ],
+    features: {
+      inductionCompatible: true,        // true/false
+      ovenSafeTempF: 500,               // Max oven temp, or undefined
+      dishwasherSafe: true,             // true/false
+    },
+  },
+
+5. Add at the end of the PRODUCTS array
+   Find the closing ]; of the PRODUCTS array and add your product before it.
+
+6. Save and commit:
+   
+   git add src/pfas-web/data/products.ts
+   git commit -m "feat: add [product name] to products database"
+   git push
+
+================================================================================
+6. HOW TO ADD NEW BRANDS
+================================================================================
+
+FILE TO EDIT: src/pfas-web/data/products.ts
+
+1. Open products.ts
+
+2. Find the BRANDS section (near the top of the file)
+
+3. Add the new brand in alphabetical order:
+
+   brandkey: {
+     id: 'brandkey',
+     name: 'Brand Display Name',
+     slug: 'brand-slug',
+     logoUrl: undefined,  // or '/images/brands/brand-name.png' if logo exists
+   },
+
+EXAMPLE - Adding Vitamix:
+
+   vitamix: {
+     id: 'vitamix',
+     name: 'Vitamix',
+     slug: 'vitamix',
+     logoUrl: undefined,
+   },
+
+================================================================================
+7. HOW TO ADD NEW CATEGORIES
+================================================================================
+
+FILE TO EDIT: src/pfas-web/data/products.ts
+
+1. Find the CATEGORIES section
+
+2. Add the new category:
+
+   'category-slug': {
+     id: 'category-slug',
+     name: 'Category Display Name',
+     slug: 'category-slug',
+     path: [
+       { id: 'parent', name: 'Parent Category', slug: 'parent' },
+       { id: 'category-slug', name: 'Category Display Name', slug: 'category-slug' },
+     ],
+   },
+
+EXAMPLE - Adding Blenders:
+
+   'blenders': {
+     id: 'blenders',
+     name: 'Blenders',
+     slug: 'blenders',
+     path: [
+       { id: 'appliances', name: 'Appliances', slug: 'appliances' },
+       { id: 'blenders', name: 'Blenders', slug: 'blenders' },
+     ],
+   },
+
+================================================================================
+8. AIRTABLE SETUP
+================================================================================
+
+BASE NAME: "PFAS-Free Kitchen Products"
+
+TABLE 1: PRODUCT SUBMISSIONS
+----------------------------
+Field Name          Field Type          Options/Notes
+---------------------------------------------------------------------------
+Product Name        Single line text    Required
+Brand               Single line text    
+Amazon URL          URL                 
+ASIN                Single line text    Extracted from URL
+Category            Single select       Cookware, Bakeware, Storage, Appliances
+Subcategory         Single line text    
+Price               Currency            USD
+Material            Single line text    e.g., "Cast iron", "Borosilicate glass"
+Coating             Single line text    e.g., "Ceramic", "None"
+PFAS Evidence       Long text           Links to lab tests, certifications
+PFAS Score          Number              1-10
+Status              Single select       New, Researching, Verified, Published, Rejected
+VA Notes            Long text           
+Submitted By        Single line text    
+Submitted Date      Date                Auto-filled
+Published Date      Date                
+
+TABLE 2: RESEARCH QUEUE
+-----------------------
+Field Name          Field Type          Options/Notes
+---------------------------------------------------------------------------
+Product             Link to Products    
+Research Task       Single select       Verify PFAS, Check Price, Find Better Link
+Priority            Single select       High, Medium, Low
+Assigned To         Single line text    VA name
+Due Date            Date                
+Status              Single select       Todo, In Progress, Done
+Notes               Long text           
+
+TABLE 3: BRAND REGISTRY
+-----------------------
+Field Name          Field Type          Options/Notes
+---------------------------------------------------------------------------
+Brand Name          Single line text    Required
+Website             URL                 
+PFAS Policy         Long text           
+Trust Level         Single select       High, Medium, Low, Avoid
+Products            Link to Products    
+Last Verified       Date                
+
+AIRTABLE VIEWS TO CREATE:
+1. "New Submissions" - Filter: Status = "New"
+2. "VA Research Queue" - Filter: Status = "Researching"
+3. "Ready to Publish" - Filter: Status = "Verified"
+4. "Published Products" - Filter: Status = "Published"
+
+STATUS FLOW:
+    New → Researching → Verified → Published
+                     ↘ Rejected
+
+================================================================================
+9. JOTFORM SETUP
+================================================================================
+
+FORM NAME: "PFAS-Free Product Submission"
+
+FORM FIELDS:
+Field               Type        Required    Notes
+---------------------------------------------------------------------------
+Product Name        Text        Yes         
+Amazon URL          Website     Yes         Full product URL
+Brand               Text        Yes         
+Category            Dropdown    Yes         Cookware, Bakeware, Storage, Appliances
+Subcategory         Text        No          Specific type (e.g., "Fry Pan")
+Approximate Price   Number      No          
+Primary Material    Text        No          What is it made of?
+Has Coating?        Radio       No          Yes/No
+Coating Type        Text        Conditional If yes, what type?
+Why PFAS-free?      Long Text   Yes         Evidence links, certifications
+Additional Notes    Long Text   No          
+Your Name           Text        Yes         For tracking
+
+FORM SETTINGS:
+- Enable email notifications (notify admin on submission)
+- Enable submission confirmation (thank you message)
+- Set up redirect to success page
+
+================================================================================
+10. ZAPIER AUTOMATIONS
+================================================================================
+
+ZAP 1: JOTFORM → AIRTABLE
+-------------------------
+Trigger: New Jotform Submission
+Action: Create Airtable Record
+
+Mapping:
+Jotform Field           Airtable Field
+---------------------------------------------------------------------------
+Product Name            Product Name
+Amazon URL              Amazon URL
+Brand                   Brand
+Category                Category
+Subcategory             Subcategory
+Approximate Price       Price
+Primary Material        Material
+Coating Type            Coating
+Why PFAS-free           PFAS Evidence
+Your Name               Submitted By
+(auto)                  Status = "New"
+
+ZAP 2: AIRTABLE → SLACK NOTIFICATION
+------------------------------------
+Trigger: New Airtable Record (Status = "New")
+Action: Send Slack Message
+
+Message template:
+    🆕 New Product Submission!
+    Product: {{Product Name}}
+    Brand: {{Brand}}
+    Category: {{Category}}
+    Submitted by: {{Submitted By}}
+    
+    👉 Review in Airtable: [link]
+
+ZAP 3: AIRTABLE → SANITY (ADVANCED)
+-----------------------------------
+Trigger: Airtable Record Updated (Status changed to "Verified")
+Action: Webhook to custom endpoint
+
+This requires a webhook endpoint that:
+1. Receives the Airtable data
+2. Transforms it to Sanity format
+3. Creates/updates the Sanity document
+
+================================================================================
+11. SANITY CMS SETUP
+================================================================================
+
+SIGN UP:
+1. Go to sanity.io
+2. Sign up with GitHub or email
+3. Create a new project named "pfas-free-kitchen"
+4. Select "Production" dataset
+5. Note your Project ID
+
+DEPLOY SANITY STUDIO:
+From the project root:
+    cd sanity
+    npm install
+
+Add your Project ID to .env.local:
+    NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
+    NEXT_PUBLIC_SANITY_DATASET=production
+
+Deploy the studio:
+    npm run deploy
+
+Your studio will be at: https://your-project.sanity.studio
+
+INITIAL DATA SETUP:
+1. Open Sanity Studio
+2. Create categories first:
+   - Cookware → Fry Pans, Dutch Ovens, Sauce Pans, Cutting Boards
+   - Bakeware → Baking Dishes, Baking Sheets
+   - Food Storage → Glass Containers, Stainless Containers
+   - Appliances → Blenders, Coffee Makers, Air Fryers, etc.
+3. Create brands (Lodge, GreenPan, Vitamix, etc.)
+4. Then add products
+
+================================================================================
+12. PFAS SCORING SYSTEM
+================================================================================
+
+SCORING GUIDE (Maximum 10 points):
+
+Evidence Type                    Points    How to Verify
+---------------------------------------------------------------------------
+🔬 Lab Tested PFAS-free          +2        Lab report URL
+🏅 Third-Party Certified         +2        Certification logo/link
+📰 Independent Testing           +2        Mamavation, Consumer Reports
+✓  Brand States PFAS-free        +1        Brand website screenshot
+🔗 Supply Chain Verified         +1        Supply chain documentation
+⚗️ Inherently PFAS-free Material +2        Material type (see Section 13)
+
+SCORE INTERPRETATION:
+
+Score       Meaning                 Action
+---------------------------------------------------------------------------
+9-10        Highly verified         Publish with confidence
+7-8         Well verified           Publish
+6           Minimally verified      Publish with note
+1-5         Insufficient evidence   REJECT
+
+CLAIM TYPES:
+- inherently_pfas_free: Material cannot contain PFAS (iron, steel, glass, wood)
+- intentionally_pfas_free: Coating/material designed to be PFAS-free
+
+VERIFICATION TIERS:
+- Tier 4: Inherently PFAS-free materials
+- Tier 3: Lab tested / third-party certified
+- Tier 2: Brand claims only
+- Tier 1: Insufficient evidence
+
+================================================================================
+13. MATERIALS REFERENCE
+================================================================================
+
+INHERENTLY PFAS-FREE (Auto +2 points)
+-------------------------------------
+These materials NEVER contain PFAS:
+- Cast iron (seasoned or enameled)
+- Carbon steel
+- Stainless steel
+- Borosilicate glass
+- Ceramic (traditional pottery)
+- Wood (teak, acacia, maple, bamboo)
+- Silicone (food-grade)
+- Titanium
+- Copper
+- Natural rubber
+
+NEEDS VERIFICATION
+------------------
+These CAN be PFAS-free but need evidence:
+- Ceramic non-stick coatings (some are, some aren't)
+- "PFOA-free" products (may still contain other PFAS)
+- Plastic containers (Tritan is safe, others vary)
+- Any "non-stick" claim
+
+AVOID / REJECT
+--------------
+- Teflon (PTFE) - contains PFAS
+- Unknown coatings without certification
+- "PFOA-free" with no PFAS-free claim
+- Products with unclear materials
+
+================================================================================
+14. TROUBLESHOOTING
+================================================================================
+
+"PRODUCT NOT SHOWING ON WEBSITE"
+--------------------------------
+1. Check the file saved correctly
+2. Make sure there are no syntax errors (missing commas, brackets)
+3. Verify the Git push succeeded
+4. Wait a few minutes for Vercel to deploy
+
+"AMAZON LINK SHOWS WRONG PRODUCT"
+---------------------------------
+1. Verify the ASIN is correct
+2. Check Amazon hasn't merged/changed the listing
+3. Search for the product fresh and get the new ASIN
+
+"PRICE IS OUTDATED"
+-------------------
+1. Prices change frequently on Amazon
+2. Update monthly or when noticed
+3. Round to nearest dollar
+
+"CAN'T FIND PFAS INFORMATION"
+-----------------------------
+1. Search: "[brand name] PFAS policy"
+2. Check if material is inherently PFAS-free
+3. If still unsure, mark as "Needs Review" and ask in Slack
+
+"PRODUCT IS DISCONTINUED"
+-------------------------
+1. Mark as "Rejected"
+2. Add note: "Product no longer available"
+3. Find an alternative if possible
+
+"I MADE A MISTAKE"
+------------------
+1. Don't panic - everything is reversible
+2. Fix it if you can
+3. Ask for help in Slack if needed
+
+================================================================================
+15. QUALITY CHECKLIST
+================================================================================
+
+BEFORE COMMITTING ANY CHANGES:
+
+[ ] Product name matches Amazon exactly
+[ ] ASIN is 10 characters (letters and numbers)
+[ ] Price is current (check Amazon)
+[ ] Category makes sense for the product
+[ ] Brand exists or has been added
+[ ] No duplicate products
+[ ] File has no syntax errors (no red squiggles in VS Code)
+[ ] Commit message is descriptive
+
+================================================================================
+16. QUICK REFERENCE CARD
+================================================================================
+
+DAILY CHECKLIST
+---------------
+[ ] Check Slack
+[ ] Review new submissions
+[ ] Research 5-10 products
+[ ] Publish verified products
+[ ] Update task status
+
+IMPORTANT LINKS
+---------------
+Tool                URL                         Purpose
+---------------------------------------------------------------------------
+Airtable            airtable.com/[your-base]    Product tracking
+Sanity              [project].sanity.studio     CMS
+Jotform             jotform.com/[your-form]     Submissions
+Notion              notion.so/[workspace]       Documentation
+Slack               [workspace].slack.com       Communication
+Website             pfas-free.kitchen           Live site
+
+PFAS SCORE QUICK GUIDE
+----------------------
+Score       Meaning                 Action
+---------------------------------------------------------------------------
+9-10        Highly verified         Publish with confidence
+7-8         Well verified           Publish
+6           Minimally verified      Publish with note
+1-5         Insufficient evidence   Reject
+
+STATUS FLOW
+-----------
+    New → Researching → Verified → Published
+                     ↘ Rejected
+
+FINDING AMAZON ASINs
+--------------------
+Method 1: From URL
+- URL: https://www.amazon.com/dp/B00006JSUA
+- ASIN is the 10-character code after /dp/
+
+Method 2: From Product Page
+- Scroll to "Product Information" section
+- Find "ASIN" row
+- Copy the 10-character code
+
+GIT COMMANDS
+------------
+Update existing product:
+    git add src/pfas-web/data/products.ts
+    git commit -m "fix: update [product name] Amazon link"
+    git push
+
+Add new product:
+    git add src/pfas-web/data/products.ts
+    git commit -m "feat: add [product name] to products database"
+    git push
+
+GETTING HELP
+------------
+Slack Channels:
+- #general - Announcements, general chat
+- #va-tasks - Task questions, blockers
+- #pfas-products - Product discussions
+- #questions - Any questions
+
+If stuck for more than 30 minutes:
+1. Post in #questions with details
+2. Include what you tried
+3. Tag @admin if urgent
+
+================================================================================
+FIRST WEEK GOALS
+================================================================================
+
+Day     Goal
+---------------------------------------------------------------------------
+1       Access all tools, read this guide
+2       Complete Airtable & Sanity training
+3       Research 5 products with supervision
+4       Research 10 products independently
+5       Publish 3 products to Sanity
+
+================================================================================
+END OF GUIDE
+================================================================================
+
+Document Version: 1.0
+Last Updated: February 2026
+Total Products in Database: 255+
+
+For questions, contact the project lead via Slack.
