@@ -121,6 +121,17 @@ export const BRANDS: Record<string, Brand> = {
   // Luxury Coffee Brands
   technivorm: { id: 'technivorm', name: 'Technivorm', slug: 'technivorm', logoUrl: undefined },
   lamarzocco: { id: 'lamarzocco', name: 'La Marzocco', slug: 'la-marzocco', logoUrl: undefined },
+
+  // Artisan Cookware Brands
+  solidteknics: { id: 'solidteknics', name: 'Solidteknics', slug: 'solidteknics', logoUrl: undefined },
+  boroughfurnace: { id: 'boroughfurnace', name: 'Borough Furnace', slug: 'borough-furnace', logoUrl: undefined },
+  marquette: { id: 'marquette', name: 'Marquette Castings', slug: 'marquette-castings', logoUrl: undefined },
+
+  // Premium Kettle Brands
+  hario: { id: 'hario', name: 'Hario', slug: 'hario', logoUrl: undefined },
+
+  // Premium Food Processor Brands
+  cuisinart: { id: 'cuisinart', name: 'Cuisinart', slug: 'cuisinart', logoUrl: undefined },
 };
 
 // ============================================================
@@ -5229,6 +5240,209 @@ export const PRODUCTS: Product[] = [
     components: [{ id: 'boiler', role: 'body', roleLabel: 'Boilers', material: { id: 'stainless-steel', name: 'Commercial Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
     retailers: [{ id: 'lamarzocco-mini-direct', retailer: RETAILERS.amazon, url: 'https://home.lamarzoccousa.com/espresso-machines/linea-mini/', price: 6600, currency: 'USD', inStock: true }],
     features: { dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // LUXURY TEA & COFFEE KETTLES
+  // ============================================================
+
+  {
+    id: 'bonavita-variable-temp-kettle',
+    name: 'Bonavita 1L Variable Temperature Gooseneck Electric Kettle',
+    slug: 'bonavita-variable-temp-kettle',
+    description: 'Precision pour-over kettle with 1-degree temperature control (140-212°F). 1200W fast heating. BPA-free construction. Heat and hold for 60 minutes. Perfect for specialty coffee and tea.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Bonavita Gooseneck Kettle', isPrimary: true }],
+    brand: BRANDS.bonavita,
+    category: CATEGORIES['kettles'],
+    materialSummary: 'Stainless steel body',
+    coatingSummary: 'None - bare stainless interior',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Stainless steel kettles', rationale: 'Stainless steel is inherently PFAS-free. BPA-free certified.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Kettle Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'bonavita-kettle-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B005YR0F40'), price: 97, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  {
+    id: 'hario-v60-buono-kettle',
+    name: 'Hario V60 Buono Gooseneck Drip Kettle 1.2L',
+    slug: 'hario-v60-buono-kettle',
+    description: 'Iconic Japanese stovetop kettle with precision gooseneck spout. Stainless steel body. Beehive design for optimal heat retention. The choice of pour-over enthusiasts worldwide. Made in Japan.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Hario V60 Buono Kettle', isPrimary: true }],
+    brand: BRANDS.hario,
+    category: CATEGORIES['kettles'],
+    materialSummary: 'Stainless steel body and lid',
+    coatingSummary: 'None - bare stainless',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel products', rationale: 'Stainless steel is inherently PFAS-free. Made in Japan.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Kettle Body', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'hario-buono-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B000IGOXLS'), price: 48, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // PREMIUM FOOD PROCESSORS
+  // ============================================================
+
+  {
+    id: 'cuisinart-dfp14-processor',
+    name: 'Cuisinart 14-Cup Food Processor Stainless Steel',
+    slug: 'cuisinart-dfp14-processor',
+    description: '720-watt motor for mincing, dicing, shredding, and kneading. Stainless steel slicing and shredding discs. Large feed tube. Dishwasher-safe parts. The workhorse of home kitchens.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Cuisinart 14-Cup Food Processor', isPrimary: true }],
+    brand: BRANDS.cuisinart,
+    category: CATEGORIES['food-processors'],
+    materialSummary: 'Stainless steel blades and housing',
+    coatingSummary: 'None on blades',
+    verification: { tier: 3 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Stainless steel components', rationale: 'Stainless steel blades and discs are inherently PFAS-free.', unknowns: ['Work bowl material'], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'blades', role: 'body', roleLabel: 'Blades', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'cuisinart-14cup-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B01AXM4WV2'), price: 230, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  {
+    id: 'breville-sous-chef-16',
+    name: 'Breville Sous Chef 16 Cup Food Processor',
+    slug: 'breville-sous-chef-16',
+    description: 'Professional 1450W induction motor with 30-year warranty. 16-cup main bowl plus 2.5-cup mini bowl. 24-size adjustable slicer. Includes French fries disc, dough blade, and more. Brushed stainless steel.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Breville Sous Chef 16', isPrimary: true }],
+    brand: BRANDS.breville,
+    category: CATEGORIES['food-processors'],
+    materialSummary: 'Brushed stainless steel with stainless blades',
+    coatingSummary: 'None on blades',
+    verification: { tier: 3 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Stainless steel components', rationale: 'Stainless steel blades and housing are inherently PFAS-free.', unknowns: ['Work bowl material'], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'blades', role: 'body', roleLabel: 'Blades', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'breville-souschef-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0CDM46KHZ'), price: 500, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // HIGH-END BLENDERS
+  // ============================================================
+
+  {
+    id: 'vitamix-pro-750',
+    name: 'Vitamix Professional Series 750 Blender',
+    slug: 'vitamix-pro-750',
+    description: 'Professional-grade 2.2 HP motor with 5 pre-programmed settings. 64 oz low-profile container. Laser-cut stainless steel blades. Self-cleaning in 60 seconds. 7-year warranty.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Vitamix Pro 750', isPrimary: true }],
+    brand: BRANDS.vitamix,
+    category: CATEGORIES['blenders'],
+    materialSummary: 'Stainless steel blades, BPA-free Tritan container',
+    coatingSummary: 'None on blades',
+    verification: { tier: 3 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'BPA-free certified', rationale: 'Stainless steel blades are inherently PFAS-free. BPA-free Tritan container.', unknowns: ['Tritan plastic composition'], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'blades', role: 'body', roleLabel: 'Blades', material: { id: 'stainless-steel', name: 'Laser-Cut Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'vitamix-750-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00GIV1MIG'), price: 595, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  {
+    id: 'vitamix-stainless-container-48',
+    name: 'Vitamix 48 oz Stainless Steel Blending Container',
+    slug: 'vitamix-stainless-container-48',
+    description: 'Premium stainless steel container for all full-size Vitamix blenders. Non-reactive, odor-resistant, and stain-resistant. BPA-free lid. Hardened laser-cut stainless blades.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Vitamix Stainless Steel Container', isPrimary: true }],
+    brand: BRANDS.vitamix,
+    category: CATEGORIES['blenders'],
+    materialSummary: '100% stainless steel container and blades',
+    coatingSummary: 'None - bare stainless',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel products', rationale: 'Stainless steel is inherently PFAS-free. Eliminates plastic container concerns.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'container', role: 'body', roleLabel: 'Container', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'vitamix-ss-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B089ZMPRLD'), price: 200, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  {
+    id: 'blendtec-pro-800',
+    name: 'Blendtec Professional 800 Blender with WildSide+ Jar',
+    slug: 'blendtec-pro-800',
+    description: 'World quietest commercial-grade home blender. 90 oz BPA-free WildSide+ jar. Stealth technology for kitchen-friendly sound levels. Professional performance for smoothies, soups, and more.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Blendtec Professional 800', isPrimary: true }],
+    brand: BRANDS.blendtec,
+    category: CATEGORIES['blenders'],
+    materialSummary: 'Stainless steel blades, BPA-free jar',
+    coatingSummary: 'None on blades',
+    verification: { tier: 3 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'BPA-free certified', rationale: 'Stainless steel blades are inherently PFAS-free. BPA-free WildSide+ jar.', unknowns: ['Jar material composition'], hasEvidence: true, evidenceCount: 2, decisionDate: '2026-02-16' },
+    components: [{ id: 'blades', role: 'body', roleLabel: 'Blades', material: { id: 'stainless-steel', name: 'Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'blendtec-800-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B086Y8KD1K'), price: 800, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // ARTISAN CAST IRON & WROUGHT IRON COOKWARE
+  // ============================================================
+
+  {
+    id: 'solidteknics-aus-ion-10',
+    name: 'Solidteknics AUS-ION 10" Wrought Iron Skillet',
+    slug: 'solidteknics-aus-ion-10',
+    description: 'Australian-made wrought iron skillet. 3mm thick clean Australian iron. Pre-seasoned and lightweight. All-purpose for stovetop, oven, BBQ, and campfire. Heirloom quality.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Solidteknics AUS-ION Skillet', isPrimary: true }],
+    brand: BRANDS.solidteknics,
+    category: CATEGORIES['fry-pans'],
+    materialSummary: '3mm Australian wrought iron',
+    coatingSummary: 'None - pre-seasoned iron',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All iron cookware', rationale: 'Wrought iron is inherently PFAS-free. Made in Australia.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Skillet Body', material: { id: 'iron', name: 'Wrought Iron', slug: 'iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'solidteknics-10-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0DMGSNCC9'), price: 200, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 900, dishwasherSafe: false },
+  },
+
+  {
+    id: 'borough-furnace-skillet-10',
+    name: 'Borough Furnace 10.5" Cast Iron Frying Skillet',
+    slug: 'borough-furnace-skillet-10',
+    description: 'Handmade in New York from 100% recycled iron. Hand-sanded smooth finish. Pre-seasoned 3x with organic flaxseed oil. Long forked handle dissipates heat. Oven-safe to 800°F. Lifetime warranty.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Borough Furnace Skillet', isPrimary: true }],
+    brand: BRANDS.boroughfurnace,
+    category: CATEGORIES['fry-pans'],
+    materialSummary: '100% recycled cast iron',
+    coatingSummary: 'None - organic flaxseed seasoning',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All cast iron products', rationale: 'Cast iron is inherently PFAS-free. Organic flaxseed seasoning. Made in USA.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Skillet Body', material: { id: 'cast-iron', name: 'Recycled Cast Iron', slug: 'cast-iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'borough-10-direct', retailer: RETAILERS.amazon, url: 'https://boroughfurnace.com/products/10-5-frying-skillet', price: 210, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 800, dishwasherSafe: false },
+  },
+
+  {
+    id: 'finex-12-skillet-lid',
+    name: 'FINEX 12" Cast Iron Skillet with Lid',
+    slug: 'finex-12-skillet-lid',
+    description: 'Handcrafted in Portland, Oregon. Patented octagonal design with 8 pour points. Speed Cool stainless steel spring handle. Hand-polished cooking surface. Pre-seasoned with organic flaxseed oil. Lifetime guarantee.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'FINEX 12" Skillet with Lid', isPrimary: true }],
+    brand: BRANDS.finex,
+    category: CATEGORIES['fry-pans'],
+    materialSummary: 'Heavy gauge cast iron',
+    coatingSummary: 'None - organic flaxseed seasoning',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All cast iron products', rationale: 'Cast iron is inherently PFAS-free. Organic flaxseed seasoning. Made in Oregon, USA.', unknowns: [], hasEvidence: true, evidenceCount: 4, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Skillet Body', material: { id: 'cast-iron', name: 'Cast Iron', slug: 'cast-iron' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'finex-12-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0145FCVDE'), price: 300, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 900, dishwasherSafe: false },
+  },
+
+  {
+    id: 'marquette-carbon-steel-skillet',
+    name: 'Marquette Castings 10.75" Carbon Steel Skillet',
+    slug: 'marquette-carbon-steel-skillet',
+    description: 'Michigan-made carbon steel skillet. 3mm thick pressed steel with cast stainless handle. Pre-seasoned with flaxseed oil. No chemical coatings. Lifetime warranty. Free shipping.',
+    imageUrl: '/placeholders/products/skillet-placeholder.svg',
+    images: [{ url: '/placeholders/products/skillet-placeholder.svg', alt: 'Marquette Carbon Steel Skillet', isPrimary: true }],
+    brand: BRANDS.marquette,
+    category: CATEGORIES['fry-pans'],
+    materialSummary: '3mm carbon steel with stainless handle',
+    coatingSummary: 'None - flaxseed oil seasoning',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All carbon steel products', rationale: 'Carbon steel is inherently PFAS-free. Made in Michigan, USA.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Skillet Body', material: { id: 'carbon-steel', name: 'Carbon Steel', slug: 'carbon-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'marquette-cs-direct', retailer: RETAILERS.amazon, url: 'https://www.marquettecastings.com/products/10-75-carbon-steel-skillet', price: 175, currency: 'USD', inStock: true }],
+    features: { inductionCompatible: true, ovenSafeTempF: 800, dishwasherSafe: false },
   },
 ];
 
