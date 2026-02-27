@@ -103,6 +103,24 @@ export const BRANDS: Record<string, Brand> = {
   kitchenaid: { id: 'kitchenaid', name: 'KitchenAid', slug: 'kitchenaid', logoUrl: undefined },
   fritaire: { id: 'fritaire', name: 'Fritaire', slug: 'fritaire', logoUrl: undefined },
   generic: { id: 'generic', name: 'Generic', slug: 'generic', logoUrl: undefined },
+
+  // Professional Knife Brands
+  wusthof: { id: 'wusthof', name: 'Wüsthof', slug: 'wusthof', logoUrl: undefined },
+  shun: { id: 'shun', name: 'Shun', slug: 'shun', logoUrl: undefined },
+  global: { id: 'global', name: 'Global', slug: 'global', logoUrl: undefined },
+
+  // Water Filtration Brands
+  berkey: { id: 'berkey', name: 'Berkey', slug: 'berkey', logoUrl: undefined },
+  aquasana: { id: 'aquasana', name: 'Aquasana', slug: 'aquasana', logoUrl: undefined },
+
+  // Premium Bakeware Brands
+  fatdaddios: { id: 'fatdaddios', name: "Fat Daddio's", slug: 'fat-daddios', logoUrl: undefined },
+  usapan: { id: 'usapan', name: 'USA Pan', slug: 'usa-pan', logoUrl: undefined },
+  anchorhocking: { id: 'anchorhocking', name: 'Anchor Hocking', slug: 'anchor-hocking', logoUrl: undefined },
+
+  // Luxury Coffee Brands
+  technivorm: { id: 'technivorm', name: 'Technivorm', slug: 'technivorm', logoUrl: undefined },
+  lamarzocco: { id: 'lamarzocco', name: 'La Marzocco', slug: 'la-marzocco', logoUrl: undefined },
 };
 
 // ============================================================
@@ -256,6 +274,26 @@ export const CATEGORIES: Record<string, Category> = {
   'air-fryers': {
     id: 'air-fryers', name: 'Air Fryers', slug: 'air-fryers',
     path: [{ id: 'appliances', name: 'Appliances', slug: 'appliances' }, { id: 'air-fryers', name: 'Air Fryers', slug: 'air-fryers' }],
+  },
+
+  // Utensils & Tools
+  'chef-knives': {
+    id: 'chef-knives', name: 'Chef Knives', slug: 'chef-knives',
+    path: [{ id: 'utensils', name: 'Utensils & Tools', slug: 'utensils' }, { id: 'chef-knives', name: 'Chef Knives', slug: 'chef-knives' }],
+  },
+  'knife-sets': {
+    id: 'knife-sets', name: 'Knife Sets', slug: 'knife-sets',
+    path: [{ id: 'utensils', name: 'Utensils & Tools', slug: 'utensils' }, { id: 'knife-sets', name: 'Knife Sets', slug: 'knife-sets' }],
+  },
+
+  // Water Filtration
+  'water-filters': {
+    id: 'water-filters', name: 'Water Filters', slug: 'water-filters',
+    path: [{ id: 'water-filtration', name: 'Water Filtration', slug: 'water-filtration' }, { id: 'water-filters', name: 'Water Filters', slug: 'water-filters' }],
+  },
+  'water-pitchers': {
+    id: 'water-pitchers', name: 'Filter Pitchers', slug: 'water-pitchers',
+    path: [{ id: 'water-filtration', name: 'Water Filtration', slug: 'water-filtration' }, { id: 'water-pitchers', name: 'Filter Pitchers', slug: 'water-pitchers' }],
   },
 };
 
@@ -4932,6 +4970,264 @@ export const PRODUCTS: Product[] = [
     verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel kettles', rationale: 'Full stainless steel water path is inherently PFAS-free. No plastic contacts water.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
     components: [{ id: 'body', role: 'body', roleLabel: 'Kettle Body', material: { id: 'stainless-steel', name: '304 Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
     retailers: [{ id: 'fellow-ekg-pro-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0B5G7DQN7'), price: 195, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // PROFESSIONAL BAKEWARE (ALUMINUM - PFAS-FREE)
+  // ============================================================
+
+  {
+    id: 'fatdaddios-round-pan-set',
+    name: "Fat Daddio's Anodized Aluminum Round Cake Pan Set 4-Tier",
+    slug: 'fatdaddios-round-pan-set',
+    description: 'Professional-grade anodized aluminum cake pans. Chemical-free, extra material-free baking. Used by over 1,000 bakeries worldwide. Established 1968.',
+    imageUrl: '/placeholders/products/baking-pan-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-pan-placeholder.svg', alt: "Fat Daddio's Cake Pan Set", isPrimary: true }],
+    brand: BRANDS.fatdaddios,
+    category: CATEGORIES['cake-pans'],
+    materialSummary: 'Anodized aluminum',
+    coatingSummary: 'None - bare anodized surface',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All anodized aluminum products', rationale: 'Anodized aluminum is inherently PFAS-free. No coatings or chemicals.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminum', name: 'Anodized Aluminum', slug: 'aluminum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'fatdaddios-set-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B07PGQY1TP'), price: 45, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  {
+    id: 'usapan-half-sheet',
+    name: 'USA Pan Aluminized Steel Half Sheet Pan',
+    slug: 'usapan-half-sheet',
+    description: 'Professional-grade aluminized steel with patented Americoat silicone coating. Family-owned, made in USA. Exceeds industry standards for durability.',
+    imageUrl: '/placeholders/products/baking-pan-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-pan-placeholder.svg', alt: 'USA Pan Half Sheet', isPrimary: true }],
+    brand: BRANDS.usapan,
+    category: CATEGORIES['baking-sheets'],
+    materialSummary: 'Aluminized steel',
+    coatingSummary: 'Americoat silicone (PFAS-free)',
+    verification: { tier: 4 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'All USA Pan products', rationale: 'Americoat is a silicone-based coating, inherently PFAS-free. Made in USA.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'steel', name: 'Aluminized Steel', slug: 'steel' }, coating: { id: 'silicone', name: 'Silicone', slug: 'silicone' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'usapan-sheet-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0029JQEIC'), price: 22, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'usapan-loaf-pan',
+    name: 'USA Pan Aluminized Steel 1 Lb Loaf Pan',
+    slug: 'usapan-loaf-pan',
+    description: 'Professional bakers loaf pan with Americoat silicone nonstick. Perfect for bread, meatloaf, and pound cakes. Made in USA.',
+    imageUrl: '/placeholders/products/baking-pan-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-pan-placeholder.svg', alt: 'USA Pan Loaf Pan', isPrimary: true }],
+    brand: BRANDS.usapan,
+    category: CATEGORIES['loaf-pans'],
+    materialSummary: 'Aluminized steel',
+    coatingSummary: 'Americoat silicone (PFAS-free)',
+    verification: { tier: 4 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'All USA Pan products', rationale: 'Americoat is a silicone-based coating, inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'steel', name: 'Aluminized Steel', slug: 'steel' }, coating: { id: 'silicone', name: 'Silicone', slug: 'silicone' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'usapan-loaf-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B001TO3CNK'), price: 17, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'nordicware-half-sheet-2pack',
+    name: 'Nordic Ware Natural Aluminum Half Sheet Pan 2-Pack',
+    slug: 'nordicware-half-sheet-2pack',
+    description: 'Pure uncoated aluminum for rapid, even heating. Encapsulated steel rim prevents warping. Made in Minneapolis, USA since 1946. Lifetime durability.',
+    imageUrl: '/placeholders/products/baking-pan-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-pan-placeholder.svg', alt: 'Nordic Ware Half Sheet', isPrimary: true }],
+    brand: BRANDS.nordicware,
+    category: CATEGORIES['baking-sheets'],
+    materialSummary: 'Pure aluminum with steel rim',
+    coatingSummary: 'None - bare aluminum',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All uncoated aluminum products', rationale: 'Pure aluminum is inherently PFAS-free. Made in USA since 1946.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Pan Body', material: { id: 'aluminum', name: 'Pure Aluminum', slug: 'aluminum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'nordicware-sheet-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0049C2S32'), price: 30, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 500, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // PREMIUM GLASS BAKEWARE
+  // ============================================================
+
+  {
+    id: 'pyrex-easy-grab-14pc',
+    name: 'Pyrex Easy Grab 14-Piece Glass Bakeware Set with Lids',
+    slug: 'pyrex-easy-grab-14pc',
+    description: 'Non-toxic borosilicate glass bakeware with BPA-free lids. Microwave, freezer, and oven safe. Easy-grip handles for confident carrying.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Pyrex Easy Grab Set', isPrimary: true }],
+    brand: BRANDS.pyrex,
+    category: CATEGORIES['baking-dishes'],
+    materialSummary: 'Tempered borosilicate glass',
+    coatingSummary: 'None - bare glass',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All glass products', rationale: 'Glass is inherently PFAS-free. BPA-free lids certified.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Dishes', material: { id: 'glass', name: 'Borosilicate Glass', slug: 'glass' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'pyrex-grab-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B005JD0EFE'), price: 55, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  {
+    id: 'anchor-hocking-3qt-bake',
+    name: 'Anchor Hocking 3 Qt Glass Baking Dish with TrueLock Lid',
+    slug: 'anchor-hocking-3qt-bake',
+    description: 'American-made tempered glass baking dish. TrueLock lid creates secure seal for storage and transport. Versatile for baking and serving.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Anchor Hocking Baking Dish', isPrimary: true }],
+    brand: BRANDS.anchorhocking,
+    category: CATEGORIES['baking-dishes'],
+    materialSummary: 'Tempered glass',
+    coatingSummary: 'None - bare glass',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All glass products', rationale: 'Glass is inherently PFAS-free. Made in USA.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Dish', material: { id: 'glass', name: 'Tempered Glass', slug: 'glass' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'anchor-3qt-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0B9Q3ZWYQ'), price: 16, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 425, dishwasherSafe: true },
+  },
+
+  {
+    id: 'pyrex-pie-plate-9',
+    name: 'Pyrex Deep Glass Pie Plate 9.5 Inch',
+    slug: 'pyrex-pie-plate-9',
+    description: 'Classic American glass pie plate. Deep dish for generous fillings. Fluted edge for decorative crimping. Oven, microwave, and dishwasher safe.',
+    imageUrl: '/placeholders/products/baking-dish-placeholder.svg',
+    images: [{ url: '/placeholders/products/baking-dish-placeholder.svg', alt: 'Pyrex Pie Plate', isPrimary: true }],
+    brand: BRANDS.pyrex,
+    category: CATEGORIES['pie-dishes'],
+    materialSummary: 'Tempered glass',
+    coatingSummary: 'None - bare glass',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All glass products', rationale: 'Glass is inherently PFAS-free.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Plate', material: { id: 'glass', name: 'Tempered Glass', slug: 'glass' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'pyrex-pie-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00LGLHUA0'), price: 12, currency: 'USD', inStock: true }],
+    features: { ovenSafeTempF: 450, dishwasherSafe: true },
+  },
+
+  // ============================================================
+  // WATER FILTRATION (PFAS-REMOVING)
+  // ============================================================
+
+  {
+    id: 'berkey-big-berkey',
+    name: 'Big Berkey Gravity-Fed Stainless Steel Water Filter 2.25 Gallon',
+    slug: 'berkey-big-berkey',
+    description: 'Surgical-grade 304 stainless steel gravity filter. Removes 250+ contaminants including PFAS. No electricity needed. Black Berkey elements last 6,000 gallons.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Big Berkey Water Filter', isPrimary: true }],
+    brand: BRANDS.berkey,
+    category: CATEGORIES['water-filters'],
+    materialSummary: '304 surgical-grade stainless steel',
+    coatingSummary: 'None - polished stainless',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Stainless steel construction', rationale: 'Stainless steel is inherently PFAS-free. Filter removes PFAS from water.', unknowns: [], hasEvidence: true, evidenceCount: 4, decisionDate: '2026-02-16' },
+    components: [{ id: 'body', role: 'body', roleLabel: 'Chamber', material: { id: 'stainless-steel', name: '304 Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'berkey-big-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00BWIWZ7C'), price: 384, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  {
+    id: 'aquasana-clean-water-machine',
+    name: 'Aquasana Clean Water Machine Countertop Filter',
+    slug: 'aquasana-clean-water-machine',
+    description: 'Powered countertop filter removes 78 contaminants including PFAS, lead, and microplastics. 15X more effective than pitchers. 8 oz in 8 seconds.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Aquasana Clean Water Machine', isPrimary: true }],
+    brand: BRANDS.aquasana,
+    category: CATEGORIES['water-filters'],
+    materialSummary: 'BPA-free housing with Claryum filter',
+    coatingSummary: 'None',
+    verification: { tier: 3 as VerificationTier, claimType: 'intentionally_pfas_free', scopeText: 'NSF certified filtration', rationale: 'NSF/ANSI 42, 53, 401 certified. Removes PFAS from water. Retains beneficial minerals.', unknowns: ['Housing material specifics'], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'filter', role: 'body', roleLabel: 'Filter', material: { id: 'claryum', name: 'Claryum Technology', slug: 'claryum' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'aquasana-cwm-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B07JV8X1J5'), price: 200, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // PROFESSIONAL CHEF KNIVES (PFAS-FREE STEEL)
+  // ============================================================
+
+  {
+    id: 'wusthof-classic-ikon-8',
+    name: "Wüsthof Classic Ikon 8\" Chef's Knife",
+    slug: 'wusthof-classic-ikon-8',
+    description: 'German-forged high-carbon stainless steel. Made in Solingen, Germany. Half-bolster design for full blade sharpening. 58 HRC hardness. Lifetime warranty.',
+    imageUrl: '/placeholders/products/utensil-placeholder.svg',
+    images: [{ url: '/placeholders/products/utensil-placeholder.svg', alt: "Wüsthof Classic Ikon Chef's Knife", isPrimary: true }],
+    brand: BRANDS.wusthof,
+    category: CATEGORIES['chef-knives'],
+    materialSummary: 'High-carbon stainless steel',
+    coatingSummary: 'None - bare steel',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All steel knives', rationale: 'High-carbon stainless steel is inherently PFAS-free. Made in Germany since 1814.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'blade', role: 'body', roleLabel: 'Blade', material: { id: 'steel', name: 'High-Carbon Stainless Steel', slug: 'steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'wusthof-ikon-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00009ZK08'), price: 180, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  {
+    id: 'shun-classic-8',
+    name: "Shun Classic 8\" Chef's Knife",
+    slug: 'shun-classic-8',
+    description: 'Japanese VG-MAX steel core with 68-layer Damascus cladding. Handcrafted in Seki, Japan. 16-degree double bevel. D-shaped PakkaWood handle. Limited lifetime warranty.',
+    imageUrl: '/placeholders/products/utensil-placeholder.svg',
+    images: [{ url: '/placeholders/products/utensil-placeholder.svg', alt: "Shun Classic Chef's Knife", isPrimary: true }],
+    brand: BRANDS.shun,
+    category: CATEGORIES['chef-knives'],
+    materialSummary: 'VG-MAX core with Damascus steel',
+    coatingSummary: 'None - bare steel',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All steel knives', rationale: 'Japanese steel is inherently PFAS-free. Handcrafted in Japan.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'blade', role: 'body', roleLabel: 'Blade', material: { id: 'steel', name: 'VG-MAX Japanese Steel', slug: 'steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'shun-classic-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B0000Y7KNQ'), price: 155, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  {
+    id: 'global-g2-8',
+    name: "Global G-2 8\" Chef's Knife",
+    slug: 'global-g2-8',
+    description: 'Japanese CROMOVA 18 stainless steel. Lightweight design with perfect balance. Convex ground edge at 15 degrees. Hollow handle filled with sand for balance. Made in Japan.',
+    imageUrl: '/placeholders/products/utensil-placeholder.svg',
+    images: [{ url: '/placeholders/products/utensil-placeholder.svg', alt: "Global G-2 Chef's Knife", isPrimary: true }],
+    brand: BRANDS.global,
+    category: CATEGORIES['chef-knives'],
+    materialSummary: 'CROMOVA 18 stainless steel',
+    coatingSummary: 'None - bare steel',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All steel knives', rationale: 'CROMOVA stainless steel is inherently PFAS-free. Made in Japan.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'blade', role: 'body', roleLabel: 'Blade', material: { id: 'steel', name: 'CROMOVA 18 Steel', slug: 'steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'global-g2-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B00005OL44'), price: 150, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  // ============================================================
+  // LUXURY COFFEE EQUIPMENT
+  // ============================================================
+
+  {
+    id: 'technivorm-moccamaster-kbgt',
+    name: 'Technivorm Moccamaster KBGT Coffee Maker with Thermal Carafe',
+    slug: 'technivorm-moccamaster-kbgt',
+    description: 'Dutch-made precision coffee brewer. Glass-lined stainless steel thermal carafe. Optimal 196-205°F brewing temperature. SCA certified. 5-year warranty.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'Technivorm Moccamaster KBGT', isPrimary: true }],
+    brand: BRANDS.technivorm,
+    category: CATEGORIES['coffee-makers'],
+    materialSummary: 'Stainless steel carafe with glass lining',
+    coatingSummary: 'Glass interior lining',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'Glass and stainless components', rationale: 'Glass-lined stainless carafe is inherently PFAS-free. Made in Netherlands.', unknowns: [], hasEvidence: true, evidenceCount: 3, decisionDate: '2026-02-16' },
+    components: [{ id: 'carafe', role: 'body', roleLabel: 'Carafe', material: { id: 'stainless-steel', name: 'Glass-Lined Stainless', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'moccamaster-kbgt-amazon', retailer: RETAILERS.amazon, url: generateAmazonLink('B002S4DI2M'), price: 359, currency: 'USD', inStock: true }],
+    features: { dishwasherSafe: false },
+  },
+
+  {
+    id: 'lamarzocco-linea-mini',
+    name: 'La Marzocco Linea Mini Espresso Machine',
+    slug: 'lamarzocco-linea-mini',
+    description: 'Commercial-grade home espresso. Dual PID-controlled boilers. Stainless steel construction. Cool-touch steam wand. La Marzocco Home app integration. Made in Florence, Italy.',
+    imageUrl: '/placeholders/products/appliance-placeholder.svg',
+    images: [{ url: '/placeholders/products/appliance-placeholder.svg', alt: 'La Marzocco Linea Mini', isPrimary: true }],
+    brand: BRANDS.lamarzocco,
+    category: CATEGORIES['espresso-machines'],
+    materialSummary: 'Stainless steel body and boilers',
+    coatingSummary: 'None on food-contact surfaces',
+    verification: { tier: 4 as VerificationTier, claimType: 'inherently_pfas_free', scopeText: 'All stainless steel components', rationale: 'Commercial-grade stainless steel is inherently PFAS-free. Made in Florence, Italy since 1927.', unknowns: [], hasEvidence: true, evidenceCount: 4, decisionDate: '2026-02-16' },
+    components: [{ id: 'boiler', role: 'body', roleLabel: 'Boilers', material: { id: 'stainless-steel', name: 'Commercial Stainless Steel', slug: 'stainless-steel' }, pfasStatus: 'verified_free' }],
+    retailers: [{ id: 'lamarzocco-mini-direct', retailer: RETAILERS.amazon, url: 'https://home.lamarzoccousa.com/espresso-machines/linea-mini/', price: 6600, currency: 'USD', inStock: true }],
     features: { dishwasherSafe: false },
   },
 ];
