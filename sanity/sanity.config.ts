@@ -7,8 +7,8 @@ export default defineConfig({
   name: 'pfas-free-kitchen',
   title: 'PFAS-Free Kitchen',
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || 'YOUR_PROJECT_ID',
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET || 'production',
+  projectId: 'v03q4g6v',
+  dataset: 'production',
 
   plugins: [
     structureTool({
