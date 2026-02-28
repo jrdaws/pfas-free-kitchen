@@ -206,15 +206,26 @@ Submitted by: {{Submitted By}}
 👉 Review in Airtable: [link]
 ```
 
-### 4.4 Zap 3: Airtable → Sanity (Advanced)
+### 4.4 Airtable → Sanity (Script-Based - No Zapier Needed)
 
-**Trigger:** Airtable Record Updated (Status changed to "Verified")
-**Action:** Webhook to custom endpoint
+Instead of Zapier, use the built-in script to publish verified products:
 
-This requires a webhook endpoint that:
-1. Receives the Airtable data
-2. Transforms it to Sanity format
-3. Creates/updates the Sanity document
+```bash
+node scripts/publish-to-sanity.mjs
+```
+
+**What it does:**
+1. Fetches products with Status = "Verified" from Airtable
+2. Creates them in Sanity (as drafts)
+3. Updates Airtable status to "Published"
+
+**Options:**
+```bash
+node scripts/publish-to-sanity.mjs --dry-run    # Preview without changes
+node scripts/publish-to-sanity.mjs rec123abc    # Publish specific record
+```
+
+**Setup:** Add Sanity write token to `.env` (see `.env.example`)
 
 ---
 
